@@ -26,10 +26,10 @@ namespace CDS.Imaging.Demo
         private void FormBitmapDisplay_Load(object sender, EventArgs e)
         {
             bitmapDisplay.SetImage(Properties.Resources.Budapest_8U1C);
-            bitmapDisplay.CDS.Mode = WinForms.BitmapDisplay.ImageDisplayMode.Free;
+            bitmapDisplay.CDS.Mode = WinForms.BitmapDisplayMode.Free;
         }
 
-        private void bitmapDisplay_PaintOver(WinForms.BitmapDisplay.BitmapDisplay sender, Graphics graphics, Size imageSize, RectangleF renderRect)
+        private void bitmapDisplay_PaintOver(WinForms.BitmapDisplay sender, Graphics graphics, Size imageSize, RectangleF renderRect)
         {
             var info = new StringBuilder();
             info.Append($"Display mode      {sender.CDS.Mode}\n");
@@ -60,7 +60,7 @@ namespace CDS.Imaging.Demo
         {
             if(rbtnDisplayModeFree.Checked)
             {
-                bitmapDisplay.CDS.Mode = WinForms.BitmapDisplay.ImageDisplayMode.Free;
+                bitmapDisplay.CDS.Mode = WinForms.BitmapDisplayMode.Free;
                 UpdateCommandEnablement();
             }
         }
@@ -71,12 +71,14 @@ namespace CDS.Imaging.Demo
 
         private void btnFitToWindow_Click(object sender, EventArgs e)
         {
+            rbtnDisplayModeFree.Checked = true;
             bitmapDisplay.CDS.FitToWindowCentred();
         }
 
 
         private void btnActualSize_Click(object sender, EventArgs e)
         {
+            rbtnDisplayModeFree.Checked = true;
             bitmapDisplay.CDS.ActualSizeCentred();
         }
 
@@ -84,7 +86,7 @@ namespace CDS.Imaging.Demo
         {
             if(rbtnDisplayModeFitToWindow.Checked)
             {
-                bitmapDisplay.CDS.Mode = WinForms.BitmapDisplay.ImageDisplayMode.FitToWindowCentred;
+                bitmapDisplay.CDS.Mode = WinForms.BitmapDisplayMode.FitToWindowCentred;
                 UpdateCommandEnablement();
             }
         }
@@ -93,7 +95,7 @@ namespace CDS.Imaging.Demo
         {
             if (rbtnDisplayModeActualSize.Checked)
             {
-                bitmapDisplay.CDS.Mode = WinForms.BitmapDisplay.ImageDisplayMode.ActualSizeCentred;
+                bitmapDisplay.CDS.Mode = WinForms.BitmapDisplayMode.ActualSizeCentred;
                 UpdateCommandEnablement();
             }
         }
@@ -102,13 +104,14 @@ namespace CDS.Imaging.Demo
         {
             if (rbtnDisplayModeLocked.Checked)
             {
-                bitmapDisplay.CDS.Mode = WinForms.BitmapDisplay.ImageDisplayMode.Locked;
+                bitmapDisplay.CDS.Mode = WinForms.BitmapDisplayMode.Locked;
                 UpdateCommandEnablement();
             }
         }
 
         private void btnCentre_Click(object sender, EventArgs e)
         {
+            rbtnDisplayModeFree.Checked = true;
             bitmapDisplay.CDS.Centre();
         }
     }

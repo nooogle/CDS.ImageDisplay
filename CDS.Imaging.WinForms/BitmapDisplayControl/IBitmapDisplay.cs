@@ -1,18 +1,18 @@
 ﻿using System.Drawing;
 
-namespace CDS.Imaging.WinForms.BitmapDisplay
+namespace CDS.Imaging.WinForms
 {
     public interface IBitmapDisplay
     {
         Image Image { get; }
         bool IsDisplayingImage { get; }
-        ImageDisplayMode Mode { get; set; }
-        TimingMetrics TimingMetrics { get; }
+        BitmapDisplayMode Mode { get; set; }
+        BitmapDisplayMetrics TimingMetrics { get; }
 
         event PaintOverEvent PaintOver;
 
-        PointF DisplayLocationFrom(PointF imageLocation);
-        PointF ImageLocationFrom(PointF displayLocation);
+        PointF? DisplayLocationFromImageLocation(PointF imageLocation);
+        PointF? ImageLocationFromDisplayLocation(PointF displayLocation);
         void SetImage(Bitmap image);
         void FitToWindowCentred();
         void ActualSizeCentred();

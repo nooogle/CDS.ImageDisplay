@@ -1,5 +1,5 @@
 ﻿
-namespace CDS.Imaging.WinForms.BitmapDisplay
+namespace CDS.Imaging.WinForms
 {
     partial class BitmapDisplay
     {

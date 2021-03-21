@@ -1,6 +1,6 @@
-﻿namespace CDS.Imaging.WinForms.BitmapDisplay
+﻿namespace CDS.Imaging.WinForms
 {
-    public enum ImageDisplayMode
+    public enum BitmapDisplayMode
     {
         FitToWindowCentred,
         ActualSizeCentred,

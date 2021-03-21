@@ -2,9 +2,9 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.WinForms.BitmapDisplay
+namespace CDS.Imaging.WinForms.BitmapDisplayControl
 {
-    class ImageDisplayDragManager
+    internal class DragManager
     {
         Point dragStartLocation;
         RectangleF initialRenderRect;
@@ -14,14 +14,14 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         public bool IsDragging { get; private set; }
 
 
-        public ImageDisplayDragManager(Action<RectangleF> setNewRenderRect)
+        public DragManager(Action<RectangleF> setNewRenderRect)
         {
             SetNewRenderRect = setNewRenderRect;
         }
 
-        public void OnMouseDown(ImageDisplayMode imageDisplayMode, MouseEventArgs mouseEventArgs, RectangleF renderRect)
+        public void OnMouseDown(BitmapDisplayMode imageDisplayMode, MouseEventArgs mouseEventArgs, RectangleF renderRect)
         {
-            if (!IsDragging && (imageDisplayMode == ImageDisplayMode.Free))
+            if (!IsDragging && (imageDisplayMode == BitmapDisplayMode.Free))
             {
                 dragStartLocation = mouseEventArgs.Location;
                 IsDragging = true;

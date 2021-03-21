@@ -2,28 +2,28 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.WinForms.BitmapDisplay
+namespace CDS.Imaging.WinForms.BitmapDisplayControl
 {
-    class ImageDisplayZoomManager
+    internal class ZoomManager
     {
         Action<RectangleF> SetNewRenderRect;
 
 
-        public ImageDisplayZoomManager(Action<RectangleF> setNewRenderRect)
+        public ZoomManager(Action<RectangleF> setNewRenderRect)
         {
             SetNewRenderRect = setNewRenderRect;
         }
 
 
-        public void OnMouseWheel(ImageDisplayMode imageDisplayMode, Size imageSize, RectangleF renderRect, MouseEventArgs mouseEventArgs)
+        public void OnMouseWheel(BitmapDisplayMode imageDisplayMode, Size imageSize, RectangleF renderRect, MouseEventArgs mouseEventArgs)
         {
-            if ((mouseEventArgs.Delta == 0) || (imageDisplayMode != ImageDisplayMode.Free)) { return; }
+            if ((mouseEventArgs.Delta == 0) || (imageDisplayMode != BitmapDisplayMode.Free)) { return; }
 
-            var currentZoom = ImageDisplayMaths.CalcZoom(
+            var currentZoom = DisplayMaths.CalcZoom(
                 imageWidth: imageSize.Width,
                 renderWidth: renderRect.Width);
 
-            var imageLocation = ImageDisplayMaths.ImageLocationFromDisplayLocation(
+            var imageLocation = DisplayMaths.ImageLocationFromDisplayLocation(
                 displayLocation: mouseEventArgs.Location,
                 imageSize: imageSize,
                 renderRect: renderRect);
@@ -49,7 +49,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             System.Diagnostics.Debug.WriteLine($"ZoomOut: {changeFactor}: {currentZoom} => {newZoom}");
 
 
-            var newRenderRect = ImageDisplayMaths.CalcDrawRect(
+            var newRenderRect = DisplayMaths.CalcDrawRect(
                 imageSize: imageSize,
                 imageZoom: newZoom,
                 targetDisplayCentre: mouseEventArgs.Location,
@@ -63,7 +63,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             var newZoom = ClipZoom(currentZoom * changeFactor);
             System.Diagnostics.Debug.WriteLine($"ZoomIn: {changeFactor}: {currentZoom} => {newZoom}");
 
-            var newRenderRect = ImageDisplayMaths.CalcDrawRect(
+            var newRenderRect = DisplayMaths.CalcDrawRect(
                 imageSize: imageSize,
                 imageZoom: newZoom,
                 targetDisplayCentre: mouseEventArgs.Location,

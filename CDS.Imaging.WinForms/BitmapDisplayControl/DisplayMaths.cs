@@ -1,9 +1,9 @@
 ﻿using System.Drawing;
 
 
-namespace CDS.Imaging.WinForms.BitmapDisplay
+namespace CDS.Imaging.WinForms.BitmapDisplayControl
 {
-    public static class ImageDisplayMaths
+    internal static class DisplayMaths
     {
         private static double DisplayLocationFromImageLocation1D(
             double imageLocation,
@@ -149,22 +149,22 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
 
         public static RectangleF CalcRenderRect(
-            ImageDisplayMode mode, 
+            BitmapDisplayMode mode, 
             Size imageSize, 
             Size displaySize, 
             RectangleF existingRenderRect)
         {
             RectangleF renderRect = existingRenderRect;
 
-            if (renderRect.IsEmpty || (mode == ImageDisplayMode.FitToWindowCentred))
+            if (renderRect.IsEmpty || (mode == BitmapDisplayMode.FitToWindowCentred))
             {
-                renderRect = ImageDisplayMaths.CalcFitToWindowRect(
+                renderRect = DisplayMaths.CalcFitToWindowRect(
                     imageSize: imageSize,
                     displaySize: displaySize);
             }
-            else if (mode == ImageDisplayMode.ActualSizeCentred)
+            else if (mode == BitmapDisplayMode.ActualSizeCentred)
             {
-                renderRect = ImageDisplayMaths.CalcActualSizeCentredRect(
+                renderRect = DisplayMaths.CalcActualSizeCentredRect(
                     imageSize: imageSize,
                     displaySize: displaySize);
             }

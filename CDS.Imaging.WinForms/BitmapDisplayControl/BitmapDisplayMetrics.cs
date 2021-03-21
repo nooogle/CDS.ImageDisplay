@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace CDS.Imaging.WinForms.BitmapDisplay
+namespace CDS.Imaging.WinForms
 {
-    public class TimingMetrics
+    public class BitmapDisplayMetrics
     {
         public TimeSpan SetImage { get; set; }
         public TimeSpan ForegroundPaint { get; set; }

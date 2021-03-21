@@ -29,7 +29,7 @@ namespace CDS.Imaging.Demo
         /// </summary>
         private void InitializeComponent()
         {
-            this.bitmapDisplay = new CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplay();
+            this.bitmapDisplay = new CDS.Imaging.WinForms.BitmapDisplay();
             this.panelControlBox = new System.Windows.Forms.Panel();
             this.btnActualSize = new System.Windows.Forms.Button();
             this.btnFitToWindow = new System.Windows.Forms.Button();
@@ -46,11 +46,11 @@ namespace CDS.Imaging.Demo
             this.bitmapDisplay.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
             this.bitmapDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bitmapDisplay.Location = new System.Drawing.Point(0, 0);
-            this.bitmapDisplay.Mode = CDS.Imaging.WinForms.BitmapDisplay.ImageDisplayMode.FitToWindowCentred;
+            this.bitmapDisplay.Mode = CDS.Imaging.WinForms.BitmapDisplayMode.FitToWindowCentred;
             this.bitmapDisplay.Name = "bitmapDisplay";
             this.bitmapDisplay.Size = new System.Drawing.Size(800, 450);
             this.bitmapDisplay.TabIndex = 0;
-            this.bitmapDisplay.PaintOver += new CDS.Imaging.WinForms.BitmapDisplay.PaintOverEvent(this.bitmapDisplay_PaintOver);
+            this.bitmapDisplay.PaintOver += new CDS.Imaging.WinForms.PaintOverEvent(this.bitmapDisplay_PaintOver);
             // 
             // panelControlBox
             // 
@@ -165,7 +165,7 @@ namespace CDS.Imaging.Demo
 
         #endregion
 
-        private WinForms.BitmapDisplay.BitmapDisplay bitmapDisplay;
+        private WinForms.BitmapDisplay bitmapDisplay;
         private System.Windows.Forms.Panel panelControlBox;
         private System.Windows.Forms.RadioButton rbtnDisplayModeLocked;
         private System.Windows.Forms.RadioButton rbtnDisplayModeFree;
@@ -173,7 +173,6 @@ namespace CDS.Imaging.Demo
         private System.Windows.Forms.RadioButton rbtnDisplayModeFitToWindow;
         private System.Windows.Forms.Button btnActualSize;
         private System.Windows.Forms.Button btnFitToWindow;
-        private System.Windows.Forms.Panel el;
         private System.Windows.Forms.Button btnCentre;
     }
 }
