@@ -11,8 +11,8 @@ namespace CDS.Imaging.WinForms
 
         event PaintOverEvent PaintOver;
 
-        PointF? DisplayLocationFromImageLocation(PointF imageLocation);
-        PointF? ImageLocationFromDisplayLocation(PointF displayLocation);
+        PointF? DisplayCoordsFromImage(PointF imageLocation);
+        PointF? ImageCoordsFromDisplay(PointF displayLocation);
         void SetImage(Bitmap image);
         void FitToWindowCentred();
         void ActualSizeCentred();

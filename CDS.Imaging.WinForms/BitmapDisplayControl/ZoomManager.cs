@@ -21,12 +21,12 @@ namespace CDS.Imaging.WinForms.BitmapDisplayControl
 
             var currentZoom = DisplayMaths.CalcZoom(
                 imageWidth: imageSize.Width,
-                renderWidth: renderRect.Width);
+                paintWidth: renderRect.Width);
 
             var imageLocation = DisplayMaths.ImageLocationFromDisplayLocation(
                 displayLocation: mouseEventArgs.Location,
                 imageSize: imageSize,
-                renderRect: renderRect);
+                paintRect: renderRect);
 
             var change = mouseEventArgs.Delta;
             var zoomIn = (change > 0);

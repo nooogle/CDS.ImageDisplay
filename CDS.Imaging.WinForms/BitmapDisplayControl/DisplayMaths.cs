@@ -8,10 +8,10 @@ namespace CDS.Imaging.WinForms.BitmapDisplayControl
         private static double DisplayLocationFromImageLocation1D(
             double imageLocation,
             double imageSize,
-            double renderLocation,
-            double renderSize)
+            double paintLocation,
+            double paintSize)
         {
-            var displayLocation = renderLocation + (imageLocation / imageSize * renderSize);
+            var displayLocation = paintLocation + (imageLocation / imageSize * paintSize);
             return displayLocation;
         }
 
@@ -19,19 +19,19 @@ namespace CDS.Imaging.WinForms.BitmapDisplayControl
         public static PointF DisplayLocationFromImageLocation(
             PointF imageLocation,
             Size imageSize,
-            RectangleF renderRect)
+            RectangleF paintRect)
         {
             var x = DisplayLocationFromImageLocation1D(
                 imageLocation: imageLocation.X,
                 imageSize: imageSize.Width,
-                renderLocation: renderRect.X,
-                renderSize: renderRect.Width);
+                paintLocation: paintRect.X,
+                paintSize: paintRect.Width);
 
             var y = DisplayLocationFromImageLocation1D(
                 imageLocation: imageLocation.Y,
                 imageSize: imageSize.Height,
-                renderLocation: renderRect.Y,
-                renderSize: renderRect.Height);
+                paintLocation: paintRect.Y,
+                paintSize: paintRect.Height);
 
             return new PointF((float)x, (float)y);
         }
@@ -39,11 +39,11 @@ namespace CDS.Imaging.WinForms.BitmapDisplayControl
         private static double ImageLocationFromDisplayLocation1D(
             double displayLocation,
             double imageSize,
-            double renderLocation,
-            double renderSize)
+            double paintLocation,
+            double paintSize)
         {
-            var zoom = renderSize / imageSize;
-            var imageLocation = (displayLocation - renderLocation) / zoom;
+            var zoom = paintSize / imageSize;
+            var imageLocation = (displayLocation - paintLocation) / zoom;
             return imageLocation;
         }
 
@@ -51,19 +51,19 @@ namespace CDS.Imaging.WinForms.BitmapDisplayControl
         public static PointF ImageLocationFromDisplayLocation(
             PointF displayLocation, 
             Size imageSize, 
-            RectangleF renderRect)
+            RectangleF paintRect)
         {
             var x = ImageLocationFromDisplayLocation1D(
                 displayLocation: displayLocation.X,
                 imageSize: imageSize.Width,
-                renderLocation: renderRect.X,
-                renderSize: renderRect.Width);
+                paintLocation: paintRect.X,
+                paintSize: paintRect.Width);
 
             var y = ImageLocationFromDisplayLocation1D(
                 displayLocation: displayLocation.Y,
                 imageSize: imageSize.Height,
-                renderLocation: renderRect.Y,
-                renderSize: renderRect.Height);
+                paintLocation: paintRect.Y,
+                paintSize: paintRect.Height);
 
             var imageLocation = new PointF((float)x, (float)y);
             return imageLocation;
@@ -72,14 +72,14 @@ namespace CDS.Imaging.WinForms.BitmapDisplayControl
 
         /// <summary>
         /// Calcualtes the effective zoom level for the given 
-        /// image size and rendering rectangle
+        /// image size and painting rectangle
         /// </summary>
         /// <returns>Effective zoom or 0 if not applicable</returns>
-        public static double CalcZoom(int imageWidth, float renderWidth)
+        public static double CalcZoom(int imageWidth, float paintWidth)
         {
             if(imageWidth <= 0.0f) { return 0; }
 
-            var zoom = renderWidth / imageWidth;
+            var zoom = paintWidth / imageWidth;
             return zoom;
         }
 
@@ -90,13 +90,13 @@ namespace CDS.Imaging.WinForms.BitmapDisplayControl
             PointF targetDisplayCentre,
             PointF targetImageCentre)
         {
-            var renderRect = new RectangleF(
+            var paintRect = new RectangleF(
                 x: (float)(targetDisplayCentre.X - (targetImageCentre.X * imageZoom)),
                 y: (float)(targetDisplayCentre.Y - (targetImageCentre.Y * imageZoom)),
                 width: (float)(imageSize.Width * imageZoom),
                 height: (float)(imageSize.Height * imageZoom));
 
-            return renderRect;
+            return paintRect;
         }
 
 
@@ -148,35 +148,35 @@ namespace CDS.Imaging.WinForms.BitmapDisplayControl
         
 
 
-        public static RectangleF CalcRenderRect(
+        public static RectangleF CalcPaintRect(
             BitmapDisplayMode mode, 
             Size imageSize, 
             Size displaySize, 
-            RectangleF existingRenderRect)
+            RectangleF existingPaintRect)
         {
-            RectangleF renderRect = existingRenderRect;
+            RectangleF paintRect = existingPaintRect;
 
-            if (renderRect.IsEmpty || (mode == BitmapDisplayMode.FitToWindowCentred))
+            if (mode == BitmapDisplayMode.ActualSizeCentred)
             {
-                renderRect = DisplayMaths.CalcFitToWindowRect(
+                paintRect = DisplayMaths.CalcActualSizeCentredRect(
                     imageSize: imageSize,
                     displaySize: displaySize);
             }
-            else if (mode == BitmapDisplayMode.ActualSizeCentred)
+            else if (paintRect.IsEmpty || (mode == BitmapDisplayMode.FitToWindowCentred))
             {
-                renderRect = DisplayMaths.CalcActualSizeCentredRect(
+                paintRect = DisplayMaths.CalcFitToWindowRect(
                     imageSize: imageSize,
                     displaySize: displaySize);
             }
 
-            return renderRect;
+            return paintRect;
         }
 
         public static RectangleF CalcCentredRect(Size displaySize, RectangleF existingRect, Size imageSize)
         {
             var displayCentre = new PointF(displaySize.Width / 2, displaySize.Height / 2);
             var imageCentre = new PointF(imageSize.Width / 2, imageSize.Height / 2);
-            var existingZoom = CalcZoom(imageWidth: imageSize.Width, renderWidth: existingRect.Width);
+            var existingZoom = CalcZoom(imageWidth: imageSize.Width, paintWidth: existingRect.Width);
 
             var displayRect = CalcDrawRect(
                 imageSize: imageSize,

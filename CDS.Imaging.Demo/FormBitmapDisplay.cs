@@ -54,6 +54,15 @@ namespace CDS.Imaging.Demo
                 fixedWidthFont, 
                 Brushes.Navy, 
                 textTopleft);
+
+            var topLeftBox = sender.DisplayCoordsFromImage(new RectangleF(0, 0, 10, 5)).Value;
+            graphics.DrawRectangle(Pens.Red, topLeftBox.X, topLeftBox.Y, topLeftBox.Width, topLeftBox.Height);
+
+            graphics.DrawString(
+                "A 10*5 box",
+                fixedWidthFont,
+                Brushes.Navy,
+                new PointF(topLeftBox.X, topLeftBox.Y));
         }
 
         private void rbtnDisplayModeFree_CheckedChanged(object sender, EventArgs e)

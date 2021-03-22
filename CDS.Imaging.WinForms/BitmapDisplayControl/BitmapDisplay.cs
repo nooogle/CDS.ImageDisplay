@@ -186,11 +186,11 @@ namespace CDS.Imaging.WinForms
         {
             if (displayBitmap != null)
             {
-                DisplayRect = BitmapDisplayControl.DisplayMaths.CalcRenderRect(
+                DisplayRect = BitmapDisplayControl.DisplayMaths.CalcPaintRect(
                     displayMode,
                     imageSize: displayBitmap.Size,
                     displaySize: ClientSize,
-                    existingRenderRect: DisplayRect);
+                    existingPaintRect: DisplayRect);
             }
             else
             {
@@ -209,27 +209,50 @@ namespace CDS.Imaging.WinForms
         }
 
 
-        public PointF? DisplayLocationFromImageLocation(PointF imageLocation)
+        public PointF? DisplayCoordsFromImage(PointF imageLocation)
         {
             if (!AnythingToDisplay) { return null; }
 
             var drawingLocation = BitmapDisplayControl.DisplayMaths.DisplayLocationFromImageLocation(
                 imageLocation: imageLocation,
                 imageSize: displayBitmap.Size,
-                renderRect: DisplayRect);
+                paintRect: DisplayRect);
 
             return drawingLocation;
         }
 
+        public RectangleF? DisplayCoordsFromImage(RectangleF imageRect)
+        {
+            if (!AnythingToDisplay) { return null; }
 
-        public PointF? ImageLocationFromDisplayLocation(PointF displayLocation)
+            var displayTopLeft = BitmapDisplayControl.DisplayMaths.DisplayLocationFromImageLocation(
+                imageLocation: imageRect.Location,
+                imageSize: displayBitmap.Size,
+                paintRect: DisplayRect);
+
+            var displayBottomRight = BitmapDisplayControl.DisplayMaths.DisplayLocationFromImageLocation(
+                imageLocation: new PointF(imageRect.Right, imageRect.Bottom),
+                imageSize: displayBitmap.Size,
+                paintRect: DisplayRect);
+
+            var displayRect = RectangleF.FromLTRB(
+                left: displayTopLeft.X,
+                top: displayTopLeft.Y,
+                right: displayBottomRight.X,
+                bottom: displayBottomRight.Y);
+
+            return displayRect;
+        }
+
+
+        public PointF? ImageCoordsFromDisplay(PointF displayLocation)
         {
             if (!AnythingToDisplay) { return null; }
 
             var imageLocation = BitmapDisplayControl.DisplayMaths.DisplayLocationFromImageLocation(
                 imageLocation: displayLocation,
                 imageSize: displayBitmap.Size,
-                renderRect: DisplayRect);
+                paintRect: DisplayRect);
 
             return imageLocation;
         }
@@ -321,6 +344,8 @@ namespace CDS.Imaging.WinForms
                 var graphicsState = paintEventArgs.Graphics.Save();
 
                 paintEventArgs.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+                paintEventArgs.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+                paintEventArgs.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
 
                 paintEventArgs.Graphics.DrawImage(
                     image: displayBitmap,
