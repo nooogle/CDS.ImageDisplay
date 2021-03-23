@@ -55,7 +55,7 @@ namespace CDS.Imaging.Demo
                 Brushes.Navy, 
                 textTopleft);
 
-            var topLeftBox = sender.DisplayCoordsFromImage(new RectangleF(0, 0, 10, 5)).Value;
+            var topLeftBox = sender.CDS.MapImageToDisplay(new RectangleF(0, 0, 10, 5)).Value;
             graphics.DrawRectangle(Pens.Red, topLeftBox.X, topLeftBox.Y, topLeftBox.Width, topLeftBox.Height);
 
             graphics.DrawString(

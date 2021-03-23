@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace CDS.Imaging.WinForms
 {
@@ -14,7 +15,7 @@ namespace CDS.Imaging.WinForms
 
         public BitmapDisplayMetrics TimingMetrics { get; } = new BitmapDisplayMetrics();
 
-        bool AnythingToDisplay => !imageSize.IsEmpty && !displaySize.IsEmpty;
+        public bool AnythingToDisplay => !imageSize.IsEmpty && !displaySize.IsEmpty;
 
 
         public RectangleF PaintRect
@@ -116,20 +117,20 @@ namespace CDS.Imaging.WinForms
         }
 
 
-        public PointF? DisplayLocationFromImageLocation(PointF imageLocation)
+        public PointF? MapImageToDisplay(PointF imageLocation)
         {
             if (!AnythingToDisplay) { return null; }
 
-            var drawingLocation = BitmapDisplayControl.DisplayMaths.DisplayLocationFromImageLocation(
+            var displayLocation = BitmapDisplayControl.DisplayMaths.DisplayLocationFromImageLocation(
                 imageLocation: imageLocation,
                 imageSize: imageSize,
                 paintRect: paintRect);
 
-            return drawingLocation;
+            return displayLocation;
         }
 
 
-        public PointF? ImageLocationFromDisplayLocation(PointF displayLocation)
+        public PointF? MapDisplayToImage(PointF displayLocation)
         {
             if (!AnythingToDisplay) { return null; }
 
@@ -139,6 +140,23 @@ namespace CDS.Imaging.WinForms
                 paintRect: paintRect);
 
             return imageLocation;
+        }
+
+        public RectangleF? MapDisplayToImage(RectangleF displayRect)
+        {
+            if (!AnythingToDisplay) { return null; }
+
+            var bottomRight = new PointF(displayRect.Right, displayRect.Bottom);
+            var imageTopLeft = MapDisplayToImage(displayRect.Location).Value;
+            var imageBottomRight = MapDisplayToImage(bottomRight).Value;
+
+            var imageRect = RectangleF.FromLTRB(
+                left: imageTopLeft.X,
+                top: imageTopLeft.Y,
+                right: imageBottomRight.X,
+                bottom: imageBottomRight.Y);
+
+            return imageRect;
         }
 
 
@@ -171,6 +189,23 @@ namespace CDS.Imaging.WinForms
             if (!AnythingToDisplay || (mode != BitmapDisplayMode.Free)) { return; }
 
             RecalculatePaintRect(displayMode: BitmapDisplayMode.FitToWindowCentred);
+        }
+
+        public RectangleF? MapImageToDisplay(RectangleF imageRect)
+        {
+            if(!AnythingToDisplay) { return null; }
+
+            var bottomRight = new PointF(imageRect.Right, imageRect.Bottom);
+            var displayTopLeft = MapImageToDisplay(imageRect.Location).Value;
+            var displayBottomRight = MapImageToDisplay(bottomRight).Value;
+
+            var displayRect = RectangleF.FromLTRB(
+                left: displayTopLeft.X,
+                top: displayTopLeft.Y,
+                right: displayBottomRight.X,
+                bottom: displayBottomRight.Y);
+
+            return displayRect;
         }
     }
 }

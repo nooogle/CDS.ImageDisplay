@@ -8,8 +8,7 @@ namespace CDS.Imaging.WinForms
     public partial class BitmapDisplay : UserControl, IBitmapDisplay
     {
         private Bitmap displayBitmap;
-        RectangleF DisplayRect;
-        private BitmapDisplayMode mode = BitmapDisplayMode.FitToWindowCentred;
+        private VirtualImageOnDisplay virtualImageOnDisplay = new VirtualImageOnDisplay();
         private System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         private BitmapDisplayControl.DragManager dragManager;
         private BitmapDisplayControl.ZoomManager zoomManager;
@@ -24,22 +23,13 @@ namespace CDS.Imaging.WinForms
         public Image Image => displayBitmap;
 
 
-        bool AnythingToDisplay => !DisplayRect.IsEmpty;
+        public bool IsDisplayingImage => virtualImageOnDisplay.AnythingToDisplay;
 
 
         public BitmapDisplayMode Mode
         {
-            get => mode;
-
-            set
-            {
-                if (mode != value)
-                {
-                    mode = value;
-                    RecalculateRenderRect(displayMode: this.mode);
-                    Invalidate();
-                }
-            }
+            get => virtualImageOnDisplay.Mode;
+            set => virtualImageOnDisplay.Mode = value;
         }
 
 
@@ -52,6 +42,14 @@ namespace CDS.Imaging.WinForms
 
             dragManager = new BitmapDisplayControl.DragManager(SetNewRenderRect);
             zoomManager = new BitmapDisplayControl.ZoomManager(SetNewRenderRect);
+
+            virtualImageOnDisplay.OnPaintRectChanged += VirtualImageOnDisplay_OnPaintRectChanged;
+        }
+
+
+        private void VirtualImageOnDisplay_OnPaintRectChanged(VirtualImageOnDisplay sender, RectangleF paintRect)
+        {
+            Invalidate();
         }
 
 
@@ -79,7 +77,6 @@ namespace CDS.Imaging.WinForms
         {
             displayBitmap?.Dispose();
             displayBitmap = null;
-            DisplayRect = Rectangle.Empty;
         }
 
 
@@ -97,31 +94,16 @@ namespace CDS.Imaging.WinForms
 
         private void SetNonNullBitmap(Bitmap newBitmap)
         {
-            bool invalidateAll = true;
-
             DropBitmapIfFormatOrSizeChanged(newBitmap);
+            var shouldCreateNewBitmap = (displayBitmap == null);
 
-            var createNewBitmap = (displayBitmap == null);
-
-            if (createNewBitmap)
+            if (shouldCreateNewBitmap)
             {
                 CreateNewBitmapFromBitmap(newBitmap);
             }
             else
             {
                 CopyBitmapToExistingBitmap(newBitmap);
-                invalidateAll = false;
-            }
-
-            RecalculateRenderRect(displayMode: this.mode);
-
-            if (invalidateAll)
-            {
-                Invalidate();
-            }
-            else
-            {
-                Invalidate(Rectangle.Round(DisplayRect));
             }
         }
 
@@ -151,12 +133,16 @@ namespace CDS.Imaging.WinForms
                 image.UnlockBits(newBitmapData);
                 displayBitmap.UnlockBits(existingBitmapData);
             }
+
+            Invalidate(Rectangle.Round(virtualImageOnDisplay.PaintRect));
         }
 
 
         private void CreateNewBitmapFromBitmap(Bitmap newBitmap)
         {
             displayBitmap = (Bitmap)newBitmap.Clone();
+            virtualImageOnDisplay.ImageSize = displayBitmap.Size;
+            Invalidate();
         }
 
 
@@ -182,79 +168,32 @@ namespace CDS.Imaging.WinForms
         }
 
 
-        private void RecalculateRenderRect(BitmapDisplayMode displayMode)
+        private void SetNewRenderRect(RectangleF newRenderRect)
         {
-            if (displayBitmap != null)
-            {
-                DisplayRect = BitmapDisplayControl.DisplayMaths.CalcPaintRect(
-                    displayMode,
-                    imageSize: displayBitmap.Size,
-                    displaySize: ClientSize,
-                    existingPaintRect: DisplayRect);
-            }
-            else
-            {
-                DisplayRect = Rectangle.Empty;
-            }
+            virtualImageOnDisplay.PaintRect = newRenderRect;
         }
 
 
-
-        public void SetNewRenderRect(RectangleF newRenderRect)
+        public PointF? MapImageToDisplay(PointF imageLocation)
         {
-            if ((displayBitmap == null) || (DisplayRect == newRenderRect)) { return; }
+            return virtualImageOnDisplay.MapImageToDisplay(imageLocation);
+        }
 
-            DisplayRect = newRenderRect;
-            Invalidate();
+        public RectangleF? MapImageToDisplay(RectangleF imageRect)
+        {
+            return virtualImageOnDisplay.MapImageToDisplay(imageRect);
         }
 
 
-        public PointF? DisplayCoordsFromImage(PointF imageLocation)
+        public PointF? MapDisplayToImage(PointF displayLocation)
         {
-            if (!AnythingToDisplay) { return null; }
-
-            var drawingLocation = BitmapDisplayControl.DisplayMaths.DisplayLocationFromImageLocation(
-                imageLocation: imageLocation,
-                imageSize: displayBitmap.Size,
-                paintRect: DisplayRect);
-
-            return drawingLocation;
+            return virtualImageOnDisplay.MapDisplayToImage(displayLocation);
         }
 
-        public RectangleF? DisplayCoordsFromImage(RectangleF imageRect)
+        
+        public RectangleF? MapDisplayToImage(RectangleF displayRect)
         {
-            if (!AnythingToDisplay) { return null; }
-
-            var displayTopLeft = BitmapDisplayControl.DisplayMaths.DisplayLocationFromImageLocation(
-                imageLocation: imageRect.Location,
-                imageSize: displayBitmap.Size,
-                paintRect: DisplayRect);
-
-            var displayBottomRight = BitmapDisplayControl.DisplayMaths.DisplayLocationFromImageLocation(
-                imageLocation: new PointF(imageRect.Right, imageRect.Bottom),
-                imageSize: displayBitmap.Size,
-                paintRect: DisplayRect);
-
-            var displayRect = RectangleF.FromLTRB(
-                left: displayTopLeft.X,
-                top: displayTopLeft.Y,
-                right: displayBottomRight.X,
-                bottom: displayBottomRight.Y);
-
-            return displayRect;
-        }
-
-
-        public PointF? ImageCoordsFromDisplay(PointF displayLocation)
-        {
-            if (!AnythingToDisplay) { return null; }
-
-            var imageLocation = BitmapDisplayControl.DisplayMaths.DisplayLocationFromImageLocation(
-                imageLocation: displayLocation,
-                imageSize: displayBitmap.Size,
-                paintRect: DisplayRect);
-
-            return imageLocation;
+            return virtualImageOnDisplay.MapDisplayToImage(displayRect);
         }
 
 
@@ -265,55 +204,18 @@ namespace CDS.Imaging.WinForms
         /// </summary>
         public void ActualSizeCentred()
         {
-            if (mode != BitmapDisplayMode.Free) { return; }
-
-            var originalDisplayRect = DisplayRect;
-
-            RecalculateRenderRect(displayMode: BitmapDisplayMode.ActualSizeCentred);
-
-            if (originalDisplayRect != DisplayRect)
-            {
-                Invalidate();
-            }
+            virtualImageOnDisplay.ActualSizeCentred();
         }
 
         public void Centre()
         {
-            if (mode != BitmapDisplayMode.Free) { return; }
-
-            var originalDisplayRect = DisplayRect;
-
-            if (displayBitmap != null)
-            {
-                DisplayRect = BitmapDisplayControl.DisplayMaths.CalcCentredRect(
-                    displaySize: ClientSize,
-                    existingRect: DisplayRect,
-                    imageSize: displayBitmap.Size);
-            }
-            else
-            {
-                DisplayRect = Rectangle.Empty;
-            }
-
-            if (originalDisplayRect != DisplayRect)
-            {
-                Invalidate();
-            }
+            virtualImageOnDisplay.Centre();
         }
 
 
         public void FitToWindowCentred()
         {
-            if (mode != BitmapDisplayMode.Free) { return; }
-
-            var originalDisplayRect = DisplayRect;
-
-            RecalculateRenderRect(displayMode: BitmapDisplayMode.FitToWindowCentred);
-
-            if (originalDisplayRect != DisplayRect)
-            {
-                Invalidate();
-            }
+            virtualImageOnDisplay.FitToWindowCentred();
         }
 
 
@@ -321,9 +223,9 @@ namespace CDS.Imaging.WinForms
         {
             stopwatch.Restart();
 
-            var clippedRenderRect = DisplayRect;
+            var clippedRenderRect = virtualImageOnDisplay.PaintRect;
             clippedRenderRect.Intersect(ClientRectangle);
-            var shouldPaintBackground = DisplayRect.IsEmpty || (e.ClipRectangle != clippedRenderRect);
+            var shouldPaintBackground = virtualImageOnDisplay.PaintRect.IsEmpty || (e.ClipRectangle != clippedRenderRect);
             if (shouldPaintBackground)
             {
                 base.OnPaintBackground(e);
@@ -339,29 +241,35 @@ namespace CDS.Imaging.WinForms
         {
             stopwatch.Restart();
 
-            if (AnythingToDisplay)
+            if (IsDisplayingImage)
             {
-                var graphicsState = paintEventArgs.Graphics.Save();
-
-                paintEventArgs.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-                paintEventArgs.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-                paintEventArgs.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
-
-                paintEventArgs.Graphics.DrawImage(
-                    image: displayBitmap,
-                    rect: DisplayRect);
-
-                paintEventArgs.Graphics.Restore(graphicsState);
+                PaintBitmap(paintEventArgs);
             }
 
             PaintOver?.Invoke(
                 sender: this,
                 graphics: paintEventArgs.Graphics,
                 imageSize: (displayBitmap == null) ? Size.Empty : displayBitmap.Size,
-                renderRect: DisplayRect);
+                renderRect: virtualImageOnDisplay.PaintRect);
 
             stopwatch.Stop();
             TimingMetrics.ForegroundPaint = stopwatch.Elapsed;
+        }
+
+
+        private void PaintBitmap(PaintEventArgs paintEventArgs)
+        {
+            var graphicsState = paintEventArgs.Graphics.Save();
+
+            paintEventArgs.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            paintEventArgs.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+            paintEventArgs.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+
+            paintEventArgs.Graphics.DrawImage(
+                image: displayBitmap,
+                rect: virtualImageOnDisplay.PaintRect);
+
+            paintEventArgs.Graphics.Restore(graphicsState);
         }
 
 
@@ -369,12 +277,12 @@ namespace CDS.Imaging.WinForms
         {
             base.OnMouseWheel(mouseEventArgs);
 
-            if (AnythingToDisplay)
+            if (IsDisplayingImage)
             {
                 zoomManager.OnMouseWheel(
                     imageDisplayMode: Mode,
                     imageSize: displayBitmap.Size,
-                    renderRect: DisplayRect,
+                    renderRect: virtualImageOnDisplay.PaintRect,
                     mouseEventArgs: mouseEventArgs);
             }
         }
@@ -383,8 +291,7 @@ namespace CDS.Imaging.WinForms
         protected override void OnSizeChanged(EventArgs e)
         {
             base.OnSizeChanged(e);
-            RecalculateRenderRect(displayMode: this.mode);
-            Invalidate();
+            virtualImageOnDisplay.DisplaySize = ClientSize;
         }
 
 
@@ -392,7 +299,7 @@ namespace CDS.Imaging.WinForms
         {
             base.OnMouseMove(mouseEventArgs);
 
-            if (AnythingToDisplay)
+            if (IsDisplayingImage)
             {
                 dragManager.OnMouseMove(mouseEventArgs);
             }
@@ -403,12 +310,12 @@ namespace CDS.Imaging.WinForms
         {
             base.OnMouseDown(mouseEventArgs);
 
-            if (AnythingToDisplay)
+            if (IsDisplayingImage)
             {
                 dragManager.OnMouseDown(
                     Mode,
                     mouseEventArgs,
-                    DisplayRect);
+                    virtualImageOnDisplay.PaintRect);
             }
         }
 
@@ -417,12 +324,10 @@ namespace CDS.Imaging.WinForms
         {
             base.OnMouseUp(mouseEventArgs);
 
-            if (AnythingToDisplay)
+            if (IsDisplayingImage)
             {
                 dragManager.OnMouseUp(mouseEventArgs);
             }
         }
-
-        public bool IsDisplayingImage => AnythingToDisplay;
     }
 }

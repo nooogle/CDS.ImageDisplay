@@ -1,9 +1,6 @@
-using System;
+using FluentAssertions;
 using System.Drawing;
 using Xunit;
-using FluentAssertions;
-using System.Collections.Generic;
-using System.Collections;
 
 namespace CDS.Imaging.WinFormsTests
 {
@@ -32,52 +29,6 @@ namespace CDS.Imaging.WinFormsTests
             vid.PaintRect.Should().Be(new RectangleF(PointF.Empty, vid.DisplaySize));
         }
 
-
-        /// <summary>
-        /// A data provider for the <see cref="FitToWindow_Maximumise_DisplayArea(Size, Size, RectangleF)"/>
-        /// test. We need this because inline params for an xUnit Theory must be constant and we 
-        /// want to pass non-const Size and RectangleF data to the test
-        /// </summary>
-        public class FitToWindowSampleData : IEnumerable<object[]>
-        {
-            object[] SquareImageInLargeWideDisplay => new object[]
-            {
-                new Size(200, 200), // image size
-                new Size(1000, 500), // display size
-                new RectangleF(250, 0, 500, 500) // fit-to-window paint rect
-            };
-
-            object[] SquareImageInLargeTallDisplay => new object[]
-            {
-                new Size(200, 200), // image size
-                new Size(500, 1000), // display size
-                new RectangleF(0, 250, 500, 500) // fit-to-window paint rect
-            };
-
-            object[] SquareImageInSmallWideDisplay => new object[]
-            {
-                new Size(200, 200), // image size
-                new Size(100, 50), // display size
-                new RectangleF(25, 0, 50, 50) // fit-to-window paint rect
-            };
-
-            object[] SquareImageInSmallTallDisplay => new object[]
-            {
-                new Size(200, 200), // image size
-                new Size(50, 100), // display size
-                new RectangleF(0, 25, 50, 50) // fit-to-window paint rect
-            };
-
-            public IEnumerator<object[]> GetEnumerator()
-            {
-                yield return SquareImageInLargeWideDisplay;
-                yield return SquareImageInLargeTallDisplay;
-                yield return SquareImageInSmallWideDisplay;
-                yield return SquareImageInSmallTallDisplay;
-            }
-
-            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        }
 
 
         [Theory]
@@ -126,7 +77,7 @@ namespace CDS.Imaging.WinFormsTests
 
         [Theory]
         [InlineData(0, 0, 300, 400)]
-        public void DisplayLocation_FromImageLocation_Correct(float imageX, float imageY, float displayX, float displayY)
+        public void MapImageToDisplay_Returns_DisplayRect(float imageX, float imageY, float displayX, float displayY)
         {
             var vid = new WinForms.VirtualImageOnDisplay();
             vid.Mode = WinForms.BitmapDisplayMode.ActualSizeCentred;
@@ -136,7 +87,7 @@ namespace CDS.Imaging.WinFormsTests
             var imageLocation = new PointF(imageX, imageY);
             var expectedDisplayLocation = new PointF(displayX, displayY);
 
-            var actualDisplayLocation = vid.DisplayLocationFromImageLocation(imageLocation);
+            var actualDisplayLocation = vid.MapImageToDisplay(imageLocation);
 
             actualDisplayLocation.Should().Be(expectedDisplayLocation);
         }
@@ -144,7 +95,7 @@ namespace CDS.Imaging.WinFormsTests
 
         [Theory]
         [InlineData(0, 0, 300, 400)]
-        public void ImageLocation_FromDisplayLocation_Correct(float imageX, float imageY, float displayX, float displayY)
+        public void MapDisplayToImage_Returns_ImageRect(float imageX, float imageY, float displayX, float displayY)
         {
             var vid = new WinForms.VirtualImageOnDisplay();
             vid.Mode = WinForms.BitmapDisplayMode.ActualSizeCentred;
@@ -154,7 +105,7 @@ namespace CDS.Imaging.WinFormsTests
             var expectedImageLocation = new PointF(imageX, imageY);
             var displayLocation = new PointF(displayX, displayY);
 
-            var actualImageLocation = vid.ImageLocationFromDisplayLocation(displayLocation);
+            var actualImageLocation = vid.MapDisplayToImage(displayLocation);
 
             actualImageLocation.Should().Be(expectedImageLocation);
         }
