@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Humanizer;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -32,12 +33,14 @@ namespace CDS.Imaging.Demo
         private void bitmapDisplay_PaintOver(WinForms.BitmapDisplay sender, Graphics graphics, Size imageSize, RectangleF renderRect)
         {
             var info = new StringBuilder();
-            info.Append($"Display mode      {sender.CDS.Mode}\n");
-            info.Append($"Size              {sender.CDS.Image.Size}\n");
-            info.Append($"Format            {sender.CDS.Image.PixelFormat}\n");
-            info.Append($"Set image         {sender.CDS.TimingMetrics.SetImage.TotalMilliseconds:0.0}ms\n");
-            info.Append($"Paint foreground  {sender.CDS.TimingMetrics.ForegroundPaint.TotalMilliseconds:0.0}ms\n");
-            info.Append($"Paint background  {sender.CDS.TimingMetrics.BackgroundPaint.TotalMilliseconds:0.0}ms\n");
+            info.Append($"Display mode      {sender.CDS.Mode.Humanize()}\n");
+            info.Append($"Display size      {sender.ClientSize}\n");
+            info.Append($"Bitmap size       {sender.CDS.Image.Size}\n");
+            info.Append($"Paint rect        {sender.CDS.PaintRect}\n");
+            info.Append($"Format            {sender.CDS.Image.PixelFormat.Humanize()}\n");
+            info.Append($"Set image         {sender.CDS.TimingMetrics.SetImage.Humanize()}\n");
+            info.Append($"Paint foreground  {sender.CDS.TimingMetrics.ForegroundPaint.Humanize()}\n");
+            info.Append($"Paint background  {sender.CDS.TimingMetrics.BackgroundPaint.Humanize()}\n");
 
             var textTopleft = new PointF(panelControlBox.Left, panelControlBox.Bottom + 10);
             var textBlockSize = graphics.MeasureString(info.ToString(), fixedWidthFont);
@@ -55,7 +58,7 @@ namespace CDS.Imaging.Demo
                 Brushes.Navy, 
                 textTopleft);
 
-            var topLeftBox = sender.CDS.MapImageToDisplay(new RectangleF(0, 0, 10, 5)).Value;
+            var topLeftBox = sender.CDS.MapImageToDisplay(new RectangleF(0, 0, 10, 5));
             graphics.DrawRectangle(Pens.Red, topLeftBox.X, topLeftBox.Y, topLeftBox.Width, topLeftBox.Height);
 
             graphics.DrawString(

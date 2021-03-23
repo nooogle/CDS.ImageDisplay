@@ -7,26 +7,25 @@ namespace CDS.Imaging.WinForms.BitmapDisplayControl
     internal class DragManager
     {
         Point dragStartLocation;
-        RectangleF initialRenderRect;
-        Action<RectangleF> SetNewRenderRect;
+        PointF initialTargetDisplayCentre;
+        Action<PointF> SetTargetDisplayCentre;
 
 
         public bool IsDragging { get; private set; }
 
 
-        public DragManager(Action<RectangleF> setNewRenderRect)
+        public DragManager(Action<PointF> setTargetDisplayCentre)
         {
-            SetNewRenderRect = setNewRenderRect;
+            SetTargetDisplayCentre = setTargetDisplayCentre;
         }
 
-        public void OnMouseDown(BitmapDisplayMode imageDisplayMode, MouseEventArgs mouseEventArgs, RectangleF renderRect)
+        public void OnMouseDown(BitmapDisplayMode imageDisplayMode, MouseEventArgs mouseEventArgs, PointF currentTargetDisplayCentre)
         {
             if (!IsDragging && (imageDisplayMode == BitmapDisplayMode.Free))
             {
                 dragStartLocation = mouseEventArgs.Location;
                 IsDragging = true;
-                initialRenderRect = renderRect;
-                System.Diagnostics.Debug.WriteLine("Dragging");
+                initialTargetDisplayCentre = currentTargetDisplayCentre;
             }
         }
 
@@ -36,7 +35,6 @@ namespace CDS.Imaging.WinForms.BitmapDisplayControl
             if (IsDragging)
             {
                 IsDragging = false;
-                System.Diagnostics.Debug.WriteLine("Dragging complete");
             }
         }
 
@@ -44,13 +42,14 @@ namespace CDS.Imaging.WinForms.BitmapDisplayControl
         {
             if (!IsDragging) { return; }
 
-            var dragVector = new Point(
-                x: mouseEventArgs.Location.X - dragStartLocation.X,
-                y: mouseEventArgs.Location.Y - dragStartLocation.Y);
+            var xDrag = mouseEventArgs.Location.X - dragStartLocation.X;
+            var yDrag = mouseEventArgs.Location.Y - dragStartLocation.Y;
 
-            var newRenderRect = initialRenderRect;
-            newRenderRect.Offset(dragVector);
-            SetNewRenderRect(newRenderRect);
+            var newTargetDisplayCentre = new PointF(
+                x: initialTargetDisplayCentre.X + xDrag,
+                y: initialTargetDisplayCentre.Y + yDrag);
+
+            SetTargetDisplayCentre(newTargetDisplayCentre);
         }
     }
 }

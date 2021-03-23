@@ -38,14 +38,16 @@ namespace CDS.Imaging.WinFormsTests
             var vid = new WinForms.VirtualImageOnDisplay();
             vid.DisplaySize = displaySize;
             vid.ImageSize = imageSize;
-            vid.Mode = WinForms.BitmapDisplayMode.FitToWindowCentred;
 
-            vid.PaintRect.Should().Be(paintRect);
+            vid.PaintRect.X.Should().BeApproximately(paintRect.X, 0.01f);
+            vid.PaintRect.Y.Should().BeApproximately(paintRect.Y, 0.01f);
+            vid.PaintRect.Width.Should().BeApproximately(paintRect.Width, 0.01f);
+            vid.PaintRect.Height.Should().BeApproximately(paintRect.Height, 0.01f);
         }
 
 
         [Fact]
-        public void MovePaintRect_Changes_Location()
+        public void ChangeTargetImageCentre_MovePaintRect()
         {
             var vid = new WinForms.VirtualImageOnDisplay();
             vid.Mode = WinForms.BitmapDisplayMode.FitToWindowCentred;
@@ -53,25 +55,27 @@ namespace CDS.Imaging.WinFormsTests
             vid.ImageSize = new Size(200, 200);
 
             vid.Mode = WinForms.BitmapDisplayMode.Free;
-            var newLocation = new PointF(123, 456);
-            vid.MovePaintRect(newLocation);
-            vid.PaintRect.Location.Should().Be(newLocation);
+            vid.TargetImageCentre = Point.Empty;
+            vid.PaintRect.Location.Should().Be(new PointF(500, 500));
         }
 
 
         [Fact]
-        public void CentreNonCentredRect_MovesTo_Centre()
+        public void DefaultInitialisation_ModeIs_FitToWindow()
         {
             var vid = new WinForms.VirtualImageOnDisplay();
-            vid.Mode = WinForms.BitmapDisplayMode.FitToWindowCentred;
-            vid.DisplaySize = new Size(1000, 1000);
-            vid.ImageSize = new Size(200, 200);
-            var fitToWindowRect = vid.PaintRect;
+            vid.Mode.Should().Be(WinForms.BitmapDisplayMode.FitToWindowCentred);
+        }
 
-            vid.Mode = WinForms.BitmapDisplayMode.Free;
-            vid.MovePaintRect(new PointF(123, 456));
-            vid.Centre();
-            vid.PaintRect.Should().Be(fitToWindowRect);
+
+        [Fact]
+        public void DefaultInitialisation_FitsToDisplay()
+        {
+            var vid = new WinForms.VirtualImageOnDisplay();
+            vid.DisplaySize = new Size(1000, 1000);
+            vid.ImageSize = new Size(100, 100);
+
+            vid.PaintRect.Should().Be(new RectangleF(0, 0, 1000, 1000));
         }
 
 

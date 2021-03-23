@@ -39,12 +39,24 @@ namespace CDS.Imaging.WinFormsTests
                 new RectangleF(0, 25, 50, 50) // fit-to-window paint rect
         };
 
+        /// <summary>
+        /// There was a bug with this image and display, y was going to -0.5
+        /// </summary>
+        object[] RealWorldWasMiscalculated => new object[]
+        {
+            new Size(5518, 3104), // image size
+            new Size(2560, 1417), // display size
+            new RectangleF(20.5f, 0, 2519, 1417) // fit-to-window paint rect
+        };
+
+
         public IEnumerator<object[]> GetEnumerator()
         {
             yield return SquareImageInLargeWideDisplay;
             yield return SquareImageInLargeTallDisplay;
             yield return SquareImageInSmallWideDisplay;
             yield return SquareImageInSmallTallDisplay;
+            yield return RealWorldWasMiscalculated;
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

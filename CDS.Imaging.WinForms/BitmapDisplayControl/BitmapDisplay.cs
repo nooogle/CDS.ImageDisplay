@@ -17,6 +17,7 @@ namespace CDS.Imaging.WinForms
 
         public BitmapDisplayMetrics TimingMetrics { get; } = new BitmapDisplayMetrics();
 
+        public RectangleF PaintRect => virtualImageOnDisplay.PaintRect;
 
         public event PaintOverEvent PaintOver;
 
@@ -40,10 +41,24 @@ namespace CDS.Imaging.WinForms
             SetStyle(ControlStyles.UserPaint, true);
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
-            dragManager = new BitmapDisplayControl.DragManager(SetNewRenderRect);
-            zoomManager = new BitmapDisplayControl.ZoomManager(SetNewRenderRect);
+            dragManager = new BitmapDisplayControl.DragManager(DragManager_SetNewTargetDisplayCentre);
+            zoomManager = new BitmapDisplayControl.ZoomManager(ZoomManager_SetNewZoom);
 
             virtualImageOnDisplay.OnPaintRectChanged += VirtualImageOnDisplay_OnPaintRectChanged;
+        }
+
+
+        private void DragManager_SetNewTargetDisplayCentre(PointF targetDisplayCentre)
+        {
+            virtualImageOnDisplay.TargetDisplayCentre = targetDisplayCentre;
+        }
+
+
+        private void ZoomManager_SetNewZoom(float zoom, PointF targetDisplayCentre, PointF targetImageCentre)
+        {
+            virtualImageOnDisplay.Zoom = zoom;
+            virtualImageOnDisplay.TargetDisplayCentre = targetDisplayCentre;
+            virtualImageOnDisplay.TargetImageCentre = targetImageCentre;
         }
 
 
@@ -168,30 +183,24 @@ namespace CDS.Imaging.WinForms
         }
 
 
-        private void SetNewRenderRect(RectangleF newRenderRect)
-        {
-            virtualImageOnDisplay.PaintRect = newRenderRect;
-        }
-
-
-        public PointF? MapImageToDisplay(PointF imageLocation)
+        public PointF MapImageToDisplay(PointF imageLocation)
         {
             return virtualImageOnDisplay.MapImageToDisplay(imageLocation);
         }
 
-        public RectangleF? MapImageToDisplay(RectangleF imageRect)
+        public RectangleF MapImageToDisplay(RectangleF imageRect)
         {
             return virtualImageOnDisplay.MapImageToDisplay(imageRect);
         }
 
 
-        public PointF? MapDisplayToImage(PointF displayLocation)
+        public PointF MapDisplayToImage(PointF displayLocation)
         {
             return virtualImageOnDisplay.MapDisplayToImage(displayLocation);
         }
 
         
-        public RectangleF? MapDisplayToImage(RectangleF displayRect)
+        public RectangleF MapDisplayToImage(RectangleF displayRect)
         {
             return virtualImageOnDisplay.MapDisplayToImage(displayRect);
         }
@@ -279,10 +288,14 @@ namespace CDS.Imaging.WinForms
 
             if (IsDisplayingImage)
             {
+                var mouseLocationInDisplayUnits = mouseEventArgs.Location;
+                var mouseLocationInImageUnits = MapDisplayToImage(mouseLocationInDisplayUnits);
+
                 zoomManager.OnMouseWheel(
                     imageDisplayMode: Mode,
-                    imageSize: displayBitmap.Size,
-                    renderRect: virtualImageOnDisplay.PaintRect,
+                    currentZoom: virtualImageOnDisplay.Zoom,
+                    mouseLocationInDisplayUnits: mouseLocationInDisplayUnits,
+                    mouseLocationInImageUnits: mouseLocationInImageUnits,
                     mouseEventArgs: mouseEventArgs);
             }
         }
@@ -313,9 +326,9 @@ namespace CDS.Imaging.WinForms
             if (IsDisplayingImage)
             {
                 dragManager.OnMouseDown(
-                    Mode,
-                    mouseEventArgs,
-                    virtualImageOnDisplay.PaintRect);
+                    imageDisplayMode: Mode,
+                    mouseEventArgs: mouseEventArgs,
+                    currentTargetDisplayCentre: virtualImageOnDisplay.TargetDisplayCentre);
             }
         }
 
