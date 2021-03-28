@@ -26,23 +26,36 @@ namespace CDS.Imaging.Demo
 
         private void FormBitmapDisplay_Load(object sender, EventArgs e)
         {
-            bitmapDisplay.SetImage(Properties.Resources.Budapest_8U1C);
-            bitmapDisplay.CDS.Mode = WinForms.BitmapDisplayMode.Free;
+            menuImageBuiltIn.Items.Add(new ImageNameAndResource("Budapest", Properties.Resources.Budapest_8U1C));
+            menuImageBuiltIn.Items.Add(new ImageNameAndResource("16*16", Properties.Resources._16x16_24_bit));
+            menuImageBuiltIn.Items.Add(new ImageNameAndResource("1*1", Properties.Resources._1x1_24_bit));
+            menuImageBuiltIn.Items.Add(new ImageNameAndResource("Alpha-channel", Properties.Resources.AlphaEdge));
+            menuImageBuiltIn.SelectedIndex = 0;
+
+            UpdateCommandEnablement();
         }
+
 
         private void bitmapDisplay_PaintOver(WinForms.BitmapDisplay sender, Graphics graphics, Size imageSize, RectangleF renderRect)
         {
             var info = new StringBuilder();
             info.Append($"Display mode      {sender.CDS.Mode.Humanize()}\n");
             info.Append($"Display size      {sender.ClientSize}\n");
-            info.Append($"Bitmap size       {sender.CDS.Image.Size}\n");
-            info.Append($"Paint rect        {sender.CDS.PaintRect}\n");
-            info.Append($"Format            {sender.CDS.Image.PixelFormat.Humanize()}\n");
+            if (!sender.CDS.AnythingToDisplay)
+            {
+                info.Append($"Image not loaded\n");
+            }
+            else
+            {
+                info.Append($"Bitmap size       {sender.CDS.Image.Size}\n");
+                info.Append($"Paint rect        {sender.CDS.PaintRect}\n");
+                info.Append($"Format            {sender.CDS.Image.PixelFormat.Humanize()}\n");
+            }
             info.Append($"Set image         {sender.CDS.TimingMetrics.SetImage.Humanize()}\n");
             info.Append($"Paint foreground  {sender.CDS.TimingMetrics.ForegroundPaint.Humanize()}\n");
             info.Append($"Paint background  {sender.CDS.TimingMetrics.BackgroundPaint.Humanize()}\n");
 
-            var textTopleft = new PointF(panelControlBox.Left, panelControlBox.Bottom + 10);
+            var textTopleft = new PointF(12, 12);
             var textBlockSize = graphics.MeasureString(info.ToString(), fixedWidthFont);
 
             var bkRect = new RectangleF(
@@ -68,63 +81,77 @@ namespace CDS.Imaging.Demo
                 new PointF(topLeftBox.X, topLeftBox.Y));
         }
 
-        private void rbtnDisplayModeFree_CheckedChanged(object sender, EventArgs e)
+        private void menuDisplayModeFree_Click(object sender, EventArgs e)
         {
-            if(rbtnDisplayModeFree.Checked)
-            {
-                bitmapDisplay.CDS.Mode = WinForms.BitmapDisplayMode.Free;
-                UpdateCommandEnablement();
-            }
+            bitmapDisplay.CDS.Mode = WinForms.BitmapDisplayMode.Free;
+            UpdateCommandEnablement();
         }
 
         private void UpdateCommandEnablement()
         {
+            menuDisplayCentre.Enabled = (bitmapDisplay.CDS.Mode == WinForms.BitmapDisplayMode.Free);
         }
 
-        private void btnFitToWindow_Click(object sender, EventArgs e)
+        private void menuDisplayModeFitToWindow_Click(object sender, EventArgs e)
         {
-            rbtnDisplayModeFree.Checked = true;
-            bitmapDisplay.CDS.FitToWindowCentred();
+            bitmapDisplay.CDS.Mode = WinForms.BitmapDisplayMode.FitToWindowCentred;
+            UpdateCommandEnablement();
         }
 
-
-        private void btnActualSize_Click(object sender, EventArgs e)
+        private void menuDisplayModeActualSize_Click(object sender, EventArgs e)
         {
-            rbtnDisplayModeFree.Checked = true;
-            bitmapDisplay.CDS.ActualSizeCentred();
+            bitmapDisplay.CDS.Mode = WinForms.BitmapDisplayMode.ActualSizeCentred;
+            UpdateCommandEnablement();
         }
 
-        private void rbtnDisplayModeFitToWindow_CheckedChanged(object sender, EventArgs e)
+        private void menuDisplayModeLocked_Click(object sender, EventArgs e)
         {
-            if(rbtnDisplayModeFitToWindow.Checked)
-            {
-                bitmapDisplay.CDS.Mode = WinForms.BitmapDisplayMode.FitToWindowCentred;
-                UpdateCommandEnablement();
-            }
+            bitmapDisplay.CDS.Mode = WinForms.BitmapDisplayMode.Locked;
+            UpdateCommandEnablement();
         }
 
-        private void rbtnDisplayModeActualSize_CheckedChanged(object sender, EventArgs e)
+        private void menuDisplayCentre_Click(object sender, EventArgs e)
         {
-            if (rbtnDisplayModeActualSize.Checked)
-            {
-                bitmapDisplay.CDS.Mode = WinForms.BitmapDisplayMode.ActualSizeCentred;
-                UpdateCommandEnablement();
-            }
-        }
-
-        private void rbtnDisplayModeLocked_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbtnDisplayModeLocked.Checked)
-            {
-                bitmapDisplay.CDS.Mode = WinForms.BitmapDisplayMode.Locked;
-                UpdateCommandEnablement();
-            }
-        }
-
-        private void btnCentre_Click(object sender, EventArgs e)
-        {
-            rbtnDisplayModeFree.Checked = true;
             bitmapDisplay.CDS.Centre();
+        }
+
+
+        private void MenuImageBuiltIn_SelectedIndexChanged(object sender, System.EventArgs e)
+        {
+            var imageNameAndResource = menuImageBuiltIn.SelectedItem as ImageNameAndResource;
+            bitmapDisplay.SetImage(imageNameAndResource.Bitmap);
+        }
+
+
+        private void bitmapDisplay_PaintUnder(WinForms.BitmapDisplay sender, Graphics graphics, Size imageSize, RectangleF renderRect)
+        {
+            if(renderRect.IsEmpty) { return; }
+
+            graphics.DrawLine(
+                Pens.Navy, 
+                renderRect.Location, 
+                new PointF(renderRect.Right - 1, renderRect.Bottom - 1));
+
+            graphics.DrawLine(
+                Pens.Navy, 
+                new PointF(renderRect.Right - 1, renderRect.Top), 
+                new PointF(renderRect.Left, renderRect.Bottom - 1));
+        }
+
+
+        private void MenuImageExit_Click(object sender, System.EventArgs e)
+        {
+            Close();
+        }
+
+        private void MenuImageOpen_Click(object sender, System.EventArgs e)
+        {
+
+        }
+
+        private void bitmapDisplay_DisplayModeChanged(WinForms.BitmapDisplay sender, WinForms.BitmapDisplayModeEventArgs modeChangedArgs)
+        {
+            UpdateCommandEnablement();
         }
     }
 }

@@ -139,6 +139,7 @@ namespace CDS.Imaging.WinForms
                     break;
 
                 default:
+                    RecalculatePaintRect();
                     break;
             }
         }

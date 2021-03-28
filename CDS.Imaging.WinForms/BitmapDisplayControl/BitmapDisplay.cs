@@ -20,17 +20,27 @@ namespace CDS.Imaging.WinForms
         public RectangleF PaintRect => virtualImageOnDisplay.PaintRect;
 
         public event PaintOverEvent PaintOver;
+        public event PaintUnderEvent PaintUnder;
+        public event ModeEventHandler DisplayModeChanged;
 
         public Image Image => displayBitmap;
 
 
-        public bool IsDisplayingImage => virtualImageOnDisplay.AnythingToDisplay;
+        public bool AnythingToDisplay => virtualImageOnDisplay.AnythingToDisplay;
 
 
         public BitmapDisplayMode Mode
         {
             get => virtualImageOnDisplay.Mode;
-            set => virtualImageOnDisplay.Mode = value;
+            set
+            {
+                if (virtualImageOnDisplay.Mode != value)
+                {
+                    virtualImageOnDisplay.Mode = value;
+                    var eventArgs = new BitmapDisplayModeEventArgs(value);
+                    DisplayModeChanged?.Invoke(this, eventArgs);
+                }
+            }
         }
 
 
@@ -206,26 +216,11 @@ namespace CDS.Imaging.WinForms
         }
 
 
-        /// <summary>
-        /// Centre the image and set to 1:1 zoom. Only applies if the 
-        /// mode is <see cref="BitmapDisplayMode.Free"/>, otherwise does 
-        /// nothing.
-        /// </summary>
-        public void ActualSizeCentred()
-        {
-            virtualImageOnDisplay.ActualSizeCentred();
-        }
-
         public void Centre()
         {
             virtualImageOnDisplay.Centre();
         }
 
-
-        public void FitToWindowCentred()
-        {
-            virtualImageOnDisplay.FitToWindowCentred();
-        }
 
 
         protected override void OnPaintBackground(PaintEventArgs e)
@@ -250,7 +245,13 @@ namespace CDS.Imaging.WinForms
         {
             stopwatch.Restart();
 
-            if (IsDisplayingImage)
+            PaintUnder?.Invoke(
+                sender: this,
+                graphics: paintEventArgs.Graphics,
+                imageSize: (displayBitmap == null) ? Size.Empty : displayBitmap.Size,
+                renderRect: virtualImageOnDisplay.PaintRect);
+
+            if (AnythingToDisplay)
             {
                 PaintBitmap(paintEventArgs);
             }
@@ -286,7 +287,7 @@ namespace CDS.Imaging.WinForms
         {
             base.OnMouseWheel(mouseEventArgs);
 
-            if (IsDisplayingImage)
+            if (AnythingToDisplay)
             {
                 var mouseLocationInDisplayUnits = mouseEventArgs.Location;
                 var mouseLocationInImageUnits = MapDisplayToImage(mouseLocationInDisplayUnits);
@@ -312,7 +313,7 @@ namespace CDS.Imaging.WinForms
         {
             base.OnMouseMove(mouseEventArgs);
 
-            if (IsDisplayingImage)
+            if (AnythingToDisplay)
             {
                 dragManager.OnMouseMove(mouseEventArgs);
             }
@@ -323,7 +324,7 @@ namespace CDS.Imaging.WinForms
         {
             base.OnMouseDown(mouseEventArgs);
 
-            if (IsDisplayingImage)
+            if (AnythingToDisplay)
             {
                 dragManager.OnMouseDown(
                     imageDisplayMode: Mode,
@@ -337,7 +338,7 @@ namespace CDS.Imaging.WinForms
         {
             base.OnMouseUp(mouseEventArgs);
 
-            if (IsDisplayingImage)
+            if (AnythingToDisplay)
             {
                 dragManager.OnMouseUp(mouseEventArgs);
             }

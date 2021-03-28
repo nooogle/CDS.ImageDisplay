@@ -63,6 +63,36 @@ namespace CDS.Imaging.Demo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _16x16_24_bit {
+            get {
+                object obj = ResourceManager.GetObject("_16x16_24_bit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap _1x1_24_bit {
+            get {
+                object obj = ResourceManager.GetObject("_1x1_24_bit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap AlphaEdge {
+            get {
+                object obj = ResourceManager.GetObject("AlphaEdge", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Budapest_8U1C {
             get {
                 object obj = ResourceManager.GetObject("Budapest_8U1C", resourceCulture);

@@ -113,5 +113,83 @@ namespace CDS.Imaging.WinFormsTests
 
             actualImageLocation.Should().Be(expectedImageLocation);
         }
+
+
+        [Fact]
+        public void ChangeImageSizeInFitToWindowMode_Resizes_ToFitWindow()
+        {
+            var vid = new WinForms.VirtualImageOnDisplay();
+            vid.Mode = WinForms.BitmapDisplayMode.FitToWindowCentred;
+            vid.DisplaySize = new Size(2000, 1000);
+            vid.ImageSize = new Size(200, 200);
+
+            vid.ImageSize = new Size(100, 1000);
+            vid.PaintRect.X.Should().BeApproximately(950, 0.01f);
+            vid.PaintRect.Y.Should().BeApproximately(0, 0.01f);
+            vid.PaintRect.Width.Should().BeApproximately(100, 0.01f);
+            vid.PaintRect.Height.Should().BeApproximately(1000, 0.01f);
+        }
+
+
+
+        [Fact]
+        public void FreshImage_InFreeMode_HasZoom1()
+        {
+            var vid = new WinForms.VirtualImageOnDisplay();
+            vid.Mode = WinForms.BitmapDisplayMode.Free;
+            vid.DisplaySize = new Size(2000, 1000);
+            vid.ImageSize = new Size(200, 200);
+
+            vid.Zoom.Should().BeApproximately(1, 0.00001f);
+        }
+
+
+        [Fact]
+        public void FreshImage_InFreeMode_IsCentred()
+        {
+            var vid = new WinForms.VirtualImageOnDisplay();
+            vid.Mode = WinForms.BitmapDisplayMode.Free;
+            vid.DisplaySize = new Size(2000, 1000);
+            vid.ImageSize = new Size(200, 200);
+
+            var expectedPaintRect = new RectangleF(900, 400, 200, 200);
+            CheckRectagleFIsExpected(vid.PaintRect, expectedPaintRect, 0.0001f);
+        }
+
+
+        [Fact]
+        public void ChangeImageSizeInFreeMode_Leaves_ZoomUnchanged()
+        {
+            var vid = new WinForms.VirtualImageOnDisplay();
+            vid.Mode = WinForms.BitmapDisplayMode.Free;
+            vid.DisplaySize = new Size(2000, 1000);
+            vid.ImageSize = new Size(200, 200);
+
+            vid.ImageSize = new Size(300, 100);
+            vid.Zoom.Should().BeApproximately(1, 0.0001f);
+        }
+
+
+        [Fact]
+        public void ChangeImageSizeInFreeMode_Leaves_CentresUnchanged()
+        {
+            var vid = new WinForms.VirtualImageOnDisplay();
+            vid.Mode = WinForms.BitmapDisplayMode.FitToWindowCentred;
+            vid.DisplaySize = new Size(2000, 1000);
+            vid.ImageSize = new Size(200, 200);
+
+            vid.ImageSize = new Size(100, 1000);
+            var expectedPaintRect = new RectangleF(950, 0, 100, 1000);
+            CheckRectagleFIsExpected(vid.PaintRect, expectedPaintRect, 0.0001f);
+        }
+
+
+        private static void CheckRectagleFIsExpected(RectangleF actual, RectangleF expected, float precision)
+        {
+            actual.X.Should().BeApproximately(expected.X, precision);
+            actual.Y.Should().BeApproximately(expected.Y, precision);
+            actual.Width.Should().BeApproximately(expected.Width, precision);
+            actual.Height.Should().BeApproximately(expected.Height, precision);
+        }
     }
 }
