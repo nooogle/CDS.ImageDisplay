@@ -6,11 +6,19 @@ namespace CDS.Imaging.WinForms.BitmapDisplayControl
 {
     internal class ZoomManager
     {
+        private float minZoom;
+        private float maxZoom;
+
         Action<float, PointF, PointF> SetNewZoom;
 
 
-        public ZoomManager(Action<float, PointF, PointF> setNewZoom)
+        public ZoomManager(
+            Action<float, PointF, PointF> setNewZoom,
+            float minZoom,
+            float maxZoom)
         {
+            this.minZoom = minZoom;
+            this.maxZoom = maxZoom;
             SetNewZoom = setNewZoom;
         }
 
@@ -39,6 +47,6 @@ namespace CDS.Imaging.WinForms.BitmapDisplayControl
             }
         }
 
-        private float ClipZoom(float zoom) => Math.Max(0.01f, Math.Min(100, zoom));
+        private float ClipZoom(float zoom) => Math.Max(minZoom, Math.Min(maxZoom, zoom));
     }
 }

@@ -29,6 +29,8 @@ namespace CDS.Imaging.Demo
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBitmapDisplay));
             this.bitmapDisplay = new CDS.Imaging.WinForms.BitmapDisplay();
             this.menu = new System.Windows.Forms.MenuStrip();
             this.menuImage = new System.Windows.Forms.ToolStripMenuItem();
@@ -37,8 +39,8 @@ namespace CDS.Imaging.Demo
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuImageExit = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDisplay = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuDisplayFitToWindow = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuDisplayActualSize = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuDisplayModeFitToWindow = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuDisplayModeActualSize = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDisplayModeFree = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDisplayModeLocked = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -47,6 +49,8 @@ namespace CDS.Imaging.Demo
             this.menuDisplayZoomReset = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDisplayZoomIn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDisplayZoomOut = new System.Windows.Forms.ToolStripMenuItem();
+            this.openImageDialog = new System.Windows.Forms.OpenFileDialog();
+            this.crossHair1 = new CDS.Imaging.WinForms.Shapes.CrossHair(this.components);
             this.menu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -54,6 +58,7 @@ namespace CDS.Imaging.Demo
             // 
             this.bitmapDisplay.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
             this.bitmapDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.bitmapDisplay.ImageDisplayCentre = ((System.Drawing.PointF)(resources.GetObject("bitmapDisplay.ImageDisplayCentre")));
             this.bitmapDisplay.Location = new System.Drawing.Point(0, 24);
             this.bitmapDisplay.Mode = CDS.Imaging.WinForms.BitmapDisplayMode.FitToWindowCentred;
             this.bitmapDisplay.Name = "bitmapDisplay";
@@ -114,8 +119,8 @@ namespace CDS.Imaging.Demo
             // menuDisplay
             // 
             this.menuDisplay.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuDisplayFitToWindow,
-            this.menuDisplayActualSize,
+            this.menuDisplayModeFitToWindow,
+            this.menuDisplayModeActualSize,
             this.menuDisplayModeFree,
             this.menuDisplayModeLocked,
             this.toolStripSeparator3,
@@ -128,19 +133,19 @@ namespace CDS.Imaging.Demo
             this.menuDisplay.Size = new System.Drawing.Size(57, 20);
             this.menuDisplay.Text = "Display";
             // 
-            // menuDisplayFitToWindow
+            // menuDisplayModeFitToWindow
             // 
-            this.menuDisplayFitToWindow.Name = "menuDisplayFitToWindow";
-            this.menuDisplayFitToWindow.Size = new System.Drawing.Size(181, 22);
-            this.menuDisplayFitToWindow.Text = "Fit to window";
-            this.menuDisplayFitToWindow.Click += new System.EventHandler(this.menuDisplayModeFitToWindow_Click);
+            this.menuDisplayModeFitToWindow.Name = "menuDisplayModeFitToWindow";
+            this.menuDisplayModeFitToWindow.Size = new System.Drawing.Size(181, 22);
+            this.menuDisplayModeFitToWindow.Text = "Fit to window";
+            this.menuDisplayModeFitToWindow.Click += new System.EventHandler(this.menuDisplayModeFitToWindow_Click);
             // 
-            // menuDisplayActualSize
+            // menuDisplayModeActualSize
             // 
-            this.menuDisplayActualSize.Name = "menuDisplayActualSize";
-            this.menuDisplayActualSize.Size = new System.Drawing.Size(181, 22);
-            this.menuDisplayActualSize.Text = "Actual size (centred)";
-            this.menuDisplayActualSize.Click += new System.EventHandler(this.menuDisplayModeActualSize_Click);
+            this.menuDisplayModeActualSize.Name = "menuDisplayModeActualSize";
+            this.menuDisplayModeActualSize.Size = new System.Drawing.Size(181, 22);
+            this.menuDisplayModeActualSize.Text = "Actual size (centred)";
+            this.menuDisplayModeActualSize.Click += new System.EventHandler(this.menuDisplayModeActualSize_Click);
             // 
             // menuDisplayModeFree
             // 
@@ -178,18 +183,46 @@ namespace CDS.Imaging.Demo
             this.menuDisplayZoomReset.Name = "menuDisplayZoomReset";
             this.menuDisplayZoomReset.Size = new System.Drawing.Size(181, 22);
             this.menuDisplayZoomReset.Text = "Zoom 1:1";
+            this.menuDisplayZoomReset.Click += new System.EventHandler(this.menuDisplayZoomReset_Click);
             // 
             // menuDisplayZoomIn
             // 
             this.menuDisplayZoomIn.Name = "menuDisplayZoomIn";
             this.menuDisplayZoomIn.Size = new System.Drawing.Size(181, 22);
             this.menuDisplayZoomIn.Text = "Zoom in";
+            this.menuDisplayZoomIn.Click += new System.EventHandler(this.menuDisplayZoomIn_Click);
             // 
             // menuDisplayZoomOut
             // 
             this.menuDisplayZoomOut.Name = "menuDisplayZoomOut";
             this.menuDisplayZoomOut.Size = new System.Drawing.Size(181, 22);
             this.menuDisplayZoomOut.Text = "Zoom out";
+            this.menuDisplayZoomOut.Click += new System.EventHandler(this.menuDisplayZoomOut_Click);
+            // 
+            // openImageDialog
+            // 
+            this.openImageDialog.Filter = "Bitmaps|*.bmp|JPEGs|*.jpg|TIFFs|*.tif|PNGs|*.png";
+            // 
+            // crossHair1
+            // 
+            this.crossHair1.CentreGap = 3F;
+            this.crossHair1.Diameter = 20F;
+            // 
+            // 
+            // 
+            this.crossHair1.EllipsePen.Color = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(0)))));
+            this.crossHair1.EllipsePen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            this.crossHair1.EllipsePen.EndCap = System.Drawing.Drawing2D.LineCap.Flat;
+            this.crossHair1.EllipsePen.StartCap = System.Drawing.Drawing2D.LineCap.Flat;
+            this.crossHair1.EllipsePen.Width = 3F;
+            // 
+            // 
+            // 
+            this.crossHair1.LinePen.Color = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(0)))));
+            this.crossHair1.LinePen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            this.crossHair1.LinePen.EndCap = System.Drawing.Drawing2D.LineCap.Flat;
+            this.crossHair1.LinePen.StartCap = System.Drawing.Drawing2D.LineCap.Flat;
+            this.crossHair1.LinePen.Width = 2F;
             // 
             // FormBitmapDisplay
             // 
@@ -220,8 +253,8 @@ namespace CDS.Imaging.Demo
         private System.Windows.Forms.ToolStripMenuItem menuImageExit;
         private System.Windows.Forms.ToolStripMenuItem menuDisplay;
         private System.Windows.Forms.ToolStripComboBox menuImageBuiltIn;
-        private System.Windows.Forms.ToolStripMenuItem menuDisplayFitToWindow;
-        private System.Windows.Forms.ToolStripMenuItem menuDisplayActualSize;
+        private System.Windows.Forms.ToolStripMenuItem menuDisplayModeFitToWindow;
+        private System.Windows.Forms.ToolStripMenuItem menuDisplayModeActualSize;
         private System.Windows.Forms.ToolStripMenuItem menuDisplayModeFree;
         private System.Windows.Forms.ToolStripMenuItem menuDisplayModeLocked;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
@@ -230,6 +263,8 @@ namespace CDS.Imaging.Demo
         private System.Windows.Forms.ToolStripMenuItem menuDisplayZoomReset;
         private System.Windows.Forms.ToolStripMenuItem menuDisplayZoomIn;
         private System.Windows.Forms.ToolStripMenuItem menuDisplayZoomOut;
+        private System.Windows.Forms.OpenFileDialog openImageDialog;
+        private WinForms.Shapes.CrossHair crossHair1;
     }
 }
 

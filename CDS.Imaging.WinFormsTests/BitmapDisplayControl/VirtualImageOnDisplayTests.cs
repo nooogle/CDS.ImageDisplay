@@ -9,7 +9,7 @@ namespace CDS.Imaging.WinFormsTests
         [Fact]
         public void FitToWindowMode_ImageSameSizeAsDisplay_FillsDisplayExactly()
         {
-            var vid = new WinForms.VirtualImageOnDisplay();
+            var vid = new WinForms.VirtualImageOnDisplay(onPaintRectChanged: (_, _) => { });
             vid.DisplaySize = new Size(1000, 600);
             vid.ImageSize = vid.DisplaySize;
             vid.Mode = WinForms.BitmapDisplayMode.FitToWindowCentred;
@@ -21,7 +21,7 @@ namespace CDS.Imaging.WinFormsTests
         [Fact]
         public void ActualSizeMode_ImageSameSizeAsDisplay_FillsDisplayExactly()
         {
-            var vid = new WinForms.VirtualImageOnDisplay();
+            var vid = new WinForms.VirtualImageOnDisplay(onPaintRectChanged: (_, _) => { });
             vid.DisplaySize = new Size(1000, 600);
             vid.ImageSize = vid.DisplaySize;
             vid.Mode = WinForms.BitmapDisplayMode.ActualSizeCentred;
@@ -35,7 +35,7 @@ namespace CDS.Imaging.WinFormsTests
         [ClassData(typeof(FitToWindowSampleData))]
         public void FitToWindow_Maximumise_DisplayArea(Size imageSize, Size displaySize, RectangleF paintRect)
         {
-            var vid = new WinForms.VirtualImageOnDisplay();
+            var vid = new WinForms.VirtualImageOnDisplay(onPaintRectChanged: (_, _) => { });
             vid.DisplaySize = displaySize;
             vid.ImageSize = imageSize;
 
@@ -49,7 +49,7 @@ namespace CDS.Imaging.WinFormsTests
         [Fact]
         public void ChangeTargetImageCentre_MovePaintRect()
         {
-            var vid = new WinForms.VirtualImageOnDisplay();
+            var vid = new WinForms.VirtualImageOnDisplay(onPaintRectChanged: (_, _) => { });
             vid.Mode = WinForms.BitmapDisplayMode.FitToWindowCentred;
             vid.DisplaySize = new Size(1000, 1000);
             vid.ImageSize = new Size(200, 200);
@@ -63,7 +63,7 @@ namespace CDS.Imaging.WinFormsTests
         [Fact]
         public void DefaultInitialisation_ModeIs_FitToWindow()
         {
-            var vid = new WinForms.VirtualImageOnDisplay();
+            var vid = new WinForms.VirtualImageOnDisplay(onPaintRectChanged: (_, _) => { });
             vid.Mode.Should().Be(WinForms.BitmapDisplayMode.FitToWindowCentred);
         }
 
@@ -71,7 +71,7 @@ namespace CDS.Imaging.WinFormsTests
         [Fact]
         public void DefaultInitialisation_FitsToDisplay()
         {
-            var vid = new WinForms.VirtualImageOnDisplay();
+            var vid = new WinForms.VirtualImageOnDisplay(onPaintRectChanged: (_, _) => { });
             vid.DisplaySize = new Size(1000, 1000);
             vid.ImageSize = new Size(100, 100);
 
@@ -83,7 +83,7 @@ namespace CDS.Imaging.WinFormsTests
         [InlineData(0, 0, 300, 400)]
         public void MapImageToDisplay_Returns_DisplayRect(float imageX, float imageY, float displayX, float displayY)
         {
-            var vid = new WinForms.VirtualImageOnDisplay();
+            var vid = new WinForms.VirtualImageOnDisplay(onPaintRectChanged: (_, _) => { });
             vid.Mode = WinForms.BitmapDisplayMode.ActualSizeCentred;
             vid.DisplaySize = new Size(1000, 1000);
             vid.ImageSize = new Size(400, 200);
@@ -101,7 +101,7 @@ namespace CDS.Imaging.WinFormsTests
         [InlineData(0, 0, 300, 400)]
         public void MapDisplayToImage_Returns_ImageRect(float imageX, float imageY, float displayX, float displayY)
         {
-            var vid = new WinForms.VirtualImageOnDisplay();
+            var vid = new WinForms.VirtualImageOnDisplay(onPaintRectChanged: (_, _) => { });
             vid.Mode = WinForms.BitmapDisplayMode.ActualSizeCentred;
             vid.DisplaySize = new Size(1000, 1000);
             vid.ImageSize = new Size(400, 200);
@@ -118,7 +118,7 @@ namespace CDS.Imaging.WinFormsTests
         [Fact]
         public void ChangeImageSizeInFitToWindowMode_Resizes_ToFitWindow()
         {
-            var vid = new WinForms.VirtualImageOnDisplay();
+            var vid = new WinForms.VirtualImageOnDisplay(onPaintRectChanged: (_, _) => { });
             vid.Mode = WinForms.BitmapDisplayMode.FitToWindowCentred;
             vid.DisplaySize = new Size(2000, 1000);
             vid.ImageSize = new Size(200, 200);
@@ -135,7 +135,7 @@ namespace CDS.Imaging.WinFormsTests
         [Fact]
         public void FreshImage_InFreeMode_HasZoom1()
         {
-            var vid = new WinForms.VirtualImageOnDisplay();
+            var vid = new WinForms.VirtualImageOnDisplay(onPaintRectChanged: (_, _) => { });
             vid.Mode = WinForms.BitmapDisplayMode.Free;
             vid.DisplaySize = new Size(2000, 1000);
             vid.ImageSize = new Size(200, 200);
@@ -147,7 +147,7 @@ namespace CDS.Imaging.WinFormsTests
         [Fact]
         public void FreshImage_InFreeMode_IsCentred()
         {
-            var vid = new WinForms.VirtualImageOnDisplay();
+            var vid = new WinForms.VirtualImageOnDisplay(onPaintRectChanged: (_, _) => { });
             vid.Mode = WinForms.BitmapDisplayMode.Free;
             vid.DisplaySize = new Size(2000, 1000);
             vid.ImageSize = new Size(200, 200);
@@ -160,7 +160,7 @@ namespace CDS.Imaging.WinFormsTests
         [Fact]
         public void ChangeImageSizeInFreeMode_Leaves_ZoomUnchanged()
         {
-            var vid = new WinForms.VirtualImageOnDisplay();
+            var vid = new WinForms.VirtualImageOnDisplay(onPaintRectChanged: (_, _) => { });
             vid.Mode = WinForms.BitmapDisplayMode.Free;
             vid.DisplaySize = new Size(2000, 1000);
             vid.ImageSize = new Size(200, 200);
@@ -173,7 +173,7 @@ namespace CDS.Imaging.WinFormsTests
         [Fact]
         public void ChangeImageSizeInFreeMode_Leaves_CentresUnchanged()
         {
-            var vid = new WinForms.VirtualImageOnDisplay();
+            var vid = new WinForms.VirtualImageOnDisplay(onPaintRectChanged: (_, _) => { });
             vid.Mode = WinForms.BitmapDisplayMode.FitToWindowCentred;
             vid.DisplaySize = new Size(2000, 1000);
             vid.ImageSize = new Size(200, 200);

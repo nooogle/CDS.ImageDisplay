@@ -4,15 +4,15 @@ namespace CDS.Imaging.WinForms
 {
     public interface IBitmapDisplay
     {
-        event ModeEventHandler DisplayModeChanged;
-
-        RectangleF PaintRect { get; } 
-        Image Image { get; }
+        RectangleF PaintRect { get; }
+        Image? Image { get; }
         bool AnythingToDisplay { get; }
         BitmapDisplayMode Mode { get; set; }
         BitmapDisplayMetrics TimingMetrics { get; }
 
-        event PaintOverEvent PaintOver;
+        event PaintOverEvent? PaintOver;
+        event PaintUnderEvent? PaintUnder;
+        event ModeEventHandler? DisplayModeChanged;
 
         PointF MapImageToDisplay(PointF imageLocation);
         RectangleF MapImageToDisplay(RectangleF imageLocation);
@@ -27,5 +27,26 @@ namespace CDS.Imaging.WinForms
         /// no-op otherwise.
         /// </summary>
         void Centre();
+
+
+        /// <summary>
+        /// Reset the zoom to 1:1
+        /// </summary>
+        void ResetZoom();
+
+
+        /// <summary>
+        /// Zoom in
+        /// </summary>
+        void ZoomIn();
+
+
+        /// <summary>
+        /// Zoom out
+        /// </summary>
+        void ZoomOut();
+
+
+        PointF ImageDisplayCentre { get; set; } 
     }
 }

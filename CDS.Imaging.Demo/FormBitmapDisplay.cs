@@ -21,7 +21,7 @@ namespace CDS.Imaging.Demo
             InitializeComponent();
 
             fixedWidthFont = new Font(family: FontFamily.GenericMonospace, emSize: 10);
-            msgPanelBrush = new SolidBrush(Color.FromArgb(64, Color.Yellow));
+            msgPanelBrush = new SolidBrush(Color.FromArgb(128, Color.Navy));
         }
 
         private void FormBitmapDisplay_Load(object sender, EventArgs e)
@@ -33,6 +33,7 @@ namespace CDS.Imaging.Demo
             menuImageBuiltIn.SelectedIndex = 0;
 
             UpdateCommandEnablement();
+            UpdateDisplayModeCheckboxes();
         }
 
 
@@ -47,8 +48,9 @@ namespace CDS.Imaging.Demo
             }
             else
             {
+                var r = sender.CDS.PaintRect;
                 info.Append($"Bitmap size       {sender.CDS.Image.Size}\n");
-                info.Append($"Paint rect        {sender.CDS.PaintRect}\n");
+                info.Append($"Paint rect        {r.X:0.0}, {r.Y:0.0}, {r.Width:0.0}, {r.Height:0:0}\n");
                 info.Append($"Format            {sender.CDS.Image.PixelFormat.Humanize()}\n");
             }
             info.Append($"Set image         {sender.CDS.TimingMetrics.SetImage.Humanize()}\n");
@@ -68,7 +70,7 @@ namespace CDS.Imaging.Demo
             graphics.DrawString(
                 info.ToString(), 
                 fixedWidthFont, 
-                Brushes.Navy, 
+                Brushes.Yellow, 
                 textTopleft);
 
             var topLeftBox = sender.CDS.MapImageToDisplay(new RectangleF(0, 0, 10, 5));
@@ -79,35 +81,46 @@ namespace CDS.Imaging.Demo
                 fixedWidthFont,
                 Brushes.Navy,
                 new PointF(topLeftBox.X, topLeftBox.Y));
+
+            crossHair1.Draw(
+                graphics,
+                bitmapDisplay.CDS.MapImageToDisplay(bitmapDisplay.CDS.ImageDisplayCentre));
         }
 
         private void menuDisplayModeFree_Click(object sender, EventArgs e)
         {
             bitmapDisplay.CDS.Mode = WinForms.BitmapDisplayMode.Free;
             UpdateCommandEnablement();
+            bitmapDisplay.Invalidate();
         }
 
         private void UpdateCommandEnablement()
         {
             menuDisplayCentre.Enabled = (bitmapDisplay.CDS.Mode == WinForms.BitmapDisplayMode.Free);
+            menuDisplayZoomIn.Enabled = (bitmapDisplay.CDS.Mode == WinForms.BitmapDisplayMode.Free);
+            menuDisplayZoomOut.Enabled = (bitmapDisplay.CDS.Mode == WinForms.BitmapDisplayMode.Free);
+            menuDisplayZoomReset.Enabled = (bitmapDisplay.CDS.Mode == WinForms.BitmapDisplayMode.Free);
         }
 
         private void menuDisplayModeFitToWindow_Click(object sender, EventArgs e)
         {
             bitmapDisplay.CDS.Mode = WinForms.BitmapDisplayMode.FitToWindowCentred;
             UpdateCommandEnablement();
+            bitmapDisplay.Invalidate();
         }
 
         private void menuDisplayModeActualSize_Click(object sender, EventArgs e)
         {
             bitmapDisplay.CDS.Mode = WinForms.BitmapDisplayMode.ActualSizeCentred;
             UpdateCommandEnablement();
+            bitmapDisplay.Invalidate();
         }
 
         private void menuDisplayModeLocked_Click(object sender, EventArgs e)
         {
             bitmapDisplay.CDS.Mode = WinForms.BitmapDisplayMode.Locked;
             UpdateCommandEnablement();
+            bitmapDisplay.Invalidate();
         }
 
         private void menuDisplayCentre_Click(object sender, EventArgs e)
@@ -146,12 +159,59 @@ namespace CDS.Imaging.Demo
 
         private void MenuImageOpen_Click(object sender, System.EventArgs e)
         {
+            if(openImageDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                OpenFromFile(openImageDialog.FileName);
+            }
+        }
 
+
+        private void OpenFromFile(string fileName)
+        {
+            try
+            {
+                using var bitmap = (Bitmap)Image.FromFile(fileName);
+                bitmapDisplay.SetImage(bitmap);
+            }
+            catch(Exception exception)
+            {
+                MessageBox.Show(
+                    owner: this,
+                    text: $"Failed to load an image or send to the display: {exception.Message}",
+                    caption: Application.ProductName,
+                    buttons: MessageBoxButtons.OK,
+                    icon: MessageBoxIcon.Error);
+            }
         }
 
         private void bitmapDisplay_DisplayModeChanged(WinForms.BitmapDisplay sender, WinForms.BitmapDisplayModeEventArgs modeChangedArgs)
         {
             UpdateCommandEnablement();
+            UpdateDisplayModeCheckboxes();
+        }
+
+
+        public void UpdateDisplayModeCheckboxes()
+        {
+            menuDisplayModeFitToWindow.Checked = (bitmapDisplay.Mode == WinForms.BitmapDisplayMode.FitToWindowCentred);
+            menuDisplayModeActualSize.Checked = (bitmapDisplay.Mode == WinForms.BitmapDisplayMode.ActualSizeCentred);
+            menuDisplayModeFree.Checked = (bitmapDisplay.Mode == WinForms.BitmapDisplayMode.Free);
+            menuDisplayModeLocked.Checked = (bitmapDisplay.Mode == WinForms.BitmapDisplayMode.Locked);
+        }
+
+        private void menuDisplayZoomOut_Click(object sender, System.EventArgs e)
+        {
+            bitmapDisplay.CDS.ZoomOut();
+        }
+
+        private void menuDisplayZoomIn_Click(object sender, System.EventArgs e)
+        {
+            bitmapDisplay.CDS.ZoomIn();
+        }
+
+        private void menuDisplayZoomReset_Click(object sender, System.EventArgs e)
+        {
+            bitmapDisplay.CDS.ResetZoom();
         }
     }
 }

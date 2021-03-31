@@ -7,8 +7,11 @@ namespace CDS.Imaging.WinForms
 {
     public partial class BitmapDisplay : UserControl, IBitmapDisplay
     {
-        private Bitmap displayBitmap;
-        private VirtualImageOnDisplay virtualImageOnDisplay = new VirtualImageOnDisplay();
+        private float minZoom = 0.01f;
+        private float maxZoom = 200;
+
+        private Bitmap? displayBitmap;
+        private VirtualImageOnDisplay virtualImageOnDisplay;
         private System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         private BitmapDisplayControl.DragManager dragManager;
         private BitmapDisplayControl.ZoomManager zoomManager;
@@ -19,11 +22,11 @@ namespace CDS.Imaging.WinForms
 
         public RectangleF PaintRect => virtualImageOnDisplay.PaintRect;
 
-        public event PaintOverEvent PaintOver;
-        public event PaintUnderEvent PaintUnder;
-        public event ModeEventHandler DisplayModeChanged;
+        public event PaintOverEvent? PaintOver;
+        public event PaintUnderEvent? PaintUnder;
+        public event ModeEventHandler? DisplayModeChanged;
 
-        public Image Image => displayBitmap;
+        public Image? Image => displayBitmap as Image;
 
 
         public bool AnythingToDisplay => virtualImageOnDisplay.AnythingToDisplay;
@@ -44,6 +47,13 @@ namespace CDS.Imaging.WinForms
         }
 
 
+        public PointF ImageDisplayCentre
+        {
+            get => virtualImageOnDisplay.TargetImageCentre;
+            set => virtualImageOnDisplay.TargetImageCentre = value;
+        }
+
+
         public BitmapDisplay()
         {
             InitializeComponent();
@@ -52,9 +62,13 @@ namespace CDS.Imaging.WinForms
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
             dragManager = new BitmapDisplayControl.DragManager(DragManager_SetNewTargetDisplayCentre);
-            zoomManager = new BitmapDisplayControl.ZoomManager(ZoomManager_SetNewZoom);
 
-            virtualImageOnDisplay.OnPaintRectChanged += VirtualImageOnDisplay_OnPaintRectChanged;
+            zoomManager = new BitmapDisplayControl.ZoomManager(
+                ZoomManager_SetNewZoom,
+                minZoom: minZoom,
+                maxZoom: maxZoom);
+
+            virtualImageOnDisplay = new VirtualImageOnDisplay(VirtualImageOnDisplay_OnPaintRectChanged);
         }
 
 
@@ -135,6 +149,11 @@ namespace CDS.Imaging.WinForms
 
         private void CopyBitmapToExistingBitmap(Bitmap image)
         {
+            if(displayBitmap == null)
+            {
+                throw new NullReferenceException("The display bitmap has not been created!");
+            }
+
             Rectangle rect = new Rectangle(0, 0, displayBitmap.Width, displayBitmap.Height);
 
             var existingBitmapData = displayBitmap.LockBits(rect, System.Drawing.Imaging.ImageLockMode.WriteOnly, image.PixelFormat);
@@ -269,6 +288,11 @@ namespace CDS.Imaging.WinForms
 
         private void PaintBitmap(PaintEventArgs paintEventArgs)
         {
+            if (displayBitmap == null)
+            {
+                throw new NullReferenceException("The display bitmap has not been created!");
+            }
+
             var graphicsState = paintEventArgs.Graphics.Save();
 
             paintEventArgs.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
@@ -343,5 +367,34 @@ namespace CDS.Imaging.WinForms
                 dragManager.OnMouseUp(mouseEventArgs);
             }
         }
+
+
+
+        /// <summary>
+        /// Reset the zoom to 1:1
+        /// </summary>
+        public void ResetZoom()
+        {
+            virtualImageOnDisplay.Zoom = 1;
+        }
+
+
+        /// <summary>
+        /// Zoom in
+        /// </summary>
+        public void ZoomIn()
+        {
+            virtualImageOnDisplay.Zoom *= 2.0f;
+        }
+
+
+        /// <summary>
+        /// Zoom out
+        /// </summary>
+        public void ZoomOut()
+        {
+            virtualImageOnDisplay.Zoom /= 2.0f;
+        }
+
     }
 }

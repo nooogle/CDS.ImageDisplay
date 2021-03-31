@@ -14,7 +14,7 @@ namespace CDS.Imaging.WinForms
         private BitmapDisplayMode mode = BitmapDisplayMode.FitToWindowCentred;
         private System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
 
-        public event OnPaintRectChangedEvent OnPaintRectChanged;
+        public OnPaintRectChangedCallback OnPaintRectChanged;
 
         public BitmapDisplayMetrics TimingMetrics { get; } = new BitmapDisplayMetrics();
 
@@ -144,8 +144,9 @@ namespace CDS.Imaging.WinForms
             }
         }
 
-        public VirtualImageOnDisplay()
+        public VirtualImageOnDisplay(OnPaintRectChangedCallback onPaintRectChanged)
         {
+            OnPaintRectChanged = onPaintRectChanged;
         }
 
 
