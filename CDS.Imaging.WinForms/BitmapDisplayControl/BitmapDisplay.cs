@@ -7,9 +7,6 @@ namespace CDS.Imaging.WinForms
 {
     public partial class BitmapDisplay : UserControl, IBitmapDisplay
     {
-        private float minZoom = 0.01f;
-        private float maxZoom = 200;
-
         private Bitmap? displayBitmap;
         private VirtualImageOnDisplay virtualImageOnDisplay;
         private System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
@@ -63,10 +60,7 @@ namespace CDS.Imaging.WinForms
 
             dragManager = new BitmapDisplayControl.DragManager(DragManager_SetNewTargetDisplayCentre);
 
-            zoomManager = new BitmapDisplayControl.ZoomManager(
-                ZoomManager_SetNewZoom,
-                minZoom: minZoom,
-                maxZoom: maxZoom);
+            zoomManager = new BitmapDisplayControl.ZoomManager(ZoomManager_SetNewZoom);
 
             virtualImageOnDisplay = new VirtualImageOnDisplay(VirtualImageOnDisplay_OnPaintRectChanged);
         }
@@ -78,11 +72,19 @@ namespace CDS.Imaging.WinForms
         }
 
 
+
         private void ZoomManager_SetNewZoom(float zoom, PointF targetDisplayCentre, PointF targetImageCentre)
         {
             virtualImageOnDisplay.Zoom = zoom;
             virtualImageOnDisplay.TargetDisplayCentre = targetDisplayCentre;
             virtualImageOnDisplay.TargetImageCentre = targetImageCentre;
+        }
+
+
+        public float Zoom
+        {
+            get => virtualImageOnDisplay.Zoom;
+            set => virtualImageOnDisplay.Zoom = value;
         }
 
 

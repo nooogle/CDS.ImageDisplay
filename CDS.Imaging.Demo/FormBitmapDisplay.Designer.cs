@@ -136,66 +136,69 @@ namespace CDS.Imaging.Demo
             // menuDisplayModeFitToWindow
             // 
             this.menuDisplayModeFitToWindow.Name = "menuDisplayModeFitToWindow";
-            this.menuDisplayModeFitToWindow.Size = new System.Drawing.Size(181, 22);
+            this.menuDisplayModeFitToWindow.Size = new System.Drawing.Size(192, 22);
             this.menuDisplayModeFitToWindow.Text = "Fit to window";
             this.menuDisplayModeFitToWindow.Click += new System.EventHandler(this.menuDisplayModeFitToWindow_Click);
             // 
             // menuDisplayModeActualSize
             // 
             this.menuDisplayModeActualSize.Name = "menuDisplayModeActualSize";
-            this.menuDisplayModeActualSize.Size = new System.Drawing.Size(181, 22);
+            this.menuDisplayModeActualSize.Size = new System.Drawing.Size(192, 22);
             this.menuDisplayModeActualSize.Text = "Actual size (centred)";
             this.menuDisplayModeActualSize.Click += new System.EventHandler(this.menuDisplayModeActualSize_Click);
             // 
             // menuDisplayModeFree
             // 
             this.menuDisplayModeFree.Name = "menuDisplayModeFree";
-            this.menuDisplayModeFree.Size = new System.Drawing.Size(181, 22);
+            this.menuDisplayModeFree.Size = new System.Drawing.Size(192, 22);
             this.menuDisplayModeFree.Text = "Free";
             this.menuDisplayModeFree.Click += new System.EventHandler(this.menuDisplayModeFree_Click);
             // 
             // menuDisplayModeLocked
             // 
             this.menuDisplayModeLocked.Name = "menuDisplayModeLocked";
-            this.menuDisplayModeLocked.Size = new System.Drawing.Size(181, 22);
+            this.menuDisplayModeLocked.Size = new System.Drawing.Size(192, 22);
             this.menuDisplayModeLocked.Text = "Locked";
             this.menuDisplayModeLocked.Click += new System.EventHandler(this.menuDisplayModeLocked_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(178, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(189, 6);
             // 
             // menuDisplayCentre
             // 
             this.menuDisplayCentre.Name = "menuDisplayCentre";
-            this.menuDisplayCentre.Size = new System.Drawing.Size(181, 22);
+            this.menuDisplayCentre.Size = new System.Drawing.Size(192, 22);
             this.menuDisplayCentre.Text = "Centre";
             this.menuDisplayCentre.Click += new System.EventHandler(this.menuDisplayCentre_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(178, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(189, 6);
             // 
             // menuDisplayZoomReset
             // 
             this.menuDisplayZoomReset.Name = "menuDisplayZoomReset";
-            this.menuDisplayZoomReset.Size = new System.Drawing.Size(181, 22);
+            this.menuDisplayZoomReset.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D0)));
+            this.menuDisplayZoomReset.Size = new System.Drawing.Size(192, 22);
             this.menuDisplayZoomReset.Text = "Zoom 1:1";
             this.menuDisplayZoomReset.Click += new System.EventHandler(this.menuDisplayZoomReset_Click);
             // 
             // menuDisplayZoomIn
             // 
             this.menuDisplayZoomIn.Name = "menuDisplayZoomIn";
-            this.menuDisplayZoomIn.Size = new System.Drawing.Size(181, 22);
+            this.menuDisplayZoomIn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Up)));
+            this.menuDisplayZoomIn.Size = new System.Drawing.Size(192, 22);
             this.menuDisplayZoomIn.Text = "Zoom in";
             this.menuDisplayZoomIn.Click += new System.EventHandler(this.menuDisplayZoomIn_Click);
             // 
             // menuDisplayZoomOut
             // 
             this.menuDisplayZoomOut.Name = "menuDisplayZoomOut";
-            this.menuDisplayZoomOut.Size = new System.Drawing.Size(181, 22);
+            this.menuDisplayZoomOut.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Down)));
+            this.menuDisplayZoomOut.Size = new System.Drawing.Size(192, 22);
             this.menuDisplayZoomOut.Text = "Zoom out";
             this.menuDisplayZoomOut.Click += new System.EventHandler(this.menuDisplayZoomOut_Click);
             // 

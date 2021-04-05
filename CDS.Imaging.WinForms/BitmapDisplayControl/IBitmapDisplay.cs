@@ -47,6 +47,8 @@ namespace CDS.Imaging.WinForms
         void ZoomOut();
 
 
+        float Zoom { get; set; } 
+
         PointF ImageDisplayCentre { get; set; } 
     }
 }

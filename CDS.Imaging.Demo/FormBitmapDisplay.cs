@@ -50,6 +50,7 @@ namespace CDS.Imaging.Demo
             {
                 var r = sender.CDS.PaintRect;
                 info.Append($"Bitmap size       {sender.CDS.Image.Size}\n");
+                info.Append($"Paint zoom        {sender.CDS.Zoom:0.000}\n");
                 info.Append($"Paint rect        {r.X:0.0}, {r.Y:0.0}, {r.Width:0.0}, {r.Height:0:0}\n");
                 info.Append($"Format            {sender.CDS.Image.PixelFormat.Humanize()}\n");
             }

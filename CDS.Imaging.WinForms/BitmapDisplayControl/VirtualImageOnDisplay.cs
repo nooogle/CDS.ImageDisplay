@@ -26,9 +26,16 @@ namespace CDS.Imaging.WinForms
 
             set
             {
-                if(zoom != value)
+                var clippedValue = Math.Max(Consts.MinZoom, Math.Min(Consts.MaxZoom, value));
+                var diffFrom1 = Math.Abs(1.0f - clippedValue);
+                if(diffFrom1 <= Consts.SnapToZoom1Tolerance)
                 {
-                    zoom = value;
+                    clippedValue = 1.0f;
+                }
+
+                if (clippedValue != zoom)
+                {
+                    zoom = clippedValue;
                     RecalculatePaintRect();
                 }
             }
