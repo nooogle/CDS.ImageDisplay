@@ -3,92 +3,142 @@ using System.Drawing;
 using System.Windows.Forms;
 
 
-namespace CDS.Imaging.WinForms
+namespace CDS.Imaging.WinForms.BitmapDisplay
 {
-    public partial class BitmapDisplay : UserControl, IBitmapDisplay
+    /// <summary>
+    /// Displays a bitmap
+    /// </summary>
+    public partial class BitmapDisplayPanel : UserControl, IBitmapDisplay
     {
         private Bitmap? displayBitmap;
-        private VirtualImageOnDisplay virtualImageOnDisplay;
+        private VirtualDisplay virtualDisplay;
         private System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-        private BitmapDisplayControl.DragManager dragManager;
-        private BitmapDisplayControl.ZoomManager zoomManager;
+        private DragManager dragManager;
+        private ZoomManager zoomManager;
 
+
+        /// <summary>
+        /// Provides access to all the custom features
+        /// </summary>
+        /// <remarks>
+        /// Allows code to use myPanel.CDS.XXX rather than myPanel.XXX - this makes
+        /// it a little easier to discover and use the custom features of this panel 
+        /// since a .Net control presents 100's of properties, events and methods!
+        /// </remarks>
         public IBitmapDisplay CDS => this;
 
+
+        /// <inheritdoc/>
         public BitmapDisplayMetrics TimingMetrics { get; } = new BitmapDisplayMetrics();
 
-        public RectangleF PaintRect => virtualImageOnDisplay.PaintRect;
 
+        /// <inheritdoc/>
+        public SizeF SizeOfHalfDisplayPixel => virtualDisplay.SizeOfHalfDisplayPixel;
+
+
+        /// <inheritdoc/>
+        public RectangleF PaintRect => virtualDisplay.PaintRect;
+
+
+        /// <inheritdoc/>
         public event PaintOverEvent? PaintOver;
-        public event PaintUnderEvent? PaintUnder;
-        public event ModeEventHandler? DisplayModeChanged;
 
+
+        /// <inheritdoc/>
+        public event PaintUnderEvent? PaintUnder;
+
+
+        /// <inheritdoc/>
+        public event ModeChangedEvent? DisplayModeChanged;
+
+
+        /// <inheritdoc/>
         public Image? Image => displayBitmap as Image;
 
 
-        public bool AnythingToDisplay => virtualImageOnDisplay.AnythingToDisplay;
+        /// <inheritdoc/>
+        public bool AnythingToDisplay => virtualDisplay.AnythingToDisplay;
 
 
+        /// <inheritdoc/>
         public BitmapDisplayMode Mode
         {
-            get => virtualImageOnDisplay.Mode;
+            get => virtualDisplay.Mode;
             set
             {
-                if (virtualImageOnDisplay.Mode != value)
+                if (virtualDisplay.Mode != value)
                 {
-                    virtualImageOnDisplay.Mode = value;
-                    var eventArgs = new BitmapDisplayModeEventArgs(value);
-                    DisplayModeChanged?.Invoke(this, eventArgs);
+                    virtualDisplay.Mode = value;
+                    DisplayModeChanged?.Invoke(this);
                 }
             }
         }
 
 
-        public PointF ImageDisplayCentre
+        /// <inheritdoc/>
+        public PointF TargetImageCentre
         {
-            get => virtualImageOnDisplay.TargetImageCentre;
-            set => virtualImageOnDisplay.TargetImageCentre = value;
+            get => virtualDisplay.TargetImageCentre;
+            set => virtualDisplay.TargetImageCentre = value;
         }
 
 
-        public BitmapDisplay()
+        /// <inheritdoc/>
+        public PointF TargetDisplayCentre
+        {
+            get => virtualDisplay.TargetDisplayCentre;
+            set => virtualDisplay.TargetDisplayCentre = value;
+        }
+
+
+        /// <summary>
+        /// Initialise - configures for double buffered display
+        /// </summary>
+        public BitmapDisplayPanel()
         {
             InitializeComponent();
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             SetStyle(ControlStyles.UserPaint, true);
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
-            dragManager = new BitmapDisplayControl.DragManager(DragManager_SetNewTargetDisplayCentre);
-
-            zoomManager = new BitmapDisplayControl.ZoomManager(ZoomManager_SetNewZoom);
-
-            virtualImageOnDisplay = new VirtualImageOnDisplay(VirtualImageOnDisplay_OnPaintRectChanged);
+            dragManager = new DragManager(DragManager_SetNewTargetDisplayCentre);
+            zoomManager = new ZoomManager(ZoomManager_SetNewZoom);
+            virtualDisplay = new VirtualDisplay(VirtualImageOnDisplay_OnPaintRectChanged);
         }
 
 
+        /// <summary>
+        /// Drag manager wants to set a new display centre
+        /// </summary>
         private void DragManager_SetNewTargetDisplayCentre(PointF targetDisplayCentre)
         {
-            virtualImageOnDisplay.TargetDisplayCentre = targetDisplayCentre;
+            virtualDisplay.TargetDisplayCentre = targetDisplayCentre;
         }
 
 
-
+        /// <summary>
+        /// Zoom manager wants to set a new zoom
+        /// </summary>
         private void ZoomManager_SetNewZoom(float zoom, PointF targetDisplayCentre, PointF targetImageCentre)
         {
-            virtualImageOnDisplay.Zoom = zoom;
-            virtualImageOnDisplay.TargetDisplayCentre = targetDisplayCentre;
-            virtualImageOnDisplay.TargetImageCentre = targetImageCentre;
+            virtualDisplay.Zoom = zoom;
+            virtualDisplay.TargetDisplayCentre = targetDisplayCentre;
+            virtualDisplay.TargetImageCentre = targetImageCentre;
         }
 
 
+        /// <inheritdoc/>
         public float Zoom
         {
-            get => virtualImageOnDisplay.Zoom;
-            set => virtualImageOnDisplay.Zoom = value;
+            get => virtualDisplay.Zoom;
+            set => virtualDisplay.Zoom = value;
         }
 
 
-        private void VirtualImageOnDisplay_OnPaintRectChanged(VirtualImageOnDisplay sender, RectangleF paintRect)
+        /// <summary>
+        /// The virtual display wants to set a new paint rect
+        /// </summary>
+        private void VirtualImageOnDisplay_OnPaintRectChanged(VirtualDisplay sender, RectangleF paintRect)
         {
             Invalidate();
         }
@@ -114,6 +164,9 @@ namespace CDS.Imaging.WinForms
         }
 
 
+        /// <summary>
+        /// Drop the current image
+        /// </summary>
         private void DropBitmap()
         {
             displayBitmap?.Dispose();
@@ -121,6 +174,14 @@ namespace CDS.Imaging.WinForms
         }
 
 
+        /// <inheritdoc/>
+        public void ClearImage()
+        {
+            SetNullImage();
+        }
+
+
+        /// <inheritdoc/>
         public void SetImage(Bitmap image)
         {
             if (image == null)
@@ -133,6 +194,10 @@ namespace CDS.Imaging.WinForms
             }
         }
 
+
+        /// <summary>
+        /// Takes a copy of a new image
+        /// </summary>
         private void SetNonNullBitmap(Bitmap newBitmap)
         {
             DropBitmapIfFormatOrSizeChanged(newBitmap);
@@ -149,6 +214,9 @@ namespace CDS.Imaging.WinForms
         }
 
 
+        /// <summary>
+        /// Copies the contents of a new image to our existing image store
+        /// </summary>
         private void CopyBitmapToExistingBitmap(Bitmap image)
         {
             if(displayBitmap == null)
@@ -180,18 +248,24 @@ namespace CDS.Imaging.WinForms
                 displayBitmap.UnlockBits(existingBitmapData);
             }
 
-            Invalidate(Rectangle.Round(virtualImageOnDisplay.PaintRect));
+            Invalidate(Rectangle.Round(virtualDisplay.PaintRect));
         }
 
 
+        /// <summary>
+        /// Creates a copy of the new image
+        /// </summary>
         private void CreateNewBitmapFromBitmap(Bitmap newBitmap)
         {
             displayBitmap = (Bitmap)newBitmap.Clone();
-            virtualImageOnDisplay.ImageSize = displayBitmap.Size;
+            virtualDisplay.ImageSize = displayBitmap.Size;
             Invalidate();
         }
 
 
+        /// <summary>
+        /// Configures for no image
+        /// </summary>
         private void SetNullImage()
         {
             DropBitmap();
@@ -199,6 +273,10 @@ namespace CDS.Imaging.WinForms
         }
 
 
+        /// <summary>
+        /// Drops the current image store if the format or size is different
+        /// to the new bitmap
+        /// </summary>
         private void DropBitmapIfFormatOrSizeChanged(Bitmap image)
         {
             if (displayBitmap == null) { return; }
@@ -214,43 +292,65 @@ namespace CDS.Imaging.WinForms
         }
 
 
+        /// <inheritdoc/>
         public PointF MapImageToDisplay(PointF imageLocation)
         {
-            return virtualImageOnDisplay.MapImageToDisplay(imageLocation);
+            return virtualDisplay.MapImageToDisplay(imageLocation);
         }
 
+
+        /// <inheritdoc/>
         public RectangleF MapImageToDisplay(RectangleF imageRect)
         {
-            return virtualImageOnDisplay.MapImageToDisplay(imageRect);
+            return virtualDisplay.MapImageToDisplay(imageRect);
         }
 
 
+        /// <inheritdoc/>
         public PointF MapDisplayToImage(PointF displayLocation)
         {
-            return virtualImageOnDisplay.MapDisplayToImage(displayLocation);
+            return virtualDisplay.MapDisplayToImage(displayLocation);
         }
 
-        
+
+        /// <inheritdoc/>
         public RectangleF MapDisplayToImage(RectangleF displayRect)
         {
-            return virtualImageOnDisplay.MapDisplayToImage(displayRect);
+            return virtualDisplay.MapDisplayToImage(displayRect);
         }
 
 
+        /// <inheritdoc/>
         public void Centre()
         {
-            virtualImageOnDisplay.Centre();
+            virtualDisplay.Centre();
         }
 
 
+        /// <inheritdoc/>
+        public void ActualSizeCentred()
+        {
+            virtualDisplay.ActualSizeCentred();
+        }
 
+
+        /// <inheritdoc/>
+        public void FitToWindowCentred()
+        {
+            virtualDisplay.FitToWindowCentred();
+        }
+
+
+        /// <summary>
+        /// Paint the background (optimised when there's nothing to display)
+        /// </summary>
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             stopwatch.Restart();
 
-            var clippedRenderRect = virtualImageOnDisplay.PaintRect;
+            var clippedRenderRect = virtualDisplay.PaintRect;
             clippedRenderRect.Intersect(ClientRectangle);
-            var shouldPaintBackground = virtualImageOnDisplay.PaintRect.IsEmpty || (e.ClipRectangle != clippedRenderRect);
+            var shouldPaintBackground = virtualDisplay.PaintRect.IsEmpty || (e.ClipRectangle != clippedRenderRect);
             if (shouldPaintBackground)
             {
                 base.OnPaintBackground(e);
@@ -261,16 +361,16 @@ namespace CDS.Imaging.WinForms
         }
 
 
-
+        /// <summary>
+        /// Paint the image
+        /// </summary>
         protected override void OnPaint(PaintEventArgs paintEventArgs)
         {
             stopwatch.Restart();
 
             PaintUnder?.Invoke(
                 sender: this,
-                graphics: paintEventArgs.Graphics,
-                imageSize: (displayBitmap == null) ? Size.Empty : displayBitmap.Size,
-                renderRect: virtualImageOnDisplay.PaintRect);
+                graphics: paintEventArgs.Graphics);
 
             if (AnythingToDisplay)
             {
@@ -279,15 +379,16 @@ namespace CDS.Imaging.WinForms
 
             PaintOver?.Invoke(
                 sender: this,
-                graphics: paintEventArgs.Graphics,
-                imageSize: (displayBitmap == null) ? Size.Empty : displayBitmap.Size,
-                renderRect: virtualImageOnDisplay.PaintRect);
+                graphics: paintEventArgs.Graphics);
 
             stopwatch.Stop();
             TimingMetrics.ForegroundPaint = stopwatch.Elapsed;
         }
 
 
+        /// <summary>
+        /// Draws the image
+        /// </summary>
         private void PaintBitmap(PaintEventArgs paintEventArgs)
         {
             if (displayBitmap == null)
@@ -303,12 +404,15 @@ namespace CDS.Imaging.WinForms
 
             paintEventArgs.Graphics.DrawImage(
                 image: displayBitmap,
-                rect: virtualImageOnDisplay.PaintRect);
+                rect: virtualDisplay.PaintRect);
 
             paintEventArgs.Graphics.Restore(graphicsState);
         }
 
 
+        /// <summary>
+        /// Use has used the mouse wheel - we use this for zoom
+        /// </summary>
         protected override void OnMouseWheel(MouseEventArgs mouseEventArgs)
         {
             base.OnMouseWheel(mouseEventArgs);
@@ -320,7 +424,7 @@ namespace CDS.Imaging.WinForms
 
                 zoomManager.OnMouseWheel(
                     imageDisplayMode: Mode,
-                    currentZoom: virtualImageOnDisplay.Zoom,
+                    currentZoom: virtualDisplay.Zoom,
                     mouseLocationInDisplayUnits: mouseLocationInDisplayUnits,
                     mouseLocationInImageUnits: mouseLocationInImageUnits,
                     mouseEventArgs: mouseEventArgs);
@@ -328,13 +432,19 @@ namespace CDS.Imaging.WinForms
         }
 
 
+        /// <summary>
+        /// Size has changed - refresh the display
+        /// </summary>
         protected override void OnSizeChanged(EventArgs e)
         {
             base.OnSizeChanged(e);
-            virtualImageOnDisplay.DisplaySize = ClientSize;
+            virtualDisplay.DisplaySize = ClientSize;
         }
 
 
+        /// <summary>
+        /// Mouse has moved - we can use this for dragging
+        /// </summary>
         protected override void OnMouseMove(MouseEventArgs mouseEventArgs)
         {
             base.OnMouseMove(mouseEventArgs);
@@ -346,6 +456,9 @@ namespace CDS.Imaging.WinForms
         }
 
 
+        /// <summary>
+        /// Mouse button down - we can use this for dragging
+        /// </summary>
         protected override void OnMouseDown(MouseEventArgs mouseEventArgs)
         {
             base.OnMouseDown(mouseEventArgs);
@@ -355,11 +468,15 @@ namespace CDS.Imaging.WinForms
                 dragManager.OnMouseDown(
                     imageDisplayMode: Mode,
                     mouseEventArgs: mouseEventArgs,
-                    currentTargetDisplayCentre: virtualImageOnDisplay.TargetDisplayCentre);
+                    currentTargetDisplayCentre: virtualDisplay.TargetDisplayCentre);
             }
         }
 
 
+        /// <summary>
+        /// Mouse button is up - we can use this for dragging
+        /// </summary>
+        /// <param name="mouseEventArgs"></param>
         protected override void OnMouseUp(MouseEventArgs mouseEventArgs)
         {
             base.OnMouseUp(mouseEventArgs);
@@ -372,30 +489,25 @@ namespace CDS.Imaging.WinForms
 
 
 
-        /// <summary>
-        /// Reset the zoom to 1:1
-        /// </summary>
+        /// <inheritdoc/>
         public void ResetZoom()
         {
-            virtualImageOnDisplay.Zoom = 1;
+            virtualDisplay.Zoom = 1;
         }
 
 
-        /// <summary>
-        /// Zoom in
-        /// </summary>
+        /// <inheritdoc/>
         public void ZoomIn()
         {
-            virtualImageOnDisplay.Zoom *= 2.0f;
+            virtualDisplay.Zoom *= 2.0f;
         }
 
 
-        /// <summary>
-        /// Zoom out
-        /// </summary>
+
+        /// <inheritdoc/>
         public void ZoomOut()
         {
-            virtualImageOnDisplay.Zoom /= 2.0f;
+            virtualDisplay.Zoom /= 2.0f;
         }
 
     }

@@ -2,8 +2,11 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace CDS.Imaging.WinForms.Shapes
+namespace CDS.Imaging.WinForms.Draw
 {
+    /// <summary>
+    /// A simple pen; allows configuration within the designer
+    /// </summary>
     public partial class SimplePen : Component
     {
         /// <summary>
@@ -65,11 +68,19 @@ namespace CDS.Imaging.WinForms.Shapes
 
 
 
+        /// <summary>
+        /// Initialise
+        /// </summary>
         public SimplePen()
         {
             InitializeComponent();
         }
 
+
+        /// <summary>
+        /// Initialise
+        /// </summary>
+        /// <param name="container"></param>
         public SimplePen(IContainer container)
         {
             container.Add(this);
@@ -97,6 +108,9 @@ namespace CDS.Imaging.WinForms.Shapes
         }
 
 
-        public static implicit operator Pen(SimplePen cPen) => cPen.Pen;
+        /// <summary>
+        /// Concert to a .Net pen
+        /// </summary>
+        public static implicit operator Pen(SimplePen simplePen) => simplePen.Pen;
     }
 }

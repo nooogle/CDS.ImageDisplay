@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace CDS.Imaging.WinFormsTests
+namespace CDS.Imaging.WinFormsTests.BitmapDisplay
 {
     /// <summary>
     /// A data provider for the <see cref="FitToWindow_Maximumise_DisplayArea(Size, Size, RectangleF)"/>

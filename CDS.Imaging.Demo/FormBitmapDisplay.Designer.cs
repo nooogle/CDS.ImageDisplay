@@ -31,7 +31,7 @@ namespace CDS.Imaging.Demo
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormBitmapDisplay));
-            this.bitmapDisplay = new CDS.Imaging.WinForms.BitmapDisplay();
+            this.bitmapDisplay = new CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel();
             this.menu = new System.Windows.Forms.MenuStrip();
             this.menuImage = new System.Windows.Forms.ToolStripMenuItem();
             this.menuImageBuiltIn = new System.Windows.Forms.ToolStripComboBox();
@@ -50,7 +50,9 @@ namespace CDS.Imaging.Demo
             this.menuDisplayZoomIn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDisplayZoomOut = new System.Windows.Forms.ToolStripMenuItem();
             this.openImageDialog = new System.Windows.Forms.OpenFileDialog();
-            this.crossHair1 = new CDS.Imaging.WinForms.Shapes.CrossHair(this.components);
+            this.crossHair1 = new CDS.Imaging.WinForms.Draw.SimpleCrossHair(this.components);
+            this.menuDisplayFitToWindow = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuDisplayActualSize = new System.Windows.Forms.ToolStripMenuItem();
             this.menu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,24 +60,28 @@ namespace CDS.Imaging.Demo
             // 
             this.bitmapDisplay.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
             this.bitmapDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bitmapDisplay.ImageDisplayCentre = ((System.Drawing.PointF)(resources.GetObject("bitmapDisplay.ImageDisplayCentre")));
-            this.bitmapDisplay.Location = new System.Drawing.Point(0, 24);
-            this.bitmapDisplay.Mode = CDS.Imaging.WinForms.BitmapDisplayMode.FitToWindowCentred;
+            this.bitmapDisplay.TargetImageCentre = ((System.Drawing.PointF)(resources.GetObject("bitmapDisplay.ImageDisplayCentre")));
+            this.bitmapDisplay.Location = new System.Drawing.Point(0, 27);
+            this.bitmapDisplay.Margin = new System.Windows.Forms.Padding(6);
+            this.bitmapDisplay.Mode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.FitToWindowCentred;
             this.bitmapDisplay.Name = "bitmapDisplay";
-            this.bitmapDisplay.Size = new System.Drawing.Size(800, 426);
+            this.bitmapDisplay.Size = new System.Drawing.Size(624, 414);
             this.bitmapDisplay.TabIndex = 0;
-            this.bitmapDisplay.PaintOver += new CDS.Imaging.WinForms.PaintOverEvent(this.bitmapDisplay_PaintOver);
-            this.bitmapDisplay.PaintUnder += new CDS.Imaging.WinForms.PaintUnderEvent(this.bitmapDisplay_PaintUnder);
-            this.bitmapDisplay.DisplayModeChanged += new CDS.Imaging.WinForms.ModeEventHandler(this.bitmapDisplay_DisplayModeChanged);
+            this.bitmapDisplay.Zoom = 1F;
+            this.bitmapDisplay.PaintOver += new CDS.Imaging.WinForms.BitmapDisplay.PaintOverEvent(this.bitmapDisplay_PaintOver);
+            this.bitmapDisplay.PaintUnder += new CDS.Imaging.WinForms.BitmapDisplay.PaintUnderEvent(this.bitmapDisplay_PaintUnder);
+            this.bitmapDisplay.DisplayModeChanged += new CDS.Imaging.WinForms.BitmapDisplay.ModeChangedEvent(this.bitmapDisplay_DisplayModeChanged);
             // 
             // menu
             // 
+            this.menu.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuImage,
             this.menuDisplay});
             this.menu.Location = new System.Drawing.Point(0, 0);
             this.menu.Name = "menu";
-            this.menu.Size = new System.Drawing.Size(800, 24);
+            this.menu.Padding = new System.Windows.Forms.Padding(11, 4, 0, 4);
+            this.menu.Size = new System.Drawing.Size(624, 27);
             this.menu.TabIndex = 7;
             this.menu.Text = "menuStrip1";
             // 
@@ -87,7 +93,7 @@ namespace CDS.Imaging.Demo
             this.toolStripSeparator1,
             this.menuImageExit});
             this.menuImage.Name = "menuImage";
-            this.menuImage.Size = new System.Drawing.Size(52, 20);
+            this.menuImage.Size = new System.Drawing.Size(60, 19);
             this.menuImage.Text = "Image";
             // 
             // menuImageBuiltIn
@@ -100,19 +106,19 @@ namespace CDS.Imaging.Demo
             // menuImageOpen
             // 
             this.menuImageOpen.Name = "menuImageOpen";
-            this.menuImageOpen.Size = new System.Drawing.Size(181, 22);
+            this.menuImageOpen.Size = new System.Drawing.Size(240, 44);
             this.menuImageOpen.Text = "Open";
             this.menuImageOpen.Click += new System.EventHandler(this.MenuImageOpen_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(178, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(237, 6);
             // 
             // menuImageExit
             // 
             this.menuImageExit.Name = "menuImageExit";
-            this.menuImageExit.Size = new System.Drawing.Size(181, 22);
+            this.menuImageExit.Size = new System.Drawing.Size(240, 44);
             this.menuImageExit.Text = "Exit";
             this.menuImageExit.Click += new System.EventHandler(this.MenuImageExit_Click);
             // 
@@ -125,64 +131,66 @@ namespace CDS.Imaging.Demo
             this.menuDisplayModeLocked,
             this.toolStripSeparator3,
             this.menuDisplayCentre,
+            this.menuDisplayActualSize,
+            this.menuDisplayFitToWindow,
             this.toolStripSeparator2,
             this.menuDisplayZoomReset,
             this.menuDisplayZoomIn,
             this.menuDisplayZoomOut});
             this.menuDisplay.Name = "menuDisplay";
-            this.menuDisplay.Size = new System.Drawing.Size(57, 20);
+            this.menuDisplay.Size = new System.Drawing.Size(65, 19);
             this.menuDisplay.Text = "Display";
             // 
             // menuDisplayModeFitToWindow
             // 
             this.menuDisplayModeFitToWindow.Name = "menuDisplayModeFitToWindow";
-            this.menuDisplayModeFitToWindow.Size = new System.Drawing.Size(192, 22);
+            this.menuDisplayModeFitToWindow.Size = new System.Drawing.Size(255, 44);
             this.menuDisplayModeFitToWindow.Text = "Fit to window";
             this.menuDisplayModeFitToWindow.Click += new System.EventHandler(this.menuDisplayModeFitToWindow_Click);
             // 
             // menuDisplayModeActualSize
             // 
             this.menuDisplayModeActualSize.Name = "menuDisplayModeActualSize";
-            this.menuDisplayModeActualSize.Size = new System.Drawing.Size(192, 22);
+            this.menuDisplayModeActualSize.Size = new System.Drawing.Size(255, 44);
             this.menuDisplayModeActualSize.Text = "Actual size (centred)";
             this.menuDisplayModeActualSize.Click += new System.EventHandler(this.menuDisplayModeActualSize_Click);
             // 
             // menuDisplayModeFree
             // 
             this.menuDisplayModeFree.Name = "menuDisplayModeFree";
-            this.menuDisplayModeFree.Size = new System.Drawing.Size(192, 22);
+            this.menuDisplayModeFree.Size = new System.Drawing.Size(255, 44);
             this.menuDisplayModeFree.Text = "Free";
             this.menuDisplayModeFree.Click += new System.EventHandler(this.menuDisplayModeFree_Click);
             // 
             // menuDisplayModeLocked
             // 
             this.menuDisplayModeLocked.Name = "menuDisplayModeLocked";
-            this.menuDisplayModeLocked.Size = new System.Drawing.Size(192, 22);
+            this.menuDisplayModeLocked.Size = new System.Drawing.Size(255, 44);
             this.menuDisplayModeLocked.Text = "Locked";
             this.menuDisplayModeLocked.Click += new System.EventHandler(this.menuDisplayModeLocked_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(189, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(252, 6);
             // 
             // menuDisplayCentre
             // 
             this.menuDisplayCentre.Name = "menuDisplayCentre";
-            this.menuDisplayCentre.Size = new System.Drawing.Size(192, 22);
+            this.menuDisplayCentre.Size = new System.Drawing.Size(255, 44);
             this.menuDisplayCentre.Text = "Centre";
             this.menuDisplayCentre.Click += new System.EventHandler(this.menuDisplayCentre_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(189, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(252, 6);
             // 
             // menuDisplayZoomReset
             // 
             this.menuDisplayZoomReset.Name = "menuDisplayZoomReset";
             this.menuDisplayZoomReset.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D0)));
-            this.menuDisplayZoomReset.Size = new System.Drawing.Size(192, 22);
+            this.menuDisplayZoomReset.Size = new System.Drawing.Size(255, 44);
             this.menuDisplayZoomReset.Text = "Zoom 1:1";
             this.menuDisplayZoomReset.Click += new System.EventHandler(this.menuDisplayZoomReset_Click);
             // 
@@ -190,7 +198,7 @@ namespace CDS.Imaging.Demo
             // 
             this.menuDisplayZoomIn.Name = "menuDisplayZoomIn";
             this.menuDisplayZoomIn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Up)));
-            this.menuDisplayZoomIn.Size = new System.Drawing.Size(192, 22);
+            this.menuDisplayZoomIn.Size = new System.Drawing.Size(255, 44);
             this.menuDisplayZoomIn.Text = "Zoom in";
             this.menuDisplayZoomIn.Click += new System.EventHandler(this.menuDisplayZoomIn_Click);
             // 
@@ -198,7 +206,7 @@ namespace CDS.Imaging.Demo
             // 
             this.menuDisplayZoomOut.Name = "menuDisplayZoomOut";
             this.menuDisplayZoomOut.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Down)));
-            this.menuDisplayZoomOut.Size = new System.Drawing.Size(192, 22);
+            this.menuDisplayZoomOut.Size = new System.Drawing.Size(255, 44);
             this.menuDisplayZoomOut.Text = "Zoom out";
             this.menuDisplayZoomOut.Click += new System.EventHandler(this.menuDisplayZoomOut_Click);
             // 
@@ -227,14 +235,29 @@ namespace CDS.Imaging.Demo
             this.crossHair1.LinePen.StartCap = System.Drawing.Drawing2D.LineCap.Flat;
             this.crossHair1.LinePen.Width = 2F;
             // 
+            // menuDisplayFitToWindow
+            // 
+            this.menuDisplayFitToWindow.Name = "menuDisplayFitToWindow";
+            this.menuDisplayFitToWindow.Size = new System.Drawing.Size(251, 44);
+            this.menuDisplayFitToWindow.Text = "Fit to window";
+            this.menuDisplayFitToWindow.Click += new System.EventHandler(MenuDisplayFitToWindow_Click);
+            // 
+            // menuDisplayActualSize
+            // 
+            this.menuDisplayActualSize.Name = "menuDisplayActualSize";
+            this.menuDisplayActualSize.Size = new System.Drawing.Size(255, 44);
+            this.menuDisplayActualSize.Text = "Actual size and centred";
+            this.menuDisplayActualSize.Click += new System.EventHandler(MenuDisplayActualSize_Click);
+            // 
             // FormBitmapDisplay
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(624, 441);
             this.Controls.Add(this.bitmapDisplay);
             this.Controls.Add(this.menu);
             this.MainMenuStrip = this.menu;
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "FormBitmapDisplay";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.FormBitmapDisplay_Load);
@@ -245,10 +268,10 @@ namespace CDS.Imaging.Demo
 
         }
 
-        
+
         #endregion
 
-        private WinForms.BitmapDisplay bitmapDisplay;
+        private WinForms.BitmapDisplay.BitmapDisplayPanel bitmapDisplay;
         private System.Windows.Forms.MenuStrip menu;
         private System.Windows.Forms.ToolStripMenuItem menuImage;
         private System.Windows.Forms.ToolStripMenuItem menuImageOpen;
@@ -267,7 +290,9 @@ namespace CDS.Imaging.Demo
         private System.Windows.Forms.ToolStripMenuItem menuDisplayZoomIn;
         private System.Windows.Forms.ToolStripMenuItem menuDisplayZoomOut;
         private System.Windows.Forms.OpenFileDialog openImageDialog;
-        private WinForms.Shapes.CrossHair crossHair1;
+        private WinForms.Draw.SimpleCrossHair crossHair1;
+        private System.Windows.Forms.ToolStripMenuItem menuDisplayActualSize;
+        private System.Windows.Forms.ToolStripMenuItem menuDisplayFitToWindow;
     }
 }
 

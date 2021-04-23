@@ -1,7 +1,7 @@
 ﻿
-namespace CDS.Imaging.WinForms.Shapes
+namespace CDS.Imaging.WinForms.Draw
 {
-    partial class CrossHair
+    partial class SimpleCrossHair
     {
         /// <summary>
         /// Required designer variable.

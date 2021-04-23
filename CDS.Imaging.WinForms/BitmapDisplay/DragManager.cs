@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.WinForms.BitmapDisplayControl
+namespace CDS.Imaging.WinForms.BitmapDisplay
 {
     internal class DragManager
     {

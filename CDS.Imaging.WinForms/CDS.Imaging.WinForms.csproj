@@ -10,13 +10,12 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>C:\Users\jon\source\repos\CDS.Imaging\CDS.Imaging.WinForms\CDS.Imaging.WinForms.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>C:\Users\jon\source\repos\CDS.Imaging\CDS.Imaging.WinForms\CDS.Imaging.WinForms.xml</DocumentationFile>
   </PropertyGroup>
-
-  <ItemGroup>
-  </ItemGroup>
 
 </Project>
