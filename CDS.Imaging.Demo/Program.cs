@@ -17,7 +17,8 @@ namespace CDS.Imaging.Demo
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormBitmapDisplay());
+            //Application.Run(new FormBitmapDisplay());
+            Application.Run(new FormTestLauncher());
         }
     }
 }

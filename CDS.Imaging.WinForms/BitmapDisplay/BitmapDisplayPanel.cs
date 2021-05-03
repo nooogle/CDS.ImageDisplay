@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -10,6 +11,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
     /// </summary>
     public partial class BitmapDisplayPanel : UserControl, IBitmapDisplay
     {
+        private const string categoryCDS = "CDS";
         private Bitmap? displayBitmap;
         private VirtualDisplay virtualDisplay;
         private System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
@@ -25,42 +27,68 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// it a little easier to discover and use the custom features of this panel 
         /// since a .Net control presents 100's of properties, events and methods!
         /// </remarks>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IBitmapDisplay CDS => this;
 
 
         /// <inheritdoc/>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public BitmapDisplayMetrics TimingMetrics { get; } = new BitmapDisplayMetrics();
 
 
         /// <inheritdoc/>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public SizeF SizeOfHalfDisplayPixel => virtualDisplay.SizeOfHalfDisplayPixel;
 
 
         /// <inheritdoc/>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public RectangleF PaintRect => virtualDisplay.PaintRect;
 
 
         /// <inheritdoc/>
+        [Category(categoryCDS)]
+        [Description(
+            "Called when the image has been rendered; gives a client an opportunity " +
+            "to paint flicker-free graphics on top of the image.")]
         public event PaintOverEvent? PaintOver;
 
 
         /// <inheritdoc/>
+        [Category(categoryCDS)]
+        [Description(
+            "Called afer the background has been painted and before the image been painted; " +
+            "to paint flicker-free graphics under of the image.")]
         public event PaintUnderEvent? PaintUnder;
 
 
         /// <inheritdoc/>
+        [Category(categoryCDS)]
+        [Description("Called when the display mode is changed.")]
         public event ModeChangedEvent? DisplayModeChanged;
 
 
         /// <inheritdoc/>
-        public Image? Image => displayBitmap as Image;
+        [Category(categoryCDS)]
+        public Image? Image
+        {
+            get => displayBitmap as Image;
+        }
 
 
         /// <inheritdoc/>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool AnythingToDisplay => virtualDisplay.AnythingToDisplay;
 
 
         /// <inheritdoc/>
+        [Category(categoryCDS)]
+        [Description("The image display mode")]
         public BitmapDisplayMode Mode
         {
             get => virtualDisplay.Mode;
@@ -76,6 +104,8 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
 
         /// <inheritdoc/>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public PointF TargetImageCentre
         {
             get => virtualDisplay.TargetImageCentre;
@@ -84,6 +114,8 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
 
         /// <inheritdoc/>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public PointF TargetDisplayCentre
         {
             get => virtualDisplay.TargetDisplayCentre;

@@ -407,7 +407,8 @@
             Set the image to display. A copy is taken and the reference is not retained.
             Passing null delegates to <see cref="M:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.ClearImage"/>. The geometry is not changed
             if an image of the same size is already displayed. Otherwise the current 
-            <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.Mode"/> is respected but <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.TargetImageCentre"/>
+            <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.Mode"/> is respected but <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.TargetImageCentre"/> is
+            reset.
             </summary>
             <param name="image"></param>
         </member>

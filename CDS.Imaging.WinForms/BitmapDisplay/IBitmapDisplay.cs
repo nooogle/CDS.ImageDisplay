@@ -128,7 +128,8 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// Set the image to display. A copy is taken and the reference is not retained.
         /// Passing null delegates to <see cref="ClearImage"/>. The geometry is not changed
         /// if an image of the same size is already displayed. Otherwise the current 
-        /// <see cref="Mode"/> is respected but <see cref="TargetImageCentre"/>
+        /// <see cref="Mode"/> is respected but <see cref="TargetImageCentre"/> is
+        /// reset.
         /// </summary>
         /// <param name="image"></param>
         void SetImage(Bitmap image);
