@@ -12,7 +12,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
     public partial class BitmapDisplayPanel : UserControl, IBitmapDisplay
     {
         private const string categoryCDS = "CDS";
-        private Bitmap? displayBitmap;
+        private Image? image;
         private VirtualDisplay virtualDisplay;
         private System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         private DragManager dragManager;
@@ -76,7 +76,16 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         [Category(categoryCDS)]
         public Image? Image
         {
-            get => displayBitmap as Image;
+            get => image;
+
+            set
+            {
+                if (image == value) { return; }
+
+                image = value;
+                virtualDisplay.ImageSize = (image == null) ? Size.Empty : image.Size;
+                Invalidate();               
+            }
         }
 
 
@@ -173,154 +182,6 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         private void VirtualImageOnDisplay_OnPaintRectChanged(VirtualDisplay sender, RectangleF paintRect)
         {
             Invalidate();
-        }
-
-
-        /// <summary> 
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
-
-                DropBitmap();
-            }
-
-            base.Dispose(disposing);
-        }
-
-
-        /// <summary>
-        /// Drop the current image
-        /// </summary>
-        private void DropBitmap()
-        {
-            displayBitmap?.Dispose();
-            displayBitmap = null;
-        }
-
-
-        /// <inheritdoc/>
-        public void ClearImage()
-        {
-            SetNullImage();
-        }
-
-
-        /// <inheritdoc/>
-        public void SetImage(Bitmap image)
-        {
-            if (image == null)
-            {
-                SetNullImage();
-            }
-            else
-            {
-                SetNonNullBitmap(image);
-            }
-        }
-
-
-        /// <summary>
-        /// Takes a copy of a new image
-        /// </summary>
-        private void SetNonNullBitmap(Bitmap newBitmap)
-        {
-            DropBitmapIfFormatOrSizeChanged(newBitmap);
-            var shouldCreateNewBitmap = (displayBitmap == null);
-
-            if (shouldCreateNewBitmap)
-            {
-                CreateNewBitmapFromBitmap(newBitmap);
-            }
-            else
-            {
-                CopyBitmapToExistingBitmap(newBitmap);
-            }
-        }
-
-
-        /// <summary>
-        /// Copies the contents of a new image to our existing image store
-        /// </summary>
-        private void CopyBitmapToExistingBitmap(Bitmap image)
-        {
-            if(displayBitmap == null)
-            {
-                throw new NullReferenceException("The display bitmap has not been created!");
-            }
-
-            Rectangle rect = new Rectangle(0, 0, displayBitmap.Width, displayBitmap.Height);
-
-            var existingBitmapData = displayBitmap.LockBits(rect, System.Drawing.Imaging.ImageLockMode.WriteOnly, image.PixelFormat);
-            var newBitmapData = image.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly, image.PixelFormat);
-
-            try
-            {
-                var bytesToCopy = newBitmapData.Stride * newBitmapData.Height;
-
-                unsafe
-                {
-                    Buffer.MemoryCopy(
-                        source: existingBitmapData.Scan0.ToPointer(),
-                        destination: newBitmapData.Scan0.ToPointer(),
-                        destinationSizeInBytes: bytesToCopy,
-                        sourceBytesToCopy: bytesToCopy);
-                }
-            }
-            finally
-            {
-                image.UnlockBits(newBitmapData);
-                displayBitmap.UnlockBits(existingBitmapData);
-            }
-
-            Invalidate(Rectangle.Round(virtualDisplay.PaintRect));
-        }
-
-
-        /// <summary>
-        /// Creates a copy of the new image
-        /// </summary>
-        private void CreateNewBitmapFromBitmap(Bitmap newBitmap)
-        {
-            displayBitmap = (Bitmap)newBitmap.Clone();
-            virtualDisplay.ImageSize = displayBitmap.Size;
-            Invalidate();
-        }
-
-
-        /// <summary>
-        /// Configures for no image
-        /// </summary>
-        private void SetNullImage()
-        {
-            DropBitmap();
-            Invalidate();
-        }
-
-
-        /// <summary>
-        /// Drops the current image store if the format or size is different
-        /// to the new bitmap
-        /// </summary>
-        private void DropBitmapIfFormatOrSizeChanged(Bitmap image)
-        {
-            if (displayBitmap == null) { return; }
-
-            var doesExistingBitmapFormatMatchNewBitmapFormat =
-                (displayBitmap.PixelFormat == image.PixelFormat) &&
-                (displayBitmap.Size == image.Size);
-
-            if (!doesExistingBitmapFormatMatchNewBitmapFormat)
-            {
-                DropBitmap();
-            }
         }
 
 
@@ -423,10 +284,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// </summary>
         private void PaintBitmap(PaintEventArgs paintEventArgs)
         {
-            if (displayBitmap == null)
-            {
-                throw new NullReferenceException("The display bitmap has not been created!");
-            }
+            if (image == null) { return; }
 
             var graphicsState = paintEventArgs.Graphics.Save();
 
@@ -434,9 +292,16 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             paintEventArgs.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
             paintEventArgs.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
 
-            paintEventArgs.Graphics.DrawImage(
-                image: displayBitmap,
-                rect: virtualDisplay.PaintRect);
+            try
+            {
+                paintEventArgs.Graphics.DrawImage(
+                    image: image,
+                    rect: virtualDisplay.PaintRect);
+            }
+            catch (ObjectDisposedException)
+            {
+                Image = null;
+            }
 
             paintEventArgs.Graphics.Restore(graphicsState);
         }

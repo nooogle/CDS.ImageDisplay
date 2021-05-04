@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="FormSimpleFitToWindow.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Humanizer.Core" Version="2.8.26" />
   </ItemGroup>
 

@@ -34,25 +34,24 @@ namespace CDS.Imaging.Demo
             // 
             // bitmapDisplayPanel
             // 
-            this.bitmapDisplayPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.bitmapDisplayPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.bitmapDisplayPanel.Location = new System.Drawing.Point(12, 12);
+            this.bitmapDisplayPanel.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
+            this.bitmapDisplayPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.bitmapDisplayPanel.Image = global::CDS.Imaging.Demo.Properties.Resources.Thailand;
+            this.bitmapDisplayPanel.Location = new System.Drawing.Point(0, 0);
             this.bitmapDisplayPanel.Mode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.FitToWindowCentred;
             this.bitmapDisplayPanel.Name = "bitmapDisplayPanel";
-            this.bitmapDisplayPanel.Size = new System.Drawing.Size(776, 426);
+            this.bitmapDisplayPanel.Size = new System.Drawing.Size(800, 374);
             this.bitmapDisplayPanel.TabIndex = 0;
-            this.bitmapDisplayPanel.Zoom = 1F;
+            this.bitmapDisplayPanel.Zoom = 1.038889F;
             // 
             // FormSimpleFitToWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 374);
             this.Controls.Add(this.bitmapDisplayPanel);
             this.Name = "FormSimpleFitToWindow";
-            this.Text = "FormSimpleFitToWindow";
+            this.Text = "Simple fit to window";
             this.ResumeLayout(false);
 
         }

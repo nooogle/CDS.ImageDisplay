@@ -121,49 +121,6 @@
             The virtual display wants to set a new paint rect
             </summary>
         </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.Dispose(System.Boolean)">
-            <summary> 
-            Clean up any resources being used.
-            </summary>
-            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.DropBitmap">
-            <summary>
-            Drop the current image
-            </summary>
-        </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.ClearImage">
-            <inheritdoc/>
-        </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.SetImage(System.Drawing.Bitmap)">
-            <inheritdoc/>
-        </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.SetNonNullBitmap(System.Drawing.Bitmap)">
-            <summary>
-            Takes a copy of a new image
-            </summary>
-        </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CopyBitmapToExistingBitmap(System.Drawing.Bitmap)">
-            <summary>
-            Copies the contents of a new image to our existing image store
-            </summary>
-        </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CreateNewBitmapFromBitmap(System.Drawing.Bitmap)">
-            <summary>
-            Creates a copy of the new image
-            </summary>
-        </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.SetNullImage">
-            <summary>
-            Configures for no image
-            </summary>
-        </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.DropBitmapIfFormatOrSizeChanged(System.Drawing.Bitmap)">
-            <summary>
-            Drops the current image store if the format or size is different
-            to the new bitmap
-            </summary>
-        </member>
         <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.MapImageToDisplay(System.Drawing.PointF)">
             <inheritdoc/>
         </member>
@@ -240,6 +197,12 @@
             Required designer variable.
             </summary>
         </member>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
         <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.InitializeComponent">
             <summary> 
             Required method for Designer support - do not modify 
@@ -266,6 +229,13 @@
             When the target zoom is within this value of 1.0f it will snap
             to 1.0f
             </summary>
+        </member>
+        <member name="T:CDS.Imaging.WinForms.BitmapDisplay.GetImageCallback">
+            <summary>
+            Callback delegate for getting an image
+            </summary>
+            <param name="sender">Sender of the callback</param>
+            <returns>An image or null if none is available</returns>
         </member>
         <member name="T:CDS.Imaging.WinForms.BitmapDisplay.OnPaintRectChangedCallback">
             <summary>
@@ -307,9 +277,12 @@
         </member>
         <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.Image">
             <summary>
-            Gets the image currently being rendered. This is owned by the display 
-            control and should not be modified by clients.
+            Get/set the image currently being displayed.
             </summary>
+            <remarks>
+            The <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.TargetImageCentre"/> is reset if an image is currently being 
+            displayed and a new image of a different size is set
+            </remarks>
         </member>
         <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.AnythingToDisplay">
             <summary>
@@ -401,21 +374,6 @@
             </remarks>
             <param name="displayLocation">A region on the image</param>
             <returns>A region on the display or an empty rectangle if there's nothing to display</returns>
-        </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.SetImage(System.Drawing.Bitmap)">
-            <summary>
-            Set the image to display. A copy is taken and the reference is not retained.
-            Passing null delegates to <see cref="M:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.ClearImage"/>. The geometry is not changed
-            if an image of the same size is already displayed. Otherwise the current 
-            <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.Mode"/> is respected but <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.TargetImageCentre"/> is
-            reset.
-            </summary>
-            <param name="image"></param>
-        </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.ClearImage">
-            <summary>
-            Removes the displayed image
-            </summary>
         </member>
         <member name="M:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.Centre">
             <summary>

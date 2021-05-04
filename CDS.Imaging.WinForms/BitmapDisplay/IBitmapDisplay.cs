@@ -15,10 +15,13 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
 
         /// <summary>
-        /// Gets the image currently being rendered. This is owned by the display 
-        /// control and should not be modified by clients.
+        /// Get/set the image currently being displayed.
         /// </summary>
-        Image? Image { get; }
+        /// <remarks>
+        /// The <see cref="TargetImageCentre"/> is reset if an image is currently being 
+        /// displayed and a new image of a different size is set
+        /// </remarks>
+        Image? Image { get; set; }
 
 
         /// <summary>
@@ -123,23 +126,6 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// <returns>A region on the display or an empty rectangle if there's nothing to display</returns>
         RectangleF MapDisplayToImage(RectangleF displayLocation);
         
-        
-        /// <summary>
-        /// Set the image to display. A copy is taken and the reference is not retained.
-        /// Passing null delegates to <see cref="ClearImage"/>. The geometry is not changed
-        /// if an image of the same size is already displayed. Otherwise the current 
-        /// <see cref="Mode"/> is respected but <see cref="TargetImageCentre"/> is
-        /// reset.
-        /// </summary>
-        /// <param name="image"></param>
-        void SetImage(Bitmap image);
-
-
-        /// <summary>
-        /// Removes the displayed image
-        /// </summary>
-        void ClearImage();
-
 
         /// <summary>
         /// Centres the image on the display, retaining the existing zoom level.

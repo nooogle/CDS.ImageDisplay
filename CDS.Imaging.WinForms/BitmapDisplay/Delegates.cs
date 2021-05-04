@@ -3,6 +3,14 @@
 namespace CDS.Imaging.WinForms.BitmapDisplay
 {
     /// <summary>
+    /// Callback delegate for getting an image
+    /// </summary>
+    /// <param name="sender">Sender of the callback</param>
+    /// <returns>An image or null if none is available</returns>
+    public delegate Image GetImageCallback(IBitmapDisplay sender);
+
+
+    /// <summary>
     /// Callback delegate
     /// </summary>
     /// <param name="sender">Callback sender</param>

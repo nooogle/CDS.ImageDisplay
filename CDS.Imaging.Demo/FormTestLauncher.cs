@@ -25,11 +25,21 @@ namespace CDS.Imaging.Demo
 
         private void AddDemos()
         {
+            var simpleNode = treeView.Nodes.Add("Simple");
+
             AddDemo(
-                parentNode: treeView.Nodes,
-                name: "Simple fit to window",
-                tooltip: "Form with single image configure to always resize to fit to the window constraints",
+                parentNode: simpleNode.Nodes,
+                name: "Fit to window",
+                tooltip: "Form with single image configured to always resize to fit to the window constraints",
                 runDemo: () => RunModalForm<FormSimpleFitToWindow>());
+
+            AddDemo(
+                parentNode: simpleNode.Nodes,
+                name: "Actual size, centered",
+                tooltip: "Form with single image configured to use 1:1 zoom and remain centered",
+                runDemo: () => RunModalForm<FormSimpleActualSizeCentred>());
+
+            treeView.ExpandAll();
         }
 
 

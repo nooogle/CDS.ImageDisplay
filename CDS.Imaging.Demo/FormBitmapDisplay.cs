@@ -9,6 +9,7 @@ namespace CDS.Imaging.Demo
 {
     public partial class FormBitmapDisplay : Form
     {
+        Bitmap loadedBitmap;
         Font fixedWidthFont;
         Brush msgPanelBrush;
 
@@ -136,7 +137,7 @@ namespace CDS.Imaging.Demo
         private void MenuImageBuiltIn_SelectedIndexChanged(object sender, System.EventArgs e)
         {
             var imageNameAndResource = menuImageBuiltIn.SelectedItem as ImageNameAndResource;
-            bitmapDisplay.SetImage(imageNameAndResource.Bitmap);
+            bitmapDisplay.CDS.Image = imageNameAndResource.Bitmap;
         }
 
 
@@ -174,8 +175,9 @@ namespace CDS.Imaging.Demo
         {
             try
             {
-                using var bitmap = (Bitmap)Image.FromFile(fileName);
-                bitmapDisplay.SetImage(bitmap);
+                DropLoadedBitmap();
+                loadedBitmap = (Bitmap)Image.FromFile(fileName);
+                bitmapDisplay.CDS.Image = loadedBitmap;
             }
             catch(Exception exception)
             {
@@ -187,6 +189,14 @@ namespace CDS.Imaging.Demo
                     icon: MessageBoxIcon.Error);
             }
         }
+
+
+        private void DropLoadedBitmap()
+        {
+            loadedBitmap?.Dispose();
+            loadedBitmap = null;
+        }
+
 
         private void bitmapDisplay_DisplayModeChanged(BitmapDisplayPanel sender)
         {
