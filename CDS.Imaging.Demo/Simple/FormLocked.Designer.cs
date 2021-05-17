@@ -1,7 +1,7 @@
 ﻿
-namespace CDS.Imaging.Demo
+namespace CDS.Imaging.Demo.Simple
 {
-    partial class FormSimpleActualSizeCentred
+    partial class FormLocked
     {
         /// <summary>
         /// Required designer variable.
@@ -29,35 +29,35 @@ namespace CDS.Imaging.Demo
         /// </summary>
         private void InitializeComponent()
         {
-            this.bitmapDisplayPanel1 = new CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel();
+            this.bitmapDisplayPanel = new CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel();
             this.SuspendLayout();
             // 
-            // bitmapDisplayPanel1
+            // bitmapDisplayPanel
             // 
-            this.bitmapDisplayPanel1.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
-            this.bitmapDisplayPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bitmapDisplayPanel1.Image = global::CDS.Imaging.Demo.Properties.Resources.Thailand;
-            this.bitmapDisplayPanel1.Location = new System.Drawing.Point(0, 0);
-            this.bitmapDisplayPanel1.Mode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.ActualSizeCentred;
-            this.bitmapDisplayPanel1.Name = "bitmapDisplayPanel1";
-            this.bitmapDisplayPanel1.Size = new System.Drawing.Size(800, 450);
-            this.bitmapDisplayPanel1.TabIndex = 0;
-            this.bitmapDisplayPanel1.Zoom = 1F;
+            this.bitmapDisplayPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.bitmapDisplayPanel.Image = global::CDS.Imaging.Demo.Properties.Resources.Thailand;
+            this.bitmapDisplayPanel.Location = new System.Drawing.Point(0, 0);
+            this.bitmapDisplayPanel.Mode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Locked;
+            this.bitmapDisplayPanel.Name = "bitmapDisplayPanel";
+            this.bitmapDisplayPanel.Size = new System.Drawing.Size(800, 450);
+            this.bitmapDisplayPanel.TabIndex = 0;
+            this.bitmapDisplayPanel.Zoom = 1F;
             // 
-            // FormSimpleActualSizeCentred
+            // FormLocked
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.bitmapDisplayPanel1);
-            this.Name = "FormSimpleActualSizeCentred";
-            this.Text = "Simple: actual size centered";
+            this.Controls.Add(this.bitmapDisplayPanel);
+            this.Name = "FormLocked";
+            this.Text = "Simple: locked";
+            this.Load += new System.EventHandler(this.FormLocked_Load);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private WinForms.BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel1;
+        private WinForms.BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel;
     }
 }

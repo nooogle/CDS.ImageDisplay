@@ -42,12 +42,14 @@
         <member name="F:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free">
             <summary>
             Allow the image zoom and location to change, either programmatically or
-            via the mouse
+            via the mouse. The <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.TargetImageCentre"/> is reset
+            if the image size changes.
             </summary>
         </member>
         <member name="F:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Locked">
             <summary>
-            Don't change the zoom or location settings at any time under any circumstances
+            Don't change the zoom or location settings unless the image size 
+            If the image size is changed the <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.PaintRect"/> 
             </summary>
         </member>
         <member name="T:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel">

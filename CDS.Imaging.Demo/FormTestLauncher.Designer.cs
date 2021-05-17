@@ -42,6 +42,7 @@ namespace CDS.Imaging.Demo
             this.treeView.Size = new System.Drawing.Size(509, 399);
             this.treeView.TabIndex = 0;
             this.treeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseDoubleClick);
+            this.treeView.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.treeView_KeyPress);
             // 
             // FormTestLauncher
             // 

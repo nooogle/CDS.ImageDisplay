@@ -1,7 +1,7 @@
 ﻿
-namespace CDS.Imaging.Demo
+namespace CDS.Imaging.Demo.Simple
 {
-    partial class FormSimpleFitToWindow
+    partial class FormFitToWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -51,7 +51,7 @@ namespace CDS.Imaging.Demo
             this.ClientSize = new System.Drawing.Size(800, 374);
             this.Controls.Add(this.bitmapDisplayPanel);
             this.Name = "FormSimpleFitToWindow";
-            this.Text = "Simple fit to window";
+            this.Text = "Simple: fit to window";
             this.ResumeLayout(false);
 
         }

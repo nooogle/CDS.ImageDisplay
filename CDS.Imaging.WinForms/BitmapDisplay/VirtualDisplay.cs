@@ -184,8 +184,15 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
                 if (displaySize != value)
                 {
                     displaySize = value;
-                    targetDisplayCentre = new PointF(displaySize.Width / 2.0f, displaySize.Height / 2.0f);
-                    ForceApplyCurrentAutomaticMode();
+                    if (mode != BitmapDisplayMode.Locked)
+                    {
+                        targetDisplayCentre = new PointF(displaySize.Width / 2.0f, displaySize.Height / 2.0f);
+                        ForceApplyCurrentAutomaticMode();
+                    }
+                    else
+                    {
+                        RecalculatePaintRect();
+                    }
                 }
             }
         }

@@ -19,13 +19,15 @@
 
         /// <summary>
         /// Allow the image zoom and location to change, either programmatically or
-        /// via the mouse
+        /// via the mouse. The <see cref="IBitmapDisplay.TargetImageCentre"/> is reset
+        /// if the image size changes.
         /// </summary>
         Free,
 
 
         /// <summary>
-        /// Don't change the zoom or location settings at any time under any circumstances
+        /// Don't change the zoom or location settings unless the image size 
+        /// If the image size is changed the <see cref="IBitmapDisplay.PaintRect"/> 
         /// </summary>
         Locked
     }

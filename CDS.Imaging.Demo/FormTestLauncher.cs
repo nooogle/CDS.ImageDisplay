@@ -31,13 +31,26 @@ namespace CDS.Imaging.Demo
                 parentNode: simpleNode.Nodes,
                 name: "Fit to window",
                 tooltip: "Form with single image configured to always resize to fit to the window constraints",
-                runDemo: () => RunModalForm<FormSimpleFitToWindow>());
+                runDemo: () => RunModalForm<Simple.FormFitToWindow>());
 
             AddDemo(
                 parentNode: simpleNode.Nodes,
                 name: "Actual size, centered",
                 tooltip: "Form with single image configured to use 1:1 zoom and remain centered",
-                runDemo: () => RunModalForm<FormSimpleActualSizeCentred>());
+                runDemo: () => RunModalForm<Simple.FormActualSizeCentred>());
+
+            AddDemo(
+                parentNode: simpleNode.Nodes,
+                name: "Locked",
+                tooltip: "Form with single image configured to lock image in position and zoom",
+                runDemo: () => RunModalForm<Simple.FormLocked>());
+
+            AddDemo(
+                parentNode: simpleNode.Nodes,
+                name: "Free",
+                tooltip: "Form with single image configured to allow the mouse to " +
+                "drag (left-button) and zoom in and out (mouse wheel) of the image",
+                runDemo: () => RunModalForm<Simple.FormFree>());
 
             treeView.ExpandAll();
         }
@@ -68,6 +81,15 @@ namespace CDS.Imaging.Demo
         private void treeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             var action = e.Node.Tag as Action;
+            action?.Invoke();
+        }
+
+        private void treeView_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            var isEnterKey = (e.KeyChar == '\r');
+            if(!isEnterKey) { return; }
+
+            var action = treeView.SelectedNode?.Tag as Action;
             action?.Invoke();
         }
     }

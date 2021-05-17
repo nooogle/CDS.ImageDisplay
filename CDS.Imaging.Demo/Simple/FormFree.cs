@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.Demo
+namespace CDS.Imaging.Demo.Simple
 {
-    public partial class FormSimpleFitToWindow : Form
+    public partial class FormFree : Form
     {
-        public FormSimpleFitToWindow()
+        public FormFree()
         {
             InitializeComponent();
         }
