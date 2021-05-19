@@ -23,12 +23,5 @@
         /// if the image size changes.
         /// </summary>
         Free,
-
-
-        /// <summary>
-        /// Don't change the zoom or location settings unless the image size 
-        /// If the image size is changed the <see cref="IBitmapDisplay.PaintRect"/> 
-        /// </summary>
-        Locked
     }
 }

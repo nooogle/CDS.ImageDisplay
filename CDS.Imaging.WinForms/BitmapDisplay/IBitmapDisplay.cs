@@ -33,7 +33,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// <summary>
         /// The image display mode
         /// </summary>
-        BitmapDisplayMode Mode { get; set; }
+        BitmapDisplayMode DisplayMode { get; set; }
 
 
         /// <summary>

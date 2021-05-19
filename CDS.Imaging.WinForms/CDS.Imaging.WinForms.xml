@@ -46,12 +46,6 @@
             if the image size changes.
             </summary>
         </member>
-        <member name="F:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Locked">
-            <summary>
-            Don't change the zoom or location settings unless the image size 
-            If the image size is changed the <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.PaintRect"/> 
-            </summary>
-        </member>
         <member name="T:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel">
             <summary>
             Displays a bitmap
@@ -91,7 +85,7 @@
         <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.AnythingToDisplay">
             <inheritdoc/>
         </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.Mode">
+        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.DisplayMode">
             <inheritdoc/>
         </member>
         <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.TargetImageCentre">
@@ -291,7 +285,7 @@
             True if there's anything to display
             </summary>
         </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.Mode">
+        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.DisplayMode">
             <summary>
             The image display mode
             </summary>
@@ -543,7 +537,7 @@
             Recalculates the paint rect based on the current mode. E.g. even if the 
             mode has not been changed, and we're in fit to window, we'll recalculate the
             appropriate rectangle based on the current image/display size and target 
-            centres. 
+            centres. Does nothing if mode is <see cref="F:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free"/>.
             </summary>
         </member>
         <member name="M:CDS.Imaging.WinForms.BitmapDisplay.VirtualDisplay.#ctor(CDS.Imaging.WinForms.BitmapDisplay.OnPaintRectChangedCallback)">

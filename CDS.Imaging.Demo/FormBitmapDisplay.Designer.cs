@@ -42,7 +42,6 @@ namespace CDS.Imaging.Demo
             this.menuDisplayModeFitToWindow = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDisplayModeActualSize = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDisplayModeFree = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuDisplayModeLocked = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.menuDisplayCentre = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -63,7 +62,7 @@ namespace CDS.Imaging.Demo
             this.bitmapDisplay.TargetImageCentre = ((System.Drawing.PointF)(resources.GetObject("bitmapDisplay.ImageDisplayCentre")));
             this.bitmapDisplay.Location = new System.Drawing.Point(0, 27);
             this.bitmapDisplay.Margin = new System.Windows.Forms.Padding(6);
-            this.bitmapDisplay.Mode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.FitToWindowCentred;
+            this.bitmapDisplay.DisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.FitToWindowCentred;
             this.bitmapDisplay.Name = "bitmapDisplay";
             this.bitmapDisplay.Size = new System.Drawing.Size(624, 414);
             this.bitmapDisplay.TabIndex = 0;
@@ -128,7 +127,6 @@ namespace CDS.Imaging.Demo
             this.menuDisplayModeFitToWindow,
             this.menuDisplayModeActualSize,
             this.menuDisplayModeFree,
-            this.menuDisplayModeLocked,
             this.toolStripSeparator3,
             this.menuDisplayCentre,
             this.menuDisplayActualSize,
@@ -161,13 +159,6 @@ namespace CDS.Imaging.Demo
             this.menuDisplayModeFree.Size = new System.Drawing.Size(255, 44);
             this.menuDisplayModeFree.Text = "Free";
             this.menuDisplayModeFree.Click += new System.EventHandler(this.menuDisplayModeFree_Click);
-            // 
-            // menuDisplayModeLocked
-            // 
-            this.menuDisplayModeLocked.Name = "menuDisplayModeLocked";
-            this.menuDisplayModeLocked.Size = new System.Drawing.Size(255, 44);
-            this.menuDisplayModeLocked.Text = "Locked";
-            this.menuDisplayModeLocked.Click += new System.EventHandler(this.menuDisplayModeLocked_Click);
             // 
             // toolStripSeparator3
             // 
@@ -282,7 +273,6 @@ namespace CDS.Imaging.Demo
         private System.Windows.Forms.ToolStripMenuItem menuDisplayModeFitToWindow;
         private System.Windows.Forms.ToolStripMenuItem menuDisplayModeActualSize;
         private System.Windows.Forms.ToolStripMenuItem menuDisplayModeFree;
-        private System.Windows.Forms.ToolStripMenuItem menuDisplayModeLocked;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem menuDisplayCentre;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;

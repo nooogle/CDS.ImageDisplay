@@ -212,12 +212,6 @@ namespace CDS.Imaging.WinFormsTests.BitmapDisplay
             originalPaintRect = vid.PaintRect;
             vid.TargetImageCentre = new PointF(0, 0);
             CheckRectagleFIsExpected(vid.PaintRect, originalPaintRect, 0.0001f);
-
-            // Locked
-            vid.Mode = BitmapDisplayMode.Locked;
-            originalPaintRect = vid.PaintRect;
-            vid.TargetImageCentre = new PointF(0, 0);
-            CheckRectagleFIsExpected(vid.PaintRect, originalPaintRect, 0.0001f);
         }
 
 
@@ -259,12 +253,6 @@ namespace CDS.Imaging.WinFormsTests.BitmapDisplay
 
             // Actual size
             vid.Mode = BitmapDisplayMode.ActualSizeCentred;
-            originalPaintRect = vid.PaintRect;
-            vid.TargetDisplayCentre = new PointF(0, 0);
-            CheckRectagleFIsExpected(vid.PaintRect, originalPaintRect, 0.0001f);
-
-            // Locked
-            vid.Mode = BitmapDisplayMode.Locked;
             originalPaintRect = vid.PaintRect;
             vid.TargetDisplayCentre = new PointF(0, 0);
             CheckRectagleFIsExpected(vid.PaintRect, originalPaintRect, 0.0001f);

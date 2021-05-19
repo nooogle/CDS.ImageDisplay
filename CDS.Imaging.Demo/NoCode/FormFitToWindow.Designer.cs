@@ -1,5 +1,5 @@
 ﻿
-namespace CDS.Imaging.Demo.Simple
+namespace CDS.Imaging.Demo.NoCode
 {
     partial class FormFitToWindow
     {
@@ -38,7 +38,7 @@ namespace CDS.Imaging.Demo.Simple
             this.bitmapDisplayPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bitmapDisplayPanel.Image = global::CDS.Imaging.Demo.Properties.Resources.Thailand;
             this.bitmapDisplayPanel.Location = new System.Drawing.Point(0, 0);
-            this.bitmapDisplayPanel.Mode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.FitToWindowCentred;
+            this.bitmapDisplayPanel.DisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.FitToWindowCentred;
             this.bitmapDisplayPanel.Name = "bitmapDisplayPanel";
             this.bitmapDisplayPanel.Size = new System.Drawing.Size(800, 374);
             this.bitmapDisplayPanel.TabIndex = 0;

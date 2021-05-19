@@ -1,7 +1,7 @@
 ﻿
-namespace CDS.Imaging.Demo.Simple
+namespace CDS.Imaging.Demo.NoCode
 {
-    partial class FormLocked
+    partial class FormFree
     {
         /// <summary>
         /// Required designer variable.
@@ -37,21 +37,20 @@ namespace CDS.Imaging.Demo.Simple
             this.bitmapDisplayPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bitmapDisplayPanel.Image = global::CDS.Imaging.Demo.Properties.Resources.Thailand;
             this.bitmapDisplayPanel.Location = new System.Drawing.Point(0, 0);
-            this.bitmapDisplayPanel.Mode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Locked;
+            this.bitmapDisplayPanel.DisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free;
             this.bitmapDisplayPanel.Name = "bitmapDisplayPanel";
             this.bitmapDisplayPanel.Size = new System.Drawing.Size(800, 450);
             this.bitmapDisplayPanel.TabIndex = 0;
             this.bitmapDisplayPanel.Zoom = 1F;
             // 
-            // FormLocked
+            // FormFree
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.bitmapDisplayPanel);
-            this.Name = "FormLocked";
-            this.Text = "Simple: locked";
-            this.Load += new System.EventHandler(this.FormLocked_Load);
+            this.Name = "FormFree";
+            this.Text = "Simple: Free";
             this.ResumeLayout(false);
 
         }

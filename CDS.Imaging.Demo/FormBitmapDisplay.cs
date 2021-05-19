@@ -37,7 +37,7 @@ namespace CDS.Imaging.Demo
         private void bitmapDisplay_PaintOver(BitmapDisplayPanel sender, Graphics graphics)
         {
             var info = new StringBuilder();
-            info.Append($"Display mode      {sender.CDS.Mode.Humanize()}\n");
+            info.Append($"Display mode      {sender.CDS.DisplayMode.Humanize()}\n");
             info.Append($"Display size      {sender.ClientSize}\n");
             if (!sender.CDS.AnythingToDisplay)
             {
@@ -94,36 +94,29 @@ namespace CDS.Imaging.Demo
 
         private void menuDisplayModeFree_Click(object sender, EventArgs e)
         {
-            bitmapDisplay.CDS.Mode = BitmapDisplayMode.Free;
+            bitmapDisplay.CDS.DisplayMode = BitmapDisplayMode.Free;
             UpdateCommandEnablement();
             bitmapDisplay.Invalidate();
         }
 
         private void UpdateCommandEnablement()
         {
-            menuDisplayCentre.Enabled = (bitmapDisplay.CDS.Mode == BitmapDisplayMode.Free);
-            menuDisplayZoomIn.Enabled = (bitmapDisplay.CDS.Mode == BitmapDisplayMode.Free);
-            menuDisplayZoomOut.Enabled = (bitmapDisplay.CDS.Mode == BitmapDisplayMode.Free);
-            menuDisplayZoomReset.Enabled = (bitmapDisplay.CDS.Mode == BitmapDisplayMode.Free);
+            menuDisplayCentre.Enabled = (bitmapDisplay.CDS.DisplayMode == BitmapDisplayMode.Free);
+            menuDisplayZoomIn.Enabled = (bitmapDisplay.CDS.DisplayMode == BitmapDisplayMode.Free);
+            menuDisplayZoomOut.Enabled = (bitmapDisplay.CDS.DisplayMode == BitmapDisplayMode.Free);
+            menuDisplayZoomReset.Enabled = (bitmapDisplay.CDS.DisplayMode == BitmapDisplayMode.Free);
         }
 
         private void menuDisplayModeFitToWindow_Click(object sender, EventArgs e)
         {
-            bitmapDisplay.CDS.Mode = BitmapDisplayMode.FitToWindowCentred;
+            bitmapDisplay.CDS.DisplayMode = BitmapDisplayMode.FitToWindowCentred;
             UpdateCommandEnablement();
             bitmapDisplay.Invalidate();
         }
 
         private void menuDisplayModeActualSize_Click(object sender, EventArgs e)
         {
-            bitmapDisplay.CDS.Mode = BitmapDisplayMode.ActualSizeCentred;
-            UpdateCommandEnablement();
-            bitmapDisplay.Invalidate();
-        }
-
-        private void menuDisplayModeLocked_Click(object sender, EventArgs e)
-        {
-            bitmapDisplay.CDS.Mode = BitmapDisplayMode.Locked;
+            bitmapDisplay.CDS.DisplayMode = BitmapDisplayMode.ActualSizeCentred;
             UpdateCommandEnablement();
             bitmapDisplay.Invalidate();
         }
@@ -207,10 +200,9 @@ namespace CDS.Imaging.Demo
 
         public void UpdateDisplayModeCheckboxes()
         {
-            menuDisplayModeFitToWindow.Checked = (bitmapDisplay.Mode == BitmapDisplayMode.FitToWindowCentred);
-            menuDisplayModeActualSize.Checked = (bitmapDisplay.Mode == BitmapDisplayMode.ActualSizeCentred);
-            menuDisplayModeFree.Checked = (bitmapDisplay.Mode == BitmapDisplayMode.Free);
-            menuDisplayModeLocked.Checked = (bitmapDisplay.Mode == BitmapDisplayMode.Locked);
+            menuDisplayModeFitToWindow.Checked = (bitmapDisplay.DisplayMode == BitmapDisplayMode.FitToWindowCentred);
+            menuDisplayModeActualSize.Checked = (bitmapDisplay.DisplayMode == BitmapDisplayMode.ActualSizeCentred);
+            menuDisplayModeFree.Checked = (bitmapDisplay.DisplayMode == BitmapDisplayMode.Free);
         }
 
         private void menuDisplayZoomOut_Click(object sender, System.EventArgs e)

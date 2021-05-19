@@ -25,36 +25,34 @@ namespace CDS.Imaging.Demo
 
         private void AddDemos()
         {
-            var simpleNode = treeView.Nodes.Add("Simple");
-
-            AddDemo(
-                parentNode: simpleNode.Nodes,
-                name: "Fit to window",
-                tooltip: "Form with single image configured to always resize to fit to the window constraints",
-                runDemo: () => RunModalForm<Simple.FormFitToWindow>());
-
-            AddDemo(
-                parentNode: simpleNode.Nodes,
-                name: "Actual size, centered",
-                tooltip: "Form with single image configured to use 1:1 zoom and remain centered",
-                runDemo: () => RunModalForm<Simple.FormActualSizeCentred>());
-
-            AddDemo(
-                parentNode: simpleNode.Nodes,
-                name: "Locked",
-                tooltip: "Form with single image configured to lock image in position and zoom",
-                runDemo: () => RunModalForm<Simple.FormLocked>());
-
-            AddDemo(
-                parentNode: simpleNode.Nodes,
-                name: "Free",
-                tooltip: "Form with single image configured to allow the mouse to " +
-                "drag (left-button) and zoom in and out (mouse wheel) of the image",
-                runDemo: () => RunModalForm<Simple.FormFree>());
+            AddNoCodeDemoNodes();
 
             treeView.ExpandAll();
         }
 
+        private void AddNoCodeDemoNodes()
+        {
+            var noCodeNode = treeView.Nodes.Add("No code");
+
+            AddDemo(
+                parentNode: noCodeNode.Nodes,
+                name: "Fit to window",
+                tooltip: "Form with single image configured to always resize to fit to the window constraints",
+                runDemo: () => RunModalForm<NoCode.FormFitToWindow>());
+
+            AddDemo(
+                parentNode: noCodeNode.Nodes,
+                name: "Actual size, centered",
+                tooltip: "Form with single image configured to use 1:1 zoom and remain centered",
+                runDemo: () => RunModalForm<NoCode.FormActualSizeCentred>());
+
+            AddDemo(
+                parentNode: noCodeNode.Nodes,
+                name: "Free",
+                tooltip: "Form with single image configured to allow the mouse to " +
+                "drag (left-button) and zoom in and out (mouse wheel) of the image",
+                runDemo: () => RunModalForm<NoCode.FormFree>());
+        }
 
         private void AddDemo(
             TreeNodeCollection parentNode,

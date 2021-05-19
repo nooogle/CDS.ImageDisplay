@@ -184,15 +184,8 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
                 if (displaySize != value)
                 {
                     displaySize = value;
-                    if (mode != BitmapDisplayMode.Locked)
-                    {
-                        targetDisplayCentre = new PointF(displaySize.Width / 2.0f, displaySize.Height / 2.0f);
-                        ForceApplyCurrentAutomaticMode();
-                    }
-                    else
-                    {
-                        RecalculatePaintRect();
-                    }
+                    targetDisplayCentre = new PointF(displaySize.Width / 2.0f, displaySize.Height / 2.0f);
+                    ForceApplyCurrentAutomaticMode();
                 }
             }
         }
@@ -220,7 +213,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// Recalculates the paint rect based on the current mode. E.g. even if the 
         /// mode has not been changed, and we're in fit to window, we'll recalculate the
         /// appropriate rectangle based on the current image/display size and target 
-        /// centres. 
+        /// centres. Does nothing if mode is <see cref="BitmapDisplayMode.Free"/>.
         /// </summary>
         private void ForceApplyCurrentAutomaticMode()
         {

@@ -98,7 +98,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// <inheritdoc/>
         [Category(categoryCDS)]
         [Description("The image display mode")]
-        public BitmapDisplayMode Mode
+        public BitmapDisplayMode DisplayMode
         {
             get => virtualDisplay.Mode;
             set
@@ -320,7 +320,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
                 var mouseLocationInImageUnits = MapDisplayToImage(mouseLocationInDisplayUnits);
 
                 zoomManager.OnMouseWheel(
-                    imageDisplayMode: Mode,
+                    imageDisplayMode: DisplayMode,
                     currentZoom: virtualDisplay.Zoom,
                     mouseLocationInDisplayUnits: mouseLocationInDisplayUnits,
                     mouseLocationInImageUnits: mouseLocationInImageUnits,
@@ -363,7 +363,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             if (AnythingToDisplay)
             {
                 dragManager.OnMouseDown(
-                    imageDisplayMode: Mode,
+                    imageDisplayMode: DisplayMode,
                     mouseEventArgs: mouseEventArgs,
                     currentTargetDisplayCentre: virtualDisplay.TargetDisplayCentre);
             }
