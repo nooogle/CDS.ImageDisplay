@@ -9,7 +9,7 @@ namespace CDS.Imaging.Demo.DemoForms
 {
     public partial class FormPaintOverAndUnder : Form
     {
-        Bitmap loadedBitmap;
+        Bitmap? loadedBitmap;
         Font fixedWidthFont;
         Brush msgPanelBrush;
 
@@ -46,10 +46,10 @@ namespace CDS.Imaging.Demo.DemoForms
             else
             {
                 var r = sender.CDS.PaintRect;
-                info.Append($"Bitmap size       {sender.CDS.GetDisplayImage().Size}\n");
+                info.Append($"Bitmap size       {sender.CDS.GetDisplayImage()?.Size}\n");
                 info.Append($"Paint zoom        {sender.CDS.Zoom:0.000}\n");
                 info.Append($"Paint rect        {r.X:0.0}, {r.Y:0.0}, {r.Width:0.0}, {r.Height:0:0}\n");
-                info.Append($"Format            {sender.CDS.GetDisplayImage().PixelFormat.Humanize()}\n");
+                info.Append($"Format            {sender.CDS.GetDisplayImage()?.PixelFormat.Humanize()}\n");
             }
             info.Append($"Set image         {sender.CDS.TimingMetrics.SetImage.Humanize()}\n");
             info.Append($"Paint foreground  {sender.CDS.TimingMetrics.ForegroundPaint.Humanize()}\n");
@@ -130,7 +130,8 @@ namespace CDS.Imaging.Demo.DemoForms
         private void MenuImageBuiltIn_SelectedIndexChanged(object sender, System.EventArgs e)
         {
             var imageNameAndResource = menuImageBuiltIn.SelectedItem as ImageNameAndResource;
-            bitmapDisplay.CDS.SetImage(imageNameAndResource.Bitmap);
+
+            bitmapDisplay.CDS.SetImage(imageNameAndResource?.Bitmap);
         }
 
 

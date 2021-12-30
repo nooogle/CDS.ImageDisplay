@@ -41,30 +41,30 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// exists and is the same specification as the new image, otherwise 
         /// creating a clone of the new image.
         /// </summary>
-        public void SetNewImage(Bitmap? newImage)
+        public void SetNewImage(IImageSource? imageSource)
         {
-            if (newImage == null)
+            if (imageSource == null)
             {
                 DropImage();
             }
             else if (Image == null)
             {
-                CreateImageFromOther(newImage: newImage);
+                CreateImageFromOther(imageSource);
             }
             else
             {
                 var sameSpecification =
-                    (Image.PixelFormat == newImage.PixelFormat) &&
-                    (Image.Size == newImage.Size);
+                    (Image.PixelFormat == imageSource.PixelFormat) &&
+                    (Image.Size == imageSource.Size);
 
                 if (sameSpecification)
                 {
-                    CopyImageBitsIntoExisting(source: newImage);
+                    CopyImageBitsIntoExisting(imageSource);
                 }
                 else
                 {
                     DropImage();
-                    CreateImageFromOther(newImage: newImage);
+                    CreateImageFromOther(imageSource);
                 }
             }
         }
@@ -74,9 +74,28 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// Creates the display image from a full clone of another image
         /// and reconfigures the display
         /// </summary>
-        private void CreateImageFromOther(Bitmap newImage)
+        private void CreateImageFromOther(IImageSource imageSource)
         {
-            Image = (Bitmap)newImage.Clone();
+            Image = new Bitmap(
+                width: imageSource.Size.Width,
+                height: imageSource.Size.Height,
+                stride: imageSource.Stride,
+                format: imageSource.PixelFormat,
+                scan0: imageSource.Scan0);
+
+            if(imageSource.PixelFormat == System.Drawing.Imaging.PixelFormat.Format8bppIndexed)
+            {
+                var palette = Image.Palette;
+                for(int index = 0; index < 256; index++)
+                {
+                    palette.Entries[index] = Color.FromArgb(index, index, index);
+                }
+
+                Image.Palette = palette;
+            }
+
+
+            CopyImageBitsIntoExisting(imageSource);
         }
 
 
@@ -84,28 +103,27 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// Copy pixels from one image directly into another; the images
         /// must have the same specification (checked by the caller!)
         /// </summary>
-        private void CopyImageBitsIntoExisting(Bitmap source)
+        private void CopyImageBitsIntoExisting(IImageSource imageSource)
         {
             if(Image == null) { return; }
 
-            var roi = new Rectangle(0, 0, source.Width, source.Height);
+            var roi = new Rectangle(0, 0, Image.Width, Image.Height);
 
-            var sourceBits = source.LockBits(roi, System.Drawing.Imaging.ImageLockMode.ReadOnly, source.PixelFormat);
+            //var sourceBits = source.LockBits(roi, System.Drawing.Imaging.ImageLockMode.ReadOnly, source.PixelFormat);
             var destBits = Image.LockBits(roi, System.Drawing.Imaging.ImageLockMode.WriteOnly, Image.PixelFormat);
 
-            var bytesToCopy = sourceBits.Stride * source.Height;
+            var bytesToCopy = destBits.Stride * destBits.Height;
 
             unsafe
             {
                 Buffer.MemoryCopy(
-                    source: (void*)sourceBits.Scan0,
+                    source: (void*)imageSource.Scan0,
                     destination: (void*)destBits.Scan0,
                     destinationSizeInBytes: bytesToCopy,
                     sourceBytesToCopy: bytesToCopy);
             }
 
             Image.UnlockBits(destBits);
-            source.UnlockBits(sourceBits);
         }
 
 

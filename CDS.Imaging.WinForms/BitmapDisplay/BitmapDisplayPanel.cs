@@ -82,18 +82,29 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
         /// <inheritdoc/>
         [Category(categoryCDS)]
-        public void SetImage(Bitmap? image)
+        public void SetImage(IImageSource? imageSource)
         {
-            lock(imageLock)
+            lock (imageLock)
             {
-                if(InvokeRequired)
+                if (InvokeRequired)
                 {
-                    SetImageIndirectlyFromNonUIThread(image);
+                    SetImageIndirectlyFromNonUIThread(imageSource);
                 }
                 else
                 {
-                    SetImageDirectlyFromUIThread(image);
+                    SetImageDirectlyFromUIThread(imageSource);
                 }
+            }
+        }
+
+
+        /// <inheritdoc/>
+        [Category(categoryCDS)]
+        public void SetImage(Bitmap? image)
+        {
+            using (var imageSource = new BitmapImageSource(image))
+            {
+                SetImage(imageSource);
             }
         }
 
@@ -102,7 +113,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// Sets the new image as a pending image; then invokes an update
         /// method to get this pending image onto the display
         /// </summary>
-        private void SetImageIndirectlyFromNonUIThread(Bitmap? image)
+        private void SetImageIndirectlyFromNonUIThread(IImageSource? imageSource)
         {
             // If we're still waiting to apply a previous non-UI image then
             // let's abandon this one; it's bad becuase we lose an image, but
@@ -115,7 +126,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             // by our lock (in SetImage) so no one else can conflict with this 
             // wrapper
             isWaitingToApplyPendingImage = true;
-            pendingDisplayImage.SetNewImage(image);
+            pendingDisplayImage.SetNewImage(imageSource);
 
 
             // Post the following action on the UI thread and return immedately;
@@ -135,9 +146,9 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// we won't be mid-paint; we can directly clone or copy the new image
         /// and repaint
         /// </summary>
-        private void SetImageDirectlyFromUIThread(Bitmap? image)
+        private void SetImageDirectlyFromUIThread(IImageSource? imageSource)
         {
-            displayImage.SetNewImage(image);
+            displayImage.SetNewImage(imageSource);
             virtualDisplay.ImageSize = displayImage.ImageSize;
             Invalidate();
         }

@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +13,9 @@
 
   <ItemGroup>
     <PackageReference Include="Humanizer.Core" Version="2.13.14" />
+    <PackageReference Include="OpenCvSharp4" Version="4.5.3.20211228" />
+    <PackageReference Include="OpenCvSharp4.Extensions" Version="4.5.3.20211228" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.5.3.20211228" />
   </ItemGroup>
 
   <ItemGroup>

@@ -27,6 +27,7 @@ namespace CDS.Imaging.Demo
         {
             AddBasicsDemoNodes();
             AddOtherDemoNodes();
+            AddOpenCVSharpDemoNodes();
 
             treeView.ExpandAll();
         }
@@ -64,6 +65,17 @@ namespace CDS.Imaging.Demo
                 name: "Paint over and under",
                 tooltip: "",
                 runDemo: () => RunModalForm<DemoForms.FormPaintOverAndUnder>());
+        }
+
+        private void AddOpenCVSharpDemoNodes()
+        {
+            var node = treeView.Nodes.Add("OpenCV Sharp");
+
+            AddDemo(
+                parentNode: node.Nodes,
+                name: "Blurring",
+                tooltip: "",
+                runDemo: () => RunModalForm<DemoForms.FormOpenCVSharp>());
         }
 
         private void AddDemo(
