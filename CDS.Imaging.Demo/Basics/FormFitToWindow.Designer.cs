@@ -1,7 +1,7 @@
 ﻿
-namespace CDS.Imaging.Demo.NoCode
+namespace CDS.Imaging.Demo.Basics
 {
-    partial class FormFree
+    partial class FormFitToWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -34,23 +34,23 @@ namespace CDS.Imaging.Demo.NoCode
             // 
             // bitmapDisplayPanel
             // 
+            this.bitmapDisplayPanel.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
             this.bitmapDisplayPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bitmapDisplayPanel.Image = global::CDS.Imaging.Demo.Properties.Resources.Thailand;
             this.bitmapDisplayPanel.Location = new System.Drawing.Point(0, 0);
-            this.bitmapDisplayPanel.DisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free;
+            this.bitmapDisplayPanel.DisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.FitToWindowCentred;
             this.bitmapDisplayPanel.Name = "bitmapDisplayPanel";
-            this.bitmapDisplayPanel.Size = new System.Drawing.Size(800, 450);
+            this.bitmapDisplayPanel.Size = new System.Drawing.Size(800, 374);
             this.bitmapDisplayPanel.TabIndex = 0;
-            this.bitmapDisplayPanel.Zoom = 1F;
+            this.bitmapDisplayPanel.Zoom = 1.038889F;
             // 
-            // FormFree
+            // FormSimpleFitToWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 374);
             this.Controls.Add(this.bitmapDisplayPanel);
-            this.Name = "FormFree";
-            this.Text = "Simple: Free";
+            this.Name = "FormSimpleFitToWindow";
+            this.Text = "Simple: fit to window";
             this.ResumeLayout(false);
 
         }

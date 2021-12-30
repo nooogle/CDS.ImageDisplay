@@ -15,13 +15,31 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
 
         /// <summary>
-        /// Get/set the image currently being displayed.
+        /// Gets the image currently being displayed. 
+        /// </summary>
+        /// <remarks>
+        /// The display owns this image and may dispose it at any time if a new
+        /// (pending) image is being swapped in; therefore, callers should
+        /// use this method with caution since it's more of a diagnostics 
+        /// tool than for sharig image data.
+        /// </remarks>
+        Bitmap? GetDisplayImage();
+
+
+        /// <summary>
+        /// A copy of the image is taken and then set as image the image to be displayd.
+        /// This takes immediate effect when called  from the UI thread, 
+        /// otherwise takes place asap by invoking an update procedure on the UI thread 
+        /// and returning immediately.
         /// </summary>
         /// <remarks>
         /// The <see cref="TargetImageCentre"/> is reset if an image is currently being 
-        /// displayed and a new image of a different size is set
+        /// displayed and a new image of a different size is set.
+        /// 
+        /// When called on a non-UI thread this returns immediately; it will be a small
+        /// amout of time later that the image is finally set as the display image.
         /// </remarks>
-        Image? Image { get; set; }
+        void SetImage(Bitmap image);
 
 
         /// <summary>

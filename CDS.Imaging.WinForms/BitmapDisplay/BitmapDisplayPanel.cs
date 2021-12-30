@@ -12,11 +12,14 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
     public partial class BitmapDisplayPanel : UserControl, IBitmapDisplay
     {
         private const string categoryCDS = "CDS";
-        private Image? image;
+        private ImageWrapper displayImage = new ImageWrapper();
+        private ImageWrapper pendingDisplayImage = new ImageWrapper();
+        private object imageLock = new object();
         private VirtualDisplay virtualDisplay;
         private System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         private DragManager dragManager;
         private ZoomManager zoomManager;
+        private bool isWaitingToApplyPendingImage;
 
 
         /// <summary>
@@ -74,18 +77,90 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
         /// <inheritdoc/>
         [Category(categoryCDS)]
-        public Image? Image
+        public Bitmap? GetDisplayImage() => displayImage.Image;
+
+
+        /// <inheritdoc/>
+        [Category(categoryCDS)]
+        public void SetImage(Bitmap? image)
         {
-            get => image;
-
-            set
+            lock(imageLock)
             {
-                if (image == value) { return; }
-
-                image = value;
-                virtualDisplay.ImageSize = (image == null) ? Size.Empty : image.Size;
-                Invalidate();               
+                if(InvokeRequired)
+                {
+                    SetImageIndirectlyFromNonUIThread(image);
+                }
+                else
+                {
+                    SetImageDirectlyFromUIThread(image);
+                }
             }
+        }
+
+
+        /// <summary>
+        /// Sets the new image as a pending image; then invokes an update
+        /// method to get this pending image onto the display
+        /// </summary>
+        private void SetImageIndirectlyFromNonUIThread(Bitmap? image)
+        {
+            // If we're still waiting to apply a previous non-UI image then
+            // let's abandon this one; it's bad becuase we lose an image, but
+            // it will stop us loading up the UI message loop with image updates
+            // that we obviously can't service fast enough
+            if(isWaitingToApplyPendingImage) { return; }
+            
+
+            // Store the new image in the pending image wrapper; we're protected
+            // by our lock (in SetImage) so no one else can conflict with this 
+            // wrapper
+            isWaitingToApplyPendingImage = true;
+            pendingDisplayImage.SetNewImage(image);
+
+
+            // Post the following action on the UI thread and return immedately;
+            // this will release the lock (applied in SetImage). When the action
+            // is picked up we'll apply the lock again, then take our wrapped
+            // pending image and apply it directly as the displayed image.
+            BeginInvoke(() =>
+            {
+                SetImage(pendingDisplayImage.Image);
+                isWaitingToApplyPendingImage = false;
+            });
+        }
+
+
+        /// <summary>
+        /// We have a new image to display and we're on the UI thread meaning
+        /// we won't be mid-paint; we can directly clone or copy the new image
+        /// and repaint
+        /// </summary>
+        private void SetImageDirectlyFromUIThread(Bitmap? image)
+        {
+            displayImage.SetNewImage(image);
+            virtualDisplay.ImageSize = displayImage.ImageSize;
+            Invalidate();
+        }
+
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                displayImage?.Dispose();
+                pendingDisplayImage?.Dispose();
+
+                if (components != null)
+                {
+                    components.Dispose();
+                }
+            }
+
+            base.Dispose(disposing);
         }
 
 
@@ -284,7 +359,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// </summary>
         private void PaintBitmap(PaintEventArgs paintEventArgs)
         {
-            if (image == null) { return; }
+            if (displayImage.Image == null) { return; }
 
             var graphicsState = paintEventArgs.Graphics.Save();
 
@@ -295,12 +370,11 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             try
             {
                 paintEventArgs.Graphics.DrawImage(
-                    image: image,
+                    image: displayImage.Image,
                     rect: virtualDisplay.PaintRect);
             }
             catch (ObjectDisposedException)
             {
-                Image = null;
             }
 
             paintEventArgs.Graphics.Restore(graphicsState);

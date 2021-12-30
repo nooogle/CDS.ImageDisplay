@@ -1,5 +1,5 @@
 ﻿
-namespace CDS.Imaging.Demo.NoCode
+namespace CDS.Imaging.Demo.Basics
 {
     partial class FormActualSizeCentred
     {
@@ -36,7 +36,6 @@ namespace CDS.Imaging.Demo.NoCode
             // 
             this.bitmapDisplayPanel1.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
             this.bitmapDisplayPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bitmapDisplayPanel1.Image = global::CDS.Imaging.Demo.Properties.Resources.Thailand;
             this.bitmapDisplayPanel1.Location = new System.Drawing.Point(0, 0);
             this.bitmapDisplayPanel1.DisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.ActualSizeCentred;
             this.bitmapDisplayPanel1.Name = "bitmapDisplayPanel1";
