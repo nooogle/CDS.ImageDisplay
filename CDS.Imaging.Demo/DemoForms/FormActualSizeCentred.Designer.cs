@@ -1,5 +1,5 @@
 ﻿
-namespace CDS.Imaging.Demo.Basics
+namespace CDS.Imaging.Demo.DemoForms
 {
     partial class FormActualSizeCentred
     {

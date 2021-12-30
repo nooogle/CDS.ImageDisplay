@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.Demo.Basics;
+namespace CDS.Imaging.Demo.DemoForms;
 
 public partial class FormFitToWindow : Form
 {

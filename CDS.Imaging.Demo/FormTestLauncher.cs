@@ -25,33 +25,45 @@ namespace CDS.Imaging.Demo
 
         private void AddDemos()
         {
-            AddNoCodeDemoNodes();
+            AddBasicsDemoNodes();
+            AddOtherDemoNodes();
 
             treeView.ExpandAll();
         }
 
-        private void AddNoCodeDemoNodes()
+        private void AddBasicsDemoNodes()
         {
-            var noCodeNode = treeView.Nodes.Add("No code");
+            var basicsNode = treeView.Nodes.Add("Basics");
 
             AddDemo(
-                parentNode: noCodeNode.Nodes,
+                parentNode: basicsNode.Nodes,
                 name: "Fit to window",
                 tooltip: "Form with single image configured to always resize to fit to the window constraints",
-                runDemo: () => RunModalForm<Basics.FormFitToWindow>());
+                runDemo: () => RunModalForm<DemoForms.FormFitToWindow>());
 
             AddDemo(
-                parentNode: noCodeNode.Nodes,
+                parentNode: basicsNode.Nodes,
                 name: "Actual size, centered",
                 tooltip: "Form with single image configured to use 1:1 zoom and remain centered",
-                runDemo: () => RunModalForm<Basics.FormActualSizeCentred>());
+                runDemo: () => RunModalForm<DemoForms.FormActualSizeCentred>());
 
             AddDemo(
-                parentNode: noCodeNode.Nodes,
+                parentNode: basicsNode.Nodes,
                 name: "Free",
                 tooltip: "Form with single image configured to allow the mouse to " +
                 "drag (left-button) and zoom in and out (mouse wheel) of the image",
-                runDemo: () => RunModalForm<Basics.FormFree>());
+                runDemo: () => RunModalForm<DemoForms.FormFree>());
+        }
+
+        private void AddOtherDemoNodes()
+        {
+            var otherNode = treeView.Nodes.Add("Other");
+
+            AddDemo(
+                parentNode: otherNode.Nodes,
+                name: "Paint over and under",
+                tooltip: "",
+                runDemo: () => RunModalForm<DemoForms.FormPaintOverAndUnder>());
         }
 
         private void AddDemo(

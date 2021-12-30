@@ -5,15 +5,15 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.Demo
+namespace CDS.Imaging.Demo.DemoForms
 {
-    public partial class FormBitmapDisplay : Form
+    public partial class FormPaintOverAndUnder : Form
     {
         Bitmap loadedBitmap;
         Font fixedWidthFont;
         Brush msgPanelBrush;
 
-        public FormBitmapDisplay()
+        public FormPaintOverAndUnder()
         {
             InitializeComponent();
 

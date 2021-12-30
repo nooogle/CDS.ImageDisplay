@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.Demo.Basics;
+namespace CDS.Imaging.Demo.DemoForms;
 
-public partial class FormActualSizeCentred : Form
+public partial class FormFree : Form
 {
-    public FormActualSizeCentred()
+    public FormFree()
     {
         InitializeComponent();
     }
@@ -21,6 +21,6 @@ public partial class FormActualSizeCentred : Form
     protected override void OnLoad(EventArgs e)
     {
         base.OnLoad(e);
-        bitmapDisplayPanel1.SetImage(Properties.Resources.Thailand);
+        bitmapDisplayPanel.SetImage(Properties.Resources.Thailand);
     }
 }
