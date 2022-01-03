@@ -54,10 +54,10 @@ namespace CDS.Imaging.Demo.OpenCVSharpExtras
 
     public static class ExtensionMethods
     {
-        public static void SetImage(this IBitmapDisplay bitmapDisplay, OpenCvSharp.Mat mat)
+        public static void CDSSetImage(this BitmapDisplayPanel bitmapDisplay, OpenCvSharp.Mat mat)
         {
             var matImageSource = new MatImageSource(mat);
-            bitmapDisplay.SetImage(matImageSource);
+            bitmapDisplay.CDSSetImage(matImageSource);
         }
     }
 }

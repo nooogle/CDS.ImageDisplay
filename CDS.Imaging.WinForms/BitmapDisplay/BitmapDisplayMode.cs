@@ -19,7 +19,7 @@
 
         /// <summary>
         /// Allow the image zoom and location to change, either programmatically or
-        /// via the mouse. The <see cref="IBitmapDisplay.TargetImageCentre"/> is reset
+        /// via the mouse. The <see cref="BitmapDisplayPanel.CDSTargetImageCentre"/> is reset
         /// if the image size changes.
         /// </summary>
         Free,

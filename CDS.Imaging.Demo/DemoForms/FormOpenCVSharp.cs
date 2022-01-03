@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using CDS.Imaging.Demo.OpenCVSharpExtras;
 using OpenCvSharp.Extensions;
-using CDS.Imaging.Demo.OpenCVSharpExtras;
+using System;
+using System.Windows.Forms;
 
 namespace CDS.Imaging.Demo.DemoForms
 {
     public partial class FormOpenCVSharp : Form
     {
+        bool changingPaintRectProgramatically;
         OpenCvSharp.Mat? cvImageGrey;
         OpenCvSharp.Mat? cvImageBlurred;
+
 
         public FormOpenCVSharp()
         {
@@ -27,11 +22,11 @@ namespace CDS.Imaging.Demo.DemoForms
         {
             base.OnLoad(e);
 
-            bitmapPanel1.CDS.SetImage(Properties.Resources.Thailand);
+            bitmapPanel1.CDSSetImage(Properties.Resources.Thailand);
 
             var cvImageColor = Properties.Resources.Thailand.ToMat();
 
-            bitmapPanel2.SetImage(cvImageColor);
+            bitmapPanel2.CDSSetImage(cvImageColor);
 
             cvImageGrey = new OpenCvSharp.Mat(
                 rows: cvImageColor.Rows,
@@ -43,7 +38,7 @@ namespace CDS.Imaging.Demo.DemoForms
                 dst: cvImageGrey,
                 code: OpenCvSharp.ColorConversionCodes.RGB2GRAY);
 
-            bitmapPanel3.CDS.SetImage(cvImageGrey);
+            bitmapPanel3.CDSSetImage(cvImageGrey);
 
             cvImageBlurred = new OpenCvSharp.Mat(
                 rows: cvImageColor.Rows,
@@ -65,7 +60,7 @@ namespace CDS.Imaging.Demo.DemoForms
                 ksize: new OpenCvSharp.Size(ksize, ksize),
                 sigmaX: trackGaussianSigma.Value);
 
-            bitmapPanel4.CDS.SetImage(cvImageBlurred);
+            bitmapPanel4.CDSSetImage(cvImageBlurred);
         }
 
         private void trackBarGaussianSize_Scroll(object sender, EventArgs e)
@@ -76,6 +71,32 @@ namespace CDS.Imaging.Demo.DemoForms
         private void trackGaussianSigma_Scroll(object sender, EventArgs e)
         {
             ProcessBlurring();
+        }
+
+
+        protected override void OnClientSizeChanged(EventArgs e)
+        {
+            base.OnClientSizeChanged(e);
+            bitmapPanel4.CDSFitToWindowCentred();
+        }
+
+
+        private void bitmapPanel_CDSPaintRectChanged(WinForms.BitmapDisplay.BitmapDisplayPanel sender)
+        {
+            SyncPaintRects(sender);
+        }
+
+        private void SyncPaintRects(WinForms.BitmapDisplay.BitmapDisplayPanel sender)
+        {
+            if (changingPaintRectProgramatically) { return; }
+            changingPaintRectProgramatically = true;
+
+            if (sender != bitmapPanel1) { bitmapPanel1.CDSSyncPaintRectFromOther(sender); }
+            if (sender != bitmapPanel2) { bitmapPanel2.CDSSyncPaintRectFromOther(sender); }
+            if (sender != bitmapPanel3) { bitmapPanel3.CDSSyncPaintRectFromOther(sender); }
+            if (sender != bitmapPanel4) { bitmapPanel4.CDSSyncPaintRectFromOther(sender); }
+
+            changingPaintRectProgramatically = false;
         }
     }
 }

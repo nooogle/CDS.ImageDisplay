@@ -112,46 +112,50 @@
             // bitmapPanel4
             // 
             this.bitmapPanel4.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
-            this.bitmapPanel4.DisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free;
+            this.bitmapPanel4.CDSDisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free;
+            this.bitmapPanel4.CDSZoom = 1F;
             this.bitmapPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bitmapPanel4.Location = new System.Drawing.Point(392, 213);
             this.bitmapPanel4.Name = "bitmapPanel4";
             this.bitmapPanel4.Size = new System.Drawing.Size(379, 157);
             this.bitmapPanel4.TabIndex = 3;
-            this.bitmapPanel4.Zoom = 1F;
+            this.bitmapPanel4.CDSPaintRectChanged += new CDS.Imaging.WinForms.BitmapDisplay.PaintRectChangedEvent(this.bitmapPanel_CDSPaintRectChanged);
             // 
             // bitmapPanel3
             // 
             this.bitmapPanel3.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
-            this.bitmapPanel3.DisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.FitToWindowCentred;
+            this.bitmapPanel3.CDSDisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free;
+            this.bitmapPanel3.CDSZoom = 1F;
             this.bitmapPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bitmapPanel3.Location = new System.Drawing.Point(5, 213);
             this.bitmapPanel3.Name = "bitmapPanel3";
             this.bitmapPanel3.Size = new System.Drawing.Size(379, 157);
             this.bitmapPanel3.TabIndex = 2;
-            this.bitmapPanel3.Zoom = 1F;
+            this.bitmapPanel3.CDSPaintRectChanged += new CDS.Imaging.WinForms.BitmapDisplay.PaintRectChangedEvent(this.bitmapPanel_CDSPaintRectChanged);
             // 
             // bitmapPanel2
             // 
             this.bitmapPanel2.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
-            this.bitmapPanel2.DisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.FitToWindowCentred;
+            this.bitmapPanel2.CDSDisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free;
+            this.bitmapPanel2.CDSZoom = 1F;
             this.bitmapPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bitmapPanel2.Location = new System.Drawing.Point(392, 27);
             this.bitmapPanel2.Name = "bitmapPanel2";
             this.bitmapPanel2.Size = new System.Drawing.Size(379, 156);
             this.bitmapPanel2.TabIndex = 1;
-            this.bitmapPanel2.Zoom = 1F;
+            this.bitmapPanel2.CDSPaintRectChanged += new CDS.Imaging.WinForms.BitmapDisplay.PaintRectChangedEvent(this.bitmapPanel_CDSPaintRectChanged);
             // 
             // bitmapPanel1
             // 
             this.bitmapPanel1.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
-            this.bitmapPanel1.DisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.FitToWindowCentred;
+            this.bitmapPanel1.CDSDisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free;
+            this.bitmapPanel1.CDSZoom = 1F;
             this.bitmapPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bitmapPanel1.Location = new System.Drawing.Point(5, 27);
             this.bitmapPanel1.Name = "bitmapPanel1";
             this.bitmapPanel1.Size = new System.Drawing.Size(379, 156);
             this.bitmapPanel1.TabIndex = 0;
-            this.bitmapPanel1.Zoom = 1F;
+            this.bitmapPanel1.CDSPaintRectChanged += new CDS.Imaging.WinForms.BitmapDisplay.PaintRectChangedEvent(this.bitmapPanel_CDSPaintRectChanged);
             // 
             // trackBarGaussianSize
             // 

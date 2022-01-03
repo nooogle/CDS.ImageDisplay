@@ -7,7 +7,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
     /// </summary>
     /// <param name="sender">Sender of the callback</param>
     /// <returns>An image or null if none is available</returns>
-    public delegate Image GetImageCallback(IBitmapDisplay sender);
+    public delegate Image GetImageCallback(BitmapDisplayPanel sender);
 
 
     /// <summary>
@@ -16,6 +16,13 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
     /// <param name="sender">Callback sender</param>
     /// <param name="paintRect">New paint rectangle</param>
     public delegate void OnPaintRectChangedCallback(VirtualDisplay sender, RectangleF paintRect);
+
+
+    /// <summary>
+    /// Callback delegate
+    /// </summary>
+    /// <param name="sender">Callback sender</param>
+    public delegate void PaintRectChangedEvent(BitmapDisplayPanel sender);
 
 
     /// <summary>

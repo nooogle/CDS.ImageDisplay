@@ -21,6 +21,6 @@ public partial class FormFree : Form
     protected override void OnLoad(EventArgs e)
     {
         base.OnLoad(e);
-        bitmapDisplayPanel.SetImage(Properties.Resources.Thailand);
+        bitmapDisplayPanel.CDSSetImage(Properties.Resources.Thailand);
     }
 }

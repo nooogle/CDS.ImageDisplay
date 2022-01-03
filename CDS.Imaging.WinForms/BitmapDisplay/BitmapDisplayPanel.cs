@@ -9,7 +9,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
     /// <summary>
     /// Displays a bitmap
     /// </summary>
-    public partial class BitmapDisplayPanel : UserControl, IBitmapDisplay
+    public partial class BitmapDisplayPanel : UserControl
     {
         private const string categoryCDS = "CDS";
         private ImageWrapper displayImage = new ImageWrapper();
@@ -23,66 +23,107 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
 
         /// <summary>
-        /// Provides access to all the custom features
+        /// Timing metrics
+        /// </summary>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public BitmapDisplayMetrics CDSTimingMetrics { get; } = new BitmapDisplayMetrics();
+
+
+        /// <summary>
+        /// The size of half a displayed pixel
         /// </summary>
         /// <remarks>
-        /// Allows code to use myPanel.CDS.XXX rather than myPanel.XXX - this makes
-        /// it a little easier to discover and use the custom features of this panel 
-        /// since a .Net control presents 100's of properties, events and methods!
+        /// Use this as an offset when drawing with a large zoom and where the 
+        /// drawing locations should be in the middle of an image pixel. E.g. with
+        /// a zoom of 11, each image pixel will take 11*11 pixels on the screen. The
+        /// half pixel size will be 5.5. Calling <see cref="CDSMapImageToDisplay(PointF)"/>
+        /// will return the location of the top-left of this 11*11 block for a particular
+        /// image pixel; adding this offset of 5.5 will allow drawing to start in the middle
+        /// of this 11*11 block.
         /// </remarks>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IBitmapDisplay CDS => this;
+        public SizeF CDSSizeOfHalfDisplayPixel => virtualDisplay.SizeOfHalfDisplayPixel;
 
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets the paint rectangle. This is based on the current image size,
+        /// display size, zoom, target image centre and target display centre.
+        /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public BitmapDisplayMetrics TimingMetrics { get; } = new BitmapDisplayMetrics();
+        public RectangleF CDSPaintRect => virtualDisplay.PaintRect;
 
 
-        /// <inheritdoc/>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public SizeF SizeOfHalfDisplayPixel => virtualDisplay.SizeOfHalfDisplayPixel;
-
-
-        /// <inheritdoc/>
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public RectangleF PaintRect => virtualDisplay.PaintRect;
-
-
-        /// <inheritdoc/>
+        /// <summary>
+        /// Called when the image has been rendered; gives a client an opportunity
+        /// to paint graphics on top of the image. This will be flicker-free as long
+        /// as the control uses double buffering
+        /// </summary>
         [Category(categoryCDS)]
         [Description(
             "Called when the image has been rendered; gives a client an opportunity " +
             "to paint flicker-free graphics on top of the image.")]
-        public event PaintOverEvent? PaintOver;
+        public event PaintOverEvent? CDSPaintOver;
 
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Called afer the background has been painted and before the image been painted;
+        /// gives a client an opportunity to paint graphics under the image. 
+        /// This will be flicker-free as long as the control uses double buffering
+        /// </summary>
         [Category(categoryCDS)]
         [Description(
             "Called afer the background has been painted and before the image been painted; " +
             "to paint flicker-free graphics under of the image.")]
-        public event PaintUnderEvent? PaintUnder;
+        public event PaintUnderEvent? CDSPaintUnder;
 
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Called when the display mode is changed.
+        /// </summary>
         [Category(categoryCDS)]
         [Description("Called when the display mode is changed.")]
-        public event ModeChangedEvent? DisplayModeChanged;
+        public event ModeChangedEvent? CDSDisplayModeChanged;
 
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Fired when the paint rectangle of the display is changed
+        /// </summary>
         [Category(categoryCDS)]
-        public Bitmap? GetDisplayImage() => displayImage.Image;
+        [Description("Called when the paint rectangle is changed.")]
+        public event PaintRectChangedEvent? CDSPaintRectChanged;
 
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets the image currently being displayed. 
+        /// </summary>
+        /// <remarks>
+        /// The display owns this image and may dispose it at any time if a new
+        /// (pending) image is being swapped in; therefore, callers should
+        /// use this method with caution since it's more of a diagnostics 
+        /// tool than for sharig image data.
+        /// </remarks>
         [Category(categoryCDS)]
-        public void SetImage(IImageSource? imageSource)
+        public Bitmap? CDSGetDisplayImage() => displayImage.Image;
+
+
+        /// <summary>
+        /// A copy of the image is taken and then set as image the image to be displayd.
+        /// This takes immediate effect when called  from the UI thread, 
+        /// otherwise takes place asap by invoking an update procedure on the UI thread 
+        /// and returning immediately.
+        /// </summary>
+        /// <remarks>
+        /// The <see cref="CDSTargetImageCentre"/> is reset if an image is currently being 
+        /// displayed and a new image of a different size is set.
+        /// 
+        /// When called on a non-UI thread this returns immediately; it will be a small
+        /// amout of time later that the image is finally set as the display image.
+        /// </remarks>
+        [Category(categoryCDS)]
+        public void CDSSetImage(IImageSource? imageSource)
         {
             lock (imageLock)
             {
@@ -98,13 +139,25 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         }
 
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// A copy of the image is taken and then set as image the image to be displayd.
+        /// This takes immediate effect when called  from the UI thread, 
+        /// otherwise takes place asap by invoking an update procedure on the UI thread 
+        /// and returning immediately.
+        /// </summary>
+        /// <remarks>
+        /// The <see cref="CDSTargetImageCentre"/> is reset if an image is currently being 
+        /// displayed and a new image of a different size is set.
+        /// 
+        /// When called on a non-UI thread this returns immediately; it will be a small
+        /// amout of time later that the image is finally set as the display image.
+        /// </remarks>
         [Category(categoryCDS)]
-        public void SetImage(Bitmap? image)
+        public void CDSSetImage(Bitmap? image)
         {
             using (var imageSource = new BitmapImageSource(image))
             {
-                SetImage(imageSource);
+                CDSSetImage(imageSource);
             }
         }
 
@@ -119,8 +172,8 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             // let's abandon this one; it's bad becuase we lose an image, but
             // it will stop us loading up the UI message loop with image updates
             // that we obviously can't service fast enough
-            if(isWaitingToApplyPendingImage) { return; }
-            
+            if (isWaitingToApplyPendingImage) { return; }
+
 
             // Store the new image in the pending image wrapper; we're protected
             // by our lock (in SetImage) so no one else can conflict with this 
@@ -135,7 +188,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             // pending image and apply it directly as the displayed image.
             BeginInvoke(() =>
             {
-                SetImage(pendingDisplayImage.Image);
+                CDSSetImage(pendingDisplayImage.Image);
                 isWaitingToApplyPendingImage = false;
             });
         }
@@ -175,16 +228,20 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         }
 
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// True if there's anything to display
+        /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public bool AnythingToDisplay => virtualDisplay.AnythingToDisplay;
+        public bool CDSAnythingToDisplay => virtualDisplay.AnythingToDisplay;
 
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// The image display mode
+        /// </summary>
         [Category(categoryCDS)]
         [Description("The image display mode")]
-        public BitmapDisplayMode DisplayMode
+        public BitmapDisplayMode CDSDisplayMode
         {
             get => virtualDisplay.Mode;
             set
@@ -192,26 +249,32 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
                 if (virtualDisplay.Mode != value)
                 {
                     virtualDisplay.Mode = value;
-                    DisplayModeChanged?.Invoke(this);
+                    CDSDisplayModeChanged?.Invoke(this);
                 }
             }
         }
 
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// The location in the image that should be rendered at 
+        /// <see cref="CDSTargetDisplayCentre"/>.
+        /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public PointF TargetImageCentre
+        public PointF CDSTargetImageCentre
         {
             get => virtualDisplay.TargetImageCentre;
             set => virtualDisplay.TargetImageCentre = value;
         }
 
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// The location on the display that should render the pixel in the image
+        /// at location <see cref="CDSTargetImageCentre"/>.
+        /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public PointF TargetDisplayCentre
+        public PointF CDSTargetDisplayCentre
         {
             get => virtualDisplay.TargetDisplayCentre;
             set => virtualDisplay.TargetDisplayCentre = value;
@@ -254,8 +317,11 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         }
 
 
-        /// <inheritdoc/>
-        public float Zoom
+        /// <summary>
+        /// Set/get the zoom level. The limits in the <see cref="Consts"/> class are
+        /// used.
+        /// </summary>
+        public float CDSZoom
         {
             get => virtualDisplay.Zoom;
             set => virtualDisplay.Zoom = value;
@@ -268,53 +334,106 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         private void VirtualImageOnDisplay_OnPaintRectChanged(VirtualDisplay sender, RectangleF paintRect)
         {
             Invalidate();
+            CDSPaintRectChanged?.Invoke(this);
         }
 
 
-        /// <inheritdoc/>
-        public PointF MapImageToDisplay(PointF imageLocation)
+        /// <summary>
+        /// Returns the image location where a pixel at <paramref name="imageLocation"/> would 
+        /// have been drawn.
+        /// </summary>
+        /// <remarks>
+        /// This is useful when you have used the mouse to select a region of interest
+        /// (rectangle) over the image and want to deteremine the ROI with respect to 
+        /// the image.
+        /// </remarks>
+        /// <param name="imageLocation">A region on the image</param>
+        /// <returns>A region on the display or an empty rectangle if there's nothing to display</returns>
+        public PointF CDSMapImageToDisplay(PointF imageLocation)
         {
             return virtualDisplay.MapImageToDisplay(imageLocation);
         }
 
 
-        /// <inheritdoc/>
-        public RectangleF MapImageToDisplay(RectangleF imageRect)
+        /// <summary>
+        /// Returns the image location where a rectangle at <paramref name="imageRect"/> would 
+        /// have been drawn.
+        /// </summary>
+        /// <remarks>
+        /// This is useful when you have used the mouse to select a region of interest
+        /// (rectangle) over the image and want to deteremine the ROI with respect to 
+        /// the image.
+        /// </remarks>
+        /// <param name="imageRect">A region on the image</param>
+        /// <returns>A region on the display or an empty rectangle if there's nothing to display</returns>
+        public RectangleF CDSMapImageToDisplay(RectangleF imageRect)
         {
             return virtualDisplay.MapImageToDisplay(imageRect);
         }
 
 
-        /// <inheritdoc/>
-        public PointF MapDisplayToImage(PointF displayLocation)
+        /// <summary>
+        /// Returns the image location where a pixel at <paramref name="displayLocation"/> would 
+        /// have been drawn.
+        /// </summary>
+        /// <remarks>
+        /// This is useful when you want to determine the image location
+        /// under the current mouse location.
+        /// </remarks>
+        /// <param name="displayLocation">A location on the display</param>
+        /// <returns>A location on the image or an empty point if there's nothing to display</returns>
+        public PointF CDSMapDisplayToImage(PointF displayLocation)
         {
             return virtualDisplay.MapDisplayToImage(displayLocation);
         }
 
 
-        /// <inheritdoc/>
-        public RectangleF MapDisplayToImage(RectangleF displayRect)
+        /// <summary>
+        /// Returns the image location where a rectangle at <paramref name="displayRect"/> would 
+        /// have been drawn.
+        /// </summary>
+        /// <remarks>
+        /// This is useful when you have used the mouse to select a region of interest
+        /// (rectangle) over the image and want to deteremine the ROI with respect to 
+        /// the image.
+        /// </remarks>
+        /// <param name="displayRect">A region on the image</param>
+        /// <returns>A region on the display or an empty rectangle if there's nothing to display</returns>
+        public RectangleF CDSMapDisplayToImage(RectangleF displayRect)
         {
             return virtualDisplay.MapDisplayToImage(displayRect);
         }
 
 
-        /// <inheritdoc/>
-        public void Centre()
+        /// <summary>
+        /// Centres the image on the display, retaining the existing zoom level.
+        /// Only applied if the display mode is <see cref="BitmapDisplayMode.Free"/>,
+        /// no-op otherwise.
+        /// </summary>
+        public void CDSCentre()
         {
             virtualDisplay.Centre();
         }
 
 
-        /// <inheritdoc/>
-        public void ActualSizeCentred()
+        /// <summary>
+        /// Centres the image on the display and sets the zoom to 1.
+        /// Only applied if the display mode is <see cref="BitmapDisplayMode.Free"/>,
+        /// no-op otherwise.
+        /// </summary>
+        public void CDSActualSizeCentred()
         {
             virtualDisplay.ActualSizeCentred();
         }
 
 
-        /// <inheritdoc/>
-        public void FitToWindowCentred()
+        /// <summary>
+        /// Centres the image on the display and adjusts the zoom so that the 
+        /// image fills the display as much as possible.
+        /// Only applied if the display mode is <see cref="BitmapDisplayMode.Free"/>,
+        /// no-op otherwise.
+        /// </summary>
+        public void CDSFitToWindowCentred()
         {
             virtualDisplay.FitToWindowCentred();
         }
@@ -336,7 +455,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             }
 
             stopwatch.Stop();
-            TimingMetrics.BackgroundPaint = stopwatch.Elapsed;
+            CDSTimingMetrics.BackgroundPaint = stopwatch.Elapsed;
         }
 
 
@@ -347,21 +466,21 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         {
             stopwatch.Restart();
 
-            PaintUnder?.Invoke(
+            CDSPaintUnder?.Invoke(
                 sender: this,
                 graphics: paintEventArgs.Graphics);
 
-            if (AnythingToDisplay)
+            if (CDSAnythingToDisplay)
             {
                 PaintBitmap(paintEventArgs);
             }
 
-            PaintOver?.Invoke(
+            CDSPaintOver?.Invoke(
                 sender: this,
                 graphics: paintEventArgs.Graphics);
 
             stopwatch.Stop();
-            TimingMetrics.ForegroundPaint = stopwatch.Elapsed;
+            CDSTimingMetrics.ForegroundPaint = stopwatch.Elapsed;
         }
 
 
@@ -399,13 +518,13 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         {
             base.OnMouseWheel(mouseEventArgs);
 
-            if (AnythingToDisplay)
+            if (CDSAnythingToDisplay)
             {
                 var mouseLocationInDisplayUnits = mouseEventArgs.Location;
-                var mouseLocationInImageUnits = MapDisplayToImage(mouseLocationInDisplayUnits);
+                var mouseLocationInImageUnits = CDSMapDisplayToImage(mouseLocationInDisplayUnits);
 
                 zoomManager.OnMouseWheel(
-                    imageDisplayMode: DisplayMode,
+                    imageDisplayMode: CDSDisplayMode,
                     currentZoom: virtualDisplay.Zoom,
                     mouseLocationInDisplayUnits: mouseLocationInDisplayUnits,
                     mouseLocationInImageUnits: mouseLocationInImageUnits,
@@ -431,7 +550,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         {
             base.OnMouseMove(mouseEventArgs);
 
-            if (AnythingToDisplay)
+            if (CDSAnythingToDisplay)
             {
                 dragManager.OnMouseMove(mouseEventArgs);
             }
@@ -445,10 +564,10 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         {
             base.OnMouseDown(mouseEventArgs);
 
-            if (AnythingToDisplay)
+            if (CDSAnythingToDisplay)
             {
                 dragManager.OnMouseDown(
-                    imageDisplayMode: DisplayMode,
+                    imageDisplayMode: CDSDisplayMode,
                     mouseEventArgs: mouseEventArgs,
                     currentTargetDisplayCentre: virtualDisplay.TargetDisplayCentre);
             }
@@ -463,7 +582,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         {
             base.OnMouseUp(mouseEventArgs);
 
-            if (AnythingToDisplay)
+            if (CDSAnythingToDisplay)
             {
                 dragManager.OnMouseUp(mouseEventArgs);
             }
@@ -471,26 +590,42 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
 
 
-        /// <inheritdoc/>
-        public void ResetZoom()
+        /// <summary>
+        /// Reset the zoom to 1:1
+        /// </summary>
+        public void CDSResetZoom()
         {
             virtualDisplay.Zoom = 1;
         }
 
 
-        /// <inheritdoc/>
-        public void ZoomIn()
+        /// <summary>
+        /// Zoom in
+        /// </summary>
+        public void CDSZoomIn()
         {
             virtualDisplay.Zoom *= 2.0f;
         }
 
 
-
-        /// <inheritdoc/>
-        public void ZoomOut()
+        /// <summary>
+        /// Zoom out
+        /// </summary>
+        public void CDSZoomOut()
         {
             virtualDisplay.Zoom /= 2.0f;
         }
 
+
+        /// <summary>
+        /// Synchronise the zoom and target display centre of this display
+        /// from another display.
+        /// </summary>
+        public void CDSSyncPaintRectFromOther(BitmapDisplayPanel sender)
+        {
+            CDSZoom = sender.CDSZoom;
+            CDSTargetDisplayCentre = sender.CDSTargetDisplayCentre;
+            CDSTargetImageCentre = sender.CDSTargetImageCentre;
+        }
     }
 }

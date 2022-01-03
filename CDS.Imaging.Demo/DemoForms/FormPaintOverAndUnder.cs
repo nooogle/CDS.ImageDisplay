@@ -37,23 +37,23 @@ namespace CDS.Imaging.Demo.DemoForms
         private void bitmapDisplay_PaintOver(BitmapDisplayPanel sender, Graphics graphics)
         {
             var info = new StringBuilder();
-            info.Append($"Display mode      {sender.CDS.DisplayMode.Humanize()}\n");
+            info.Append($"Display mode      {sender.CDSDisplayMode.Humanize()}\n");
             info.Append($"Display size      {sender.ClientSize}\n");
-            if (!sender.CDS.AnythingToDisplay)
+            if (!sender.CDSAnythingToDisplay)
             {
                 info.Append($"Image not loaded\n");
             }
             else
             {
-                var r = sender.CDS.PaintRect;
-                info.Append($"Bitmap size       {sender.CDS.GetDisplayImage()?.Size}\n");
-                info.Append($"Paint zoom        {sender.CDS.Zoom:0.000}\n");
+                var r = sender.CDSPaintRect;
+                info.Append($"Bitmap size       {sender.CDSGetDisplayImage()?.Size}\n");
+                info.Append($"Paint zoom        {sender.CDSZoom:0.000}\n");
                 info.Append($"Paint rect        {r.X:0.0}, {r.Y:0.0}, {r.Width:0.0}, {r.Height:0:0}\n");
-                info.Append($"Format            {sender.CDS.GetDisplayImage()?.PixelFormat.Humanize()}\n");
+                info.Append($"Format            {sender.CDSGetDisplayImage()?.PixelFormat.Humanize()}\n");
             }
-            info.Append($"Set image         {sender.CDS.TimingMetrics.SetImage.Humanize()}\n");
-            info.Append($"Paint foreground  {sender.CDS.TimingMetrics.ForegroundPaint.Humanize()}\n");
-            info.Append($"Paint background  {sender.CDS.TimingMetrics.BackgroundPaint.Humanize()}\n");
+            info.Append($"Set image         {sender.CDSTimingMetrics.SetImage.Humanize()}\n");
+            info.Append($"Paint foreground  {sender.CDSTimingMetrics.ForegroundPaint.Humanize()}\n");
+            info.Append($"Paint background  {sender.CDSTimingMetrics.BackgroundPaint.Humanize()}\n");
 
             var textTopleft = new PointF(12, 12);
             var textBlockSize = graphics.MeasureString(info.ToString(), fixedWidthFont);
@@ -71,7 +71,7 @@ namespace CDS.Imaging.Demo.DemoForms
                 Brushes.Yellow, 
                 textTopleft);
 
-            var topLeftBox = sender.CDS.MapImageToDisplay(new RectangleF(0, 0, 10, 5));
+            var topLeftBox = sender.CDSMapImageToDisplay(new RectangleF(0, 0, 10, 5));
             graphics.DrawRectangle(Pens.Red, topLeftBox.X, topLeftBox.Y, topLeftBox.Width, topLeftBox.Height);
 
             graphics.DrawString(
@@ -82,48 +82,48 @@ namespace CDS.Imaging.Demo.DemoForms
 
             crossHair1.Draw(
                 graphics,
-                bitmapDisplay.CDS.MapImageToDisplay(bitmapDisplay.CDS.TargetImageCentre));
+                bitmapDisplay.CDSMapImageToDisplay(bitmapDisplay.CDSTargetImageCentre));
 
 
             // Line test
             graphics.DrawLine(
                 Pens.Black,
-                sender.CDS.MapImageToDisplay(new PointF(50, 50)) + sender.CDS.SizeOfHalfDisplayPixel,
-                sender.CDS.MapImageToDisplay(new PointF(100, 60)) + sender.CDS.SizeOfHalfDisplayPixel);
+                sender.CDSMapImageToDisplay(new PointF(50, 50)) + sender.CDSSizeOfHalfDisplayPixel,
+                sender.CDSMapImageToDisplay(new PointF(100, 60)) + sender.CDSSizeOfHalfDisplayPixel);
         }
 
         private void menuDisplayModeFree_Click(object sender, EventArgs e)
         {
-            bitmapDisplay.CDS.DisplayMode = BitmapDisplayMode.Free;
+            bitmapDisplay.CDSDisplayMode = BitmapDisplayMode.Free;
             UpdateCommandEnablement();
             bitmapDisplay.Invalidate();
         }
 
         private void UpdateCommandEnablement()
         {
-            menuDisplayCentre.Enabled = (bitmapDisplay.CDS.DisplayMode == BitmapDisplayMode.Free);
-            menuDisplayZoomIn.Enabled = (bitmapDisplay.CDS.DisplayMode == BitmapDisplayMode.Free);
-            menuDisplayZoomOut.Enabled = (bitmapDisplay.CDS.DisplayMode == BitmapDisplayMode.Free);
-            menuDisplayZoomReset.Enabled = (bitmapDisplay.CDS.DisplayMode == BitmapDisplayMode.Free);
+            menuDisplayCentre.Enabled = (bitmapDisplay.CDSDisplayMode == BitmapDisplayMode.Free);
+            menuDisplayZoomIn.Enabled = (bitmapDisplay.CDSDisplayMode == BitmapDisplayMode.Free);
+            menuDisplayZoomOut.Enabled = (bitmapDisplay.CDSDisplayMode == BitmapDisplayMode.Free);
+            menuDisplayZoomReset.Enabled = (bitmapDisplay.CDSDisplayMode == BitmapDisplayMode.Free);
         }
 
         private void menuDisplayModeFitToWindow_Click(object sender, EventArgs e)
         {
-            bitmapDisplay.CDS.DisplayMode = BitmapDisplayMode.FitToWindowCentred;
+            bitmapDisplay.CDSDisplayMode = BitmapDisplayMode.FitToWindowCentred;
             UpdateCommandEnablement();
             bitmapDisplay.Invalidate();
         }
 
         private void menuDisplayModeActualSize_Click(object sender, EventArgs e)
         {
-            bitmapDisplay.CDS.DisplayMode = BitmapDisplayMode.ActualSizeCentred;
+            bitmapDisplay.CDSDisplayMode = BitmapDisplayMode.ActualSizeCentred;
             UpdateCommandEnablement();
             bitmapDisplay.Invalidate();
         }
 
         private void menuDisplayCentre_Click(object sender, EventArgs e)
         {
-            bitmapDisplay.CDS.Centre();
+            bitmapDisplay.CDSCentre();
         }
 
 
@@ -131,23 +131,23 @@ namespace CDS.Imaging.Demo.DemoForms
         {
             var imageNameAndResource = menuImageBuiltIn.SelectedItem as ImageNameAndResource;
 
-            bitmapDisplay.CDS.SetImage(imageNameAndResource?.Bitmap);
+            bitmapDisplay.CDSSetImage(imageNameAndResource?.Bitmap);
         }
 
 
         private void bitmapDisplay_PaintUnder(BitmapDisplayPanel sender, Graphics graphics)
         {
-            if(sender.CDS.PaintRect.IsEmpty) { return; }
+            if(sender.CDSPaintRect.IsEmpty) { return; }
 
             graphics.DrawLine(
                 Pens.Navy, 
-                sender.CDS.PaintRect.Location, 
-                new PointF(sender.CDS.PaintRect.Right - 1, sender.CDS.PaintRect.Bottom - 1));
+                sender.CDSPaintRect.Location, 
+                new PointF(sender.CDSPaintRect.Right - 1, sender.CDSPaintRect.Bottom - 1));
 
             graphics.DrawLine(
                 Pens.Navy, 
-                new PointF(sender.CDS.PaintRect.Right - 1, sender.CDS.PaintRect.Top), 
-                new PointF(sender.CDS.PaintRect.Left, sender.CDS.PaintRect.Bottom - 1));
+                new PointF(sender.CDSPaintRect.Right - 1, sender.CDSPaintRect.Top), 
+                new PointF(sender.CDSPaintRect.Left, sender.CDSPaintRect.Bottom - 1));
         }
 
 
@@ -171,7 +171,7 @@ namespace CDS.Imaging.Demo.DemoForms
             {
                 DropLoadedBitmap();
                 loadedBitmap = (Bitmap)Image.FromFile(fileName);
-                bitmapDisplay.CDS.SetImage(loadedBitmap);
+                bitmapDisplay.CDSSetImage(loadedBitmap);
             }
             catch(Exception exception)
             {
@@ -201,35 +201,35 @@ namespace CDS.Imaging.Demo.DemoForms
 
         public void UpdateDisplayModeCheckboxes()
         {
-            menuDisplayModeFitToWindow.Checked = (bitmapDisplay.DisplayMode == BitmapDisplayMode.FitToWindowCentred);
-            menuDisplayModeActualSize.Checked = (bitmapDisplay.DisplayMode == BitmapDisplayMode.ActualSizeCentred);
-            menuDisplayModeFree.Checked = (bitmapDisplay.DisplayMode == BitmapDisplayMode.Free);
+            menuDisplayModeFitToWindow.Checked = (bitmapDisplay.CDSDisplayMode == BitmapDisplayMode.FitToWindowCentred);
+            menuDisplayModeActualSize.Checked = (bitmapDisplay.CDSDisplayMode == BitmapDisplayMode.ActualSizeCentred);
+            menuDisplayModeFree.Checked = (bitmapDisplay.CDSDisplayMode == BitmapDisplayMode.Free);
         }
 
         private void menuDisplayZoomOut_Click(object sender, System.EventArgs e)
         {
-            bitmapDisplay.CDS.ZoomOut();
+            bitmapDisplay.CDSZoomOut();
         }
 
         private void menuDisplayZoomIn_Click(object sender, System.EventArgs e)
         {
-            bitmapDisplay.CDS.ZoomIn();
+            bitmapDisplay.CDSZoomIn();
         }
 
         private void menuDisplayZoomReset_Click(object sender, System.EventArgs e)
         {
-            bitmapDisplay.CDS.ResetZoom();
+            bitmapDisplay.CDSResetZoom();
         }
 
 
         private void MenuDisplayActualSize_Click(object sender, System.EventArgs e)
         {
-            bitmapDisplay.CDS.ActualSizeCentred();
+            bitmapDisplay.CDSActualSizeCentred();
         }
 
         private void MenuDisplayFitToWindow_Click(object sender, System.EventArgs e)
         {
-            bitmapDisplay.CDS.FitToWindowCentred();
+            bitmapDisplay.CDSFitToWindowCentred();
         }
 
     }

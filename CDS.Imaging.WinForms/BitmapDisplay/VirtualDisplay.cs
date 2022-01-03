@@ -38,6 +38,12 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
 
         /// <summary>
+        /// Called whenever <see cref="PaintRect"/> changes
+        /// </summary>
+        private OnPaintRectChangedCallback onPaintRectChanged;
+
+
+        /// <summary>
         /// The size of half a display pixel
         /// </summary>
         /// <remarks>
@@ -48,12 +54,6 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// offset.
         /// </remarks>
         public SizeF SizeOfHalfDisplayPixel { get; private set; }
-
-
-        /// <summary>
-        /// Called whenever <see cref="PaintRect"/> changes
-        /// </summary>
-        public OnPaintRectChangedCallback OnPaintRectChanged;
 
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// Gets/sets the target image centre. Changes are only accepted
         /// in <see cref="BitmapDisplayMode.Free"/> mode; otherwise they are
         /// ignored. The <see cref="PaintRect"/> will be recalculated and 
-        /// <see cref="OnPaintRectChanged"/> called if it changes.
+        /// <see cref="onPaintRectChanged"/> called if it changes.
         /// </summary>
         public PointF TargetImageCentre
         {
@@ -116,7 +116,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// Gets/sets the target display centre. Changes are only accepted
         /// in <see cref="BitmapDisplayMode.Free"/> mode; otherwise they are
         /// ignored. The <see cref="PaintRect"/> will be recalculated and 
-        /// <see cref="OnPaintRectChanged"/> called if it changes.
+        /// <see cref="onPaintRectChanged"/> called if it changes.
         /// </summary>
         public PointF TargetDisplayCentre
         {
@@ -145,7 +145,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
                 if (paintRect != value)
                 {
                     paintRect = value;
-                    OnPaintRectChanged?.Invoke(this, paintRect);
+                    onPaintRectChanged?.Invoke(this, paintRect);
                 }
             }
         }
@@ -244,7 +244,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// </param>
         public VirtualDisplay(OnPaintRectChangedCallback onPaintRectChanged)
         {
-            OnPaintRectChanged = onPaintRectChanged;
+            this.onPaintRectChanged = onPaintRectChanged;
         }
 
 
@@ -313,8 +313,6 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
             return imageLocation;
         }
-
-
 
 
 
