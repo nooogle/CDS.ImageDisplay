@@ -42,7 +42,7 @@
         <member name="F:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free">
             <summary>
             Allow the image zoom and location to change, either programmatically or
-            via the mouse. The <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.TargetImageCentre"/> is reset
+            via the mouse. The <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSTargetImageCentre"/> is reset
             if the image size changes.
             </summary>
         </member>
@@ -51,48 +51,136 @@
             Displays a bitmap
             </summary>
         </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDS">
+        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSTimingMetrics">
             <summary>
-            Provides access to all the custom features
+            Timing metrics
+            </summary>
+        </member>
+        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSSizeOfHalfDisplayPixel">
+            <summary>
+            The size of half a displayed pixel
             </summary>
             <remarks>
-            Allows code to use myPanel.CDS.XXX rather than myPanel.XXX - this makes
-            it a little easier to discover and use the custom features of this panel 
-            since a .Net control presents 100's of properties, events and methods!
+            Use this as an offset when drawing with a large zoom and where the 
+            drawing locations should be in the middle of an image pixel. E.g. with
+            a zoom of 11, each image pixel will take 11*11 pixels on the screen. The
+            half pixel size will be 5.5. Calling <see cref="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSMapImageToDisplay(System.Drawing.PointF)"/>
+            will return the location of the top-left of this 11*11 block for a particular
+            image pixel; adding this offset of 5.5 will allow drawing to start in the middle
+            of this 11*11 block.
             </remarks>
         </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.TimingMetrics">
-            <inheritdoc/>
+        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSPaintRect">
+            <summary>
+            Gets the paint rectangle. This is based on the current image size,
+            display size, zoom, target image centre and target display centre.
+            </summary>
         </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.SizeOfHalfDisplayPixel">
-            <inheritdoc/>
+        <member name="E:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSPaintOver">
+            <summary>
+            Called when the image has been rendered; gives a client an opportunity
+            to paint graphics on top of the image. This will be flicker-free as long
+            as the control uses double buffering
+            </summary>
         </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.PaintRect">
-            <inheritdoc/>
+        <member name="E:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSPaintUnder">
+            <summary>
+            Called afer the background has been painted and before the image been painted;
+            gives a client an opportunity to paint graphics under the image. 
+            This will be flicker-free as long as the control uses double buffering
+            </summary>
         </member>
-        <member name="E:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.PaintOver">
-            <inheritdoc/>
+        <member name="E:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSDisplayModeChanged">
+            <summary>
+            Called when the display mode is changed.
+            </summary>
         </member>
-        <member name="E:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.PaintUnder">
-            <inheritdoc/>
+        <member name="E:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSPaintRectChanged">
+            <summary>
+            Fired when the paint rectangle of the display is changed
+            </summary>
         </member>
-        <member name="E:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.DisplayModeChanged">
-            <inheritdoc/>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSGetDisplayImage">
+            <summary>
+            Gets the image currently being displayed. 
+            </summary>
+            <remarks>
+            The display owns this image and may dispose it at any time if a new
+            (pending) image is being swapped in; therefore, callers should
+            use this method with caution since it's more of a diagnostics 
+            tool than for sharig image data.
+            </remarks>
         </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.Image">
-            <inheritdoc/>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSSetImage(CDS.Imaging.WinForms.BitmapDisplay.IImageSource)">
+            <summary>
+            A copy of the image is taken and then set as image the image to be displayd.
+            This takes immediate effect when called  from the UI thread, 
+            otherwise takes place asap by invoking an update procedure on the UI thread 
+            and returning immediately.
+            </summary>
+            <remarks>
+            The <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSTargetImageCentre"/> is reset if an image is currently being 
+            displayed and a new image of a different size is set.
+            
+            When called on a non-UI thread this returns immediately; it will be a small
+            amout of time later that the image is finally set as the display image.
+            </remarks>
         </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.AnythingToDisplay">
-            <inheritdoc/>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSSetImage(System.Drawing.Bitmap)">
+            <summary>
+            A copy of the image is taken and then set as image the image to be displayd.
+            This takes immediate effect when called  from the UI thread, 
+            otherwise takes place asap by invoking an update procedure on the UI thread 
+            and returning immediately.
+            </summary>
+            <remarks>
+            The <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSTargetImageCentre"/> is reset if an image is currently being 
+            displayed and a new image of a different size is set.
+            
+            When called on a non-UI thread this returns immediately; it will be a small
+            amout of time later that the image is finally set as the display image.
+            </remarks>
         </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.DisplayMode">
-            <inheritdoc/>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.SetImageIndirectlyFromNonUIThread(CDS.Imaging.WinForms.BitmapDisplay.IImageSource)">
+            <summary>
+            Sets the new image as a pending image; then invokes an update
+            method to get this pending image onto the display
+            </summary>
         </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.TargetImageCentre">
-            <inheritdoc/>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.SetImageDirectlyFromUIThread(CDS.Imaging.WinForms.BitmapDisplay.IImageSource)">
+            <summary>
+            We have a new image to display and we're on the UI thread meaning
+            we won't be mid-paint; we can directly clone or copy the new image
+            and repaint
+            </summary>
         </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.TargetDisplayCentre">
-            <inheritdoc/>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSAnythingToDisplay">
+            <summary>
+            True if there's anything to display
+            </summary>
+        </member>
+        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSDisplayMode">
+            <summary>
+            The image display mode
+            </summary>
+        </member>
+        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSTargetImageCentre">
+            <summary>
+            The location in the image that should be rendered at 
+            <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSTargetDisplayCentre"/>.
+            </summary>
+        </member>
+        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSTargetDisplayCentre">
+            <summary>
+            The location on the display that should render the pixel in the image
+            at location <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSTargetImageCentre"/>.
+            </summary>
         </member>
         <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.#ctor">
             <summary>
@@ -109,34 +197,89 @@
             Zoom manager wants to set a new zoom
             </summary>
         </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.Zoom">
-            <inheritdoc/>
+        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSZoom">
+            <summary>
+            Set/get the zoom level. The limits in the <see cref="T:CDS.Imaging.WinForms.BitmapDisplay.Consts"/> class are
+            used.
+            </summary>
         </member>
         <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.VirtualImageOnDisplay_OnPaintRectChanged(CDS.Imaging.WinForms.BitmapDisplay.VirtualDisplay,System.Drawing.RectangleF)">
             <summary>
             The virtual display wants to set a new paint rect
             </summary>
         </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.MapImageToDisplay(System.Drawing.PointF)">
-            <inheritdoc/>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSMapImageToDisplay(System.Drawing.PointF)">
+            <summary>
+            Returns the image location where a pixel at <paramref name="imageLocation"/> would 
+            have been drawn.
+            </summary>
+            <remarks>
+            This is useful when you have used the mouse to select a region of interest
+            (rectangle) over the image and want to deteremine the ROI with respect to 
+            the image.
+            </remarks>
+            <param name="imageLocation">A region on the image</param>
+            <returns>A region on the display or an empty rectangle if there's nothing to display</returns>
         </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.MapImageToDisplay(System.Drawing.RectangleF)">
-            <inheritdoc/>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSMapImageToDisplay(System.Drawing.RectangleF)">
+            <summary>
+            Returns the image location where a rectangle at <paramref name="imageRect"/> would 
+            have been drawn.
+            </summary>
+            <remarks>
+            This is useful when you have used the mouse to select a region of interest
+            (rectangle) over the image and want to deteremine the ROI with respect to 
+            the image.
+            </remarks>
+            <param name="imageRect">A region on the image</param>
+            <returns>A region on the display or an empty rectangle if there's nothing to display</returns>
         </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.MapDisplayToImage(System.Drawing.PointF)">
-            <inheritdoc/>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSMapDisplayToImage(System.Drawing.PointF)">
+            <summary>
+            Returns the image location where a pixel at <paramref name="displayLocation"/> would 
+            have been drawn.
+            </summary>
+            <remarks>
+            This is useful when you want to determine the image location
+            under the current mouse location.
+            </remarks>
+            <param name="displayLocation">A location on the display</param>
+            <returns>A location on the image or an empty point if there's nothing to display</returns>
         </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.MapDisplayToImage(System.Drawing.RectangleF)">
-            <inheritdoc/>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSMapDisplayToImage(System.Drawing.RectangleF)">
+            <summary>
+            Returns the image location where a rectangle at <paramref name="displayRect"/> would 
+            have been drawn.
+            </summary>
+            <remarks>
+            This is useful when you have used the mouse to select a region of interest
+            (rectangle) over the image and want to deteremine the ROI with respect to 
+            the image.
+            </remarks>
+            <param name="displayRect">A region on the image</param>
+            <returns>A region on the display or an empty rectangle if there's nothing to display</returns>
         </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.Centre">
-            <inheritdoc/>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSCentre">
+            <summary>
+            Centres the image on the display, retaining the existing zoom level.
+            Only applied if the display mode is <see cref="F:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free"/>,
+            no-op otherwise.
+            </summary>
         </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.ActualSizeCentred">
-            <inheritdoc/>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSActualSizeCentred">
+            <summary>
+            Centres the image on the display and sets the zoom to 1.
+            Only applied if the display mode is <see cref="F:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free"/>,
+            no-op otherwise.
+            </summary>
         </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.FitToWindowCentred">
-            <inheritdoc/>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSFitToWindowCentred">
+            <summary>
+            Centres the image on the display and adjusts the zoom so that the 
+            image fills the display as much as possible.
+            Only applied if the display mode is <see cref="F:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free"/>,
+            no-op otherwise.
+            </summary>
         </member>
         <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.OnPaintBackground(System.Windows.Forms.PaintEventArgs)">
             <summary>
@@ -179,30 +322,52 @@
             </summary>
             <param name="mouseEventArgs"></param>
         </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.ResetZoom">
-            <inheritdoc/>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSResetZoom">
+            <summary>
+            Reset the zoom to 1:1
+            </summary>
         </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.ZoomIn">
-            <inheritdoc/>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSZoomIn">
+            <summary>
+            Zoom in
+            </summary>
         </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.ZoomOut">
-            <inheritdoc/>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSZoomOut">
+            <summary>
+            Zoom out
+            </summary>
+        </member>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.CDSSyncPaintRectFromOther(CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel)">
+            <summary>
+            Synchronise the zoom and target display centre of this display
+            from another display.
+            </summary>
         </member>
         <member name="F:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.components">
             <summary> 
             Required designer variable.
             </summary>
         </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.Dispose(System.Boolean)">
-            <summary> 
-            Clean up any resources being used.
-            </summary>
-            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        </member>
         <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel.InitializeComponent">
             <summary> 
             Required method for Designer support - do not modify 
             the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:CDS.Imaging.WinForms.BitmapDisplay.BitmapImageSource">
+            <summary>
+            Provides read-only access to the properties and pixels for a .Net Bitmap
+            </summary>
+        </member>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapImageSource.#ctor(System.Drawing.Bitmap)">
+            <summary>
+            Locks the bitap for reading and provide access via the properties
+            to the bitmap properties and pixels. 
+            </summary>
+        </member>
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.BitmapImageSource.Dispose">
+            <summary>
+            Unlocks the bitmap
             </summary>
         </member>
         <member name="T:CDS.Imaging.WinForms.BitmapDisplay.Consts">
@@ -240,6 +405,12 @@
             <param name="sender">Callback sender</param>
             <param name="paintRect">New paint rectangle</param>
         </member>
+        <member name="T:CDS.Imaging.WinForms.BitmapDisplay.PaintRectChangedEvent">
+            <summary>
+            Callback delegate
+            </summary>
+            <param name="sender">Callback sender</param>
+        </member>
         <member name="T:CDS.Imaging.WinForms.BitmapDisplay.PaintOverEvent">
             <summary>
             Event delegate
@@ -260,185 +431,91 @@
             </summary>
             <param name="sender">Event sender</param>
         </member>
-        <member name="T:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay">
+        <member name="T:CDS.Imaging.WinForms.BitmapDisplay.IImageSource">
             <summary>
-            Behaviour for a bitmap display control
+            Provides access to an image's properties and pixel data
             </summary>
         </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.PaintRect">
+        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IImageSource.IsImageAvailable">
             <summary>
-            Gets the paint rectangle. This is based on the current image size,
-            display size, zoom, target image centre and target display centre.
+            True if an image is available
             </summary>
         </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.Image">
+        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IImageSource.Stride">
             <summary>
-            Get/set the image currently being displayed.
-            </summary>
-            <remarks>
-            The <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.TargetImageCentre"/> is reset if an image is currently being 
-            displayed and a new image of a different size is set
-            </remarks>
-        </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.AnythingToDisplay">
-            <summary>
-            True if there's anything to display
+            Stride of the image
             </summary>
         </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.DisplayMode">
+        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IImageSource.Width">
             <summary>
-            The image display mode
+            Width
             </summary>
         </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.TimingMetrics">
+        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IImageSource.Height">
             <summary>
-            Timing metrics
+            Height
             </summary>
         </member>
-        <member name="E:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.PaintOver">
+        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IImageSource.Size">
             <summary>
-            Called when the image has been rendered; gives a client an opportunity
-            to paint graphics on top of the image. This will be flicker-free as long
-            as the control uses double buffering
+            Size
             </summary>
         </member>
-        <member name="E:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.PaintUnder">
+        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IImageSource.Scan0">
             <summary>
-            Called afer the background has been painted and before the image been painted;
-            gives a client an opportunity to paint graphics under the image. 
-            This will be flicker-free as long as the control uses double buffering
+            Point to first pixel
             </summary>
         </member>
-        <member name="E:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.DisplayModeChanged">
+        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IImageSource.PixelFormat">
             <summary>
-            Called when the display mode is changed.
+            Image format
             </summary>
         </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.MapImageToDisplay(System.Drawing.PointF)">
+        <member name="T:CDS.Imaging.WinForms.BitmapDisplay.ImageWrapper">
             <summary>
-            Returns the display location where a pixel at <paramref name="imageLocation"/> would be drawn.
-            </summary>
-            <remarks>
-            This is useful when you want to overlay graphics on the image with respect to the 
-            image regardless of the current zoom and display settings.
-            
-            When the zoom is large each image pixel will occupy several display pixels. The 
-            returned coordinate is at the top-left of this region. The <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.SizeOfHalfDisplayPixel"/>
-            property can be used if the drawing should use the centre of the rendered pixels.
-            </remarks>
-            <param name="imageLocation">A rectangle on the image</param>
-            <returns>A rectangle on the display or an empty rectangle if there's nothing to display</returns>
-        </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.MapImageToDisplay(System.Drawing.RectangleF)">
-            <summary>
-            Returns the display location where a rectangle at <paramref name="imageLocation"/> would be drawn.
-            </summary>
-            <remarks>
-            This is useful when you want to overlay graphics on the image with respect to the 
-            image regardless of the current zoom and display settings.
-            
-            When the zoom is large each image pixel will occupy several display pixels. The location
-            of the returned rectangle is at the top-left of this region. The 
-            location is at the top-left of this region. The <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.SizeOfHalfDisplayPixel"/>
-            property can be used if the drawing should use the centre of the rendered pixels.
-            </remarks>
-            <param name="imageLocation">A rectangle on the image</param>
-            <returns>A rectangle on the display or an empty rectangle if there's nothing to display</returns>
-        </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.MapDisplayToImage(System.Drawing.PointF)">
-            <summary>
-            Returns the image location where a pixel at <paramref name="displayLocation"/> would 
-            have been drawn.
-            </summary>
-            <remarks>
-            This is useful when you have used the mouse to select a region of interest
-            (rectangle) over the image and want to deteremine the ROI with respect to 
-            the image.
-            </remarks>
-            <param name="displayLocation">A region on the image</param>
-            <returns>A region on the display or an empty rectangle if there's nothing to display</returns>
-        </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.MapDisplayToImage(System.Drawing.RectangleF)">
-            <summary>
-            Returns the image location where a rectangle at <paramref name="displayLocation"/> would 
-            have been drawn.
-            </summary>
-            <remarks>
-            This is useful when you have used the mouse to select a region of interest
-            (rectangle) over the image and want to deteremine the ROI with respect to 
-            the image.
-            </remarks>
-            <param name="displayLocation">A region on the image</param>
-            <returns>A region on the display or an empty rectangle if there's nothing to display</returns>
-        </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.Centre">
-            <summary>
-            Centres the image on the display, retaining the existing zoom level.
-            Only applied if the display mode is <see cref="F:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free"/>,
-            no-op otherwise.
+            Manages a .Net Bitmap. New images will be copied into the image when
+            the specification is the same; otherwise a new image is created and 
+            a clone taken of the new image.
             </summary>
         </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.FitToWindowCentred">
+        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.ImageWrapper.Image">
             <summary>
-            Centres the image on the display and adjusts the zoom so that the 
-            image fills the display as much as possible.
-            Only applied if the display mode is <see cref="F:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free"/>,
-            no-op otherwise.
+            The image
             </summary>
         </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.ActualSizeCentred">
+        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.ImageWrapper.ImageSize">
             <summary>
-            Centres the image on the display and sets the zoom to 1.
-            Only applied if the display mode is <see cref="F:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free"/>,
-            no-op otherwise.
+            The size of the image, or Size.Empty if there isn't an image
             </summary>
         </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.ResetZoom">
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.ImageWrapper.Dispose">
             <summary>
-            Reset the zoom to 1:1
+            Clean up managed resources
             </summary>
         </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.ZoomIn">
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.ImageWrapper.SetNewImage(CDS.Imaging.WinForms.BitmapDisplay.IImageSource)">
             <summary>
-            Zoom in
+            Sets a new image, reusing the existing <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.ImageWrapper.Image"/> if it
+            exists and is the same specification as the new image, otherwise 
+            creating a clone of the new image.
             </summary>
         </member>
-        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.ZoomOut">
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.ImageWrapper.CreateImageFromOther(CDS.Imaging.WinForms.BitmapDisplay.IImageSource)">
             <summary>
-            Zoom out
+            Creates the display image from a full clone of another image
+            and reconfigures the display
             </summary>
         </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.Zoom">
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.ImageWrapper.CopyImageBitsIntoExisting(CDS.Imaging.WinForms.BitmapDisplay.IImageSource)">
             <summary>
-            Set/get the zoom level. The limits in the <see cref="T:CDS.Imaging.WinForms.BitmapDisplay.Consts"/> class are
-            used.
+            Copy pixels from one image directly into another; the images
+            must have the same specification (checked by the caller!)
             </summary>
         </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.TargetImageCentre">
+        <member name="M:CDS.Imaging.WinForms.BitmapDisplay.ImageWrapper.DropImage">
             <summary>
-            The location in the image that should be rendered at 
-            <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.TargetDisplayCentre"/>.
+            Disposes the display image; should only be called on the UI thread!
             </summary>
-        </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.TargetDisplayCentre">
-            <summary>
-            The location on the display that should render the pixel in the image
-            at location <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.TargetImageCentre"/>.
-            </summary>
-        </member>
-        <member name="P:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.SizeOfHalfDisplayPixel">
-            <summary>
-            The size of half a displayed pixel
-            </summary>
-            <remarks>
-            Use this as an offset when drawing with a large zoom and where the 
-            drawing locations should be in the middle of an image pixel. E.g. with
-            a zoom of 11, each image pixel will take 11*11 pixels on the screen. The
-            half pixel size will be 5.5. Calling <see cref="M:CDS.Imaging.WinForms.BitmapDisplay.IBitmapDisplay.MapImageToDisplay(System.Drawing.PointF)"/>
-            will return the location of the top-left of this 11*11 block for a particular
-            image pixel; adding this offset of 5.5 will allow drawing to start in the middle
-            of this 11*11 block.
-            </remarks>
         </member>
         <member name="T:CDS.Imaging.WinForms.BitmapDisplay.VirtualDisplay">
             <summary>
@@ -465,6 +542,11 @@
             </para>
             </remarks>
         </member>
+        <member name="F:CDS.Imaging.WinForms.BitmapDisplay.VirtualDisplay.onPaintRectChanged">
+            <summary>
+            Called whenever <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.VirtualDisplay.PaintRect"/> changes
+            </summary>
+        </member>
         <member name="P:CDS.Imaging.WinForms.BitmapDisplay.VirtualDisplay.SizeOfHalfDisplayPixel">
             <summary>
             The size of half a display pixel
@@ -476,11 +558,6 @@
             property gives the adjustment to make to a display location for this
             offset.
             </remarks>
-        </member>
-        <member name="F:CDS.Imaging.WinForms.BitmapDisplay.VirtualDisplay.OnPaintRectChanged">
-            <summary>
-            Called whenever <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.VirtualDisplay.PaintRect"/> changes
-            </summary>
         </member>
         <member name="P:CDS.Imaging.WinForms.BitmapDisplay.VirtualDisplay.AnythingToDisplay">
             <summary>
@@ -499,7 +576,7 @@
             Gets/sets the target image centre. Changes are only accepted
             in <see cref="F:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free"/> mode; otherwise they are
             ignored. The <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.VirtualDisplay.PaintRect"/> will be recalculated and 
-            <see cref="F:CDS.Imaging.WinForms.BitmapDisplay.VirtualDisplay.OnPaintRectChanged"/> called if it changes.
+            <see cref="F:CDS.Imaging.WinForms.BitmapDisplay.VirtualDisplay.onPaintRectChanged"/> called if it changes.
             </summary>
         </member>
         <member name="P:CDS.Imaging.WinForms.BitmapDisplay.VirtualDisplay.TargetDisplayCentre">
@@ -507,7 +584,7 @@
             Gets/sets the target display centre. Changes are only accepted
             in <see cref="F:CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free"/> mode; otherwise they are
             ignored. The <see cref="P:CDS.Imaging.WinForms.BitmapDisplay.VirtualDisplay.PaintRect"/> will be recalculated and 
-            <see cref="F:CDS.Imaging.WinForms.BitmapDisplay.VirtualDisplay.OnPaintRectChanged"/> called if it changes.
+            <see cref="F:CDS.Imaging.WinForms.BitmapDisplay.VirtualDisplay.onPaintRectChanged"/> called if it changes.
             </summary>
         </member>
         <member name="P:CDS.Imaging.WinForms.BitmapDisplay.VirtualDisplay.PaintRect">

@@ -2,9 +2,12 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFrameworks>net6.0-windows;net8.0-windows;net48</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
+    <Platforms>AnyCPU;ARM64;x64</Platforms>
+    <LangVersion>latest</LangVersion>
+    <VersionPrefix>1.2.2</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,10 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Humanizer.Core" Version="2.13.14" />
-    <PackageReference Include="OpenCvSharp4" Version="4.5.3.20211228" />
-    <PackageReference Include="OpenCvSharp4.Extensions" Version="4.5.3.20211228" />
-    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.5.3.20211228" />
+    <PackageReference Include="Humanizer.Core" Version="2.14.1" />
+    <PackageReference Include="OpenCvSharp4" Version="4.10.0.20241108" />
+    <PackageReference Include="OpenCvSharp4.Extensions" Version="4.10.0.20241108" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.10.0.20241108" />
   </ItemGroup>
 
   <ItemGroup>

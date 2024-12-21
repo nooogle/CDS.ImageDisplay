@@ -1,21 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFrameworks>net6.0-windows;net8.0-windows;net48</TargetFrameworks>
 		<UseWindowsForms>true</UseWindowsForms>
-		<Version>1.0.1</Version>
 		<Company>CDS</Company>
 		<Nullable>enable</Nullable>
-	</PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <LangVersion>latest</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>C:\Users\jon\source\repos\CDS.Imaging\CDS.Imaging.WinForms\CDS.Imaging.WinForms.xml</DocumentationFile>
+    <Platforms>AnyCPU;ARM64;x64</Platforms>
+    <VersionPrefix>1.2.0</VersionPrefix>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>C:\Users\jon\source\repos\CDS.Imaging\CDS.Imaging.WinForms\CDS.Imaging.WinForms.xml</DocumentationFile>
-  </PropertyGroup>
 
 </Project>
