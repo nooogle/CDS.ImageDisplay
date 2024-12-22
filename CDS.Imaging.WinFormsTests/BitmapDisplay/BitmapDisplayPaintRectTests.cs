@@ -84,9 +84,9 @@ namespace CDS.Imaging.WinFormsTests.BitmapDisplay
         [Theory]
         [InlineData(0, 0, 300, 400)]
         public void MapImageToDisplay_Returns_DisplayRect(
-            float imageX, 
-            float imageY, 
-            float expectedDisplayX, 
+            float imageX,
+            float imageY,
+            float expectedDisplayX,
             float expectedDisplayY)
         {
             var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
