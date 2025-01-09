@@ -20,6 +20,13 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         private DragManager dragManager;
         private ZoomManager zoomManager;
         private bool isWaitingToApplyPendingImage;
+        private ROIManager roiManager;
+
+
+        /// <summary>
+        /// The mouse mode
+        /// </summary>
+        public MouseMode CDSMouseMode { get; set; } = MouseMode.None;
 
 
         /// <summary>
@@ -203,6 +210,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         {
             displayImage.SetNewImage(imageSource);
             virtualDisplay.ImageSize = displayImage.ImageSize;
+            roiManager.SetImageSize(imageSource == null ? null : (Size?)displayImage.ImageSize);
             Invalidate();
         }
 
@@ -294,7 +302,48 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             dragManager = new DragManager(DragManager_SetNewTargetDisplayCentre);
             zoomManager = new ZoomManager(ZoomManager_SetNewZoom);
             virtualDisplay = new VirtualDisplay(VirtualImageOnDisplay_OnPaintRectChanged);
+            
+            roiManager = new ROIManager(
+                mapImagePointToDisplayPoint: CDSMapImagePointToDisplayPoint,
+                mapImageRectangleToDisplayRectangle: CDSMapImageRectangleToDisplayRectangle,
+                mapDisplayPointToImagePoint: CDSMapDisplayPointToImagePoint,
+                invalidateDisplay: Invalidate,
+                setMouseCursor: cursor => Cursor = cursor);
         }
+
+
+        /// <summary>
+        /// Map an image point to a display point
+        /// </summary>
+        /// <param name="imagePoint"></param>
+        /// <returns></returns>
+        public Point CDSMapImagePointToDisplayPoint(Point imagePoint)
+        {
+            return Point.Truncate(virtualDisplay.MapImageToDisplay(imagePoint));
+        }
+
+
+        /// <summary>
+        /// Map an image rectangle to a display rectangle
+        /// </summary>
+        /// <param name="imageRectangle"></param>
+        /// <returns></returns>
+        public Rectangle CDSMapImageRectangleToDisplayRectangle(Rectangle imageRectangle)
+        {
+            return Rectangle.Truncate(virtualDisplay.MapImageToDisplay(imageRectangle));
+        }
+
+
+        /// <summary>
+        /// Map a display point to an image point
+        /// </summary>
+        /// <param name="displayPoint"></param>
+        /// <returns></returns>
+        public Point CDSMapDisplayPointToImagePoint(Point displayPoint)
+        {
+            return Point.Truncate(virtualDisplay.MapDisplayToImage(displayPoint));
+        }
+
 
 
         /// <summary>
@@ -473,6 +522,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             if (CDSAnythingToDisplay)
             {
                 PaintBitmap(paintEventArgs);
+                roiManager.Draw(paintEventArgs.Graphics);
             }
 
             CDSPaintOver?.Invoke(
@@ -552,7 +602,20 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
             if (CDSAnythingToDisplay)
             {
-                dragManager.OnMouseMove(mouseEventArgs);
+                switch (CDSMouseMode)
+                {
+                    case MouseMode.Drag:
+                        dragManager.OnMouseMove(mouseEventArgs);
+                        break;
+
+                    case MouseMode.ROISelection:
+                        roiManager.OnMouseMove(mouseEventArgs);
+                        Invalidate();
+                        break;
+
+                    default:
+                        break;
+                }
             }
         }
 
@@ -566,10 +629,22 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
             if (CDSAnythingToDisplay)
             {
-                dragManager.OnMouseDown(
-                    imageDisplayMode: CDSDisplayMode,
-                    mouseEventArgs: mouseEventArgs,
-                    currentTargetDisplayCentre: virtualDisplay.TargetDisplayCentre);
+                switch(CDSMouseMode)
+                {
+                    case MouseMode.Drag:
+                        dragManager.OnMouseDown(
+                            imageDisplayMode: CDSDisplayMode,
+                            mouseEventArgs: mouseEventArgs,
+                            currentTargetDisplayCentre: virtualDisplay.TargetDisplayCentre);
+                        break;
+
+                    case MouseMode.ROISelection:
+                        roiManager.OnMouseDown(mouseEventArgs);
+                        Invalidate();
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -584,7 +659,20 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
             if (CDSAnythingToDisplay)
             {
-                dragManager.OnMouseUp(mouseEventArgs);
+                switch(CDSMouseMode)
+                {
+                    case MouseMode.Drag:
+                        dragManager.OnMouseUp(mouseEventArgs);
+                        break;
+                 
+                    case MouseMode.ROISelection:
+                        roiManager.OnMouseUp(mouseEventArgs);
+                        Invalidate();
+                        break;
+                    
+                    default:
+                        break;
+                }
             }
         }
 
@@ -626,6 +714,15 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             CDSZoom = sender.CDSZoom;
             CDSTargetDisplayCentre = sender.CDSTargetDisplayCentre;
             CDSTargetImageCentre = sender.CDSTargetImageCentre;
+        }
+
+
+        /// <summary>
+        /// Sets the region of interest 
+        /// </summary>
+        public void CDSSetROI(Rectangle roi)
+        {
+            roiManager.SetROI(roi);
         }
     }
 }

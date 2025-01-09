@@ -2,12 +2,14 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net6.0-windows;net8.0-windows;net48</TargetFrameworks>
+    <TargetFrameworks>net8.0-windows;net48</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
     <Platforms>AnyCPU;ARM64;x64</Platforms>
+    <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
     <LangVersion>latest</LangVersion>
     <VersionPrefix>1.2.2</VersionPrefix>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +21,7 @@
     <PackageReference Include="OpenCvSharp4" Version="4.10.0.20241108" />
     <PackageReference Include="OpenCvSharp4.Extensions" Version="4.10.0.20241108" />
     <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.10.0.20241108" />
+    <PackageReference Include="System.Resources.Extensions" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +29,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="DemoForms\FormROISelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

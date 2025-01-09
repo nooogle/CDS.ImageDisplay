@@ -52,6 +52,8 @@ namespace CDS.Imaging.Demo.DemoForms
         {
             if ((cvImageBlurred == null) || (cvImageGrey == null)) { return; }
 
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
             var ksize = (trackBarGaussianSize.Value * 2) + 1;
 
             OpenCvSharp.Cv2.GaussianBlur(
@@ -59,6 +61,9 @@ namespace CDS.Imaging.Demo.DemoForms
                 dst: cvImageBlurred,
                 ksize: new OpenCvSharp.Size(ksize, ksize),
                 sigmaX: trackGaussianSigma.Value);
+
+            stopwatch.Stop();
+            labelProcessTimeMS.Text = $"Processing time: {stopwatch.ElapsedMilliseconds:0.0} ms";
 
             bitmapPanel4.CDSSetImage(cvImageBlurred);
         }

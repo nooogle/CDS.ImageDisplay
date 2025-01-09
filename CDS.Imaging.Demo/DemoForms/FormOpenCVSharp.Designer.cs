@@ -28,191 +28,213 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.bitmapPanel4 = new CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel();
-            this.bitmapPanel3 = new CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel();
-            this.bitmapPanel2 = new CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel();
-            this.bitmapPanel1 = new CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel();
-            this.trackBarGaussianSize = new System.Windows.Forms.TrackBar();
-            this.label1 = new System.Windows.Forms.Label();
-            this.trackGaussianSigma = new System.Windows.Forms.TrackBar();
-            this.label2 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarGaussianSize)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackGaussianSigma)).BeginInit();
-            this.SuspendLayout();
+            tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            label6 = new System.Windows.Forms.Label();
+            label5 = new System.Windows.Forms.Label();
+            label4 = new System.Windows.Forms.Label();
+            label3 = new System.Windows.Forms.Label();
+            bitmapPanel4 = new WinForms.BitmapDisplay.BitmapDisplayPanel();
+            bitmapPanel3 = new WinForms.BitmapDisplay.BitmapDisplayPanel();
+            bitmapPanel2 = new WinForms.BitmapDisplay.BitmapDisplayPanel();
+            bitmapPanel1 = new WinForms.BitmapDisplay.BitmapDisplayPanel();
+            trackBarGaussianSize = new System.Windows.Forms.TrackBar();
+            label1 = new System.Windows.Forms.Label();
+            trackGaussianSigma = new System.Windows.Forms.TrackBar();
+            label2 = new System.Windows.Forms.Label();
+            labelProcessTimeMS = new System.Windows.Forms.Label();
+            tableLayoutPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBarGaussianSize).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)trackGaussianSigma).BeginInit();
+            SuspendLayout();
             // 
             // tableLayoutPanel
             // 
-            this.tableLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Inset;
-            this.tableLayoutPanel.ColumnCount = 2;
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel.Controls.Add(this.label6, 0, 2);
-            this.tableLayoutPanel.Controls.Add(this.label5, 1, 2);
-            this.tableLayoutPanel.Controls.Add(this.label4, 0, 0);
-            this.tableLayoutPanel.Controls.Add(this.label3, 1, 0);
-            this.tableLayoutPanel.Controls.Add(this.bitmapPanel4, 1, 3);
-            this.tableLayoutPanel.Controls.Add(this.bitmapPanel3, 0, 3);
-            this.tableLayoutPanel.Controls.Add(this.bitmapPanel2, 1, 1);
-            this.tableLayoutPanel.Controls.Add(this.bitmapPanel1, 0, 1);
-            this.tableLayoutPanel.Location = new System.Drawing.Point(12, 63);
-            this.tableLayoutPanel.Name = "tableLayoutPanel";
-            this.tableLayoutPanel.RowCount = 4;
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(776, 375);
-            this.tableLayoutPanel.TabIndex = 0;
+            tableLayoutPanel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            tableLayoutPanel.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Inset;
+            tableLayoutPanel.ColumnCount = 2;
+            tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            tableLayoutPanel.Controls.Add(label6, 0, 2);
+            tableLayoutPanel.Controls.Add(label5, 1, 2);
+            tableLayoutPanel.Controls.Add(label4, 0, 0);
+            tableLayoutPanel.Controls.Add(label3, 1, 0);
+            tableLayoutPanel.Controls.Add(bitmapPanel4, 1, 3);
+            tableLayoutPanel.Controls.Add(bitmapPanel3, 0, 3);
+            tableLayoutPanel.Controls.Add(bitmapPanel2, 1, 1);
+            tableLayoutPanel.Controls.Add(bitmapPanel1, 0, 1);
+            tableLayoutPanel.Location = new System.Drawing.Point(22, 134);
+            tableLayoutPanel.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            tableLayoutPanel.Name = "tableLayoutPanel";
+            tableLayoutPanel.RowCount = 4;
+            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 43F));
+            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 43F));
+            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            tableLayoutPanel.Size = new System.Drawing.Size(1441, 800);
+            tableLayoutPanel.TabIndex = 0;
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(5, 188);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(172, 15);
-            this.label6.TabIndex = 7;
-            this.label6.Text = "Greyscale OpenCV Mat (8U_C1)";
+            label6.AutoSize = true;
+            label6.Location = new System.Drawing.Point(8, 401);
+            label6.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(348, 32);
+            label6.TabIndex = 7;
+            label6.Text = "Greyscale OpenCV Mat (8U_C1)";
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(392, 188);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(212, 15);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "Blurred greyscale OpenCV Mat (8U_C1)";
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(727, 401);
+            label5.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(430, 32);
+            label5.TabIndex = 6;
+            label5.Text = "Blurred greyscale OpenCV Mat (8U_C1)";
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(5, 2);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(70, 15);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "RGB Bitmap";
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(8, 2);
+            label4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(140, 32);
+            label4.TabIndex = 5;
+            label4.Text = "RGB Bitmap";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(392, 2);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(144, 15);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "RGB OpenCV Mat (8U_C3)";
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(727, 2);
+            label3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(291, 32);
+            label3.TabIndex = 4;
+            label3.Text = "RGB OpenCV Mat (8U_C3)";
             // 
             // bitmapPanel4
             // 
-            this.bitmapPanel4.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
-            this.bitmapPanel4.CDSDisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free;
-            this.bitmapPanel4.CDSZoom = 1F;
-            this.bitmapPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bitmapPanel4.Location = new System.Drawing.Point(392, 213);
-            this.bitmapPanel4.Name = "bitmapPanel4";
-            this.bitmapPanel4.Size = new System.Drawing.Size(379, 157);
-            this.bitmapPanel4.TabIndex = 3;
-            this.bitmapPanel4.CDSPaintRectChanged += new CDS.Imaging.WinForms.BitmapDisplay.PaintRectChangedEvent(this.bitmapPanel_CDSPaintRectChanged);
+            bitmapPanel4.BackgroundImage = Properties.Resources.double_bubble;
+            bitmapPanel4.CDSDisplayMode = WinForms.BitmapDisplay.BitmapDisplayMode.Free;
+            bitmapPanel4.CDSZoom = 1F;
+            bitmapPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            bitmapPanel4.Location = new System.Drawing.Point(727, 452);
+            bitmapPanel4.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            bitmapPanel4.Name = "bitmapPanel4";
+            bitmapPanel4.Size = new System.Drawing.Size(706, 340);
+            bitmapPanel4.TabIndex = 3;
+            bitmapPanel4.CDSPaintRectChanged += bitmapPanel_CDSPaintRectChanged;
             // 
             // bitmapPanel3
             // 
-            this.bitmapPanel3.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
-            this.bitmapPanel3.CDSDisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free;
-            this.bitmapPanel3.CDSZoom = 1F;
-            this.bitmapPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bitmapPanel3.Location = new System.Drawing.Point(5, 213);
-            this.bitmapPanel3.Name = "bitmapPanel3";
-            this.bitmapPanel3.Size = new System.Drawing.Size(379, 157);
-            this.bitmapPanel3.TabIndex = 2;
-            this.bitmapPanel3.CDSPaintRectChanged += new CDS.Imaging.WinForms.BitmapDisplay.PaintRectChangedEvent(this.bitmapPanel_CDSPaintRectChanged);
+            bitmapPanel3.BackgroundImage = Properties.Resources.double_bubble;
+            bitmapPanel3.CDSDisplayMode = WinForms.BitmapDisplay.BitmapDisplayMode.Free;
+            bitmapPanel3.CDSZoom = 1F;
+            bitmapPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            bitmapPanel3.Location = new System.Drawing.Point(8, 452);
+            bitmapPanel3.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            bitmapPanel3.Name = "bitmapPanel3";
+            bitmapPanel3.Size = new System.Drawing.Size(705, 340);
+            bitmapPanel3.TabIndex = 2;
+            bitmapPanel3.CDSPaintRectChanged += bitmapPanel_CDSPaintRectChanged;
             // 
             // bitmapPanel2
             // 
-            this.bitmapPanel2.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
-            this.bitmapPanel2.CDSDisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free;
-            this.bitmapPanel2.CDSZoom = 1F;
-            this.bitmapPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bitmapPanel2.Location = new System.Drawing.Point(392, 27);
-            this.bitmapPanel2.Name = "bitmapPanel2";
-            this.bitmapPanel2.Size = new System.Drawing.Size(379, 156);
-            this.bitmapPanel2.TabIndex = 1;
-            this.bitmapPanel2.CDSPaintRectChanged += new CDS.Imaging.WinForms.BitmapDisplay.PaintRectChangedEvent(this.bitmapPanel_CDSPaintRectChanged);
+            bitmapPanel2.BackgroundImage = Properties.Resources.double_bubble;
+            bitmapPanel2.CDSDisplayMode = WinForms.BitmapDisplay.BitmapDisplayMode.Free;
+            bitmapPanel2.CDSZoom = 1F;
+            bitmapPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            bitmapPanel2.Location = new System.Drawing.Point(727, 53);
+            bitmapPanel2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            bitmapPanel2.Name = "bitmapPanel2";
+            bitmapPanel2.Size = new System.Drawing.Size(706, 340);
+            bitmapPanel2.TabIndex = 1;
+            bitmapPanel2.CDSPaintRectChanged += bitmapPanel_CDSPaintRectChanged;
             // 
             // bitmapPanel1
             // 
-            this.bitmapPanel1.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
-            this.bitmapPanel1.CDSDisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free;
-            this.bitmapPanel1.CDSZoom = 1F;
-            this.bitmapPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bitmapPanel1.Location = new System.Drawing.Point(5, 27);
-            this.bitmapPanel1.Name = "bitmapPanel1";
-            this.bitmapPanel1.Size = new System.Drawing.Size(379, 156);
-            this.bitmapPanel1.TabIndex = 0;
-            this.bitmapPanel1.CDSPaintRectChanged += new CDS.Imaging.WinForms.BitmapDisplay.PaintRectChangedEvent(this.bitmapPanel_CDSPaintRectChanged);
+            bitmapPanel1.BackgroundImage = Properties.Resources.double_bubble;
+            bitmapPanel1.CDSDisplayMode = WinForms.BitmapDisplay.BitmapDisplayMode.Free;
+            bitmapPanel1.CDSZoom = 1F;
+            bitmapPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            bitmapPanel1.Location = new System.Drawing.Point(8, 53);
+            bitmapPanel1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            bitmapPanel1.Name = "bitmapPanel1";
+            bitmapPanel1.Size = new System.Drawing.Size(705, 340);
+            bitmapPanel1.TabIndex = 0;
+            bitmapPanel1.CDSPaintRectChanged += bitmapPanel_CDSPaintRectChanged;
             // 
             // trackBarGaussianSize
             // 
-            this.trackBarGaussianSize.Location = new System.Drawing.Point(101, 12);
-            this.trackBarGaussianSize.Maximum = 30;
-            this.trackBarGaussianSize.Name = "trackBarGaussianSize";
-            this.trackBarGaussianSize.Size = new System.Drawing.Size(196, 45);
-            this.trackBarGaussianSize.TabIndex = 1;
-            this.trackBarGaussianSize.Value = 5;
-            this.trackBarGaussianSize.Scroll += new System.EventHandler(this.trackBarGaussianSize_Scroll);
+            trackBarGaussianSize.Location = new System.Drawing.Point(188, 26);
+            trackBarGaussianSize.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            trackBarGaussianSize.Maximum = 30;
+            trackBarGaussianSize.Name = "trackBarGaussianSize";
+            trackBarGaussianSize.Size = new System.Drawing.Size(364, 90);
+            trackBarGaussianSize.TabIndex = 1;
+            trackBarGaussianSize.Value = 5;
+            trackBarGaussianSize.Scroll += trackBarGaussianSize_Scroll;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 12);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(86, 15);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Half kernel size";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(22, 26);
+            label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(177, 32);
+            label1.TabIndex = 2;
+            label1.Text = "Half kernel size";
             // 
             // trackGaussianSigma
             // 
-            this.trackGaussianSigma.Location = new System.Drawing.Point(356, 12);
-            this.trackGaussianSigma.Maximum = 30;
-            this.trackGaussianSigma.Name = "trackGaussianSigma";
-            this.trackGaussianSigma.Size = new System.Drawing.Size(196, 45);
-            this.trackGaussianSigma.TabIndex = 3;
-            this.trackGaussianSigma.Scroll += new System.EventHandler(this.trackGaussianSigma_Scroll);
+            trackGaussianSigma.Location = new System.Drawing.Point(661, 26);
+            trackGaussianSigma.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            trackGaussianSigma.Maximum = 30;
+            trackGaussianSigma.Name = "trackGaussianSigma";
+            trackGaussianSigma.Size = new System.Drawing.Size(364, 90);
+            trackGaussianSigma.TabIndex = 3;
+            trackGaussianSigma.Scroll += trackGaussianSigma_Scroll;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(310, 12);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(40, 15);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Sigma";
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(576, 26);
+            label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(80, 32);
+            label2.TabIndex = 4;
+            label2.Text = "Sigma";
+            // 
+            // labelProcessTimeMS
+            // 
+            labelProcessTimeMS.AutoSize = true;
+            labelProcessTimeMS.Location = new System.Drawing.Point(1043, 26);
+            labelProcessTimeMS.Name = "labelProcessTimeMS";
+            labelProcessTimeMS.Size = new System.Drawing.Size(204, 32);
+            labelProcessTimeMS.TabIndex = 5;
+            labelProcessTimeMS.Text = "Process time: 0ms";
             // 
             // FormOpenCVSharp
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.trackGaussianSigma);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.trackBarGaussianSize);
-            this.Controls.Add(this.tableLayoutPanel);
-            this.Name = "FormOpenCVSharp";
-            this.Text = "FormOpenCVSharp";
-            this.tableLayoutPanel.ResumeLayout(false);
-            this.tableLayoutPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarGaussianSize)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackGaussianSigma)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(1486, 960);
+            Controls.Add(labelProcessTimeMS);
+            Controls.Add(label2);
+            Controls.Add(trackGaussianSigma);
+            Controls.Add(label1);
+            Controls.Add(trackBarGaussianSize);
+            Controls.Add(tableLayoutPanel);
+            Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            Name = "FormOpenCVSharp";
+            Text = "FormOpenCVSharp";
+            tableLayoutPanel.ResumeLayout(false);
+            tableLayoutPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBarGaussianSize).EndInit();
+            ((System.ComponentModel.ISupportInitialize)trackGaussianSigma).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -230,5 +252,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelProcessTimeMS;
     }
 }

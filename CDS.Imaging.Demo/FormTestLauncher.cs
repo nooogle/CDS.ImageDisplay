@@ -66,6 +66,12 @@ namespace CDS.Imaging.Demo
                 name: "Paint over and under",
                 tooltip: "",
                 runDemo: () => RunModalForm<DemoForms.FormPaintOverAndUnder>());
+
+            AddDemo(
+                parentNode: otherNode.Nodes,
+                name: "ROI selection",
+                tooltip: "",
+                runDemo: () => RunModalForm<DemoForms.FormROISelection>());
         }
 
         private void AddOpenCVSharpDemoNodes()
@@ -98,7 +104,7 @@ namespace CDS.Imaging.Demo
 
         private void SetCaption()
         {
-            string appName = Application.ProductName;
+            string appName = Application.ProductName!;
             string appVersion = Application.ProductVersion.Split('+')[0]; // Remove hash if present
 
             string appBitDepth = Environment.Is64BitProcess ? "64-bit" : "32-bit";
