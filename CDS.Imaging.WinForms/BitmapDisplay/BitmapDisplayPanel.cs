@@ -12,6 +12,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
     public partial class BitmapDisplayPanel : UserControl
     {
         private const string categoryCDS = "CDS";
+
         private ImageWrapper displayImage = new ImageWrapper();
         private ImageWrapper pendingDisplayImage = new ImageWrapper();
         private object imageLock = new object();
@@ -21,12 +22,33 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         private ZoomManager zoomManager;
         private bool isWaitingToApplyPendingImage;
         private ROIManager roiManager;
+        private MouseMode mouseMode = MouseMode.None;
+
 
 
         /// <summary>
         /// The mouse mode
         /// </summary>
-        public MouseMode CDSMouseMode { get; set; } = MouseMode.None;
+        [Category(categoryCDS)]
+        public MouseMode CDSMouseMode
+        {
+            get => mouseMode;
+
+            set
+            {
+                if(mouseMode != value)
+                {
+                    mouseMode = value;
+                    CDSOnMouseModeChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Fired when the mouse mode is changed
+        /// </summary>
+        public event EventHandler? CDSOnMouseModeChanged;
 
 
         /// <summary>
@@ -110,7 +132,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// The display owns this image and may dispose it at any time if a new
         /// (pending) image is being swapped in; therefore, callers should
         /// use this method with caution since it's more of a diagnostics 
-        /// tool than for sharig image data.
+        /// tool than for sharing image data.
         /// </remarks>
         [Category(categoryCDS)]
         public Bitmap? CDSGetDisplayImage() => displayImage.Image;
@@ -308,7 +330,9 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
                 mapImageRectangleToDisplayRectangle: CDSMapImageRectangleToDisplayRectangle,
                 mapDisplayPointToImagePoint: CDSMapDisplayPointToImagePoint,
                 invalidateDisplay: Invalidate,
-                setMouseCursor: cursor => Cursor = cursor);
+                setMouseCursor: cursor => Cursor = cursor,
+                onCommittedROIChange: () => OnCommittedROIChanged?.Invoke(this, EventArgs.Empty),
+                onDraggingROIChange: () => OnDraggingROIChanged?.Invoke(this, EventArgs.Empty));
         }
 
 
@@ -717,12 +741,69 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         }
 
 
+
         /// <summary>
-        /// Sets the region of interest 
+        /// Controls the visibility of the ROI
         /// </summary>
-        public void CDSSetROI(Rectangle roi)
+        [Category(categoryCDS)]
+        public bool ROIVisible
         {
-            roiManager.SetROI(roi);
+            get => roiManager.Visible;
+            set => roiManager.Visible = value;
         }
+
+
+        /// <summary>
+        /// Controls the ability to edit the ROI
+        /// </summary>
+        [Category(categoryCDS)] 
+        public bool CanEditCommittedROI
+        {
+            get => roiManager.CanEditCommitted;
+            set => roiManager.CanEditCommitted = value;
+        }
+
+
+        /// <summary>
+        /// Controls the ability to create a new ROI
+        /// </summary>
+        [Category(categoryCDS)]
+        public bool CanCreateNewROI
+        {
+            get => roiManager.CanCreateNew;
+            set => roiManager.CanCreateNew = value;
+        }
+
+
+        /// <summary>
+        /// The committed ROI, or an empty rectangle if there is no committed ROI
+        /// </summary>
+        [Category(categoryCDS)]
+        public Rectangle CommittedROI
+        {
+            get => roiManager.CommittedROI;
+            set => roiManager.CommittedROI = value;
+        }
+
+
+        /// <summary>
+        /// The current dragging ROI, or an empty rectangle if one is not being dragged
+        /// </summary>
+        [Category(categoryCDS)]
+        public Rectangle DraggingROI => roiManager.LiveDraggingROI;
+
+
+        /// <summary>
+        /// Fired when the committed ROI is changed
+        /// </summary>
+        [Category(categoryCDS)]
+        public event EventHandler? OnCommittedROIChanged;
+
+
+        /// <summary>
+        /// Fired when the dragging ROI is changed
+        /// </summary>
+        [Category(categoryCDS)]
+        public event EventHandler? OnDraggingROIChanged;
     }
 }

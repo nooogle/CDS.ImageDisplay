@@ -5,8 +5,9 @@ using System.Windows.Forms;
 
 namespace CDS.Imaging.WinForms.BitmapDisplay
 {
-
-
+    /// <summary>
+    /// Manages a region of interest (ROI) on an image.
+    /// </summary>
     public class ROIManager : IDisposable
     {
         private bool isDisposed = false;
@@ -15,6 +16,8 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         private readonly Func<Point, Point> mapDisplayPointToImagePoint;
         private readonly Action invalidateDisplay;
         private readonly Action<Cursor> setMouseCursor;
+        private readonly Action onCommittedROIChange;
+        private readonly Action onDraggingROIChange;
 
         private readonly ImmutableDictionary<DraggingMode, Cursor> mouseCursors;
 
@@ -28,12 +31,76 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         private RectangleRenderer committedROIRenderer;
         private RectangleRenderer liveDraggingROIRenderer;
 
+        private bool visible = true;
+        private bool canEditCommitted = false;
+        private bool canCreateNew = false;
+
+
+        /// <summary>
+        /// Controls whether the ROI is visible.
+        /// </summary>
+        public bool Visible 
+        {
+            get => visible;
+         
+            set
+            {
+                if (visible != value)
+                {
+                    visible = value;
+                    invalidateDisplay();
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Controls whether the ROI can changed. 
+        /// </summary>
+        public bool CanEditCommitted
+        {
+            get => canEditCommitted;
+         
+            set
+            {
+                if (canEditCommitted != value)
+                {
+                    canEditCommitted = value;
+                    invalidateDisplay();
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Controls whether a new ROI can be created.
+        /// </summary>
+        public bool CanCreateNew
+        {
+            get => canCreateNew;
+
+            set
+            {
+                if (canCreateNew != value)
+                {
+                    canCreateNew = value;
+                    invalidateDisplay();
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ROIManager"/> class.
+        /// </summary>
         public ROIManager(
             Func<Point, Point> mapImagePointToDisplayPoint,
             Func<Rectangle, Rectangle> mapImageRectangleToDisplayRectangle,
             Func<Point, Point> mapDisplayPointToImagePoint,
             Action invalidateDisplay,
-            Action<Cursor> setMouseCursor)
+            Action<Cursor> setMouseCursor,
+            Action onCommittedROIChange,
+            Action onDraggingROIChange)
         {
             this.imageSize = null;
 
@@ -46,21 +113,79 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             this.setMouseCursor = setMouseCursor;
 
             committedROIRenderer = new RectangleRenderer();
-            committedROIRenderer.ShowGrapples = true;
+            committedROIRenderer.GrapplesMode = RectangleRenderer.GrapplesRenderingMode.ShowEnabled;
             committedROIRenderer.OutlinePen.Color = Color.FromArgb(128, Color.Red);
             committedROIRenderer.OutlinePen.Width = 2;
 
             liveDraggingROIRenderer = new RectangleRenderer();
-            liveDraggingROIRenderer.ShowGrapples = true;
+            liveDraggingROIRenderer.GrapplesMode = RectangleRenderer.GrapplesRenderingMode.ShowEnabled;
             liveDraggingROIRenderer.OutlinePen.Color = Color.FromArgb(128, Color.Red);
             liveDraggingROIRenderer.OutlinePen.Width = 4;
             liveDraggingROIRenderer.FillBrush.Color = Color.FromArgb(32, Color.Red);
-            liveDraggingROIRenderer.GrapplePen.Color = Color.FromArgb(128, Color.Cyan);
-            liveDraggingROIRenderer.GrapplePen.Width = 2;
-            liveDraggingROIRenderer.GrappleBrush.Color = Color.FromArgb(128, Color.Navy);
+            liveDraggingROIRenderer.EnabledGrapplePen.Color = Color.FromArgb(128, Color.Cyan);
+            liveDraggingROIRenderer.EnabledGrapplePen.Width = 2;
+            liveDraggingROIRenderer.EnabledGrappleBrush.Color = Color.FromArgb(128, Color.Navy);
+
+            liveDraggingROIRenderer.DisabledGrapplePen.Width = 2;
+
+            this.onCommittedROIChange = onCommittedROIChange;
+            this.onDraggingROIChange = onDraggingROIChange;
         }
 
 
+        /// <summary>
+        /// Gets/sets the current (committed) ROI. An empty rectangle indicates no ROI is set.
+        /// </summary>
+        public Rectangle CommittedROI
+        {
+            get => committedROI;
+            set
+            {
+                var originalCommittedROI = committedROI;
+
+                if (!imageSize.HasValue)
+                {
+                    committedROI = Rectangle.Empty;
+                }
+                else
+                {
+                    committedROI = value;
+                    committedROI.Intersect(new Rectangle(Point.Empty, imageSize!.Value));
+                    if (committedROI.Size.IsEmpty) { committedROI = Rectangle.Empty; }
+
+
+                    if (committedROI != originalCommittedROI)
+                    {
+                        onCommittedROIChange();
+                        invalidateDisplay();
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Gets the ROI that is currently being dragged, or returns an empty rectangle if no ROI is being dragged.
+        /// </summary>
+        public Rectangle LiveDraggingROI
+        {
+            get => liveDraggingROI;
+
+            private set
+            {
+                if (liveDraggingROI != value)
+                {
+                    liveDraggingROI = value;
+                    onDraggingROIChange();
+                    invalidateDisplay();
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Disposes of the resources used by the ROI manager.
+        /// </summary>
         public void Dispose()
         {
             if (isDisposed) { return; }
@@ -72,6 +197,9 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         }
 
 
+        /// <summary>
+        /// Creates a dictionary of cursors for each dragging mode.
+        /// </summary>
         private static ImmutableDictionary<DraggingMode, Cursor> CreateMouseCursorsDict()
         {
             var builder = ImmutableDictionary.CreateBuilder<DraggingMode, Cursor>();
@@ -98,19 +226,29 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         {
             if(!imageSize.HasValue) { return; }
 
-            committedROI = roi;
-            committedROI.Intersect(new Rectangle(Point.Empty, imageSize.Value));
+            var newCommittedROI = roi;
+            newCommittedROI.Intersect(new Rectangle(Point.Empty, imageSize.Value));
+            CommittedROI = newCommittedROI;
+
             invalidateDisplay();
         }
 
 
+        /// <summary>
+        /// Sets the current image size (or uses null to indiate an image is not loaded).
+        /// </summary>
+        /// <param name="imageSize"></param>
         public void SetImageSize(Size? imageSize)
         {
             this.imageSize = imageSize;
         }
 
 
+        /// <summary>
+        /// True if there's an image that the ROI can be applied to.
+        /// </summary>
         private bool CanWorkWithROI => imageSize.HasValue;
+
 
 
         /// <summary>
@@ -126,6 +264,11 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             }
         }
 
+
+        /// <summary>
+        /// Handles the mouse down event to begin defining an ROI.
+        /// </summary>
+        /// <param name="e"></param>
         private void OnLeftMouseButtonDown(MouseEventArgs e)
         {
             mouseDownLocationOnDisplay = e.Location;
@@ -200,15 +343,19 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
         private void StartDraggingNewROI(Point imagePoint)
         {
+            if(!canCreateNew) { return; }
+
             originalDraggingROI = new Rectangle(imagePoint, Size.Empty);
-            liveDraggingROI = originalDraggingROI;
+            LiveDraggingROI = originalDraggingROI;
             draggingMode = DraggingMode.BottomRightCorner;
         }
 
         private void StartDraggingCommittedROI(DraggingMode newDragMode)
         {
+            if (!canEditCommitted) { return; }
+
             originalDraggingROI = committedROI;
-            liveDraggingROI = originalDraggingROI;
+            LiveDraggingROI = originalDraggingROI;
             draggingMode = newDragMode;
         }
 
@@ -279,7 +426,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
             if (isMouseLeftOfLeftEdgeOfOriginalROI)
             {
-                liveDraggingROI = Rectangle.FromLTRB(
+                LiveDraggingROI = Rectangle.FromLTRB(
                     currentMouseLocationOverImage.X,
                     originalDraggingROI.Top,
                     originalDraggingROI.Left,
@@ -287,7 +434,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             }
             else
             {
-                liveDraggingROI = Rectangle.FromLTRB(
+                LiveDraggingROI = Rectangle.FromLTRB(
                     originalDraggingROI.Left,
                     originalDraggingROI.Top,
                     currentMouseLocationOverImage.X,
@@ -302,7 +449,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
             if (isMouseRightOfRightEdgeOfOriginalROI)
             {
-                liveDraggingROI = Rectangle.FromLTRB(
+                LiveDraggingROI = Rectangle.FromLTRB(
                     originalDraggingROI.Right,
                     originalDraggingROI.Top,
                     currentMouseLocationOverImage.X,
@@ -310,7 +457,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             }
             else
             {
-                liveDraggingROI = Rectangle.FromLTRB(
+                LiveDraggingROI = Rectangle.FromLTRB(
                     currentMouseLocationOverImage.X,
                     originalDraggingROI.Top,
                     originalDraggingROI.Right,
@@ -326,7 +473,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
             if (isMouseBelowBottomOfOriginalROI)
             {
-                liveDraggingROI = Rectangle.FromLTRB(
+                LiveDraggingROI = Rectangle.FromLTRB(
                     originalDraggingROI.Left,
                     originalDraggingROI.Bottom,
                     originalDraggingROI.Right,
@@ -334,7 +481,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             }
             else
             {
-                liveDraggingROI = Rectangle.FromLTRB(
+                LiveDraggingROI = Rectangle.FromLTRB(
                     originalDraggingROI.Left,
                     currentMouseLocationOverImage.Y,
                     originalDraggingROI.Right,
@@ -349,7 +496,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
             if (isMouseAboveTopOfOriginalROI)
             {
-                liveDraggingROI = Rectangle.FromLTRB(
+                LiveDraggingROI = Rectangle.FromLTRB(
                     originalDraggingROI.Left,
                     currentMouseLocationOverImage.Y,
                     originalDraggingROI.Right,
@@ -357,7 +504,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             }
             else
             {
-                liveDraggingROI = Rectangle.FromLTRB(
+                LiveDraggingROI = Rectangle.FromLTRB(
                     originalDraggingROI.Left,
                     originalDraggingROI.Top,
                     originalDraggingROI.Right,
@@ -385,7 +532,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             if (left > right) { Swap(ref left, ref right); }
             if (top > bottom) { Swap(ref top, ref bottom); }
 
-            liveDraggingROI = Rectangle.FromLTRB(left, top, right, bottom);
+            LiveDraggingROI = Rectangle.FromLTRB(left, top, right, bottom);
         }
 
 
@@ -401,9 +548,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             if (left > right) { Swap(ref left, ref right); }
             if (top > bottom) { Swap(ref top, ref bottom); }
 
-            liveDraggingROI = Rectangle.FromLTRB(left, top, right, bottom);
-
-            System.Diagnostics.Debug.WriteLine(liveDraggingROI);
+            LiveDraggingROI = Rectangle.FromLTRB(left, top, right, bottom);
         }
 
 
@@ -416,7 +561,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             var bottom = originalDraggingROI.Bottom;
             if (left > right) { Swap(ref left, ref right); }
             if (top > bottom) { Swap(ref top, ref bottom); }
-            liveDraggingROI = Rectangle.FromLTRB(left, top, right, bottom);
+            LiveDraggingROI = Rectangle.FromLTRB(left, top, right, bottom);
         }
 
         private void UpdateBottomLeftCornerDragging(Point mouseLocationOnDisplay)
@@ -428,7 +573,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             var bottom = currentMouseLocationOverImage.Y;
             if (left > right) { Swap(ref left, ref right); }
             if (top > bottom) { Swap(ref top, ref bottom); }
-            liveDraggingROI = Rectangle.FromLTRB(left, top, right, bottom);
+            LiveDraggingROI = Rectangle.FromLTRB(left, top, right, bottom);
         }
 
 
@@ -440,7 +585,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             var deltaX = currentMouseLocationOverImage.X - mouseDownLocationOverImage.X;
             var deltaY = currentMouseLocationOverImage.Y - mouseDownLocationOverImage.Y;
 
-            liveDraggingROI = Rectangle.FromLTRB(
+            LiveDraggingROI = Rectangle.FromLTRB(
                 originalDraggingROI.Left + deltaX,
                 originalDraggingROI.Top + deltaY,
                 originalDraggingROI.Right + deltaX,
@@ -455,11 +600,9 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         {
             if(draggingMode == DraggingMode.None) { return; }
 
-            committedROI = liveDraggingROI;
+            CommittedROI = LiveDraggingROI;
+            LiveDraggingROI = Rectangle.Empty;
             draggingMode = DraggingMode.None;
-
-            committedROI.Intersect(new Rectangle(Point.Empty, imageSize!.Value));
-            if(committedROI.IsEmpty) { committedROI = Rectangle.Empty; }
 
             invalidateDisplay();
         }
@@ -470,6 +613,8 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// </summary>
         public void Draw(Graphics g)
         {
+            if (!visible) { return; }
+
             if (!committedROI.IsEmpty)
             {
                 var displayRect = mapImageRectangleToDisplayRectangle(committedROI);
@@ -478,7 +623,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
             if (draggingMode != DraggingMode.None)
             {
-                var displayRect = mapImageRectangleToDisplayRectangle(liveDraggingROI);
+                var displayRect = mapImageRectangleToDisplayRectangle(LiveDraggingROI);
                 liveDraggingROIRenderer.Draw(g, displayRect);
             }
         }

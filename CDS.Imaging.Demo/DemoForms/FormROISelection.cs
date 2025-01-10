@@ -16,9 +16,46 @@ public partial class FormROISelection : Form
     {
         base.OnLoad(e);
         bitmapDisplayPanel.CDSSetImage(Properties.Resources.Thailand);
+        UpdateROILabels();
 
-        //bitmapDisplayPanel.CDSSetROI(new Rectangle(100, 100, 100, 50));
 
-        bitmapDisplayPanel.CDSMouseMode = WinForms.BitmapDisplay.MouseMode.ROISelection;
+        propertyGrid1.SelectedObject = bitmapDisplayPanel;
+    }
+
+    private void UpdateROILabels()
+    {
+        labelCommittedROI.Text = $"Committed ROI: {bitmapDisplayPanel.CommittedROI}";
+        labelDraggingROI.Text = $"Dragging ROI: {bitmapDisplayPanel.DraggingROI}";
+    }
+
+    private void FormROISelection_Load(object sender, EventArgs e)
+    {
+
+    }
+
+    protected override void OnSizeChanged(EventArgs e)
+    {
+        base.OnSizeChanged(e);
+        bitmapDisplayPanel.CDSFitToWindowCentred();
+    }
+
+    private void btnSetROI_Click(object sender, EventArgs e)
+    {
+        bitmapDisplayPanel.CommittedROI = new Rectangle(10, 20, 100, 200);
+    }
+
+    private void btnClearROI_Click(object sender, EventArgs e)
+    {
+        bitmapDisplayPanel.CommittedROI = Rectangle.Empty;
+    }
+
+    private void bitmapDisplayPanel_CDSOnCommittedROIChanged(object sender, EventArgs e)
+    {
+        UpdateROILabels();
+    }
+
+    private void bitmapDisplayPanel_CDSOnDraggingROIChanged(object sender, EventArgs e)
+    {
+        UpdateROILabels();
     }
 }
