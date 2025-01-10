@@ -13,7 +13,6 @@ namespace CDS.Imaging.Demo
 
         private void FormTestLauncher_Load(object sender, EventArgs e)
         {
-            SetCaption();
             AddDemos();
         }
 
@@ -97,21 +96,8 @@ namespace CDS.Imaging.Demo
 
         private void SetCaption()
         {
-            string appName = Application.ProductName!;
-            string appVersion = Application.ProductVersion.Split('+')[0]; // Remove hash if present
-
-            string appBitDepth = Environment.Is64BitProcess ? "64-bit" : "32-bit";
-            string appArchitecture = RuntimeInformation.ProcessArchitecture.ToString();
-            string appFramework = RuntimeInformation.FrameworkDescription;
-
-            string osBitDepth = Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit";
-            string osArchitecture =  RuntimeInformation.OSArchitecture.ToString();
-
-            Text = 
-                $"Application: {appName} [{appVersion}], running as {appBitDepth} {appArchitecture} using {appFramework} " +
-                $"on {osBitDepth} {osArchitecture} processor";
+            this.Text = WinForms.SystemInfo.Get();
         }
-
 
         private void treeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {

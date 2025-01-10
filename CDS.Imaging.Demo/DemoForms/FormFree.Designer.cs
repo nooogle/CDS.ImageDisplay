@@ -36,11 +36,11 @@ namespace CDS.Imaging.Demo.DemoForms
             // 
             this.bitmapDisplayPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bitmapDisplayPanel.Location = new System.Drawing.Point(0, 0);
-            this.bitmapDisplayPanel.CDSDisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free;
+            this.bitmapDisplayPanel.DisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.Free;
             this.bitmapDisplayPanel.Name = "bitmapDisplayPanel";
             this.bitmapDisplayPanel.Size = new System.Drawing.Size(800, 450);
             this.bitmapDisplayPanel.TabIndex = 0;
-            this.bitmapDisplayPanel.CDSZoom = 1F;
+            this.bitmapDisplayPanel.Zoom = 1F;
             // 
             // FormFree
             // 

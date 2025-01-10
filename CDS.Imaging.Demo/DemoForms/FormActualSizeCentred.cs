@@ -21,6 +21,6 @@ public partial class FormActualSizeCentred : Form
     protected override void OnLoad(EventArgs e)
     {
         base.OnLoad(e);
-        bitmapDisplayPanel1.CDSSetImage(Properties.Resources.Thailand);
+        bitmapDisplayPanel1.SetImage(Properties.Resources.Thailand);
     }
 }

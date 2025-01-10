@@ -21,6 +21,6 @@ public partial class FormFitToWindow : Form
     protected override void OnLoad(EventArgs e)
     {
         base.OnLoad(e);
-        bitmapDisplayPanel.CDSSetImage(Properties.Resources.Thailand);
+        bitmapDisplayPanel.SetImage(Properties.Resources.Thailand);
     }
 }

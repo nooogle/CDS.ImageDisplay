@@ -272,9 +272,9 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         private void OnLeftMouseButtonDown(MouseEventArgs e)
         {
             mouseDownLocationOnDisplay = e.Location;
-            var imagePoint = mapDisplayPointToImagePoint(e.Location);
 
-            var newDragMode = DetermineDragModeFromMouseLocation(imagePoint);
+            var imagePoint = mapDisplayPointToImagePoint(e.Location);
+            var newDragMode = DetermineDragModeFromMouseLocation(mouseLocationOnDisplay: e.Location);
 
             var isMouseDownOverCommittedROI = !committedROI.IsEmpty && committedROI.Contains(imagePoint);
 
@@ -291,18 +291,23 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         }
 
 
-        private DraggingMode DetermineDragModeFromMouseLocation(Point mouseLocationOverImage)
+        private DraggingMode DetermineDragModeFromMouseLocation(Point mouseLocationOnDisplay)
         {
             if (committedROI.IsEmpty) { return DraggingMode.None; }
-            if (!committedROI.Contains(mouseLocationOverImage)) { return DraggingMode.None; }
 
-            if (mouseLocationOverImage.X < committedROI.Left + 10)
+            var mouseLocationOnImage = mapDisplayPointToImagePoint(mouseLocationOnDisplay);
+
+            if (!committedROI.Contains(mouseLocationOnImage)) { return DraggingMode.None; }
+
+            var committedROIInDisplayCoordinates = mapImageRectangleToDisplayRectangle(committedROI);
+
+            if (mouseLocationOnDisplay.X < committedROIInDisplayCoordinates.Left + 10)
             {
-                if (mouseLocationOverImage.Y < committedROI.Top + 10)
+                if (mouseLocationOnDisplay.Y < committedROIInDisplayCoordinates.Top + 10)
                 {
                     return DraggingMode.TopLeftCorner;
                 }
-                else if (mouseLocationOverImage.Y > committedROI.Bottom - 10)
+                else if (mouseLocationOnDisplay.Y > committedROIInDisplayCoordinates.Bottom - 10)
                 {
                     return DraggingMode.BottomLeftCorner;
                 }
@@ -311,13 +316,13 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
                     return DraggingMode.LeftEdge;
                 }
             }
-            else if (mouseLocationOverImage.X > committedROI.Right - 10)
+            else if (mouseLocationOnDisplay.X > committedROIInDisplayCoordinates.Right - 10)
             {
-                if (mouseLocationOverImage.Y < committedROI.Top + 10)
+                if (mouseLocationOnDisplay.Y < committedROIInDisplayCoordinates.Top + 10)
                 {
                     return DraggingMode.TopRightCorner;
                 }
-                else if (mouseLocationOverImage.Y > committedROI.Bottom - 10)
+                else if (mouseLocationOnDisplay.Y > committedROIInDisplayCoordinates.Bottom - 10)
                 {
                     return DraggingMode.BottomRightCorner;
                 }
@@ -326,11 +331,11 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
                     return DraggingMode.RightEdge;
                 }
             }
-            else if (mouseLocationOverImage.Y < committedROI.Top + 10)
+            else if (mouseLocationOnDisplay.Y < committedROIInDisplayCoordinates.Top + 10)
             {
                 return DraggingMode.TopEdge;
             }
-            else if (mouseLocationOverImage.Y > committedROI.Bottom - 10)
+            else if (mouseLocationOnDisplay.Y > committedROIInDisplayCoordinates.Bottom - 10)
             {
                 return DraggingMode.BottomEdge;
             }
@@ -371,8 +376,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             }
             else if (!committedROI.IsEmpty)
             {
-                var mouseLocationOverImage = mapDisplayPointToImagePoint(e.Location);
-                var dragModeIfMouseClicked = DetermineDragModeFromMouseLocation(mouseLocationOverImage);
+                var dragModeIfMouseClicked = DetermineDragModeFromMouseLocation(mouseLocationOnDisplay: e.Location);
 
                 setMouseCursor(mouseCursors[dragModeIfMouseClicked]);
             }

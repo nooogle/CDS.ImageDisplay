@@ -22,7 +22,7 @@ namespace CDS.Imaging.Demo.DemoForms
         {
             base.OnLoad(e);
 
-            bitmapPanel1.CDSSetImage(Properties.Resources.Thailand);
+            bitmapPanel1.SetImage(Properties.Resources.Thailand);
 
             var cvImageColor = Properties.Resources.Thailand.ToMat();
 
@@ -82,7 +82,7 @@ namespace CDS.Imaging.Demo.DemoForms
         protected override void OnClientSizeChanged(EventArgs e)
         {
             base.OnClientSizeChanged(e);
-            bitmapPanel4.CDSFitToWindowCentred();
+            bitmapPanel4.FitToWindowCentred();
         }
 
 
@@ -96,10 +96,10 @@ namespace CDS.Imaging.Demo.DemoForms
             if (changingPaintRectProgramatically) { return; }
             changingPaintRectProgramatically = true;
 
-            if (sender != bitmapPanel1) { bitmapPanel1.CDSSyncPaintRectFromOther(sender); }
-            if (sender != bitmapPanel2) { bitmapPanel2.CDSSyncPaintRectFromOther(sender); }
-            if (sender != bitmapPanel3) { bitmapPanel3.CDSSyncPaintRectFromOther(sender); }
-            if (sender != bitmapPanel4) { bitmapPanel4.CDSSyncPaintRectFromOther(sender); }
+            if (sender != bitmapPanel1) { bitmapPanel1.SyncPaintRectFromOther(sender); }
+            if (sender != bitmapPanel2) { bitmapPanel2.SyncPaintRectFromOther(sender); }
+            if (sender != bitmapPanel3) { bitmapPanel3.SyncPaintRectFromOther(sender); }
+            if (sender != bitmapPanel4) { bitmapPanel4.SyncPaintRectFromOther(sender); }
 
             changingPaintRectProgramatically = false;
         }

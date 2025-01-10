@@ -15,7 +15,7 @@ public partial class FormROISelection : Form
     protected override void OnLoad(EventArgs e)
     {
         base.OnLoad(e);
-        bitmapDisplayPanel.CDSSetImage(Properties.Resources.Thailand);
+        bitmapDisplayPanel.SetImage(Properties.Resources.Thailand);
         UpdateROILabels();
 
 
@@ -36,7 +36,7 @@ public partial class FormROISelection : Form
     protected override void OnSizeChanged(EventArgs e)
     {
         base.OnSizeChanged(e);
-        bitmapDisplayPanel.CDSFitToWindowCentred();
+        bitmapDisplayPanel.FitToWindowCentred();
     }
 
     private void btnSetROI_Click(object sender, EventArgs e)

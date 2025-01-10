@@ -57,7 +57,7 @@ namespace CDS.Imaging.Demo.OpenCVSharpExtras
         public static void CDSSetImage(this BitmapDisplayPanel bitmapDisplay, OpenCvSharp.Mat mat)
         {
             var matImageSource = new MatImageSource(mat);
-            bitmapDisplay.CDSSetImage(matImageSource);
+            bitmapDisplay.SetImage(matImageSource);
         }
     }
 }

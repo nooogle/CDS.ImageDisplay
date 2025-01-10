@@ -26,7 +26,7 @@
 //            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
 //            vid.DisplaySize = new Size(1000, 600);
 //            vid.ImageSize = vid.DisplaySize;
-//            vid.Mode = BitmapDisplayMode.ActualSizeCentred;
+//            vid.Mode = BitmapDisplayMode.CentreImageActualSize;
 
 //            vid.PaintRect.Should().Be(new RectangleF(PointF.Empty, vid.DisplaySize));
 //        }
@@ -90,7 +90,7 @@
 //            float expectedDisplayY)
 //        {
 //            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
-//            vid.Mode = BitmapDisplayMode.ActualSizeCentred;
+//            vid.Mode = BitmapDisplayMode.CentreImageActualSize;
 //            vid.DisplaySize = new Size(1000, 1000);
 //            vid.ImageSize = new Size(400, 200);
 
@@ -108,7 +108,7 @@
 //        public void MapDisplayToImage_Returns_ImageRect(float imageX, float imageY, float displayX, float displayY)
 //        {
 //            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
-//            vid.Mode = BitmapDisplayMode.ActualSizeCentred;
+//            vid.Mode = BitmapDisplayMode.CentreImageActualSize;
 //            vid.DisplaySize = new Size(1000, 1000);
 //            vid.ImageSize = new Size(400, 200);
 
@@ -208,7 +208,7 @@
 //            CheckRectagleFIsExpected(vid.PaintRect, originalPaintRect, 0.0001f);
 
 //            // Actual size
-//            vid.Mode = BitmapDisplayMode.ActualSizeCentred;
+//            vid.Mode = BitmapDisplayMode.CentreImageActualSize;
 //            originalPaintRect = vid.PaintRect;
 //            vid.TargetImageCentre = new PointF(0, 0);
 //            CheckRectagleFIsExpected(vid.PaintRect, originalPaintRect, 0.0001f);
@@ -252,7 +252,7 @@
 //            CheckRectagleFIsExpected(vid.PaintRect, originalPaintRect, 0.0001f);
 
 //            // Actual size
-//            vid.Mode = BitmapDisplayMode.ActualSizeCentred;
+//            vid.Mode = BitmapDisplayMode.CentreImageActualSize;
 //            originalPaintRect = vid.PaintRect;
 //            vid.TargetDisplayCentre = new PointF(0, 0);
 //            CheckRectagleFIsExpected(vid.PaintRect, originalPaintRect, 0.0001f);

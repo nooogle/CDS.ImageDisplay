@@ -37,11 +37,11 @@ namespace CDS.Imaging.Demo.DemoForms
             this.bitmapDisplayPanel1.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
             this.bitmapDisplayPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bitmapDisplayPanel1.Location = new System.Drawing.Point(0, 0);
-            this.bitmapDisplayPanel1.CDSDisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.ActualSizeCentred;
+            this.bitmapDisplayPanel1.DisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.ActualSizeCentred;
             this.bitmapDisplayPanel1.Name = "bitmapDisplayPanel1";
             this.bitmapDisplayPanel1.Size = new System.Drawing.Size(800, 450);
             this.bitmapDisplayPanel1.TabIndex = 0;
-            this.bitmapDisplayPanel1.CDSZoom = 1F;
+            this.bitmapDisplayPanel1.Zoom = 1F;
             // 
             // FormSimpleActualSizeCentred
             // 

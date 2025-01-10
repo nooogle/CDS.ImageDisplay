@@ -57,16 +57,16 @@ namespace CDS.Imaging.Demo.DemoForms
             // bitmapDisplay
             // 
             this.bitmapDisplay.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
-            this.bitmapDisplay.CDSDisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.FitToWindowCentred;
+            this.bitmapDisplay.DisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.FitToWindowCentred;
             this.bitmapDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bitmapDisplay.Location = new System.Drawing.Point(0, 24);
             this.bitmapDisplay.Name = "bitmapDisplay";
             this.bitmapDisplay.Size = new System.Drawing.Size(722, 459);
             this.bitmapDisplay.TabIndex = 0;
-            this.bitmapDisplay.CDSZoom = 1F;
-            this.bitmapDisplay.CDSPaintOver += new CDS.Imaging.WinForms.BitmapDisplay.PaintOverEvent(this.bitmapDisplay_PaintOver);
-            this.bitmapDisplay.CDSPaintUnder += new CDS.Imaging.WinForms.BitmapDisplay.PaintUnderEvent(this.bitmapDisplay_PaintUnder);
-            this.bitmapDisplay.CDSDisplayModeChanged += new CDS.Imaging.WinForms.BitmapDisplay.ModeChangedEvent(this.bitmapDisplay_DisplayModeChanged);
+            this.bitmapDisplay.Zoom = 1F;
+            this.bitmapDisplay.OnPaintOver += new CDS.Imaging.WinForms.BitmapDisplay.PaintOverEvent(this.bitmapDisplay_PaintOver);
+            this.bitmapDisplay.OnPaintUnder += new CDS.Imaging.WinForms.BitmapDisplay.PaintUnderEvent(this.bitmapDisplay_PaintUnder);
+            this.bitmapDisplay.OnDisplayModeChanged += new CDS.Imaging.WinForms.BitmapDisplay.ModeChangedEvent(this.bitmapDisplay_DisplayModeChanged);
             // 
             // menu
             // 
