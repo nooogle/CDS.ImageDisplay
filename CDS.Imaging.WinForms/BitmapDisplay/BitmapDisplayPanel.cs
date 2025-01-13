@@ -25,6 +25,12 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         private MouseMode mouseMode = MouseMode.None;
 
 
+        /// <summary>
+        /// The ROI manager
+        /// </summary>
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        public ROIManager ROIManager => roiManager;
+
 
         /// <summary>
         /// The mouse mode
@@ -556,7 +562,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             if (AnythingToDisplay)
             {
                 PaintBitmap(paintEventArgs);
-                //roiManager.Draw(paintEventArgs.Graphics);
+                roiManager.Draw(paintEventArgs.Graphics);
             }
 
             OnPaintOver?.Invoke(

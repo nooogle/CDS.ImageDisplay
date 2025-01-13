@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Humanizer;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -57,5 +58,11 @@ public partial class FormROISelection : Form
     private void bitmapDisplayPanel_CDSOnDraggingROIChanged(object sender, EventArgs e)
     {
         UpdateROILabels();
+    }
+
+    private void timerUpdateMetrics_Tick(object sender, EventArgs e)
+    {
+        labelPaintForegroundMetrics.Text = bitmapDisplayPanel.TimingMetrics.ForegroundPaint.Humanize();
+        labelPaintBackgroundMetrics.Text = bitmapDisplayPanel.TimingMetrics.BackgroundPaint.Humanize();
     }
 }

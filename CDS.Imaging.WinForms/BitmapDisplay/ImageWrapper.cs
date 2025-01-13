@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -76,14 +77,9 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// </summary>
         private void CreateImageFromOther(IImageSource imageSource)
         {
-            Image = new Bitmap(
-                width: imageSource.Size.Width,
-                height: imageSource.Size.Height,
-                stride: imageSource.Stride,
-                format: imageSource.PixelFormat,
-                scan0: imageSource.Scan0);
+            Image = new Bitmap(imageSource.Width, imageSource.Height, imageSource.PixelFormat);
 
-            if(imageSource.PixelFormat == System.Drawing.Imaging.PixelFormat.Format8bppIndexed)
+            if (imageSource.PixelFormat == System.Drawing.Imaging.PixelFormat.Format8bppIndexed)
             {
                 var palette = Image.Palette;
                 for(int index = 0; index < 256; index++)
@@ -116,6 +112,9 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
             unsafe
             {
+                System.Diagnostics.Debug.Assert(imageSource.Scan0 != destBits.Scan0);
+                System.Diagnostics.Debug.Assert(bytesToCopy > 0);
+
                 Buffer.MemoryCopy(
                     source: (void*)imageSource.Scan0,
                     destination: (void*)destBits.Scan0,
