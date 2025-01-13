@@ -1,9 +1,9 @@
-﻿namespace CDS.Imaging.WinForms.BitmapDisplay
+﻿namespace CDS.Imaging.WinForms.RegionOfInterest
 {
     /// <summary>
     /// The different dragging modes for the ROI manager.
     /// </summary>
-    public enum DraggingMode
+    public enum ROIDragMode
     {
         /// <summary>
         /// No dragging mode.

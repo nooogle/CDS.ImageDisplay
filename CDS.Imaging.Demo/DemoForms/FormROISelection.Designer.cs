@@ -34,48 +34,42 @@ namespace CDS.Imaging.Demo.DemoForms
             panel1 = new System.Windows.Forms.Panel();
             labelPaintBackgroundMetrics = new System.Windows.Forms.Label();
             label5 = new System.Windows.Forms.Label();
+            propertyGrid = new System.Windows.Forms.PropertyGrid();
             labelPaintForegroundMetrics = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
-            propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             labelDraggingROI = new System.Windows.Forms.Label();
             labelCommittedROI = new System.Windows.Forms.Label();
             btnClearROI = new System.Windows.Forms.Button();
             btnSetROI = new System.Windows.Forms.Button();
             sysInfoPanel = new WinForms.SysInfoPanel();
             timerUpdateMetrics = new System.Windows.Forms.Timer(components);
+            roiSelectionOnBitmapDisplay = new WinForms.RegionOfInterest.ROISelectionOnBitmapDisplay(components);
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // bitmapDisplayPanel
             // 
             bitmapDisplayPanel.BackgroundImage = Properties.Resources.double_bubble;
-            bitmapDisplayPanel.CanCreateNewROI = true;
-            bitmapDisplayPanel.CanEditCommittedROI = true;
-            bitmapDisplayPanel.CommittedROI = new System.Drawing.Rectangle(0, 0, 0, 0);
             bitmapDisplayPanel.DisplayMode = WinForms.BitmapDisplay.BitmapDisplayMode.Free;
             bitmapDisplayPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             bitmapDisplayPanel.Location = new System.Drawing.Point(448, 38);
-            bitmapDisplayPanel.MouseMode = WinForms.BitmapDisplay.MouseMode.ROISelection;
             bitmapDisplayPanel.Name = "bitmapDisplayPanel";
-            bitmapDisplayPanel.ROIVisible = true;
             bitmapDisplayPanel.Size = new System.Drawing.Size(352, 412);
             bitmapDisplayPanel.TabIndex = 0;
             bitmapDisplayPanel.Zoom = 1F;
-            bitmapDisplayPanel.OnCommittedROIChanged += bitmapDisplayPanel_CDSOnCommittedROIChanged;
-            bitmapDisplayPanel.OnDraggingROIChanged += bitmapDisplayPanel_CDSOnDraggingROIChanged;
             // 
             // panel1
             // 
             panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             panel1.Controls.Add(labelPaintBackgroundMetrics);
             panel1.Controls.Add(label5);
+            panel1.Controls.Add(propertyGrid);
             panel1.Controls.Add(labelPaintForegroundMetrics);
             panel1.Controls.Add(label3);
             panel1.Controls.Add(label2);
             panel1.Controls.Add(label1);
-            panel1.Controls.Add(propertyGrid1);
             panel1.Controls.Add(labelDraggingROI);
             panel1.Controls.Add(labelCommittedROI);
             panel1.Controls.Add(btnClearROI);
@@ -104,6 +98,14 @@ namespace CDS.Imaging.Demo.DemoForms
             label5.Size = new System.Drawing.Size(101, 15);
             label5.TabIndex = 11;
             label5.Text = "Paint background";
+            // 
+            // propertyGrid
+            // 
+            propertyGrid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            propertyGrid.Location = new System.Drawing.Point(11, 105);
+            propertyGrid.Name = "propertyGrid";
+            propertyGrid.Size = new System.Drawing.Size(424, 294);
+            propertyGrid.TabIndex = 6;
             // 
             // labelPaintForegroundMetrics
             // 
@@ -140,14 +142,6 @@ namespace CDS.Imaging.Demo.DemoForms
             label1.Size = new System.Drawing.Size(97, 15);
             label1.TabIndex = 7;
             label1.Text = "Paint foreground";
-            // 
-            // propertyGrid1
-            // 
-            propertyGrid1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            propertyGrid1.Location = new System.Drawing.Point(10, 132);
-            propertyGrid1.Name = "propertyGrid1";
-            propertyGrid1.Size = new System.Drawing.Size(428, 267);
-            propertyGrid1.TabIndex = 6;
             // 
             // labelDraggingROI
             // 
@@ -201,6 +195,17 @@ namespace CDS.Imaging.Demo.DemoForms
             timerUpdateMetrics.Interval = 250;
             timerUpdateMetrics.Tick += timerUpdateMetrics_Tick;
             // 
+            // roiSelectionOnBitmapDisplay
+            // 
+            roiSelectionOnBitmapDisplay.BitmapDisplayPanel = bitmapDisplayPanel;
+            roiSelectionOnBitmapDisplay.CanCreateNew = true;
+            roiSelectionOnBitmapDisplay.CanEditCommitted = true;
+            roiSelectionOnBitmapDisplay.CommittedROI = new System.Drawing.Rectangle(0, 0, 0, 0);
+            roiSelectionOnBitmapDisplay.DrawCommittedROIWhenFullSize = false;
+            roiSelectionOnBitmapDisplay.Visible = true;
+            roiSelectionOnBitmapDisplay.OnCommittedROIChanged += roiSelectionOnBitmapDisplay_OnCommittedROIChanged;
+            roiSelectionOnBitmapDisplay.OnDraggingROIChanged += roiSelectionOnBitmapDisplay_OnDraggingROIChanged;
+            // 
             // FormROISelection
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -211,7 +216,6 @@ namespace CDS.Imaging.Demo.DemoForms
             Controls.Add(sysInfoPanel);
             Name = "FormROISelection";
             Text = "ROI selection";
-            Load += FormROISelection_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ResumeLayout(false);
@@ -225,7 +229,7 @@ namespace CDS.Imaging.Demo.DemoForms
         private System.Windows.Forms.Button btnSetROI;
         private System.Windows.Forms.Label labelDraggingROI;
         private System.Windows.Forms.Label labelCommittedROI;
-        private System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.PropertyGrid propertyGrid;
         private CDS.Imaging.WinForms.SysInfoPanel sysInfoPanel;
         private System.Windows.Forms.Label labelPaintBackgroundMetrics;
         private System.Windows.Forms.Label label5;
@@ -234,5 +238,6 @@ namespace CDS.Imaging.Demo.DemoForms
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Timer timerUpdateMetrics;
+        private WinForms.RegionOfInterest.ROISelectionOnBitmapDisplay roiSelectionOnBitmapDisplay;
     }
 }

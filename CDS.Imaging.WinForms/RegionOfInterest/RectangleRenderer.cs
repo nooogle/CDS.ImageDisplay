@@ -1,13 +1,12 @@
-﻿using System;
-using System.Data.Common;
+﻿using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.WinForms.BitmapDisplay
+namespace CDS.Imaging.WinForms.RegionOfInterest
 {
     /// <summary>
-    /// Renders a rectangle on a graphics object.
+    /// Renders a rectangle on a graphics object. Supports grapples.
     /// </summary>
-    public class RectangleRenderer : IDisposable
+    public partial class RectangleRenderer : Component
     {
         /// <summary>
         /// Specifies how the grapple points of the rectangle should be rendered.
@@ -33,13 +32,12 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         }
 
 
-        private bool isDisposed;
-        private Draw.SimplePen outlinePen;
-        private Draw.SimpleSolidBrush fillBrush;
-        private Draw.SimplePen enabledGrapplePen;
-        private Draw.SimpleSolidBrush enabledGrappleBrush;
-        private Draw.SimplePen disabledGrapplePen;
-        private Draw.SimpleSolidBrush disabledGrappleBrush;
+        private Draw.SimplePen? outlinePen;
+        private Draw.SimpleSolidBrush? fillBrush;
+        private Draw.SimplePen? enabledGrapplePen;
+        private Draw.SimpleSolidBrush? enabledGrappleBrush;
+        private Draw.SimplePen? disabledGrapplePen;
+        private Draw.SimpleSolidBrush? disabledGrappleBrush;
         private Rectangle[] grappleRectangles = new Rectangle[8];
 
 
@@ -54,45 +52,79 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// <summary>
         /// The pen used to draw the outline of the rectangle.
         /// </summary>
-        public Draw.SimplePen OutlinePen => outlinePen;
+        public Draw.SimplePen OutlinePen => outlinePen!;
 
 
         /// <summary>
         /// The pen used to draw the grapple points of the rectangle.
         /// </summary>
-        public Draw.SimplePen EnabledGrapplePen => enabledGrapplePen;
+        public Draw.SimplePen EnabledGrapplePen => enabledGrapplePen!;
 
 
         /// <summary>
         /// The brush used to fill the rectangle.
         /// </summary>
-        public Draw.SimpleSolidBrush FillBrush => fillBrush;
+        public Draw.SimpleSolidBrush FillBrush => fillBrush!;
 
 
         /// <summary>
         /// The brush used to fill the grapple points of the rectangle.
         /// </summary>
-        public Draw.SimpleSolidBrush EnabledGrappleBrush => enabledGrappleBrush;
+        public Draw.SimpleSolidBrush EnabledGrappleBrush => enabledGrappleBrush!;
 
 
         /// <summary>
         /// The pen used to draw the grapple points of the rectangle when it is disabled.
         /// </summary>
-        public Draw.SimplePen DisabledGrapplePen => disabledGrapplePen;
+        public Draw.SimplePen DisabledGrapplePen => disabledGrapplePen!;
 
 
         /// <summary>
         /// The brush used to fill the grapple points of the rectangle when it is disabled.
         /// </summary>
-        public Draw.SimpleSolidBrush DisabledGrappleBrush => disabledGrappleBrush;
+        public Draw.SimpleSolidBrush DisabledGrappleBrush => disabledGrappleBrush!;
 
 
         /// <summary>
-        /// Creates a new instance of the <see cref="RectangleRenderer"/> class.
+        /// The diameter of the grapple points.
+        /// </summary>
+        public int GrappleDiameter { get; set; } = 6;
+
+
+        /// <summary>
+        /// Default constructor.
         /// </summary>
         public RectangleRenderer()
         {
-            outlinePen = new Draw.SimplePen() {  Color = Color.White };
+            InitializeComponent();
+            CommonInitialise();
+        }
+
+
+        /// <summary>
+        /// Constructor that takes a container.
+        /// </summary>
+        public RectangleRenderer(IContainer container)
+        {
+            container.Add(this);
+            InitializeComponent();
+            CommonInitialise();
+        }
+
+
+        /// <summary>
+        /// Common initialisation for the constructors.
+        /// </summary>
+        private void CommonInitialise()
+        {
+            components.Add(outlinePen);
+            components.Add(fillBrush);
+            components.Add(enabledGrapplePen);
+            components.Add(enabledGrappleBrush);
+            components.Add(disabledGrapplePen);
+            components.Add(disabledGrappleBrush);
+
+            outlinePen = new Draw.SimplePen() { Color = Color.White };
             fillBrush = new Draw.SimpleSolidBrush() { Color = Color.Transparent };
 
             enabledGrapplePen = new Draw.SimplePen() { Color = Color.Navy };
@@ -101,34 +133,6 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             disabledGrapplePen = new Draw.SimplePen() { Color = Color.Gray };
             disabledGrappleBrush = new Draw.SimpleSolidBrush() { Color = Color.Gray };
         }
-
-
-        /// <summary>
-        /// Disposes of the resources used by the <see cref="RectangleRenderer"/>.
-        /// </summary>
-        public void Dispose()
-        {
-            if (isDisposed)
-            {
-                return;
-            }
-
-            outlinePen.Dispose();
-            fillBrush.Dispose();
-            enabledGrapplePen.Dispose();
-            disabledGrapplePen.Dispose();
-            enabledGrappleBrush.Dispose();
-            disabledGrappleBrush.Dispose();
-
-            isDisposed = true;
-        }
-
-
-        /// <summary>
-        /// The diameter of the grapple points.
-        /// </summary>
-        public int GrappleDiameter { get; set; } = 6;
-
 
 
         /// <summary>
@@ -144,6 +148,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             {
                 return (enabledGrapplePen, enabledGrappleBrush);
             }
+
             return (disabledGrapplePen, disabledGrappleBrush);
         }
 
@@ -157,6 +162,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         {
             if (rectangle.IsEmpty) { return; }
             if (graphics == null) { return; }
+            if ((fillBrush == null) || (outlinePen == null)) { return; }
 
             (Draw.SimplePen? grapplesPen, Draw.SimpleSolidBrush? grapplesBrush) = GetGrapplesPenAndBrush();
 
@@ -169,7 +175,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             {
                 graphics.FillRectangle(fillBrush, rectangle);
 
-                if (grapplesBrush!= null)
+                if (grapplesBrush != null)
                 {
                     for (int grappleIndex = 0; grappleIndex < grappleRectangles.Length; grappleIndex++)
                     {
@@ -192,18 +198,26 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             }
         }
 
+
+        /// <summary>
+        /// Recalculates the rectangles for the grapple points.
+        /// </summary>
         private void RecalculateGrapplesRectangles(Rectangle rectangle)
         {
             grappleRectangles[0] = CreateGrappleRect(location: rectangle.Location);
             grappleRectangles[1] = CreateGrappleRect(location: new Point(rectangle.Right, rectangle.Top));
             grappleRectangles[2] = CreateGrappleRect(location: new Point(rectangle.Right, rectangle.Bottom));
             grappleRectangles[3] = CreateGrappleRect(location: new Point(rectangle.Left, rectangle.Bottom));
-            grappleRectangles[4] = CreateGrappleRect(location: new Point(rectangle.Left + (rectangle.Width / 2), rectangle.Top));
-            grappleRectangles[5] = CreateGrappleRect(location: new Point(rectangle.Right, rectangle.Top + (rectangle.Height / 2)));
-            grappleRectangles[6] = CreateGrappleRect(location: new Point(rectangle.Left + (rectangle.Width / 2), rectangle.Bottom));
-            grappleRectangles[7] = CreateGrappleRect(location: new Point(rectangle.Left, rectangle.Top + (rectangle.Height / 2)));
+            grappleRectangles[4] = CreateGrappleRect(location: new Point(rectangle.Left + rectangle.Width / 2, rectangle.Top));
+            grappleRectangles[5] = CreateGrappleRect(location: new Point(rectangle.Right, rectangle.Top + rectangle.Height / 2));
+            grappleRectangles[6] = CreateGrappleRect(location: new Point(rectangle.Left + rectangle.Width / 2, rectangle.Bottom));
+            grappleRectangles[7] = CreateGrappleRect(location: new Point(rectangle.Left, rectangle.Top + rectangle.Height / 2));
         }
 
+
+        /// <summary>
+        /// Creates a rectangle for a grapple point.
+        /// </summary>
         private Rectangle CreateGrappleRect(Point location)
         {
             return new Rectangle(

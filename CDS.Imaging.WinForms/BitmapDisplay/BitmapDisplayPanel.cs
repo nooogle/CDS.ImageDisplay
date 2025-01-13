@@ -21,41 +21,23 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         private DragManager dragManager;
         private ZoomManager zoomManager;
         private bool isWaitingToApplyPendingImage;
-        private ROIManager roiManager;
-        private MouseMode mouseMode = MouseMode.None;
 
 
         /// <summary>
-        /// The ROI manager
+        /// Greater than 0 if dragging is suppressed.
         /// </summary>
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        public ROIManager ROIManager => roiManager;
+        /// <remarks>
+        /// This is useful if a something is hooking mouse down/move/up events and wants
+        /// to prevent the image being dragged around while they are performing their
+        /// own operation (such as selected a region of interest).
+        /// </remarks>
+        private int suppressDraggingCounter;
 
 
         /// <summary>
-        /// The mouse mode
+        /// True if dragging is allowed
         /// </summary>
-        [Category(categoryCDS)]
-        public MouseMode MouseMode
-        {
-            get => mouseMode;
-
-            set
-            {
-                if(mouseMode != value)
-                {
-                    mouseMode = value;
-                    OnMouseModeChanged?.Invoke(this, EventArgs.Empty);
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// Fired when the mouse mode is changed
-        /// </summary>
-        [Category(categoryCDS)]
-        public event EventHandler? OnMouseModeChanged;
+        private bool IsDraggingAllowed => suppressDraggingCounter == 0;
 
 
         /// <summary>
@@ -133,6 +115,12 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         [Category(categoryCDS)]
         [Description("Called when the paint rectangle is changed.")]
         public event PaintRectChangedEvent? OnPaintRectChanged;
+
+
+        /// <summary>
+        /// Fired when the image size changes
+        /// </summary>
+        public event OnImageSizeChangedEvent? OnImageSizeChanged;
 
 
         /// <summary>
@@ -240,9 +228,16 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// </summary>
         private void SetImageDirectlyFromUIThread(IImageSource? imageSource)
         {
+            Size originalImageSize = virtualDisplay.ImageSize;
+
             displayImage.SetNewImage(imageSource);
             virtualDisplay.ImageSize = displayImage.ImageSize;
-            roiManager.SetImageSize(imageSource == null ? null : (Size?)displayImage.ImageSize);
+
+            if (originalImageSize != virtualDisplay.ImageSize)
+            {
+                OnImageSizeChanged?.Invoke(this, originalImageSize, virtualDisplay.ImageSize);
+            }
+
             Invalidate();
         }
 
@@ -297,6 +292,25 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
 
         /// <summary>
+        /// Suppress dragging
+        /// </summary>
+        public void SuppressDragging()
+        {
+            suppressDraggingCounter++;
+        }
+
+
+        /// <summary>
+        /// Allow dragging. (Note this will only have an effect if the counter is
+        /// reduced to 0).
+        /// </summary>
+        public void UnsuppressDragging()
+        {
+            suppressDraggingCounter--;
+        }
+
+
+        /// <summary>
         /// The location in the image that should be rendered at 
         /// <see cref="TargetDisplayCentre"/>.
         /// </summary>
@@ -337,15 +351,6 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             dragManager = new DragManager(DragManager_SetNewTargetDisplayCentre);
             zoomManager = new ZoomManager(ZoomManager_SetNewZoom);
             virtualDisplay = new VirtualDisplay(VirtualImageOnDisplay_OnPaintRectChanged);
-            
-            roiManager = new ROIManager(
-                mapImagePointToDisplayPoint: MapImagePointToDisplayPoint,
-                mapImageRectangleToDisplayRectangle: MapImageRectangleToDisplayRectangle,
-                mapDisplayPointToImagePoint: MapDisplayPointToImagePoint,
-                invalidateDisplay: Invalidate,
-                setMouseCursor: cursor => Cursor = cursor,
-                onCommittedROIChange: () => OnCommittedROIChanged?.Invoke(this, EventArgs.Empty),
-                onDraggingROIChange: () => OnDraggingROIChanged?.Invoke(this, EventArgs.Empty));
         }
 
 
@@ -562,7 +567,6 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             if (AnythingToDisplay)
             {
                 PaintBitmap(paintEventArgs);
-                roiManager.Draw(paintEventArgs.Graphics);
             }
 
             OnPaintOver?.Invoke(
@@ -632,24 +636,13 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// </summary>
         protected override void OnMouseMove(MouseEventArgs mouseEventArgs)
         {
-            base.OnMouseMove(mouseEventArgs);
-
-            if (AnythingToDisplay)
+            if (dragManager.IsDragging)
             {
-                switch (MouseMode)
-                {
-                    case MouseMode.Drag:
-                        dragManager.OnMouseMove(mouseEventArgs);
-                        break;
-
-                    case MouseMode.ROISelection:
-                        roiManager.OnMouseMove(mouseEventArgs);
-                        Invalidate();
-                        break;
-
-                    default:
-                        break;
-                }
+                dragManager.OnMouseMove(mouseEventArgs);
+            }
+            else
+            {
+                base.OnMouseMove(mouseEventArgs);
             }
         }
 
@@ -661,24 +654,12 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         {
             base.OnMouseDown(mouseEventArgs);
 
-            if (AnythingToDisplay)
+            if (AnythingToDisplay && IsDraggingAllowed)
             {
-                switch(MouseMode)
-                {
-                    case MouseMode.Drag:
-                        dragManager.OnMouseDown(
-                            imageDisplayMode: DisplayMode,
-                            mouseEventArgs: mouseEventArgs,
-                            currentTargetDisplayCentre: virtualDisplay.TargetDisplayCentre);
-                        break;
-
-                    case MouseMode.ROISelection:
-                        roiManager.OnMouseDown(mouseEventArgs);
-                        Invalidate();
-                        break;
-                    default:
-                        break;
-                }
+                dragManager.OnMouseDown(
+                    imageDisplayMode: DisplayMode,
+                    mouseEventArgs: mouseEventArgs,
+                    currentTargetDisplayCentre: virtualDisplay.TargetDisplayCentre);
             }
         }
 
@@ -686,30 +667,15 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// <summary>
         /// Mouse button is up - we can use this for dragging
         /// </summary>
-        /// <param name="mouseEventArgs"></param>
         protected override void OnMouseUp(MouseEventArgs mouseEventArgs)
         {
             base.OnMouseUp(mouseEventArgs);
 
-            if (AnythingToDisplay)
+            if (AnythingToDisplay && dragManager.IsDragging)
             {
-                switch(MouseMode)
-                {
-                    case MouseMode.Drag:
-                        dragManager.OnMouseUp(mouseEventArgs);
-                        break;
-                 
-                    case MouseMode.ROISelection:
-                        roiManager.OnMouseUp(mouseEventArgs);
-                        Invalidate();
-                        break;
-                    
-                    default:
-                        break;
-                }
+                dragManager.OnMouseUp(mouseEventArgs);
             }
         }
-
 
 
         /// <summary>
@@ -749,71 +715,5 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             TargetDisplayCentre = sender.TargetDisplayCentre;
             TargetImageCentre = sender.TargetImageCentre;
         }
-
-
-
-        /// <summary>
-        /// Controls the visibility of the ROI
-        /// </summary>
-        [Category(categoryCDS)]
-        public bool ROIVisible
-        {
-            get => roiManager.Visible;
-            set => roiManager.Visible = value;
-        }
-
-
-        /// <summary>
-        /// Controls the ability to edit the ROI
-        /// </summary>
-        [Category(categoryCDS)] 
-        public bool CanEditCommittedROI
-        {
-            get => roiManager.CanEditCommitted;
-            set => roiManager.CanEditCommitted = value;
-        }
-
-
-        /// <summary>
-        /// Controls the ability to create a new ROI
-        /// </summary>
-        [Category(categoryCDS)]
-        public bool CanCreateNewROI
-        {
-            get => roiManager.CanCreateNew;
-            set => roiManager.CanCreateNew = value;
-        }
-
-
-        /// <summary>
-        /// The committed ROI, or an empty rectangle if there is no committed ROI
-        /// </summary>
-        [Category(categoryCDS)]
-        public Rectangle CommittedROI
-        {
-            get => roiManager.CommittedROI;
-            set => roiManager.CommittedROI = value;
-        }
-
-
-        /// <summary>
-        /// The current dragging ROI, or an empty rectangle if one is not being dragged
-        /// </summary>
-        [Category(categoryCDS)]
-        public Rectangle DraggingROI => roiManager.LiveDraggingROI;
-
-
-        /// <summary>
-        /// Fired when the committed ROI is changed
-        /// </summary>
-        [Category(categoryCDS)]
-        public event EventHandler? OnCommittedROIChanged;
-
-
-        /// <summary>
-        /// Fired when the dragging ROI is changed
-        /// </summary>
-        [Category(categoryCDS)]
-        public event EventHandler? OnDraggingROIChanged;
     }
 }

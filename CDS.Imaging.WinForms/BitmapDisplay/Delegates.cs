@@ -46,4 +46,13 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
     /// </summary>
     /// <param name="sender">Event sender</param>
     public delegate void ModeChangedEvent(BitmapDisplayPanel sender);
+
+
+    /// <summary>
+    /// Event delegate
+    /// </summary>
+    /// <param name="newSize">New size</param>
+    /// <param name="oldSize">Old size</param>
+    /// <param name="sender">Event sender</param>
+    public delegate void OnImageSizeChangedEvent(BitmapDisplayPanel sender, Size oldSize, Size newSize);
 }
