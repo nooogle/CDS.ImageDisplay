@@ -1,6 +1,6 @@
 ﻿namespace CDS.Imaging.WinForms.RegionOfInterest
 {
-    partial class MultipleROIManagerOnBitmapDisplay
+    partial class MultipleROIManager
     {
         /// <summary>
         /// Required designer variable.

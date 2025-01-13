@@ -1,47 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CDS.Imaging.WinForms.RegionOfInterest
 {
-    public partial class MultipleROIManagerOnBitmapDisplay : Component
+
+
+    /// <summary>
+    /// Manages multiple ROIs on a bitmap display.
+    /// </summary>
+    /// <remarks>
+    /// Each region of interest (ROI) is represented by an <see cref="ISingleROIDescriptor"/> object.
+    /// A default class, <see cref="SingleROIDescriptor"/>, is provided that implements this interface.
+    /// Otherwise, you can create your own class that implements the interface, and optionally delegate
+    /// most of the properties and methods to an instance of <see cref="SingleROIDescriptor"/> (using
+    /// the composition pattern).
+    /// </remarks>
+    public partial class MultipleROIManager : Component
     {
-        public class ROIDescriptor : IDisposable
-        {
-            public override string ToString() => Name;
-
-            public string Name { get; set; } = "";
-
-            public Rectangle ROI { get; set; }
-
-            public Size MinimumSize { get; set; } = new Size(1, 1);
-
-            public Size MaximumSize { get; set; } = new Size(1000000, 1000000);
-
-            public RectangleRenderer Renderer { get; } = new RectangleRenderer()
-            {
-                GrapplesMode = RectangleRenderer.GrapplesRenderingMode.Hide,
-            };
-
-            public void Dispose()
-            {
-                Renderer.Dispose();
-            }
-        }
-
-
         private const string categoryCDS = "CDS";
 
         private Size? imageSize;
         private bool visible = true;
         private BitmapDisplay.BitmapDisplayPanel? bitmapDisplayPanel;
-        private ROIDescriptor? activeROIDescriptor;
+        private ISingleROIDescriptor? activeROIDescriptor;
 
 
         /// <summary>
@@ -49,7 +33,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Func<IEnumerable<ROIDescriptor>>? GetROIDescriptors { get; set; } = () => [];
+        public Func<IEnumerable<ISingleROIDescriptor>>? GetROIDescriptors { get; set; } = () => [];
 
 
 
@@ -111,7 +95,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         /// <summary>
         /// Constructor
         /// </summary>
-        public MultipleROIManagerOnBitmapDisplay()
+        public MultipleROIManager()
         {
             InitializeComponent();
             CommonInitialise();
@@ -120,7 +104,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         /// <summary>
         /// Constructor
         /// </summary>
-        public MultipleROIManagerOnBitmapDisplay(IContainer container)
+        public MultipleROIManager(IContainer container)
         {
             container.Add(this);
             InitializeComponent();
@@ -153,8 +137,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
             foreach (var roiDescriptor in GetROIDescriptors!())
             {
-                var displayRect = bitmapDisplayPanel!.MapImageRectangleToDisplayRectangle(roiDescriptor.ROI);
-                roiDescriptor.Renderer.Draw(graphics, displayRect);
+                roiDescriptor.Draw(graphics, bitmapDisplayPanel!, roiDescriptor.ROI);
             }
         }
 
@@ -193,7 +176,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
             }
         }
 
-        private void HandleROIClicked(ROIDescriptor roiDescriptor)
+        private void HandleROIClicked(ISingleROIDescriptor roiDescriptor)
         {
             if(roiDescriptor == activeROIDescriptor) { return; }
             if(roiSelectionOnBitmapDisplay.IsDragging) { return; }

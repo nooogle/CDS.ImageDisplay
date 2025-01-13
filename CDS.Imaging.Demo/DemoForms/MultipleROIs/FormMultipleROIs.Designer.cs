@@ -1,5 +1,5 @@
 ﻿
-namespace CDS.Imaging.Demo.DemoForms
+namespace CDS.Imaging.Demo.DemoForms.MultipleROIs
 {
     partial class FormMultipleROIs
     {
@@ -36,7 +36,7 @@ namespace CDS.Imaging.Demo.DemoForms
             btnClearROI = new System.Windows.Forms.Button();
             btnSetROI = new System.Windows.Forms.Button();
             sysInfoPanel = new WinForms.SysInfoPanel();
-            multipleROIManagerOnBitmapDisplay = new WinForms.RegionOfInterest.MultipleROIManagerOnBitmapDisplay(components);
+            multipleROIManagerOnBitmapDisplay = new WinForms.RegionOfInterest.MultipleROIManager(components);
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -125,6 +125,6 @@ namespace CDS.Imaging.Demo.DemoForms
         private System.Windows.Forms.Button btnSetROI;
         private System.Windows.Forms.PropertyGrid propertyGrid;
         private CDS.Imaging.WinForms.SysInfoPanel sysInfoPanel;
-        private WinForms.RegionOfInterest.MultipleROIManagerOnBitmapDisplay multipleROIManagerOnBitmapDisplay;
+        private WinForms.RegionOfInterest.MultipleROIManager multipleROIManagerOnBitmapDisplay;
     }
 }

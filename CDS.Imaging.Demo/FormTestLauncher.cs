@@ -69,7 +69,7 @@ namespace CDS.Imaging.Demo
                 parentNode: otherNode.Nodes,
                 name: "Multiple ROIs",
                 tooltip: "",
-                runDemo: () => RunModalForm<DemoForms.FormMultipleROIs>());
+                runDemo: () => RunModalForm<DemoForms.MultipleROIs.FormMultipleROIs>());
         }
 
         private void AddOpenCVSharpDemoNodes()
