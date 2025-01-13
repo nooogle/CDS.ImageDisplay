@@ -62,6 +62,12 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
 
         /// <summary>
+        /// True if the ROI is currently being dragged.
+        /// </summary>
+        public bool IsDragging => (draggingMode != ROIDragMode.None);
+
+
+        /// <summary>
         /// The bitmap display panel that the ROI is drawn on.
         /// </summary>
         [Category(categoryCDS)]
@@ -322,16 +328,6 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
             CommittedROI = newCommittedROI;
 
             bitmapDisplayPanel?.Invalidate();
-        }
-
-
-        /// <summary>
-        /// Sets the current image size (or uses null to indiate an image is not loaded).
-        /// </summary>
-        /// <param name="imageSize"></param>
-        public void SetImageSize(Size? imageSize)
-        {
-            this.imageSize = imageSize;
         }
 
 

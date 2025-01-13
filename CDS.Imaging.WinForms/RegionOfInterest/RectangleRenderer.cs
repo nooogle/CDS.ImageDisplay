@@ -42,6 +42,12 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
 
         /// <summary>
+        /// Controls whether the rectangle is visible.
+        /// </summary>
+        public bool Visible { get; set; } = true;
+
+
+        /// <summary>
         /// Gets or sets the rendering mode of the grapple points.
         /// </summary>
         public GrapplesRenderingMode GrapplesMode { get; set; } = GrapplesRenderingMode.ShowEnabled;
@@ -160,6 +166,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         /// <param name="rectangle"></param>
         public void Draw(Graphics graphics, Rectangle rectangle)
         {
+            if(!Visible) { return; }
             if (rectangle.IsEmpty) { return; }
             if (graphics == null) { return; }
             if ((fillBrush == null) || (outlinePen == null)) { return; }

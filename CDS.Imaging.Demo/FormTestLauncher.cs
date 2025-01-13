@@ -64,6 +64,12 @@ namespace CDS.Imaging.Demo
                 name: "ROI selection",
                 tooltip: "",
                 runDemo: () => RunModalForm<DemoForms.FormROISelection>());
+
+            AddDemo(
+                parentNode: otherNode.Nodes,
+                name: "Multiple ROIs",
+                tooltip: "",
+                runDemo: () => RunModalForm<DemoForms.FormMultipleROIs>());
         }
 
         private void AddOpenCVSharpDemoNodes()
