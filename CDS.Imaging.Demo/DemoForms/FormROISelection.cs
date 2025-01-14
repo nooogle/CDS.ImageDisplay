@@ -21,7 +21,7 @@ public partial class FormROISelection : Form
 
         [Category("WinForms controls")]
         [DisplayName("ROI selection")]
-        public WinForms.RegionOfInterest.ROISelectionOnBitmapDisplay ROISelectionOnBitmapDisplay { get; }
+        public WinForms.RegionOfInterest.SingleROIManager ROISelectionOnBitmapDisplay { get; }
 
 
         [Category("Demo form")]
@@ -34,7 +34,7 @@ public partial class FormROISelection : Form
         /// </summary>
         public TestProperties(
             WinForms.BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel,
-            WinForms.RegionOfInterest.ROISelectionOnBitmapDisplay roiSelectionOnBitmapDisplay)
+            WinForms.RegionOfInterest.SingleROIManager roiSelectionOnBitmapDisplay)
         {
             BitmapDisplayPanel = bitmapDisplayPanel;
             ROISelectionOnBitmapDisplay = roiSelectionOnBitmapDisplay;
@@ -123,7 +123,7 @@ public partial class FormROISelection : Form
     /// <summary>
     /// The ROI has been committed to the ROISelectionOnBitmapDisplay
     /// </summary>
-    private void roiSelectionOnBitmapDisplay_OnCommittedROIChanged(CDS.Imaging.WinForms.RegionOfInterest.ROISelectionOnBitmapDisplay sender, Rectangle roi)
+    private void roiSelectionOnBitmapDisplay_OnCommittedROIChanged(CDS.Imaging.WinForms.RegionOfInterest.SingleROIManager sender, Rectangle roi)
     {
         var sizeLimitedROI = new Rectangle(
             roi.Location.X,
@@ -143,7 +143,7 @@ public partial class FormROISelection : Form
     /// <summary>
     /// The ROI is being dragged on the ROISelectionOnBitmapDisplay
     /// </summary>
-    private void roiSelectionOnBitmapDisplay_OnDraggingROIChanged(CDS.Imaging.WinForms.RegionOfInterest.ROISelectionOnBitmapDisplay sender, Rectangle roi)
+    private void roiSelectionOnBitmapDisplay_OnDraggingROIChanged(CDS.Imaging.WinForms.RegionOfInterest.SingleROIManager sender, Rectangle roi)
     {
         UpdateROILabels();
     }

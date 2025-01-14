@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 
 namespace CDS.Imaging.Demo.DemoForms.MultipleROIs;
 
 
-class TestProperties
+class TestProperties : INotifyPropertyChanged
 {
     [Category("WinForms controls")]
     [DisplayName("Bitmap display")]
@@ -19,7 +20,7 @@ class TestProperties
 
     [Category("Demo form")]
     [DisplayName("ROI descriptors")]
-    public List<MyROIDescriptor> ROIDescriptors { get; }
+    public BindingList<MyROIDescriptor> ROIDescriptors { get; }
 
 
     /// <summary>
@@ -33,15 +34,32 @@ class TestProperties
         MultipleROIManager = multipleROIManager;
 
         ROIDescriptors = CreateDefaultROIs();
+        ROIDescriptors.ListChanged += (s, e) =>
+        {
+            NotifyPropertyChanged(nameof(ROIDescriptors));
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ROIDescriptors)));
+        };
+    }
+
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+
+    private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+    {
+        if (PropertyChanged != null)
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 
 
     /// <summary>
     /// Create some default ROIs
     /// </summary>
-    private List<MyROIDescriptor> CreateDefaultROIs()
+    private BindingList<MyROIDescriptor> CreateDefaultROIs()
     {
-        return new List<MyROIDescriptor>
+        return new BindingList<MyROIDescriptor>
             {
                 new MyROIDescriptor()
                 {

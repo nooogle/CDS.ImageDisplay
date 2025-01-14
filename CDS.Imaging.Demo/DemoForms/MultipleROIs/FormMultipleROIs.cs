@@ -23,6 +23,11 @@ public partial class FormMultipleROIs : Form
         InitializeComponent();
 
         testProperties = new TestProperties(bitmapDisplayPanel, multipleROIManagerOnBitmapDisplay);
+        testProperties.PropertyChanged += (s, e) =>
+            {
+                multipleROIManagerOnBitmapDisplay.RefreshSelection();
+                propertyGrid.Refresh();
+            };
     }
 
 
@@ -46,5 +51,10 @@ public partial class FormMultipleROIs : Form
     {
         base.OnSizeChanged(e);
         bitmapDisplayPanel.FitToWindowCentred();
+    }
+
+    private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+    {
+        multipleROIManagerOnBitmapDisplay.RefreshSelection();
     }
 }

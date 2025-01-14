@@ -347,10 +347,30 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             SetStyle(ControlStyles.UserPaint, true);
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            
+            this.SetStyle(ControlStyles.Selectable, true); // Ensure the control is selectable
+            this.TabStop = true; // Enable tab stop so it can gain focus
 
             dragManager = new DragManager(DragManager_SetNewTargetDisplayCentre);
             zoomManager = new ZoomManager(ZoomManager_SetNewZoom);
             virtualDisplay = new VirtualDisplay(VirtualImageOnDisplay_OnPaintRectChanged);
+        }
+
+
+        /// <summary>
+        /// Ensure arrow keys are treated as input keys
+        /// </summary>
+        protected override bool IsInputKey(Keys keyData)
+        {
+            if ((keyData & Keys.KeyCode) == Keys.Left ||
+                (keyData & Keys.KeyCode) == Keys.Right ||
+                (keyData & Keys.KeyCode) == Keys.Up ||
+                (keyData & Keys.KeyCode) == Keys.Down)
+            {
+                return true; // Treat arrow keys as input keys
+            }
+
+            return base.IsInputKey(keyData);
         }
 
 

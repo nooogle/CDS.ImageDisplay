@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            roiSelectionOnBitmapDisplay = new ROISelectionOnBitmapDisplay(components);
+            roiSelectionOnBitmapDisplay = new SingleROIManager(components);
             // 
             // roiSelectionOnBitmapDisplay
             // 
@@ -44,6 +44,6 @@
 
         #endregion
 
-        private ROISelectionOnBitmapDisplay roiSelectionOnBitmapDisplay;
+        private SingleROIManager roiSelectionOnBitmapDisplay;
     }
 }

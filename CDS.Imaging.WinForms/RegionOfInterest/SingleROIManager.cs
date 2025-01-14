@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -8,7 +9,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
     /// <summary>
     /// Manages a region of interest (ROI) on a <see cref="BitmapDisplay.BitmapDisplayPanel"/>
     /// </summary>
-    public partial class ROISelectionOnBitmapDisplay : Component
+    public partial class SingleROIManager : Component
     {
         private const string categoryCDS = "CDS";
 
@@ -86,6 +87,8 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
                         bitmapDisplayPanel.MouseUp -= BitmapDisplayPanel_MouseUp;
                         bitmapDisplayPanel.OnPaintOver -= BitmapDisplayPanel_OnPaintOver;
                         bitmapDisplayPanel.OnImageSizeChanged -= BitmapDisplayPanel_OnImageSizeChanged;
+                        bitmapDisplayPanel.KeyPress -= BitmapDisplayPanel_KeyPress;
+                        bitmapDisplayPanel.KeyDown -= BitmapDisplayPanel_KeyDown;
                     }
 
                     bitmapDisplayPanel = value;
@@ -97,9 +100,72 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
                         bitmapDisplayPanel.MouseUp += BitmapDisplayPanel_MouseUp;
                         bitmapDisplayPanel.OnPaintOver += BitmapDisplayPanel_OnPaintOver;
                         bitmapDisplayPanel.OnImageSizeChanged += BitmapDisplayPanel_OnImageSizeChanged;
+                        bitmapDisplayPanel.KeyPress += BitmapDisplayPanel_KeyPress;
+                        bitmapDisplayPanel.KeyDown += BitmapDisplayPanel_KeyDown;
                     }
                 }
             }
+        }
+
+        private void BitmapDisplayPanel_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (draggingMode != ROIDragMode.None) { return; }
+            if (!Visible) { return; }
+
+            int change = 1;
+            if (e.Control) { change = 10; }
+
+            if (e.KeyCode == Keys.Left)
+            {
+                if (e.Shift)
+                {
+                    CommittedROI = new Rectangle(CommittedROI.Left, CommittedROI.Top, CommittedROI.Width - change, CommittedROI.Height);
+                }
+                else
+                {
+                    CommittedROI = new Rectangle(CommittedROI.Left - change, CommittedROI.Top, CommittedROI.Width, CommittedROI.Height);
+                }
+            }
+            else if (e.KeyCode == Keys.Right)
+            {
+                if (e.Shift)
+                {
+                    CommittedROI = new Rectangle(CommittedROI.Left, CommittedROI.Top, CommittedROI.Width + change, CommittedROI.Height);
+                }
+                else
+                {
+                    CommittedROI = new Rectangle(CommittedROI.Left + change, CommittedROI.Top, CommittedROI.Width, CommittedROI.Height);
+                }
+            }
+            else if (e.KeyCode == Keys.Up)
+            {
+                if (e.Shift)
+                {
+                    CommittedROI = new Rectangle(CommittedROI.Left, CommittedROI.Top, CommittedROI.Width, CommittedROI.Height - change);
+                }
+                else
+                {
+                    CommittedROI = new Rectangle(CommittedROI.Left, CommittedROI.Top - change, CommittedROI.Width, CommittedROI.Height);
+                }
+            }
+            else if (e.KeyCode == Keys.Down)
+            {
+                if (e.Shift)
+                {
+                    CommittedROI = new Rectangle(CommittedROI.Left, CommittedROI.Top, CommittedROI.Width, CommittedROI.Height + change);
+                }
+                else
+                {
+                    CommittedROI = new Rectangle(CommittedROI.Left, CommittedROI.Top + change, CommittedROI.Width, CommittedROI.Height);
+                }
+            }
+        }
+
+        private void BitmapDisplayPanel_KeyPress(object? sender, KeyPressEventArgs e)
+        {
+             if(draggingMode != ROIDragMode.None) { return; }
+             if(!Visible) { return; }
+
         }
 
 
@@ -168,9 +234,9 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ROISelectionOnBitmapDisplay"/> class.
+        /// Initializes a new instance of the <see cref="SingleROIManager"/> class.
         /// </summary>
-        public ROISelectionOnBitmapDisplay()
+        public SingleROIManager()
         {
             InitializeComponent();
             CompleteInitialisation();
@@ -178,9 +244,9 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ROISelectionOnBitmapDisplay"/> class.
+        /// Initializes a new instance of the <see cref="SingleROIManager"/> class.
         /// </summary>
-        public ROISelectionOnBitmapDisplay(IContainer container)
+        public SingleROIManager(IContainer container)
         {
             container.Add(this);
             InitializeComponent();
@@ -212,33 +278,6 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
             mouseCursors = CreateMouseCursorsDict();
         }
-
-
-        ///// <summary>
-        ///// Initializes a new instance of the <see cref="ROIManager"/> class.
-        ///// </summary>
-        //public ROIManager(
-        //    Func<Point, Point> mapImagePointToDisplayPoint,
-        //    Func<Rectangle, Rectangle> mapImageRectangleToDisplayRectangle,
-        //    Func<Point, Point> mapDisplayPointToImagePoint,
-        //    Action invalidateDisplay,
-        //    Action<Cursor> setMouseCursor,
-        //    Action onCommittedROIChange,
-        //    Action onDraggingROIChange)
-        //{
-        //    imageSize = null;
-
-        //    this.mapImagePointToDisplayPoint = mapImagePointToDisplayPoint;
-        //    this.mapImageRectangleToDisplayRectangle = mapImageRectangleToDisplayRectangle;
-        //    this.mapDisplayPointToImagePoint = mapDisplayPointToImagePoint;
-        //    this.invalidateDisplay = invalidateDisplay;
-
-        //    this.setMouseCursor = setMouseCursor;
-
-
-        //    this.onCommittedROIChange = onCommittedROIChange;
-        //    this.onDraggingROIChange = onDraggingROIChange;
-        //}
 
 
         /// <summary>
@@ -337,6 +376,16 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         private bool CanWorkWithROI => (bitmapDisplayPanel != null) && imageSize.HasValue;
 
 
+
+        /// <summary>
+        /// True if the spacebar is pressed.
+        /// </summary>
+        private bool IsSpacebarPressed()
+        {
+            return (Win32.GetKeyState(Win32.VK_SPACE) & 0x8000) != 0;
+        }
+
+
         /// <summary>
         /// Handles the mouse down event to begin defining an ROI.
         /// </summary>
@@ -344,7 +393,8 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         {
             if (!CanWorkWithROI) { return; }
 
-            if (e.Button == MouseButtons.Left)
+
+            if (!IsSpacebarPressed() && (e.Button == MouseButtons.Left))
             {
                 OnLeftMouseButtonDown(e);
             }

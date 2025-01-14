@@ -1,6 +1,6 @@
 ﻿namespace CDS.Imaging.WinForms.RegionOfInterest
 {
-    partial class ROISelectionOnBitmapDisplay
+    partial class SingleROIManager
     {
         /// <summary>
         /// Required designer variable.

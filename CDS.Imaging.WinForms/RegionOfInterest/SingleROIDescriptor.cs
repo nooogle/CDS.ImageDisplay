@@ -18,6 +18,14 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
 
         /// <inheritdoc/>
+        public bool Visible { get; set; } = true;
+
+
+        /// <inheritdoc/>
+        public bool Locked { get; set; } = false;
+
+
+        /// <inheritdoc/>
         public string Name { get; set; } = "";
 
 
@@ -50,6 +58,8 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         /// <inheritdoc/>
         public void Draw(Graphics graphics, BitmapDisplayPanel bitmapDisplay, Rectangle roiOnImage)
         {
+            if(!Visible) { return; }
+
             var displayRect = bitmapDisplay.MapImageRectangleToDisplayRectangle(roiOnImage);
             Renderer.Draw(graphics, displayRect);
         }

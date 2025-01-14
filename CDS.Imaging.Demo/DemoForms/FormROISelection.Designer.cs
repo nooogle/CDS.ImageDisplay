@@ -45,7 +45,7 @@ namespace CDS.Imaging.Demo.DemoForms
             btnSetROI = new System.Windows.Forms.Button();
             sysInfoPanel = new WinForms.SysInfoPanel();
             timerUpdateMetrics = new System.Windows.Forms.Timer(components);
-            roiSelectionOnBitmapDisplay = new WinForms.RegionOfInterest.ROISelectionOnBitmapDisplay(components);
+            roiSelectionOnBitmapDisplay = new WinForms.RegionOfInterest.SingleROIManager(components);
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -238,6 +238,6 @@ namespace CDS.Imaging.Demo.DemoForms
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Timer timerUpdateMetrics;
-        private WinForms.RegionOfInterest.ROISelectionOnBitmapDisplay roiSelectionOnBitmapDisplay;
+        private WinForms.RegionOfInterest.SingleROIManager roiSelectionOnBitmapDisplay;
     }
 }

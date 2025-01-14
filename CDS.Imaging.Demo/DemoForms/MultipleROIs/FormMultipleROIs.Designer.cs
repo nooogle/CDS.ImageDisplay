@@ -71,6 +71,7 @@ namespace CDS.Imaging.Demo.DemoForms.MultipleROIs
             propertyGrid.Name = "propertyGrid";
             propertyGrid.Size = new System.Drawing.Size(424, 564);
             propertyGrid.TabIndex = 6;
+            propertyGrid.PropertyValueChanged += propertyGrid_PropertyValueChanged;
             // 
             // btnClearROI
             // 

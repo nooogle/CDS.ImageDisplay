@@ -10,6 +10,18 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
     public interface ISingleROIDescriptor : IDisposable
     {
         /// <summary>
+        /// True if the ROI is visible.
+        /// </summary>
+        bool Visible { get; set; }
+
+
+        /// <summary>
+        /// True if the ROI is locked and should be editable.
+        /// </summary>
+        bool Locked { get; set; } 
+
+
+        /// <summary>
         /// Maximum size of the ROI.
         /// </summary>
         Size MaximumSize { get; set; }

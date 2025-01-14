@@ -154,6 +154,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         private void BitmapDisplayPanel_Click(object? sender, EventArgs e)
         {
             if (!DoesHaveImageToWorkWith) { return; }
+            if(IsSpacebarPressed()) { return; }
 
             var roiDescriptors = GetROIDescriptors!();
             var mouseLocationOnThisControl = bitmapDisplayPanel!.PointToClient(Cursor.Position);
@@ -180,6 +181,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         {
             if(roiDescriptor == activeROIDescriptor) { return; }
             if(roiSelectionOnBitmapDisplay.IsDragging) { return; }
+            if(roiDescriptor.Locked) { return; }
 
             DeselectActiveROI();
 
@@ -207,7 +209,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         }
 
 
-        private void roiSelectionOnBitmapDisplay_OnCommittedROIChanged(ROISelectionOnBitmapDisplay sender, Rectangle roi)
+        private void roiSelectionOnBitmapDisplay_OnCommittedROIChanged(SingleROIManager sender, Rectangle roi)
         {
             var newROI = new Rectangle(
                 x: roi.Location.X,
@@ -219,6 +221,34 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
             roiSelectionOnBitmapDisplay.CommittedROI = newROI;
             activeROIDescriptor.ROI = newROI;
+        }
+
+
+
+        /// <summary>
+        /// Refreshes the selected region of interest.
+        /// </summary>
+        /// <remarks>
+        /// This is useful if a ROI descriptor property of the currently selected ROI has been changed 
+        /// which results in the ROI no longer being editable or visible.
+        /// </remarks>
+        public void RefreshSelection()
+        {
+            if((activeROIDescriptor != null) && (!activeROIDescriptor.Visible || activeROIDescriptor.Locked))
+            {
+                DeselectActiveROI();
+            }
+
+            bitmapDisplayPanel?.Invalidate();
+        }
+
+
+        /// <summary>
+        /// True if the spacebar is pressed.
+        /// </summary>
+        private bool IsSpacebarPressed()
+        {
+            return (Win32.GetKeyState(Win32.VK_SPACE) & 0x8000) != 0;
         }
     }
 }
