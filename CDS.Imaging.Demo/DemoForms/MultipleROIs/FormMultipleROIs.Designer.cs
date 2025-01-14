@@ -33,10 +33,10 @@ namespace CDS.Imaging.Demo.DemoForms.MultipleROIs
             bitmapDisplayPanel = new WinForms.BitmapDisplay.BitmapDisplayPanel();
             panel1 = new System.Windows.Forms.Panel();
             propertyGrid = new System.Windows.Forms.PropertyGrid();
-            btnClearROI = new System.Windows.Forms.Button();
-            btnSetROI = new System.Windows.Forms.Button();
+            btnLoadImage = new System.Windows.Forms.Button();
             sysInfoPanel = new WinForms.SysInfoPanel();
             multipleROIManagerOnBitmapDisplay = new WinForms.RegionOfInterest.MultipleROIManager(components);
+            openFileDialog = new System.Windows.Forms.OpenFileDialog();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -55,8 +55,7 @@ namespace CDS.Imaging.Demo.DemoForms.MultipleROIs
             // 
             panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             panel1.Controls.Add(propertyGrid);
-            panel1.Controls.Add(btnClearROI);
-            panel1.Controls.Add(btnSetROI);
+            panel1.Controls.Add(btnLoadImage);
             panel1.Dock = System.Windows.Forms.DockStyle.Left;
             panel1.Location = new System.Drawing.Point(0, 38);
             panel1.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
@@ -67,29 +66,21 @@ namespace CDS.Imaging.Demo.DemoForms.MultipleROIs
             // propertyGrid
             // 
             propertyGrid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            propertyGrid.Location = new System.Drawing.Point(11, 63);
+            propertyGrid.Location = new System.Drawing.Point(11, 52);
             propertyGrid.Name = "propertyGrid";
-            propertyGrid.Size = new System.Drawing.Size(424, 564);
+            propertyGrid.Size = new System.Drawing.Size(424, 575);
             propertyGrid.TabIndex = 6;
             propertyGrid.PropertyValueChanged += propertyGrid_PropertyValueChanged;
             // 
-            // btnClearROI
+            // btnLoadImage
             // 
-            btnClearROI.Location = new System.Drawing.Point(92, 11);
-            btnClearROI.Name = "btnClearROI";
-            btnClearROI.Size = new System.Drawing.Size(75, 23);
-            btnClearROI.TabIndex = 3;
-            btnClearROI.Text = "Clear ROI";
-            btnClearROI.UseVisualStyleBackColor = true;
-            // 
-            // btnSetROI
-            // 
-            btnSetROI.Location = new System.Drawing.Point(11, 11);
-            btnSetROI.Name = "btnSetROI";
-            btnSetROI.Size = new System.Drawing.Size(75, 23);
-            btnSetROI.TabIndex = 2;
-            btnSetROI.Text = "Set ROI";
-            btnSetROI.UseVisualStyleBackColor = true;
+            btnLoadImage.Location = new System.Drawing.Point(11, 11);
+            btnLoadImage.Name = "btnLoadImage";
+            btnLoadImage.Size = new System.Drawing.Size(124, 23);
+            btnLoadImage.TabIndex = 2;
+            btnLoadImage.Text = "Load image";
+            btnLoadImage.UseVisualStyleBackColor = true;
+            btnLoadImage.Click += btnLoadImage_Click;
             // 
             // sysInfoPanel
             // 
@@ -102,7 +93,95 @@ namespace CDS.Imaging.Demo.DemoForms.MultipleROIs
             // multipleROIManagerOnBitmapDisplay
             // 
             multipleROIManagerOnBitmapDisplay.BitmapDisplayPanel = bitmapDisplayPanel;
+            // 
+            // 
+            // 
+            // 
+            // 
+            // 
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.DisabledGrappleBrush.Color = System.Drawing.Color.Gray;
+            // 
+            // 
+            // 
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.DisabledGrapplePen.Color = System.Drawing.Color.Gray;
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.DisabledGrapplePen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.DisabledGrapplePen.EndCap = System.Drawing.Drawing2D.LineCap.Flat;
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.DisabledGrapplePen.StartCap = System.Drawing.Drawing2D.LineCap.Flat;
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.DisabledGrapplePen.Width = 1F;
+            // 
+            // 
+            // 
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.EnabledGrappleBrush.Color = System.Drawing.Color.Navy;
+            // 
+            // 
+            // 
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.EnabledGrapplePen.Color = System.Drawing.Color.Navy;
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.EnabledGrapplePen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.EnabledGrapplePen.EndCap = System.Drawing.Drawing2D.LineCap.Flat;
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.EnabledGrapplePen.StartCap = System.Drawing.Drawing2D.LineCap.Flat;
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.EnabledGrapplePen.Width = 1F;
+            // 
+            // 
+            // 
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.FillBrush.Color = System.Drawing.Color.Transparent;
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.GrappleDiameter = 6;
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.GrapplesMode = WinForms.RegionOfInterest.RectangleRenderer.GrapplesRenderingMode.ShowEnabled;
+            // 
+            // 
+            // 
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.OutlinePen.Color = System.Drawing.Color.FromArgb(128, 255, 0, 0);
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.OutlinePen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.OutlinePen.EndCap = System.Drawing.Drawing2D.LineCap.Flat;
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.OutlinePen.StartCap = System.Drawing.Drawing2D.LineCap.Flat;
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.OutlinePen.Width = 2F;
+            multipleROIManagerOnBitmapDisplay.CommittedROIRenderer.Visible = true;
+            // 
+            // 
+            // 
+            // 
+            // 
+            // 
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.DisabledGrappleBrush.Color = System.Drawing.Color.Gray;
+            // 
+            // 
+            // 
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.DisabledGrapplePen.Color = System.Drawing.Color.Gray;
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.DisabledGrapplePen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.DisabledGrapplePen.EndCap = System.Drawing.Drawing2D.LineCap.Flat;
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.DisabledGrapplePen.StartCap = System.Drawing.Drawing2D.LineCap.Flat;
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.DisabledGrapplePen.Width = 2F;
+            // 
+            // 
+            // 
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.EnabledGrappleBrush.Color = System.Drawing.Color.FromArgb(128, 0, 0, 128);
+            // 
+            // 
+            // 
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.EnabledGrapplePen.Color = System.Drawing.Color.FromArgb(128, 0, 255, 255);
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.EnabledGrapplePen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.EnabledGrapplePen.EndCap = System.Drawing.Drawing2D.LineCap.Flat;
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.EnabledGrapplePen.StartCap = System.Drawing.Drawing2D.LineCap.Flat;
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.EnabledGrapplePen.Width = 2F;
+            // 
+            // 
+            // 
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.FillBrush.Color = System.Drawing.Color.FromArgb(32, 255, 0, 0);
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.GrappleDiameter = 6;
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.GrapplesMode = WinForms.RegionOfInterest.RectangleRenderer.GrapplesRenderingMode.ShowEnabled;
+            // 
+            // 
+            // 
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.OutlinePen.Color = System.Drawing.Color.Lime;
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.OutlinePen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.OutlinePen.EndCap = System.Drawing.Drawing2D.LineCap.Flat;
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.OutlinePen.StartCap = System.Drawing.Drawing2D.LineCap.Flat;
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.OutlinePen.Width = 10F;
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.Visible = true;
             multipleROIManagerOnBitmapDisplay.Visible = true;
+            // 
+            // openFileDialog
+            // 
+            openFileDialog.Filter = "JPG files|*.jpg|Bitmap files|*.bmp|TIF files|*.tif|PNG files|*.png";
             // 
             // FormMultipleROIs
             // 
@@ -122,10 +201,10 @@ namespace CDS.Imaging.Demo.DemoForms.MultipleROIs
 
         private WinForms.BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button btnClearROI;
-        private System.Windows.Forms.Button btnSetROI;
+        private System.Windows.Forms.Button btnLoadImage;
         private System.Windows.Forms.PropertyGrid propertyGrid;
         private CDS.Imaging.WinForms.SysInfoPanel sysInfoPanel;
         private WinForms.RegionOfInterest.MultipleROIManager multipleROIManagerOnBitmapDisplay;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
     }
 }

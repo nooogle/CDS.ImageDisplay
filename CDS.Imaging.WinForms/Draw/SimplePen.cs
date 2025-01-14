@@ -7,8 +7,15 @@ namespace CDS.Imaging.WinForms.Draw
     /// <summary>
     /// A simple pen; allows configuration within the designer
     /// </summary>
+    [TypeConverter(typeof(ExpandableObjectConverter))]
     public partial class SimplePen : Component
     {
+        /// <summary>
+        /// This instance as a string
+        /// </summary>
+        public override string ToString() => $"Pen {Color} {Width} {DashStyle} {StartCap} {EndCap}";
+
+
         /// <summary>
         /// The .Net Pen
         /// </summary>

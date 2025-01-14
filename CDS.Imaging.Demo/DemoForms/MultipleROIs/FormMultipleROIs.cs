@@ -57,4 +57,23 @@ public partial class FormMultipleROIs : Form
     {
         multipleROIManagerOnBitmapDisplay.RefreshSelection();
     }
+
+    private void btnLoadImage_Click(object sender, EventArgs e)
+    {
+        if (openFileDialog.ShowDialog(this) != DialogResult.OK) { return; }
+
+        try
+        {
+            var newImage = System.Drawing.Image.FromFile(openFileDialog.FileName);
+            bitmapDisplayPanel.SetImage((System.Drawing.Bitmap)newImage);
+        }
+        catch(Exception exception)
+        {
+            MessageBox.Show(
+                exception.Message, 
+                "Error loading image",
+                MessageBoxButtons.OK, 
+                MessageBoxIcon.Error);
+        }
+    }
 }

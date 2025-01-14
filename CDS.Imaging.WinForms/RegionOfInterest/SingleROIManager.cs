@@ -46,13 +46,19 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         /// <summary>
         /// The renderer for the committed ROI.
         /// </summary>
-        public RectangleRenderer CommittedROIRenderer => committedROIRenderer;
+        public RectangleRenderer CommittedROIRenderer
+        {
+            get => committedROIRenderer;
+        }
 
 
         /// <summary>
         /// The renderer for the ROI that is being dragged.
         /// </summary>
-        public RectangleRenderer LiveDraggingROIRenderer => liveDraggingROIRenderer;
+        public RectangleRenderer LiveDraggingROIRenderer
+        {
+            get => liveDraggingROIRenderer;
+        }
 
 
         /// <summary>

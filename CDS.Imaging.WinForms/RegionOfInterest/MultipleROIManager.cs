@@ -6,8 +6,6 @@ using System.Windows.Forms;
 
 namespace CDS.Imaging.WinForms.RegionOfInterest
 {
-
-
     /// <summary>
     /// Manages multiple ROIs on a bitmap display.
     /// </summary>
@@ -18,7 +16,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
     /// most of the properties and methods to an instance of <see cref="SingleROIDescriptor"/> (using
     /// the composition pattern).
     /// </remarks>
-    public partial class MultipleROIManager : Component
+        public partial class MultipleROIManager : Component
     {
         private const string categoryCDS = "CDS";
 
@@ -84,10 +82,35 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
                     }
 
                     roiSelectionOnBitmapDisplay.BitmapDisplayPanel = bitmapDisplayPanel;
+
                 }
             }
         }
 
+
+
+        /// <summary>
+        /// The renderer for the dragging ROI.
+        /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        [Category(categoryCDS)]
+        [DisplayName("Dragging ROI renderer")]
+        public RectangleRenderer DraggingROIRenderer
+        {
+            get => roiSelectionOnBitmapDisplay.LiveDraggingROIRenderer;
+        }
+
+
+        /// <summary>
+        /// The renderer for the committed ROI.
+        /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        [Category(categoryCDS)]
+        [DisplayName("Committed ROI renderer")]
+        public RectangleRenderer CommittedROIRenderer
+        {
+            get => roiSelectionOnBitmapDisplay.CommittedROIRenderer;
+        }
 
 
 

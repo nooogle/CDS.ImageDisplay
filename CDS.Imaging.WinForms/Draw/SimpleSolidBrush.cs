@@ -1,14 +1,20 @@
 ﻿using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 
 namespace CDS.Imaging.WinForms.Draw
 {
     /// <summary>
     /// A simple solid brush; allows configuration within the designer
     /// </summary>
+    [TypeConverter(typeof(ExpandableObjectConverter))]
     public partial class SimpleSolidBrush : Component
     {
+        /// <summary>
+        /// String representation
+        /// </summary>
+        public override string ToString() => "";
+
+
         /// <summary>
         /// The .Net Brush
         /// </summary>

@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.ComponentModel;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CDS.Imaging.WinForms.Draw
 {
     /// <summary>
     /// Draws a cross hair
     /// </summary>
+    [TypeConverter(typeof(ExpandableObjectConverter))]
     public partial class SimpleCrossHair : Component
     {
+        /// <summary>
+        /// String representation
+        /// </summary>
+        public override string ToString() => "";
+
         /// <summary>
         /// Diameter
         /// </summary>

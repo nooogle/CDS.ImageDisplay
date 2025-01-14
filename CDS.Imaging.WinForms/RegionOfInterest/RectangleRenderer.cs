@@ -6,6 +6,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
     /// <summary>
     /// Renders a rectangle on a graphics object. Supports grapples.
     /// </summary>
+    [TypeConverter(typeof(ExpandableObjectConverter))]
     public partial class RectangleRenderer : Component
     {
         /// <summary>
@@ -58,36 +59,42 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         /// <summary>
         /// The pen used to draw the outline of the rectangle.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public Draw.SimplePen OutlinePen => outlinePen!;
 
 
         /// <summary>
         /// The pen used to draw the grapple points of the rectangle.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public Draw.SimplePen EnabledGrapplePen => enabledGrapplePen!;
 
 
         /// <summary>
         /// The brush used to fill the rectangle.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public Draw.SimpleSolidBrush FillBrush => fillBrush!;
 
 
         /// <summary>
         /// The brush used to fill the grapple points of the rectangle.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public Draw.SimpleSolidBrush EnabledGrappleBrush => enabledGrappleBrush!;
 
 
         /// <summary>
         /// The pen used to draw the grapple points of the rectangle when it is disabled.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public Draw.SimplePen DisabledGrapplePen => disabledGrapplePen!;
 
 
         /// <summary>
         /// The brush used to fill the grapple points of the rectangle when it is disabled.
         /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public Draw.SimpleSolidBrush DisabledGrappleBrush => disabledGrappleBrush!;
 
 
@@ -233,5 +240,11 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
                 width: GrappleDiameter,
                 height: GrappleDiameter);
         }
+
+
+        /// <summary>
+        /// String representation of the object.
+        /// </summary>
+        public override string ToString() => "";
     }
 }
