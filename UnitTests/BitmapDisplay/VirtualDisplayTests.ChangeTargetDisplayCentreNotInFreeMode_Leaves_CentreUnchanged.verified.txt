@@ -1,0 +1,12 @@
+﻿{
+  fitToWindowTargetDisplayCentre: {
+    IsEmpty: false,
+    X: 1000.0,
+    Y: 500.0
+  },
+  actualSizeTargetDisplayCentre: {
+    IsEmpty: false,
+    X: 1000.0,
+    Y: 500.0
+  }
+}

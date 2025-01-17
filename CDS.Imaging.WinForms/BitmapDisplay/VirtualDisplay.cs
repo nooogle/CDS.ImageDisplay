@@ -75,7 +75,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             {
                 var clippedValue = Math.Max(Consts.MinZoom, Math.Min(Consts.MaxZoom, value));
                 var diffFrom1 = Math.Abs(1.0f - clippedValue);
-                if(diffFrom1 <= Consts.SnapToZoom1Tolerance)
+                if (diffFrom1 <= Consts.SnapToZoom1Tolerance)
                 {
                     clippedValue = 1.0f;
                 }
@@ -103,7 +103,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
             set
             {
-                if((mode == BitmapDisplayMode.Free) && (targetImageCentre != value))
+                if ((mode == BitmapDisplayMode.Free) && (targetImageCentre != value))
                 {
                     targetImageCentre = value;
                     RecalculatePaintRect();
@@ -217,7 +217,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// </summary>
         private void ForceApplyCurrentAutomaticMode()
         {
-            if(!AnythingToDisplay) { return; }
+            if (!AnythingToDisplay) { return; }
 
             switch (mode)
             {
@@ -448,7 +448,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// <returns>A rectangle on the display or an empty rectangle if there's nothing to display</returns>
         public RectangleF MapImageToDisplay(RectangleF imageRect)
         {
-            if(!AnythingToDisplay) { return RectangleF.Empty; }
+            if (!AnythingToDisplay) { return RectangleF.Empty; }
 
             var bottomRight = new PointF(imageRect.Right, imageRect.Bottom);
             var displayTopLeft = MapImageToDisplay(imageRect.Location);
@@ -461,6 +461,23 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
                 bottom: displayBottomRight.Y);
 
             return displayRect;
+        }
+
+
+        /// <summary>
+        /// Maps a distance, in image units, to display units.
+        /// </summary>
+        /// <param name="imageDistance">
+        /// Distance in image units
+        /// </param>
+        /// <returns>
+        /// Distance in display units, or 0 if there's nothing to display
+        /// </returns>
+        public float MapImageToDisplay(float imageDistance)
+        {
+            if (!AnythingToDisplay) { return 0; }
+
+            return imageDistance * zoom;
         }
     }
 }

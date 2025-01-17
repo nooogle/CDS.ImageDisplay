@@ -50,7 +50,7 @@ class MyROIDescriptor : WinForms.RegionOfInterest.ISingleROIDescriptor, INotifyP
 
         coreDescriptor.Draw(graphics, bitmapDisplay, roiOnImage);
 
-        var locationOnDisplay = bitmapDisplay.MapImagePointToDisplayPoint(roiOnImage.Location);
+        var locationOnDisplay = bitmapDisplay.MapImageToDisplay(roiOnImage.Location, WinForms.BitmapDisplay.DisplayPixelAlign.TopLeft);
         locationOnDisplay.Offset(0, -12);
         graphics.DrawString(Name, SystemFonts.DefaultFont, Brushes.Yellow, locationOnDisplay);
     }

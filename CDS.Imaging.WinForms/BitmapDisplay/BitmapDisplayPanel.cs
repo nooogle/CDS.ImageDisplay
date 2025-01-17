@@ -56,7 +56,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// Use this as an offset when drawing with a large zoom and where the 
         /// drawing locations should be in the middle of an image pixel. E.g. with
         /// a zoom of 11, each image pixel will take 11*11 pixels on the screen. The
-        /// half pixel size will be 5.5. Calling <see cref="MapImageToDisplay(PointF)"/>
+        /// half pixel size will be 5.5. Calling <see cref="MapImageToDisplay(PointF, DisplayPixelAlign)"/>
         /// will return the location of the top-left of this 11*11 block for a particular
         /// image pixel; adding this offset of 5.5 will allow drawing to start in the middle
         /// of this 11*11 block.
@@ -347,7 +347,7 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             SetStyle(ControlStyles.UserPaint, true);
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            
+
             this.SetStyle(ControlStyles.Selectable, true); // Ensure the control is selectable
             this.TabStop = true; // Enable tab stop so it can gain focus
 
@@ -372,42 +372,6 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
             return base.IsInputKey(keyData);
         }
-
-
-        /// <summary>
-        /// Map an image point to a display point
-        /// </summary>
-        /// <param name="imagePoint">A location on the image, independent of where it's currently being displayed</param>
-        /// <returns>
-        /// A point on the display
-        /// </returns>
-        public Point MapImagePointToDisplayPoint(Point imagePoint)
-        {
-            return Point.Truncate(virtualDisplay.MapImageToDisplay(imagePoint));
-        }
-
-
-        /// <summary>
-        /// Map an image rectangle to a display rectangle
-        /// </summary>
-        /// <param name="imageRectangle"></param>
-        /// <returns></returns>
-        public Rectangle MapImageRectangleToDisplayRectangle(Rectangle imageRectangle)
-        {
-            return Rectangle.Truncate(virtualDisplay.MapImageToDisplay(imageRectangle));
-        }
-
-
-        /// <summary>
-        /// Map a display point to an image point
-        /// </summary>
-        /// <param name="displayPoint"></param>
-        /// <returns></returns>
-        public Point MapDisplayPointToImagePoint(Point displayPoint)
-        {
-            return Point.Truncate(virtualDisplay.MapDisplayToImage(displayPoint));
-        }
-
 
 
         /// <summary>
@@ -453,36 +417,51 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
 
         /// <summary>
-        /// Returns the image location where a pixel at <paramref name="imageLocation"/> would 
-        /// have been drawn.
+        /// Returns the display location where a pixel at <paramref name="imageLocation"/> 
+        /// would be drawn. The location is the centre of the pixel. This is useful
+        /// when the image is zoomed in such as a single image pixel takes many display
+        /// pixels and you want to start your drawing in the centre of this block.
         /// </summary>
-        /// <remarks>
-        /// This is useful when you have used the mouse to select a region of interest
-        /// (rectangle) over the image and want to deteremine the ROI with respect to 
-        /// the image.
-        /// </remarks>
         /// <param name="imageLocation">A region on the image</param>
-        /// <returns>A region on the display or an empty rectangle if there's nothing to display</returns>
-        public PointF MapImageToDisplay(PointF imageLocation)
+        /// <param name="pixelAdjust">The pixel adjustment</param>
+        /// <returns>A location on the display or an empty point if there's nothing to display</returns>
+        public Point MapImageToDisplay(PointF imageLocation, DisplayPixelAlign pixelAdjust)
         {
-            return virtualDisplay.MapImageToDisplay(imageLocation);
+            var displayCoordinate = virtualDisplay.MapImageToDisplay(imageLocation);
+
+            if(pixelAdjust == DisplayPixelAlign.Centre)
+            {
+                displayCoordinate.X += SizeOfHalfDisplayPixel.Width;
+                displayCoordinate.Y += SizeOfHalfDisplayPixel.Height;
+            }
+
+            return Point.Round(displayCoordinate);
         }
 
 
         /// <summary>
-        /// Returns the image location where a rectangle at <paramref name="imageRect"/> would 
-        /// have been drawn.
+        /// Returns the display location where a rectangle at <paramref name="imageRect"/> would 
+        /// have been drawn, with the location being the centre of the pixels. 
+        /// centre of this block.
         /// </summary>
         /// <remarks>
-        /// This is useful when you have used the mouse to select a region of interest
-        /// (rectangle) over the image and want to deteremine the ROI with respect to 
-        /// the image.
+        /// This is useful when the image is zoomed in such that individual image pixels
+        /// are displayed as a block of display pixels and you want to start drawing in the
         /// </remarks>
         /// <param name="imageRect">A region on the image</param>
+        /// <param name="pixelAdjust">The pixel adjustment</param>
         /// <returns>A region on the display or an empty rectangle if there's nothing to display</returns>
-        public RectangleF MapImageToDisplay(RectangleF imageRect)
+        public Rectangle MapImageToDisplay(RectangleF imageRect, DisplayPixelAlign pixelAdjust)
         {
-            return virtualDisplay.MapImageToDisplay(imageRect);
+            var displayRect = virtualDisplay.MapImageToDisplay(imageRect);
+
+            if (pixelAdjust == DisplayPixelAlign.Centre)
+            {
+                displayRect.X += SizeOfHalfDisplayPixel.Width;
+                displayRect.Y += SizeOfHalfDisplayPixel.Height;
+            }
+            
+            return Rectangle.Round(displayRect);
         }
 
 
@@ -503,6 +482,22 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
 
 
         /// <summary>
+        /// Returns the image location where a pixel at <paramref name="displayLocation"/> would 
+        /// have been drawn.
+        /// </summary>
+        /// <remarks>
+        /// This is useful when you want to determine the image location
+        /// under the current mouse location.
+        /// </remarks>
+        /// <param name="displayLocation">A location on the display</param>
+        /// <returns>A location on the image or an empty point if there's nothing to display</returns>
+        public PointF MapDisplayToImage(Point displayLocation)
+        {
+            return virtualDisplay.MapDisplayToImage(displayLocation);
+        }
+
+
+        /// <summary>
         /// Returns the image location where a rectangle at <paramref name="displayRect"/> would 
         /// have been drawn.
         /// </summary>
@@ -514,6 +509,23 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
         /// <param name="displayRect">A region on the image</param>
         /// <returns>A region on the display or an empty rectangle if there's nothing to display</returns>
         public RectangleF MapDisplayToImage(RectangleF displayRect)
+        {
+            return virtualDisplay.MapDisplayToImage(displayRect);
+        }
+
+
+        /// <summary>
+        /// Returns the image location where a rectangle at <paramref name="displayRect"/> would 
+        /// have been drawn.
+        /// </summary>
+        /// <remarks>
+        /// This is useful when you have used the mouse to select a region of interest
+        /// (rectangle) over the image and want to deteremine the ROI with respect to 
+        /// the image.
+        /// </remarks>
+        /// <param name="displayRect">A region on the image</param>
+        /// <returns>A region on the display or an empty rectangle if there's nothing to display</returns>
+        public RectangleF MapDisplayToImage(Rectangle displayRect)
         {
             return virtualDisplay.MapDisplayToImage(displayRect);
         }
@@ -734,6 +746,17 @@ namespace CDS.Imaging.WinForms.BitmapDisplay
             Zoom = sender.Zoom;
             TargetDisplayCentre = sender.TargetDisplayCentre;
             TargetImageCentre = sender.TargetImageCentre;
+        }
+
+
+        /// <summary>
+        /// Maps a distance, in image units, to display units
+        /// </summary>
+        public int MapImageToDisplay(float imageDistance)
+        {
+            float displayDistance = virtualDisplay.MapImageToDisplay(imageDistance: imageDistance);
+
+            return (int)Math.Round(displayDistance);
         }
     }
 }

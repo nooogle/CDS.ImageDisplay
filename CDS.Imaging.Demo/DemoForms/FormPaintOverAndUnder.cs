@@ -71,7 +71,7 @@ namespace CDS.Imaging.Demo.DemoForms
                 Brushes.Yellow, 
                 textTopleft);
 
-            var topLeftBox = sender.MapImageToDisplay(new RectangleF(0, 0, 10, 5));
+            var topLeftBox = sender.MapImageToDisplay(new RectangleF(0, 0, 10, 5), DisplayPixelAlign.TopLeft);
             graphics.DrawRectangle(Pens.Red, topLeftBox.X, topLeftBox.Y, topLeftBox.Width, topLeftBox.Height);
 
             graphics.DrawString(
@@ -82,14 +82,14 @@ namespace CDS.Imaging.Demo.DemoForms
 
             crossHair1.Draw(
                 graphics,
-                bitmapDisplay.MapImageToDisplay(bitmapDisplay.TargetImageCentre));
+                bitmapDisplay.MapImageToDisplay(bitmapDisplay.TargetImageCentre, DisplayPixelAlign.Centre));
 
 
             // Line test
             graphics.DrawLine(
                 Pens.Black,
-                sender.MapImageToDisplay(new PointF(50, 50)) + sender.SizeOfHalfDisplayPixel,
-                sender.MapImageToDisplay(new PointF(100, 60)) + sender.SizeOfHalfDisplayPixel);
+                sender.MapImageToDisplay(new Point(50, 50), DisplayPixelAlign.Centre),
+                sender.MapImageToDisplay(new Point(100, 60), DisplayPixelAlign.Centre));
         }
 
         private void menuDisplayModeFree_Click(object sender, EventArgs e)

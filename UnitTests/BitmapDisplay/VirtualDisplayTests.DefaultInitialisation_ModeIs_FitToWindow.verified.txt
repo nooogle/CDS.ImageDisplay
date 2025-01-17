@@ -1,0 +1,6 @@
+﻿{
+  vid: {
+    AnythingToDisplay: false,
+    Zoom: 1.0
+  }
+}

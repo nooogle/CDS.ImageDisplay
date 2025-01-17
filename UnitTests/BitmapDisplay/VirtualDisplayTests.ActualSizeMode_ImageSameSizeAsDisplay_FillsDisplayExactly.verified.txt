@@ -1,0 +1,27 @@
+﻿{
+  vid: {
+    AnythingToDisplay: true,
+    Zoom: 1.0,
+    TargetImageCentre: {
+      IsEmpty: false,
+      X: 500.0,
+      Y: 300.0
+    },
+    TargetDisplayCentre: {
+      IsEmpty: false,
+      X: 500.0,
+      Y: 300.0
+    },
+    PaintRect: {
+      Size: 1000, 600,
+      Width: 1000.0,
+      Height: 600.0,
+      Right: 1000.0,
+      Bottom: 600.0,
+      IsEmpty: false
+    },
+    ImageSize: 1000, 600,
+    DisplaySize: 1000, 600,
+    Mode: ActualSizeCentred
+  }
+}

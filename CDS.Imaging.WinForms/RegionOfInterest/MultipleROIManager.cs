@@ -181,7 +181,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
             var roiDescriptors = GetROIDescriptors!();
             var mouseLocationOnThisControl = bitmapDisplayPanel!.PointToClient(Cursor.Position);
-            var mouseLocationOnImage = bitmapDisplayPanel!.MapDisplayPointToImagePoint(mouseLocationOnThisControl);
+            var mouseLocationOnImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnThisControl));
 
             bool didHandleClick = false;
             foreach (var roiDescriptor in roiDescriptors)

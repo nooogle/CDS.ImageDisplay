@@ -399,7 +399,6 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         {
             if (!CanWorkWithROI) { return; }
 
-
             if (!IsSpacebarPressed() && (e.Button == MouseButtons.Left))
             {
                 OnLeftMouseButtonDown(e);
@@ -410,15 +409,14 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         /// <summary>
         /// Handles the mouse down event to begin defining an ROI.
         /// </summary>
-        /// <param name="e"></param>
         private void OnLeftMouseButtonDown(MouseEventArgs e)
         {
             mouseDownLocationOnDisplay = e.Location;
 
-            var imagePoint = bitmapDisplayPanel!.MapDisplayPointToImagePoint(e.Location);
+            var imagePoint = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(e.Location));
             var newDragMode = DetermineDragModeFromMouseLocation(mouseLocationOnDisplay: e.Location);
 
-            var isMouseDownOverCommittedROI = !committedROI.IsEmpty && committedROI.Contains(imagePoint);
+            var isMouseDownOverCommittedROI = !committedROI.IsEmpty && imagePoint.IsInOrTouching(committedROI);
 
             if (isMouseDownOverCommittedROI)
             {
@@ -437,11 +435,17 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         {
             if (committedROI.IsEmpty) { return ROIDragMode.None; }
 
-            var mouseLocationOnImage = bitmapDisplayPanel!.MapDisplayPointToImagePoint(mouseLocationOnDisplay);
+            var mouseLocationOnImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
 
-            if (!committedROI.Contains(mouseLocationOnImage)) { return ROIDragMode.None; }
+            var committedROIInDisplayCoordinates = bitmapDisplayPanel!.MapImageToDisplay(committedROI, BitmapDisplay.DisplayPixelAlign.TopLeft);
 
-            var committedROIInDisplayCoordinates = bitmapDisplayPanel!.MapImageRectangleToDisplayRectangle(committedROI);
+            var hitTestROI = committedROIInDisplayCoordinates;
+            hitTestROI.Inflate(10, 10);
+
+            if(!hitTestROI.Contains(mouseLocationOnDisplay)) { return ROIDragMode.None; }
+
+            //if (!committedROI.Contains(mouseLocationOnImage)) { return ROIDragMode.None; }
+
 
             if (mouseLocationOnDisplay.X < committedROIInDisplayCoordinates.Left + 10)
             {
@@ -572,7 +576,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
         private void UpdateRightEdgeDragging(Point mouseLocationOnDisplay)
         {
-            var currentMouseLocationOverImage = bitmapDisplayPanel!.MapDisplayPointToImagePoint(mouseLocationOnDisplay);
+            var currentMouseLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
 
             var isMouseLeftOfLeftEdgeOfOriginalROI = currentMouseLocationOverImage.X < originalDraggingROI.Left;
 
@@ -596,7 +600,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
         private void UpdateLeftEdgeDragging(Point mouseLocationOnDisplay)
         {
-            var currentMouseLocationOverImage = bitmapDisplayPanel!.MapDisplayPointToImagePoint(mouseLocationOnDisplay);
+            var currentMouseLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
             var isMouseRightOfRightEdgeOfOriginalROI = currentMouseLocationOverImage.X > originalDraggingROI.Right;
 
             if (isMouseRightOfRightEdgeOfOriginalROI)
@@ -619,7 +623,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
         private void UpdateTopEdgeDragging(Point mouseLocationOnDisplay)
         {
-            var currentMouseLocationOverImage = bitmapDisplayPanel!.MapDisplayPointToImagePoint(mouseLocationOnDisplay);
+            var currentMouseLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
 
             var isMouseBelowBottomOfOriginalROI = currentMouseLocationOverImage.Y > originalDraggingROI.Bottom;
 
@@ -643,7 +647,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
         private void UpdateBottomEdgeDragging(Point mouseLocationOnDisplay)
         {
-            var currentMouseLocationOverImage = bitmapDisplayPanel!.MapDisplayPointToImagePoint(mouseLocationOnDisplay);
+            var currentMouseLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
             var isMouseAboveTopOfOriginalROI = currentMouseLocationOverImage.Y < originalDraggingROI.Top;
 
             if (isMouseAboveTopOfOriginalROI)
@@ -674,7 +678,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
         private void UpdateTopLeftCornerDragging(Point mouseLocationOnDisplay)
         {
-            var currentMouseLocationOverImage = bitmapDisplayPanel!.MapDisplayPointToImagePoint(mouseLocationOnDisplay);
+            var currentMouseLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
 
             var left = currentMouseLocationOverImage.X;
             var right = originalDraggingROI.Right;
@@ -690,7 +694,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
         private void UpdateBottomRightCornerDragging(Point mouseLocationOnDisplay)
         {
-            var currentMouseLocationOverImage = bitmapDisplayPanel!.MapDisplayPointToImagePoint(mouseLocationOnDisplay);
+            var currentMouseLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
 
             var left = originalDraggingROI.Left;
             var right = currentMouseLocationOverImage.X;
@@ -706,7 +710,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
         private void UpdateTopRightCornerDragging(Point mouseLocationOnDisplay)
         {
-            var currentMouseLocationOverImage = bitmapDisplayPanel!.MapDisplayPointToImagePoint(mouseLocationOnDisplay);
+            var currentMouseLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
             var left = originalDraggingROI.Left;
             var right = currentMouseLocationOverImage.X;
             var top = currentMouseLocationOverImage.Y;
@@ -718,7 +722,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
         private void UpdateBottomLeftCornerDragging(Point mouseLocationOnDisplay)
         {
-            var currentMouseLocationOverImage = bitmapDisplayPanel!.MapDisplayPointToImagePoint(mouseLocationOnDisplay);
+            var currentMouseLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
             var left = currentMouseLocationOverImage.X;
             var right = originalDraggingROI.Right;
             var top = originalDraggingROI.Top;
@@ -731,8 +735,8 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
         private void UpdateWholeROIDragging(Point mouseLocationOnDisplay)
         {
-            var currentMouseLocationOverImage = bitmapDisplayPanel!.MapDisplayPointToImagePoint(mouseLocationOnDisplay);
-            var mouseDownLocationOverImage = bitmapDisplayPanel!.MapDisplayPointToImagePoint(mouseDownLocationOnDisplay);
+            var currentMouseLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
+            var mouseDownLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseDownLocationOnDisplay));
 
             var deltaX = currentMouseLocationOverImage.X - mouseDownLocationOverImage.X;
             var deltaY = currentMouseLocationOverImage.Y - mouseDownLocationOverImage.Y;
@@ -772,13 +776,13 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
             if (!committedROI.IsEmpty && (DrawCommittedROIWhenFullSize || (committedROI.Size != imageSize)))
             {
-                var displayRect = bitmapDisplayPanel!.MapImageRectangleToDisplayRectangle(committedROI);
+                var displayRect = bitmapDisplayPanel!.MapImageToDisplay(committedROI, BitmapDisplay.DisplayPixelAlign.TopLeft);
                 committedROIRenderer.Draw(graphics, displayRect);
             }
 
             if (draggingMode != ROIDragMode.None)
             {
-                var displayRect = bitmapDisplayPanel!.MapImageRectangleToDisplayRectangle(LiveDraggingROI);
+                var displayRect = bitmapDisplayPanel!.MapImageToDisplay(LiveDraggingROI, BitmapDisplay.DisplayPixelAlign.TopLeft);
                 liveDraggingROIRenderer.Draw(graphics, displayRect);
             }
         }

@@ -70,6 +70,12 @@ namespace CDS.Imaging.Demo
                 name: "Multiple ROIs",
                 tooltip: "",
                 runDemo: () => RunModalForm<DemoForms.MultipleROIs.FormMultipleROIs>());
+
+            AddDemo(
+                parentNode: otherNode.Nodes,
+                name: "Overlays",
+                tooltip: "Demonstrates how to use the overlays tools for drawing on top of an image using image-coordinates regarldess of the current pan and zoom",
+                runDemo: () => RunModalForm<DemoForms.OverlaysDemo.FormOverlays>());
         }
 
         private void AddOpenCVSharpDemoNodes()
@@ -98,11 +104,6 @@ namespace CDS.Imaging.Demo
         {
             using T form = new();
             form.ShowDialog(this);
-        }
-
-        private void SetCaption()
-        {
-            this.Text = WinForms.SystemInfo.Get();
         }
 
         private void treeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)

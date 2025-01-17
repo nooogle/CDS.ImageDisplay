@@ -175,7 +175,7 @@ namespace CDS.Imaging.Demo.DemoForms.MultipleROIs
             multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.OutlinePen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
             multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.OutlinePen.EndCap = System.Drawing.Drawing2D.LineCap.Flat;
             multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.OutlinePen.StartCap = System.Drawing.Drawing2D.LineCap.Flat;
-            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.OutlinePen.Width = 10F;
+            multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.OutlinePen.Width = 2F;
             multipleROIManagerOnBitmapDisplay.DraggingROIRenderer.Visible = true;
             multipleROIManagerOnBitmapDisplay.Visible = true;
             // 

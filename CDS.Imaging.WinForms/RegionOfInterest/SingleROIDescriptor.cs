@@ -60,7 +60,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         {
             if(!Visible) { return; }
 
-            var displayRect = bitmapDisplay.MapImageRectangleToDisplayRectangle(roiOnImage);
+            var displayRect = bitmapDisplay.MapImageToDisplay(roiOnImage, pixelAdjust: DisplayPixelAlign.TopLeft);
             Renderer.Draw(graphics, displayRect);
         }
     }
