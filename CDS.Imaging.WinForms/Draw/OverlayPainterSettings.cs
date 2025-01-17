@@ -9,7 +9,7 @@ namespace CDS.Imaging.WinForms.Draw
     /// Represents the settings for drawing overlays.
     /// </summary>
     [TypeConverter(typeof(ExpandableObjectConverter))]
-    public class OverlaySettings
+    public class OverlayPainterSettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether drawing is enabled.

@@ -39,5 +39,27 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
             new RectangleFEditable(600, 100, 100, 50),
             new RectangleFEditable(700, 200, 50, 200),
         };
+
+
+        public Polygon[] Polygons { get; set; } =
+        [
+            new Polygon()
+            {
+                Points =
+                [
+                    new PointFEditable(500, 100),
+                    new PointFEditable(600, 200),
+                    new PointFEditable(500, 300),
+                    new PointFEditable(400, 200),
+                ]
+            }
+        ];
+
+
+        public CrossHair CrossHair { get; set; } = new CrossHair
+        {
+            Centre = new PointF(400, 400),
+        };
     }
 }
+     

@@ -2,6 +2,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo;
@@ -75,6 +76,33 @@ public partial class FormOverlays : Form
         OverlayBubbles(sender, graphics, imageSize);
         OverlayText(sender, graphics);
         OverlayEllipses(sender, graphics, imageSize);
+        OverlayPolygons(sender, graphics, imageSize);
+        OverlayCrossHair(sender, graphics, imageSize);
+    }
+
+    private void OverlayCrossHair(BitmapDisplayPanel sender, Graphics graphics, Size imageSize)
+    {
+        overlayPainter.DrawCrossHair(
+            testSettings.Settings.CrossHair,
+            centre: testSettings.Shapes.CrossHair.Centre,
+            lineLength: testSettings.Shapes.CrossHair.Length,
+            centreGap: testSettings.Shapes.CrossHair.CentreGap,
+            sender,
+            graphics,
+            pixelAlignment: testSettings.Shapes.CrossHair.CentreDisplayMode);
+    }
+
+    private void OverlayPolygons(BitmapDisplayPanel sender, Graphics graphics, Size imageSize)
+    {
+        foreach (var polygon in testSettings.Shapes.Polygons)
+        {
+            overlayPainter.DrawPolygon(
+                testSettings.Settings.Polygons,
+                polygon.Points.Select(p => (PointF)p).ToArray(),
+                sender,
+                graphics,
+                pointAlign: polygon.CentreDisplayMode);
+        }
     }
 
     private void OverlayEllipses(BitmapDisplayPanel sender, Graphics graphics, Size imageSize)

@@ -39,7 +39,7 @@ namespace CDS.Imaging.WinForms.Draw
         /// </summary>
         /// <param name="settings">The overlay settings to apply.</param>
         /// <param name="drawingAction">The drawing action to perform.</param>
-        public void Draw(OverlaySettings settings, Action drawingAction)
+        public void Draw(OverlayPainterSettings settings, Action drawingAction)
         {
             if (!settings.Enabled) { return; }
 
@@ -63,7 +63,7 @@ namespace CDS.Imaging.WinForms.Draw
         /// <param name="sender">The bitmap display panel.</param>
         /// <param name="graphics">The graphics object to draw on.</param>
         /// <param name="lineEndsAlign">The pixel adjust mode for the line.</param>
-        public void DrawLine(OverlaySettings settings, Point p1, Point p2, BitmapDisplayPanel sender, Graphics graphics, DisplayPixelAlign lineEndsAlign)
+        public void DrawLine(OverlayPainterSettings settings, Point p1, Point p2, BitmapDisplayPanel sender, Graphics graphics, DisplayPixelAlign lineEndsAlign)
         {
             PointF p1F = new PointF(p1.X, p1.Y);
             PointF p2F = new PointF(p2.X, p2.Y);
@@ -79,7 +79,7 @@ namespace CDS.Imaging.WinForms.Draw
         /// <param name="sender">The bitmap display panel.</param>
         /// <param name="graphics">The graphics object to draw on.</param>
         /// <param name="displayPixelAlign">The pixel adjust mode for the line.</param>
-        public void DrawLine(OverlaySettings settings, PointF p1, PointF p2, BitmapDisplayPanel sender, Graphics graphics, DisplayPixelAlign displayPixelAlign)
+        public void DrawLine(OverlayPainterSettings settings, PointF p1, PointF p2, BitmapDisplayPanel sender, Graphics graphics, DisplayPixelAlign displayPixelAlign)
         {
             Draw(settings, () =>
             {
@@ -97,7 +97,7 @@ namespace CDS.Imaging.WinForms.Draw
         /// <param name="sender">The bitmap display panel.</param>
         /// <param name="graphics">The graphics object to draw on.</param>
         /// <param name="cornerMode">The pixel adjust mode for the corners of the rectangle.</param>
-        public void DrawRectangle(OverlaySettings settings, Rectangle rectangle, BitmapDisplayPanel sender, Graphics graphics, DisplayPixelAlign cornerMode)
+        public void DrawRectangle(OverlayPainterSettings settings, Rectangle rectangle, BitmapDisplayPanel sender, Graphics graphics, DisplayPixelAlign cornerMode)
         {
             RectangleF rectangleF = new RectangleF(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
             DrawRectangle(settings, rectangleF, sender, graphics, cornerMode);
@@ -111,7 +111,7 @@ namespace CDS.Imaging.WinForms.Draw
         /// <param name="sender">The bitmap display panel.</param>
         /// <param name="graphics">The graphics object to draw on.</param>
         /// <param name="cornerMode">The pixel adjust mode for the corners of the rectangle.</param>
-        public void DrawRectangle(OverlaySettings settings, RectangleF rectangle, BitmapDisplayPanel sender, Graphics graphics, DisplayPixelAlign cornerMode)
+        public void DrawRectangle(OverlayPainterSettings settings, RectangleF rectangle, BitmapDisplayPanel sender, Graphics graphics, DisplayPixelAlign cornerMode)
         {
             Draw(settings, () =>
             {
@@ -129,7 +129,7 @@ namespace CDS.Imaging.WinForms.Draw
         /// <param name="sender">The bitmap display panel.</param>
         /// <param name="graphics">The graphics object to draw on.</param>
         /// <param name="centreMode">The pixel adjust mode for the centre of the circle.</param>
-        public void DrawCircle(OverlaySettings settings, Rectangle rectangle, BitmapDisplayPanel sender, Graphics graphics, DisplayPixelAlign centreMode)
+        public void DrawCircle(OverlayPainterSettings settings, Rectangle rectangle, BitmapDisplayPanel sender, Graphics graphics, DisplayPixelAlign centreMode)
         {
             RectangleF rectangleF = new RectangleF(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
             DrawCircle(settings, rectangleF, sender, graphics, centreMode);
@@ -143,7 +143,7 @@ namespace CDS.Imaging.WinForms.Draw
         /// <param name="sender">The bitmap display panel.</param>
         /// <param name="graphics">The graphics object to draw on.</param>
         /// <param name="centreMode">The pixel adjust mode for the centre of the circle.</param>
-        public void DrawCircle(OverlaySettings settings, RectangleF rectangle, BitmapDisplayPanel sender, Graphics graphics, DisplayPixelAlign centreMode)
+        public void DrawCircle(OverlayPainterSettings settings, RectangleF rectangle, BitmapDisplayPanel sender, Graphics graphics, DisplayPixelAlign centreMode)
         {
             Draw(settings, () =>
             {
@@ -165,7 +165,7 @@ namespace CDS.Imaging.WinForms.Draw
         /// <param name="graphics">The graphics object to draw on.</param>
         /// <param name="originMode">The pixel adjust mode for the origin of the ellipse.</param>
         public void DrawEllipse(
-            OverlaySettings settings,
+            OverlayPainterSettings settings,
             PointF centre,
             float majorAxis,
             float minorAxis,
@@ -204,11 +204,102 @@ namespace CDS.Imaging.WinForms.Draw
             });
         }
 
+
+        /// <summary>
+        /// Draws a polygon with the specified settings.
+        /// </summary>
+        /// <param name="graphics">The graphics object to draw on.</param>
+        /// <param name="pointAlign">The pixel adjust mode for the points of the polygon.</param>
+        /// <param name="points">The points of the polygon.</param>
+        /// <param name="sender">The bitmap display panel.</param>
+        /// <param name="settings">The overlay settings to apply.</param>
+        public void DrawPolygon(
+            OverlayPainterSettings settings, 
+            PointF[] points, 
+            BitmapDisplayPanel sender, 
+            Graphics graphics, 
+            DisplayPixelAlign pointAlign)
+        {
+            Draw(settings, () =>
+            {
+                PointF[] pointsOnDisplay = new PointF[points.Length];
+                
+                for (int i = 0; i < points.Length; i++)
+                {
+                    pointsOnDisplay[i] = sender.MapImageToDisplay(points[i], pointAlign);
+                }
+
+                graphics.FillPolygon(brush, pointsOnDisplay);
+                graphics.DrawPolygon(pen, pointsOnDisplay);
+            });
+        }
+
+
+        /// <summary>
+        /// Draws a crosshair with the specified settings.
+        /// </summary>
+        /// <param name="centre">The center of the crosshair.</param>
+        /// <param name="centreGap">The gap between the center and the crosshair lines.</param>
+        /// <param name="pixelAlignment">The pixel adjust mode for the center of the crosshair.</param>
+        /// <param name="graphics">The graphics object to draw on.</param>
+        /// <param name="lineLength">The length of the crosshair lines.</param>
+        /// <param name="sender">The bitmap display panel.</param>
+        /// <param name="settings">The overlay settings to apply.</param>
+        public void DrawCrossHair(
+            OverlayPainterSettings settings, 
+            PointF centre, 
+            float lineLength, 
+            float centreGap,
+            BitmapDisplayPanel sender, 
+            Graphics graphics, 
+            DisplayPixelAlign pixelAlignment)
+        {
+            Draw(settings, () =>
+            {
+                var centreOnDisplay = sender.MapImageToDisplay(centre, pixelAlignment);
+                var lineLengthOnDisplay = sender.MapImageToDisplay(lineLength);
+                var centreGapOnDisplay = sender.MapImageToDisplay(centreGap);
+
+                // top line
+                graphics.DrawLine(
+                    pen, 
+                    centreOnDisplay.X, 
+                    centreOnDisplay.Y - lineLengthOnDisplay - centreGapOnDisplay, 
+                    centreOnDisplay.X, 
+                    centreOnDisplay.Y - centreGapOnDisplay);
+
+                // bottom line
+                graphics.DrawLine(
+                    pen,
+                    centreOnDisplay.X,
+                    centreOnDisplay.Y + centreGapOnDisplay,
+                    centreOnDisplay.X,
+                    centreOnDisplay.Y + lineLengthOnDisplay + centreGapOnDisplay);
+
+                // left line
+                graphics.DrawLine(
+                    pen,
+                    centreOnDisplay.X - lineLengthOnDisplay - centreGapOnDisplay,
+                    centreOnDisplay.Y,
+                    centreOnDisplay.X - centreGapOnDisplay,
+                    centreOnDisplay.Y);
+
+                // right line
+                graphics.DrawLine(
+                    pen,
+                    centreOnDisplay.X + centreGapOnDisplay,
+                    centreOnDisplay.Y,
+                    centreOnDisplay.X + lineLengthOnDisplay + centreGapOnDisplay,
+                    centreOnDisplay.Y);
+            });
+        }
+
+
         /// <summary>
         /// Creates and caches a font for the specified size if it does not exist.
         /// </summary>
         /// <param name="settings">The overlay settings containing the font name and size.</param>
-        private void CreateFont(OverlaySettings settings)
+        private void CreateFont(OverlayPainterSettings settings)
         {
             if (fonts.ContainsKey((fontName: settings.FontName, fontSize: settings.FontSize))) { return; }
 
@@ -234,7 +325,7 @@ namespace CDS.Imaging.WinForms.Draw
         /// <param name="point">The location to draw the text.</param>
         /// <param name="sender">The bitmap display panel.</param>
         /// <param name="graphics">The graphics object to draw on.</param>
-        public void DrawText(OverlaySettings settings, string text, Point point, BitmapDisplayPanel sender, Graphics graphics)
+        public void DrawText(OverlayPainterSettings settings, string text, Point point, BitmapDisplayPanel sender, Graphics graphics)
         {
             PointF pointF = new PointF(point.X, point.Y);
             DrawText(settings, text, pointF, sender, graphics);
@@ -248,7 +339,7 @@ namespace CDS.Imaging.WinForms.Draw
         /// <param name="point">The location to draw the text.</param>
         /// <param name="sender">The bitmap display panel.</param>
         /// <param name="graphics">The graphics object to draw on.</param>
-        public void DrawText(OverlaySettings settings, string text, PointF point, BitmapDisplayPanel sender, Graphics graphics)
+        public void DrawText(OverlayPainterSettings settings, string text, PointF point, BitmapDisplayPanel sender, Graphics graphics)
         {
             Draw(settings, () =>
             {
