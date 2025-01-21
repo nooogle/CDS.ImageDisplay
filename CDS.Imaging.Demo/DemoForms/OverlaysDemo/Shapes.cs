@@ -4,10 +4,12 @@ using System.Drawing;
 
 namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
 {
+
     [TypeConverter(typeof(ExpandableObjectConverter))]
     class Shapes
     {
-        public WinForms.Draw.Shapes.IShapeOverlay[]? All { get; private set; }
+        [Browsable(false)]
+        public WinForms.Draw.Layer Layer1 { get; } = new();
 
 
 
@@ -84,42 +86,38 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
 
         public void PostLoadConfigure(RenderingSettings drawingSettings)
         {
-            var allShapes = new List<WinForms.Draw.Shapes.IShapeOverlay>();
-
             foreach (var rectangle in Rectangles)
             {
                 rectangle.Rendering = drawingSettings.Rectangles;
-                allShapes.Add(rectangle);
+                Layer1.Shapes.Add(rectangle);
             }
 
             foreach (var circle in Circles)
             {
                 circle.Rendering = drawingSettings.Circles;
-                allShapes.Add(circle);
+                Layer1.Shapes.Add(circle);
             }
 
             foreach (var line in Lines)
             {
                 line.Rendering = drawingSettings.Lines;
-                allShapes.Add(line);
+                Layer1.Shapes.Add(line);
             }
 
             Ellipse.Rendering = drawingSettings.Ellipses;
-            allShapes.Add(Ellipse);
+            Layer1.Shapes.Add(Ellipse);
 
             foreach (var text in TextMessages)
             {
                 text.Rendering = drawingSettings.Text;
-                allShapes.Add(text);
+                Layer1.Shapes.Add(text);
             }
 
             Polygon.Rendering = drawingSettings.Polygons;
-            allShapes.Add(Polygon);
+            Layer1.Shapes.Add(Polygon);
 
             CrossHair.Rendering = drawingSettings.CrossHair;
-            allShapes.Add(CrossHair);
-
-            All = allShapes.ToArray();
+            Layer1.Shapes.Add(CrossHair);
         }
     }
 }

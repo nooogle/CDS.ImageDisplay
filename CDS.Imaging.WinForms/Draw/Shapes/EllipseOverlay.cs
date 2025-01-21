@@ -14,7 +14,7 @@ public class EllipseOverlay : IShapeOverlay
     /// <summary>
     /// Simple representation of this instance
     /// </summary>
-    public override string ToString() => $"Centre = {Centre}, major = {MajorAxis}, minor = {MinorAxis}, angle = {MajorAxisAngleDegrees}";
+    public override string ToString() => $"Ellipse: centre = {Centre}, major = {MajorAxis}, minor = {MinorAxis}, angle = {MajorAxisAngleDegrees}";
 
 
     /// <inheritdoc />

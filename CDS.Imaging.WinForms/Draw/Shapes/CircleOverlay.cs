@@ -14,7 +14,7 @@ public class CircleOverlay : IShapeOverlay
     /// <summary>
     /// Simple representation of this instance
     /// </summary>
-    public override string ToString() => $"Centre = {Centre}, radius = {Radius}";
+    public override string ToString() => $"Circle: centre = {Centre}, radius = {Radius}";
 
 
     /// <inheritdoc />

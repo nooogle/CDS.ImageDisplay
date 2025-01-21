@@ -13,7 +13,7 @@ public class RectangleOverlay : IShapeOverlay
     /// <summary>
     /// Simple representation of this instance
     /// </summary>
-    public override string ToString() => $"Rect = {Rect}";
+    public override string ToString() => $"Rect: {Rect}";
 
 
     /// <inheritdoc />

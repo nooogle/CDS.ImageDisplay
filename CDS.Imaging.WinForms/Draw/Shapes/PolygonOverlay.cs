@@ -14,7 +14,7 @@ public class PolygonOverlay : IShapeOverlay
     /// <summary>
     /// Simple representation of this instance
     /// </summary>
-    public override string ToString() => $"{Points.Length} points";
+    public override string ToString() => $"Polygon: {Points.Length} points";
 
 
     /// <inheritdoc />

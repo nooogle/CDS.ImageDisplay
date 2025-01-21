@@ -14,7 +14,7 @@ public class TextOverlay : IShapeOverlay
     /// <summary>
     /// Simple representation of this instance
     /// </summary>
-    public override string ToString() => $"Location = {Location}, Text = {Text}";
+    public override string ToString() => $"Text: location = {Location}, Text = {Text}";
 
 
     /// <inheritdoc />

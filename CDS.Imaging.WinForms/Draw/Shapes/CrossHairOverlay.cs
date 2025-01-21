@@ -14,7 +14,7 @@ public class CrossHairOverlay : IShapeOverlay
     /// <summary>
     /// Simple representation of this instance
     /// </summary>
-    public override string ToString() => $"Centre = {Centre}";
+    public override string ToString() => $"Crosshair: centre = {Centre}";
 
 
     /// <inheritdoc />

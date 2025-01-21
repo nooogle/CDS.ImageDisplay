@@ -29,6 +29,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="DemoForms\LayersDemo\FormOverlays.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="DemoForms\OverlaysDemo\FormOverlays.cs">
       <SubType>Form</SubType>
     </Compile>

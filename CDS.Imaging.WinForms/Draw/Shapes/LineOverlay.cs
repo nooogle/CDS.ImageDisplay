@@ -13,7 +13,7 @@ public class LineOverlay : IShapeOverlay
     /// <summary>
     /// Simple representation of this instance
     /// </summary>
-    public override string ToString() => $"Start = {Start}, end = {End}";
+    public override string ToString() => $"Line: form {Start} to {End}";
 
 
     /// <inheritdoc />

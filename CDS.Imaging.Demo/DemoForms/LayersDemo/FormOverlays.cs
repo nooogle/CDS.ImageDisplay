@@ -5,7 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo;
+namespace CDS.Imaging.Demo.DemoForms.LayersDemo;
 
 
 /// <summary>
@@ -13,9 +13,8 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo;
 /// </summary>
 public partial class FormOverlays : Form
 {
-    private TestSettings testSettings = new TestSettings();
     private Bitmap bitmap;
-
+    private WinForms.Draw.Layer shapes;
 
     /// <summary>
     /// Constructor
@@ -23,7 +22,9 @@ public partial class FormOverlays : Form
     public FormOverlays()
     {
         InitializeComponent();
-        bitmap = BitmapGenerator.Make(new Size(800, 600));
+        var imageSize = new Size(800, 600);
+        bitmap = BitmapGenerator.Make(imageSize);
+        shapes = ShapesFactory.Create(imageSize);
     }
 
 
@@ -34,9 +35,7 @@ public partial class FormOverlays : Form
     {
         base.OnLoad(e);
 
-        testSettings.Shapes.PostLoadConfigure(testSettings.Rendering);
-
-        propertyGrid.SelectedObject = testSettings;
+        propertyGrid.SelectedObject = shapes;
         bitmapDisplayPanel.SetImage(bitmap);
     }
 
@@ -71,7 +70,9 @@ public partial class FormOverlays : Form
         if (bitmapDisplayPanel == null) { return; }
         if (bitmapDisplayPanel.GetDisplayImage() == null) { return; }
 
-        testSettings.Shapes.Layer1.Draw(sender, graphics);
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+        shapes.Draw(sender, graphics);
+        stopwatch.Stop();
     }
 
 
@@ -79,6 +80,16 @@ public partial class FormOverlays : Form
     /// A property has changed, so repaint the image
     /// </summary>
     private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+    {
+        bitmapDisplayPanel.Invalidate();
+    }
+
+
+    /// <summary>
+    /// Redraw the image (just in case any properties have changed that didn't
+    /// trigger a repaint)
+    /// </summary>
+    private void timerRefresh_Tick(object sender, EventArgs e)
     {
         bitmapDisplayPanel.Invalidate();
     }

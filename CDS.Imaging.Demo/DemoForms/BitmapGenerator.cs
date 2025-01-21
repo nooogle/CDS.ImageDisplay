@@ -9,11 +9,11 @@ namespace CDS.Imaging.Demo.DemoForms;
 /// </summary>
 static class BitmapGenerator
 {
-    public static Bitmap Make(int width, int height)
+    public static Bitmap Make(Size imageSize)
     {
-        Bitmap bitmap = new Bitmap(width, height, format: System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-        FillBackground(width, height, bitmap);
-        DrawGrid(width, height, bitmap);
+        Bitmap bitmap = new Bitmap(imageSize.Width, imageSize.Height, format: System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+        FillBackground(imageSize.Width, imageSize.Height, bitmap);
+        DrawGrid(imageSize.Width, imageSize.Height, bitmap);
         return bitmap;
     }
 

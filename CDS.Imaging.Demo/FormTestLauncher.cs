@@ -76,6 +76,12 @@ namespace CDS.Imaging.Demo
                 name: "Overlays",
                 tooltip: "Demonstrates how to use the overlays tools for drawing on top of an image using image-coordinates regarldess of the current pan and zoom",
                 runDemo: () => RunModalForm<DemoForms.OverlaysDemo.FormOverlays>());
+
+            AddDemo(
+                parentNode: otherNode.Nodes,
+                name: "Layers",
+                tooltip: "Demonstrates how to use multiple shape layers",
+                runDemo: () => RunModalForm<DemoForms.LayersDemo.FormOverlays>());
         }
 
         private void AddOpenCVSharpDemoNodes()

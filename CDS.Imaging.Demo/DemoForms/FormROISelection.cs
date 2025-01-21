@@ -65,7 +65,7 @@ public partial class FormROISelection : Form
     protected override void OnLoad(EventArgs e)
     {
         base.OnLoad(e);
-        bitmapDisplayPanel.SetImage(BitmapGenerator.Make(800, 600));
+        bitmapDisplayPanel.SetImage(BitmapGenerator.Make(new Size(800, 600)));
         UpdateROILabels();
 
         propertyGrid.SelectedObject = testProperties;
