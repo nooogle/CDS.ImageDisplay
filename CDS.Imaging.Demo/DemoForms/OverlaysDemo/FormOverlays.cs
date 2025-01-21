@@ -34,6 +34,8 @@ public partial class FormOverlays : Form
     {
         base.OnLoad(e);
 
+        testSettings.Shapes.PostLoadConfigure(testSettings.Rendering);
+
         propertyGrid.SelectedObject = testSettings;
         bitmapDisplayPanel.SetImage(bitmap);
     }
@@ -68,118 +70,13 @@ public partial class FormOverlays : Form
     {
         if (bitmapDisplayPanel == null) { return; }
         if (bitmapDisplayPanel.GetDisplayImage() == null) { return; }
+        if (testSettings.Shapes.All == null) { return; }
 
         var imageSize = bitmapDisplayPanel.GetDisplayImage()!.Size;
 
-        OverlayRectangles(sender, graphics, imageSize);
-        OverlayLines(sender, graphics, imageSize);
-        OverlayBubbles(sender, graphics, imageSize);
-        OverlayText(sender, graphics);
-        OverlayEllipses(sender, graphics, imageSize);
-        OverlayPolygons(sender, graphics, imageSize);
-        OverlayCrossHair(sender, graphics, imageSize);
-    }
-
-    private void OverlayCrossHair(BitmapDisplayPanel sender, Graphics graphics, Size imageSize)
-    {
-        overlayPainter.DrawCrossHair(
-            testSettings.Settings.CrossHair,
-            centre: testSettings.Shapes.CrossHair.Centre,
-            lineLength: testSettings.Shapes.CrossHair.Length,
-            centreGap: testSettings.Shapes.CrossHair.CentreGap,
-            sender,
-            graphics,
-            pixelAlignment: testSettings.Shapes.CrossHair.CentreDisplayMode);
-    }
-
-    private void OverlayPolygons(BitmapDisplayPanel sender, Graphics graphics, Size imageSize)
-    {
-        foreach (var polygon in testSettings.Shapes.Polygons)
+        foreach (var shape in testSettings.Shapes.All)
         {
-            overlayPainter.DrawPolygon(
-                testSettings.Settings.Polygons,
-                polygon.Points.Select(p => (PointF)p).ToArray(),
-                sender,
-                graphics,
-                pointAlign: polygon.CentreDisplayMode);
-        }
-    }
-
-    private void OverlayEllipses(BitmapDisplayPanel sender, Graphics graphics, Size imageSize)
-    {
-        if (!testSettings.Settings.Ellipses.Enabled) { return; };
-
-        foreach (var ellipse in testSettings.Shapes.Ellipses)
-        {
-            overlayPainter.DrawEllipse(
-                settings: testSettings.Settings.Ellipses,
-                centre: ellipse.Centre,
-                majorAxis: ellipse.MajorAxis,
-                minorAxis: ellipse.MinorAxis,
-                majorAxisAngleDegrees: ellipse.MajorAxisAngleDegrees,
-                sender: sender,
-                graphics: graphics,
-                originMode: ellipse.OriginOnDisplayMode);
-        }
-    }
-
-    private void OverlayText(BitmapDisplayPanel sender, Graphics graphics)
-    {
-        foreach (var textMessage in testSettings.Shapes.TextMessages)
-        {
-            overlayPainter.DrawText(
-                testSettings.Settings.Text,
-                textMessage.Text,
-                textMessage.Location,
-                sender,
-                graphics);
-        }
-    }
-
-    private void OverlayBubbles(BitmapDisplayPanel sender, Graphics graphics, Size imageSize)
-    {
-        if (testSettings.Settings.Circles.Enabled)
-        {
-            foreach (var circle in testSettings.Shapes.Circles)
-            {
-                overlayPainter.DrawCircle(
-                        testSettings.Settings.Circles,
-                        new RectangleF(
-                            circle.Centre.X - circle.Radius,
-                            circle.Centre.Y - circle.Radius,
-                            2 * circle.Radius,
-                            2 * circle.Radius),
-                        sender,
-                        graphics,
-                        centreMode: circle.CentreDisplayMode);
-            }
-        }
-    }
-
-    private void OverlayLines(BitmapDisplayPanel sender, Graphics graphics, Size imageSize)
-    {
-        foreach (var line in testSettings.Shapes.Lines)
-        {
-            overlayPainter.DrawLine(
-                testSettings.Settings.Lines,
-                line.Start,
-                line.End,
-                sender,
-                graphics,
-                displayPixelAlign: line.LineEndDisplayMode);
-        }
-    }
-
-    private void OverlayRectangles(BitmapDisplayPanel sender, Graphics graphics, Size imageSize)
-    {
-        foreach (var rectangle in testSettings.Shapes.Rectangles)
-        {
-            overlayPainter.DrawRectangle(
-                testSettings.Settings.Rectangles,
-                rectangle,
-                sender,
-                graphics,
-                cornerMode: rectangle.CornerDisplayMode);
+            shape.Draw(sender, graphics);
         }
     }
 

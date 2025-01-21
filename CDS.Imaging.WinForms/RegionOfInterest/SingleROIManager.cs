@@ -21,14 +21,34 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         private Rectangle liveDraggingROI;
         private Point mouseDownLocationOnDisplay;
 
-        private RectangleRenderer committedROIRenderer = new RectangleRenderer();
-        private RectangleRenderer liveDraggingROIRenderer = new RectangleRenderer();
+        private ROIWithGrapplesShape committedROIRenderer = new ROIWithGrapplesShape();
+        private ROIWithGrapplesShape liveDraggingROIRenderer = new ROIWithGrapplesShape();
 
         private bool visible = true;
-        private bool canEditCommitted = false;
-        private bool canCreateNew = false;
+        private bool canEditCommitted = true;
+        private bool canCreateNew = true;
 
         private BitmapDisplay.BitmapDisplayPanel? bitmapDisplayPanel;
+
+
+        /// <summary>
+        /// The border inside and outside the ROI that will test positive
+        /// for a mouse hit test. (E.g. this allows the mouse to drag a corner
+        /// or edge even if it's not exactly over the edge.)
+        /// </summary>
+        private int dragBorder = 10;
+
+
+        /// <summary>
+        /// The border inside and outside the ROI that will test positive
+        /// for a mouse hit test. (E.g. this allows the mouse to drag a corner
+        /// or edge even if it's not exactly over the edge.)
+        /// </summary>
+        public int DragBorder
+        {
+            get => dragBorder;
+            set => dragBorder = Math.Max(0, Math.Min(value, 100));
+        }
 
 
         /// <summary>
@@ -46,7 +66,8 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         /// <summary>
         /// The renderer for the committed ROI.
         /// </summary>
-        public RectangleRenderer CommittedROIRenderer
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public ROIWithGrapplesShape CommittedROIRenderer
         {
             get => committedROIRenderer;
         }
@@ -55,7 +76,8 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         /// <summary>
         /// The renderer for the ROI that is being dragged.
         /// </summary>
-        public RectangleRenderer LiveDraggingROIRenderer
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public ROIWithGrapplesShape LiveDraggingROIRenderer
         {
             get => liveDraggingROIRenderer;
         }
@@ -169,8 +191,8 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
         private void BitmapDisplayPanel_KeyPress(object? sender, KeyPressEventArgs e)
         {
-             if(draggingMode != ROIDragMode.None) { return; }
-             if(!Visible) { return; }
+            if (draggingMode != ROIDragMode.None) { return; }
+            if (!Visible) { return; }
 
         }
 
@@ -265,22 +287,31 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         /// </summary>
         private void CompleteInitialisation()
         {
-            components.Add(committedROIRenderer);
-            components.Add(liveDraggingROIRenderer);
+            committedROIRenderer.Rendering = new Draw.RenderingSpec()
+            {
+                Lines = new Draw.LineSpec()
+                {
+                    Color = Color.FromArgb(128, Color.Green),
+                    Width = 2
+                },
+                Fill = new Draw.BrushSpec()
+                {
+                    Color = Color.Transparent
+                }
+            };
 
-            committedROIRenderer.GrapplesMode = RectangleRenderer.GrapplesRenderingMode.ShowEnabled;
-            committedROIRenderer.OutlinePen.Color = Color.FromArgb(128, Color.Red);
-            committedROIRenderer.OutlinePen.Width = 2;
-
-            liveDraggingROIRenderer.GrapplesMode = RectangleRenderer.GrapplesRenderingMode.ShowEnabled;
-            liveDraggingROIRenderer.OutlinePen.Color = Color.FromArgb(128, Color.Red);
-            liveDraggingROIRenderer.OutlinePen.Width = 4;
-            liveDraggingROIRenderer.FillBrush.Color = Color.FromArgb(32, Color.Red);
-            liveDraggingROIRenderer.EnabledGrapplePen.Color = Color.FromArgb(128, Color.Cyan);
-            liveDraggingROIRenderer.EnabledGrapplePen.Width = 2;
-            liveDraggingROIRenderer.EnabledGrappleBrush.Color = Color.FromArgb(128, Color.Navy);
-
-            liveDraggingROIRenderer.DisabledGrapplePen.Width = 2;
+            LiveDraggingROIRenderer.Rendering = new Draw.RenderingSpec()
+            {
+                Lines = new Draw.LineSpec()
+                {
+                    Color = Color.FromArgb(128, Color.Orange),
+                    Width = 2
+                },
+                Fill = new Draw.BrushSpec()
+                {
+                    Color = Color.Transparent
+                }
+            };
 
             mouseCursors = CreateMouseCursorsDict();
         }
@@ -416,9 +447,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
             var imagePoint = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(e.Location));
             var newDragMode = DetermineDragModeFromMouseLocation(mouseLocationOnDisplay: e.Location);
 
-            var isMouseDownOverCommittedROI = !committedROI.IsEmpty && imagePoint.IsInOrTouching(committedROI);
-
-            if (isMouseDownOverCommittedROI)
+            if(newDragMode != ROIDragMode.None)
             {
                 StartDraggingCommittedROI(newDragMode);
             }
@@ -440,20 +469,17 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
             var committedROIInDisplayCoordinates = bitmapDisplayPanel!.MapImageToDisplay(committedROI, BitmapDisplay.DisplayPixelAlign.TopLeft);
 
             var hitTestROI = committedROIInDisplayCoordinates;
-            hitTestROI.Inflate(10, 10);
+            hitTestROI.Inflate(DragBorder, DragBorder);
 
-            if(!hitTestROI.Contains(mouseLocationOnDisplay)) { return ROIDragMode.None; }
+            if (!hitTestROI.Contains(mouseLocationOnDisplay)) { return ROIDragMode.None; }
 
-            //if (!committedROI.Contains(mouseLocationOnImage)) { return ROIDragMode.None; }
-
-
-            if (mouseLocationOnDisplay.X < committedROIInDisplayCoordinates.Left + 10)
+            if (mouseLocationOnDisplay.X < committedROIInDisplayCoordinates.Left + DragBorder)
             {
-                if (mouseLocationOnDisplay.Y < committedROIInDisplayCoordinates.Top + 10)
+                if (mouseLocationOnDisplay.Y < committedROIInDisplayCoordinates.Top + DragBorder)
                 {
                     return ROIDragMode.TopLeftCorner;
                 }
-                else if (mouseLocationOnDisplay.Y > committedROIInDisplayCoordinates.Bottom - 10)
+                else if (mouseLocationOnDisplay.Y > committedROIInDisplayCoordinates.Bottom - DragBorder)
                 {
                     return ROIDragMode.BottomLeftCorner;
                 }
@@ -462,13 +488,13 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
                     return ROIDragMode.LeftEdge;
                 }
             }
-            else if (mouseLocationOnDisplay.X > committedROIInDisplayCoordinates.Right - 10)
+            else if (mouseLocationOnDisplay.X > committedROIInDisplayCoordinates.Right - DragBorder)
             {
-                if (mouseLocationOnDisplay.Y < committedROIInDisplayCoordinates.Top + 10)
+                if (mouseLocationOnDisplay.Y < committedROIInDisplayCoordinates.Top + DragBorder)
                 {
                     return ROIDragMode.TopRightCorner;
                 }
-                else if (mouseLocationOnDisplay.Y > committedROIInDisplayCoordinates.Bottom - 10)
+                else if (mouseLocationOnDisplay.Y > committedROIInDisplayCoordinates.Bottom - DragBorder)
                 {
                     return ROIDragMode.BottomRightCorner;
                 }
@@ -477,11 +503,11 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
                     return ROIDragMode.RightEdge;
                 }
             }
-            else if (mouseLocationOnDisplay.Y < committedROIInDisplayCoordinates.Top + 10)
+            else if (mouseLocationOnDisplay.Y < committedROIInDisplayCoordinates.Top + DragBorder)
             {
                 return ROIDragMode.TopEdge;
             }
-            else if (mouseLocationOnDisplay.Y > committedROIInDisplayCoordinates.Bottom - 10)
+            else if (mouseLocationOnDisplay.Y > committedROIInDisplayCoordinates.Bottom - DragBorder)
             {
                 return ROIDragMode.BottomEdge;
             }
@@ -534,7 +560,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
         private void UpdateDraggingROI(Point mouseLocationOnDisplay)
         {
-            if((bitmapDisplayPanel == null) || mouseCursors == null) { return; }
+            if ((bitmapDisplayPanel == null) || mouseCursors == null) { return; }
 
             switch (draggingMode)
             {
@@ -776,15 +802,16 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
             if (!committedROI.IsEmpty && (DrawCommittedROIWhenFullSize || (committedROI.Size != imageSize)))
             {
-                var displayRect = bitmapDisplayPanel!.MapImageToDisplay(committedROI, BitmapDisplay.DisplayPixelAlign.TopLeft);
-                committedROIRenderer.Draw(graphics, displayRect);
+                committedROIRenderer.ROI = committedROI;
+                committedROIRenderer.Draw(sender, graphics);
             }
 
             if (draggingMode != ROIDragMode.None)
             {
-                var displayRect = bitmapDisplayPanel!.MapImageToDisplay(LiveDraggingROI, BitmapDisplay.DisplayPixelAlign.TopLeft);
-                liveDraggingROIRenderer.Draw(graphics, displayRect);
+                liveDraggingROIRenderer.ROI = LiveDraggingROI;
+                liveDraggingROIRenderer.Draw(sender, graphics);
             }
         }
     }
 }
+

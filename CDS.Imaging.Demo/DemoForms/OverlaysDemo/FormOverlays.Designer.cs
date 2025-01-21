@@ -34,7 +34,6 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
             panel1 = new System.Windows.Forms.Panel();
             propertyGrid = new System.Windows.Forms.PropertyGrid();
             sysInfoPanel = new WinForms.SysInfoPanel();
-            overlayPainter = new WinForms.Draw.OverlayPainter(components);
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -99,6 +98,5 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.PropertyGrid propertyGrid;
         private CDS.Imaging.WinForms.SysInfoPanel sysInfoPanel;
-        private CDS.Imaging.WinForms.Draw.OverlayPainter overlayPainter;
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using CDS.Imaging.WinForms.BitmapDisplay;
+using System.ComponentModel;
 using System.Drawing;
 
 namespace CDS.Imaging.Demo.DemoForms.MultipleROIs;
@@ -6,56 +7,53 @@ namespace CDS.Imaging.Demo.DemoForms.MultipleROIs;
 
 class MyROIDescriptor : WinForms.RegionOfInterest.ISingleROIDescriptor, INotifyPropertyChanged
 {
-    private WinForms.RegionOfInterest.SingleROIDescriptor coreDescriptor = new WinForms.RegionOfInterest.SingleROIDescriptor();
-
-
-    public void Dispose()
-    {
-        coreDescriptor.Dispose();
-    }
+    public WinForms.RegionOfInterest.ROIWithGrapplesShape CoreShape { get; } = new WinForms.RegionOfInterest.ROIWithGrapplesShape();
 
     public bool Locked 
     { 
-        get => coreDescriptor.Locked;
+        get => CoreShape.Locked;
        
         set
         {
-            coreDescriptor.Locked = value;
+            CoreShape.Locked = value;
             OnPropertyChanged(nameof(Locked));
         }
     }
     public bool Visible
     {
-        get => coreDescriptor.Visible;
+        get => CoreShape.Visible;
     
         set
         {
-            coreDescriptor.Visible = value;
+            CoreShape.Visible = value;
             OnPropertyChanged(nameof(Visible));
         }
     }
 
-    public Size MaximumSize { get => coreDescriptor.MaximumSize; set => coreDescriptor.MaximumSize = value; }
-    public Size MinimumSize { get => coreDescriptor.MinimumSize; set => coreDescriptor.MinimumSize = value; }
-    public string Name { get => coreDescriptor.Name; set => coreDescriptor.Name = value; }
-
-    public WinForms.RegionOfInterest.RectangleRenderer Renderer => coreDescriptor.Renderer;
-
-    public Rectangle ROI { get => coreDescriptor.ROI; set => coreDescriptor.ROI = value; }
+    public Size MaximumSize { get => CoreShape.MaximumSize; set => CoreShape.MaximumSize = value; }
+    public Size MinimumSize { get => CoreShape.MinimumSize; set => CoreShape.MinimumSize = value; }
+    public string Name { get => CoreShape.Name; set => CoreShape.Name = value; }
+    public Rectangle ROI { get => CoreShape.ROI; set => CoreShape.ROI = value; }
+    public DisplayPixelAlign PixelAlign { get => CoreShape.PixelAlign; set => CoreShape.PixelAlign = value; }
 
 
-    void WinForms.RegionOfInterest.ISingleROIDescriptor.Draw(Graphics graphics, WinForms.BitmapDisplay.BitmapDisplayPanel bitmapDisplay, Rectangle roiOnImage)
+    public MyROIDescriptor()
     {
-        if (!Visible) { return; } 
+        CoreShape.Rendering = new WinForms.Draw.RenderingSpec();
+    }
 
-        coreDescriptor.Draw(graphics, bitmapDisplay, roiOnImage);
+    void WinForms.Draw.Shapes.IShapeOverlay.Draw(WinForms.BitmapDisplay.BitmapDisplayPanel bitmapDisplay, Graphics graphics)
+    {
+        if (!Visible) { return; }
 
-        var locationOnDisplay = bitmapDisplay.MapImageToDisplay(roiOnImage.Location, WinForms.BitmapDisplay.DisplayPixelAlign.TopLeft);
+        CoreShape.Draw(bitmapDisplay, graphics);
+
+        var locationOnDisplay = bitmapDisplay.MapImageToDisplay(ROI.Location, WinForms.BitmapDisplay.DisplayPixelAlign.TopLeft);
         locationOnDisplay.Offset(0, -12);
         graphics.DrawString(Name, SystemFonts.DefaultFont, Brushes.Yellow, locationOnDisplay);
     }
 
-    public override string ToString() => coreDescriptor.ToString();
+    public override string ToString() => CoreShape.ToString();
 
     
     public event PropertyChangedEventHandler? PropertyChanged;

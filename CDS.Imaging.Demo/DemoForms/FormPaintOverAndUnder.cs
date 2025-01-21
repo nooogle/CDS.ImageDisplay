@@ -12,6 +12,8 @@ namespace CDS.Imaging.Demo.DemoForms
         Bitmap? loadedBitmap;
         Font fixedWidthFont;
         Brush msgPanelBrush;
+        WinForms.Draw.Shapes.CrossHairOverlay crossHair = new WinForms.Draw.Shapes.CrossHairOverlay();
+
 
         public FormPaintOverAndUnder()
         {
@@ -80,9 +82,8 @@ namespace CDS.Imaging.Demo.DemoForms
                 Brushes.Navy,
                 new PointF(topLeftBox.X, topLeftBox.Y));
 
-            crossHair1.Draw(
-                graphics,
-                bitmapDisplay.MapImageToDisplay(bitmapDisplay.TargetImageCentre, DisplayPixelAlign.Centre));
+            crossHair.Centre = bitmapDisplay.TargetImageCentre;
+            crossHair.Draw(bitmapDisplay, graphics);
 
 
             // Line test

@@ -22,10 +22,10 @@ public partial class FormMultipleROIs : Form
     {
         InitializeComponent();
 
-        testProperties = new TestProperties(bitmapDisplayPanel, multipleROIManagerOnBitmapDisplay);
+        testProperties = new TestProperties(bitmapDisplayPanel, multipleROIManager);
         testProperties.PropertyChanged += (s, e) =>
             {
-                multipleROIManagerOnBitmapDisplay.RefreshSelection();
+                multipleROIManager.RefreshSelection();
                 propertyGrid.Refresh();
             };
     }
@@ -40,7 +40,7 @@ public partial class FormMultipleROIs : Form
         bitmapDisplayPanel.SetImage(Properties.Resources.Thailand);
 
         propertyGrid.SelectedObject = testProperties;
-        multipleROIManagerOnBitmapDisplay.GetROIDescriptors = () => testProperties.ROIDescriptors;
+        multipleROIManager.GetROIDescriptors = () => testProperties.ROIDescriptors;
     }
 
 
@@ -55,7 +55,7 @@ public partial class FormMultipleROIs : Form
 
     private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
     {
-        multipleROIManagerOnBitmapDisplay.RefreshSelection();
+        multipleROIManager.RefreshSelection();
     }
 
     private void btnLoadImage_Click(object sender, EventArgs e)

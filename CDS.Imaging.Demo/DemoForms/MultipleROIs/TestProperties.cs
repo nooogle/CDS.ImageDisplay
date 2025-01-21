@@ -37,7 +37,6 @@ class TestProperties : INotifyPropertyChanged
         ROIDescriptors.ListChanged += (s, e) =>
         {
             NotifyPropertyChanged(nameof(ROIDescriptors));
-            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ROIDescriptors)));
         };
     }
 
@@ -59,21 +58,26 @@ class TestProperties : INotifyPropertyChanged
     /// </summary>
     private BindingList<MyROIDescriptor> CreateDefaultROIs()
     {
-        return new BindingList<MyROIDescriptor>
+        var list = new BindingList<MyROIDescriptor>
+        {
+            new MyROIDescriptor()
             {
-                new MyROIDescriptor()
-                {
-                    Name = "ROI 1",
-                    ROI = new Rectangle(10, 10, 100, 20),
-                    MinimumSize = new Size(100, 20),
-                },
+                Name = "ROI 1",
+                ROI = new Rectangle(10, 10, 100, 20),
+                MinimumSize = new Size(100, 20),
+            },
 
-                new MyROIDescriptor()
-                {
-                    Name = "ROI 2",
-                    ROI = new Rectangle(50, 50, 200, 100),
-                    MinimumSize = new Size(100, 40),
-                }
-            };
+            new MyROIDescriptor()
+            {
+                Name = "ROI 2",
+                ROI = new Rectangle(50, 50, 200, 100),
+                MinimumSize = new Size(100, 40),
+            }
+        };
+
+        list[0].CoreShape.Rendering.Fill.Color = Color.FromArgb(64, Color.AliceBlue);
+        list[1].CoreShape.Rendering.Fill.Color = Color.FromArgb(64, Color.Linen);
+
+        return list;
     }
 }

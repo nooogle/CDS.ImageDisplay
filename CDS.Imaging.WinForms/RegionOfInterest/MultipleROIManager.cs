@@ -11,12 +11,12 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
     /// </summary>
     /// <remarks>
     /// Each region of interest (ROI) is represented by an <see cref="ISingleROIDescriptor"/> object.
-    /// A default class, <see cref="SingleROIDescriptor"/>, is provided that implements this interface.
+    /// A default class, <see cref="ROIWithGrapplesShape"/>, is provided that implements this interface.
     /// Otherwise, you can create your own class that implements the interface, and optionally delegate
-    /// most of the properties and methods to an instance of <see cref="SingleROIDescriptor"/> (using
+    /// most of the properties and methods to an instance of <see cref="ROIWithGrapplesShape"/> (using
     /// the composition pattern).
     /// </remarks>
-        public partial class MultipleROIManager : Component
+    public partial class MultipleROIManager : Component
     {
         private const string categoryCDS = "CDS";
 
@@ -95,7 +95,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         [Category(categoryCDS)]
         [DisplayName("Dragging ROI renderer")]
-        public RectangleRenderer DraggingROIRenderer
+        public ROIWithGrapplesShape DraggingROIRenderer
         {
             get => roiSelectionOnBitmapDisplay.LiveDraggingROIRenderer;
         }
@@ -107,7 +107,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         [Category(categoryCDS)]
         [DisplayName("Committed ROI renderer")]
-        public RectangleRenderer CommittedROIRenderer
+        public ROIWithGrapplesShape CommittedROIRenderer
         {
             get => roiSelectionOnBitmapDisplay.CommittedROIRenderer;
         }
@@ -160,7 +160,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
             foreach (var roiDescriptor in GetROIDescriptors!())
             {
-                roiDescriptor.Draw(graphics, bitmapDisplayPanel!, roiDescriptor.ROI);
+                roiDescriptor.Draw(bitmapDisplayPanel!, graphics);
             }
         }
 
@@ -208,8 +208,8 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
             DeselectActiveROI();
 
+            roiDescriptor.Visible = false;
             activeROIDescriptor = roiDescriptor;
-            activeROIDescriptor.Renderer.Visible = false;
 
             roiSelectionOnBitmapDisplay.CommittedROI = activeROIDescriptor.ROI;
             roiSelectionOnBitmapDisplay.Visible = true;
@@ -223,7 +223,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         {
             if (activeROIDescriptor == null) { return; }
 
-            activeROIDescriptor.Renderer.Visible = true;
+            activeROIDescriptor.Visible = true;
             activeROIDescriptor = null;
             roiSelectionOnBitmapDisplay.Visible = false;
             roiSelectionOnBitmapDisplay.CanEditCommitted = false;

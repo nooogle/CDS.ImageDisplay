@@ -17,5 +17,5 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
     /// <summary>
     /// Event handler for when the ROI on the multiple ROI manager is clicked
     /// </summary>
-    public delegate void OnROIClickedEvent(MultipleROIManager sender, SingleROIDescriptor roiDescriptor);
+    public delegate void OnROIClickedEvent(MultipleROIManager sender, ISingleROIDescriptor roiDescriptor);
 }

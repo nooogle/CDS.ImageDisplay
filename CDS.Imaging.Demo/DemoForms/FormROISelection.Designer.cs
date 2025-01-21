@@ -45,7 +45,7 @@ namespace CDS.Imaging.Demo.DemoForms
             btnSetROI = new System.Windows.Forms.Button();
             sysInfoPanel = new WinForms.SysInfoPanel();
             timerUpdateMetrics = new System.Windows.Forms.Timer(components);
-            roiSelectionOnBitmapDisplay = new WinForms.RegionOfInterest.SingleROIManager(components);
+            singleROIManager = new WinForms.RegionOfInterest.SingleROIManager(components);
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -195,16 +195,48 @@ namespace CDS.Imaging.Demo.DemoForms
             timerUpdateMetrics.Interval = 250;
             timerUpdateMetrics.Tick += timerUpdateMetrics_Tick;
             // 
-            // roiSelectionOnBitmapDisplay
+            // singleROIManager
             // 
-            roiSelectionOnBitmapDisplay.BitmapDisplayPanel = bitmapDisplayPanel;
-            roiSelectionOnBitmapDisplay.CanCreateNew = true;
-            roiSelectionOnBitmapDisplay.CanEditCommitted = true;
-            roiSelectionOnBitmapDisplay.CommittedROI = new System.Drawing.Rectangle(0, 0, 0, 0);
-            roiSelectionOnBitmapDisplay.DrawCommittedROIWhenFullSize = false;
-            roiSelectionOnBitmapDisplay.Visible = true;
-            roiSelectionOnBitmapDisplay.OnCommittedROIChanged += roiSelectionOnBitmapDisplay_OnCommittedROIChanged;
-            roiSelectionOnBitmapDisplay.OnDraggingROIChanged += roiSelectionOnBitmapDisplay_OnDraggingROIChanged;
+            singleROIManager.BitmapDisplayPanel = bitmapDisplayPanel;
+            singleROIManager.CanCreateNew = true;
+            singleROIManager.CanEditCommitted = true;
+            singleROIManager.CommittedROI = new System.Drawing.Rectangle(0, 0, 0, 0);
+            singleROIManager.CommittedROIRenderer.GrappleDiameter = 6;
+            singleROIManager.CommittedROIRenderer.Locked = false;
+            singleROIManager.CommittedROIRenderer.MaximumSize = new System.Drawing.Size(1000000, 1000000);
+            singleROIManager.CommittedROIRenderer.MinimumSize = new System.Drawing.Size(1, 1);
+            singleROIManager.CommittedROIRenderer.Name = "";
+            singleROIManager.CommittedROIRenderer.PixelAlign = WinForms.BitmapDisplay.DisplayPixelAlign.TopLeft;
+            singleROIManager.CommittedROIRenderer.Rendering.Fill.Color = System.Drawing.Color.Transparent;
+            singleROIManager.CommittedROIRenderer.Rendering.Font.FontName = "Arial";
+            singleROIManager.CommittedROIRenderer.Rendering.Font.FontSize = 12;
+            singleROIManager.CommittedROIRenderer.Rendering.Lines.Color = System.Drawing.Color.FromArgb(128, 0, 128, 0);
+            singleROIManager.CommittedROIRenderer.Rendering.Lines.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            singleROIManager.CommittedROIRenderer.Rendering.Lines.EndCap = System.Drawing.Drawing2D.LineCap.Flat;
+            singleROIManager.CommittedROIRenderer.Rendering.Lines.StartCap = System.Drawing.Drawing2D.LineCap.Flat;
+            singleROIManager.CommittedROIRenderer.Rendering.Lines.Width = 2F;
+            singleROIManager.CommittedROIRenderer.Rendering.Visible = true;
+            singleROIManager.CommittedROIRenderer.ROI = new System.Drawing.Rectangle(0, 0, 0, 0);
+            singleROIManager.CommittedROIRenderer.Visible = true;
+            singleROIManager.DrawCommittedROIWhenFullSize = false;
+            singleROIManager.LiveDraggingROIRenderer.GrappleDiameter = 6;
+            singleROIManager.LiveDraggingROIRenderer.Locked = false;
+            singleROIManager.LiveDraggingROIRenderer.MaximumSize = new System.Drawing.Size(1000000, 1000000);
+            singleROIManager.LiveDraggingROIRenderer.MinimumSize = new System.Drawing.Size(1, 1);
+            singleROIManager.LiveDraggingROIRenderer.Name = "";
+            singleROIManager.LiveDraggingROIRenderer.PixelAlign = WinForms.BitmapDisplay.DisplayPixelAlign.TopLeft;
+            singleROIManager.LiveDraggingROIRenderer.Rendering.Fill.Color = System.Drawing.Color.FromArgb(32, 255, 128, 0);
+            singleROIManager.LiveDraggingROIRenderer.Rendering.Lines.Color = System.Drawing.Color.FromArgb(192, 255, 128, 0);
+            singleROIManager.LiveDraggingROIRenderer.Rendering.Lines.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            singleROIManager.LiveDraggingROIRenderer.Rendering.Lines.EndCap = System.Drawing.Drawing2D.LineCap.Flat;
+            singleROIManager.LiveDraggingROIRenderer.Rendering.Lines.StartCap = System.Drawing.Drawing2D.LineCap.Flat;
+            singleROIManager.LiveDraggingROIRenderer.Rendering.Lines.Width = 2F;
+            singleROIManager.LiveDraggingROIRenderer.Rendering.Visible = true;
+            singleROIManager.LiveDraggingROIRenderer.ROI = new System.Drawing.Rectangle(0, 0, 0, 0);
+            singleROIManager.LiveDraggingROIRenderer.Visible = true;
+            singleROIManager.Visible = true;
+            singleROIManager.OnCommittedROIChanged += singleROIManager_OnCommittedROIChanged;
+            singleROIManager.OnDraggingROIChanged += singleROIManager_OnDraggingROIChanged;
             // 
             // FormROISelection
             // 
@@ -238,6 +270,6 @@ namespace CDS.Imaging.Demo.DemoForms
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Timer timerUpdateMetrics;
-        private WinForms.RegionOfInterest.SingleROIManager roiSelectionOnBitmapDisplay;
+        private WinForms.RegionOfInterest.SingleROIManager singleROIManager;
     }
 }

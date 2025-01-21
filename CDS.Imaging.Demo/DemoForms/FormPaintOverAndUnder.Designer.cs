@@ -50,7 +50,6 @@ namespace CDS.Imaging.Demo.DemoForms
             this.menuDisplayZoomIn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDisplayZoomOut = new System.Windows.Forms.ToolStripMenuItem();
             this.openImageDialog = new System.Windows.Forms.OpenFileDialog();
-            this.crossHair1 = new CDS.Imaging.WinForms.Draw.SimpleCrossHair(this.components);
             this.menu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -215,28 +214,6 @@ namespace CDS.Imaging.Demo.DemoForms
             // 
             this.openImageDialog.Filter = "Bitmaps|*.bmp|JPEGs|*.jpg|TIFFs|*.tif|PNGs|*.png";
             // 
-            // crossHair1
-            // 
-            this.crossHair1.CentreGap = 3F;
-            this.crossHair1.Diameter = 20F;
-            this.crossHair1.EllipseEnabled = true;
-            // 
-            // 
-            // 
-            this.crossHair1.EllipsePen.Color = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(0)))));
-            this.crossHair1.EllipsePen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-            this.crossHair1.EllipsePen.EndCap = System.Drawing.Drawing2D.LineCap.Flat;
-            this.crossHair1.EllipsePen.StartCap = System.Drawing.Drawing2D.LineCap.Flat;
-            this.crossHair1.EllipsePen.Width = 3F;
-            // 
-            // 
-            // 
-            this.crossHair1.LinePen.Color = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(0)))));
-            this.crossHair1.LinePen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-            this.crossHair1.LinePen.EndCap = System.Drawing.Drawing2D.LineCap.Flat;
-            this.crossHair1.LinePen.StartCap = System.Drawing.Drawing2D.LineCap.Flat;
-            this.crossHair1.LinePen.Width = 2F;
-            // 
             // FormPaintOverAndUnder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -276,7 +253,6 @@ namespace CDS.Imaging.Demo.DemoForms
         private System.Windows.Forms.ToolStripMenuItem menuDisplayZoomIn;
         private System.Windows.Forms.ToolStripMenuItem menuDisplayZoomOut;
         private System.Windows.Forms.OpenFileDialog openImageDialog;
-        private WinForms.Draw.SimpleCrossHair crossHair1;
         private System.Windows.Forms.ToolStripMenuItem menuDisplayActualSize;
         private System.Windows.Forms.ToolStripMenuItem menuDisplayFitToWindow;
     }

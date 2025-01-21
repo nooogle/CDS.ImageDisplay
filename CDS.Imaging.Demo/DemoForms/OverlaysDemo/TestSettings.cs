@@ -5,7 +5,7 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
     [TypeConverter(typeof(ExpandableObjectConverter))]
     internal class TestSettings
     {
-        public DrawingShapes Shapes { get; set; } = new DrawingShapes();
-        public DrawingSettings Settings { get; set; } = new DrawingSettings();
+        public Shapes Shapes { get; set; } = new Shapes();
+        public RenderingSettings Rendering { get; set; } = new RenderingSettings();
     }
 }

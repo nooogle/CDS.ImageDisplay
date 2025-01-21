@@ -6,6 +6,7 @@ Please generate C# code that adheres to the following practices:
      - Use `PascalCase` for public and protected members, including methods, properties, and constants.
      - Use `camelCase` for private fields, parameters, and local variables.
      - Place braces on a new line, following the standard .NET formatting rules.
+     - Don't use underscores in identifiers.
 
 2. **Commenting**:
    - Use XML documentation comments (`///`) for all public methods, properties, and classes.

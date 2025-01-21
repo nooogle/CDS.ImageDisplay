@@ -8,7 +8,7 @@ namespace CDS.Imaging.Demo.DemoForms;
 
 
 /// <summary>
-/// Form for demonstrating the ROISelectionOnBitmapDisplay
+/// Form for demonstrating the singleROIManager
 /// </summary>
 public partial class FormROISelection : Form
 {
@@ -21,7 +21,7 @@ public partial class FormROISelection : Form
 
         [Category("WinForms controls")]
         [DisplayName("ROI selection")]
-        public WinForms.RegionOfInterest.SingleROIManager ROISelectionOnBitmapDisplay { get; }
+        public WinForms.RegionOfInterest.SingleROIManager SingleROIManager { get; }
 
 
         [Category("Demo form")]
@@ -34,10 +34,10 @@ public partial class FormROISelection : Form
         /// </summary>
         public TestProperties(
             WinForms.BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel,
-            WinForms.RegionOfInterest.SingleROIManager roiSelectionOnBitmapDisplay)
+            WinForms.RegionOfInterest.SingleROIManager singleROIManager)
         {
             BitmapDisplayPanel = bitmapDisplayPanel;
-            ROISelectionOnBitmapDisplay = roiSelectionOnBitmapDisplay;
+            SingleROIManager = singleROIManager;
         }
     }
 
@@ -55,7 +55,7 @@ public partial class FormROISelection : Form
     {
         InitializeComponent();
 
-        testProperties = new TestProperties(bitmapDisplayPanel, roiSelectionOnBitmapDisplay);
+        testProperties = new TestProperties(bitmapDisplayPanel, singleROIManager);
     }
 
 
@@ -65,7 +65,7 @@ public partial class FormROISelection : Form
     protected override void OnLoad(EventArgs e)
     {
         base.OnLoad(e);
-        bitmapDisplayPanel.SetImage(Properties.Resources.Thailand);
+        bitmapDisplayPanel.SetImage(BitmapGenerator.Make(800, 600));
         UpdateROILabels();
 
         propertyGrid.SelectedObject = testProperties;
@@ -77,8 +77,8 @@ public partial class FormROISelection : Form
     /// </summary>
     private void UpdateROILabels()
     {
-        labelCommittedROI.Text = $"Committed ROI: {roiSelectionOnBitmapDisplay.CommittedROI}";
-        labelDraggingROI.Text = $"Dragging ROI: {roiSelectionOnBitmapDisplay.LiveDraggingROI}";
+        labelCommittedROI.Text = $"Committed ROI: {singleROIManager.CommittedROI}";
+        labelDraggingROI.Text = $"Dragging ROI: {singleROIManager.LiveDraggingROI}";
     }
 
 
@@ -97,7 +97,7 @@ public partial class FormROISelection : Form
     /// </summary>
     private void btnSetROI_Click(object sender, EventArgs e)
     {
-        roiSelectionOnBitmapDisplay.CommittedROI = new Rectangle(10, 20, 100, 200);
+        singleROIManager.CommittedROI = new Rectangle(10, 20, 100, 200);
     }
 
 
@@ -106,7 +106,7 @@ public partial class FormROISelection : Form
     /// </summary>
     private void btnClearROI_Click(object sender, EventArgs e)
     {
-        roiSelectionOnBitmapDisplay.CommittedROI = Rectangle.Empty;
+        singleROIManager.CommittedROI = Rectangle.Empty;
     }
 
 
@@ -121,9 +121,9 @@ public partial class FormROISelection : Form
 
 
     /// <summary>
-    /// The ROI has been committed to the ROISelectionOnBitmapDisplay
+    /// The ROI has been committed to the singleROIManager
     /// </summary>
-    private void roiSelectionOnBitmapDisplay_OnCommittedROIChanged(CDS.Imaging.WinForms.RegionOfInterest.SingleROIManager sender, Rectangle roi)
+    private void singleROIManager_OnCommittedROIChanged(CDS.Imaging.WinForms.RegionOfInterest.SingleROIManager sender, Rectangle roi)
     {
         var sizeLimitedROI = new Rectangle(
             roi.Location.X,
@@ -133,7 +133,7 @@ public partial class FormROISelection : Form
 
         if (roi != sizeLimitedROI)
         {
-            roiSelectionOnBitmapDisplay.CommittedROI = sizeLimitedROI;
+            singleROIManager.CommittedROI = sizeLimitedROI;
         }
 
         UpdateROILabels();
@@ -141,9 +141,9 @@ public partial class FormROISelection : Form
 
 
     /// <summary>
-    /// The ROI is being dragged on the ROISelectionOnBitmapDisplay
+    /// The ROI is being dragged on the singleROIManagery
     /// </summary>
-    private void roiSelectionOnBitmapDisplay_OnDraggingROIChanged(CDS.Imaging.WinForms.RegionOfInterest.SingleROIManager sender, Rectangle roi)
+    private void singleROIManager_OnDraggingROIChanged(CDS.Imaging.WinForms.RegionOfInterest.SingleROIManager sender, Rectangle roi)
     {
         UpdateROILabels();
     }
