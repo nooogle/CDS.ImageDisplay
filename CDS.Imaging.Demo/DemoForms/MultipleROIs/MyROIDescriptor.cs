@@ -51,6 +51,7 @@ class MyROIDescriptor : WinForms.RegionOfInterest.ISingleROIDescriptor, INotifyP
     {
         this.name = name;
         CoreShape.Rendering = new WinForms.Draw.RenderingSpec();
+        CoreShape.GrapplesVisible = false;
     }
 
     void WinForms.Draw.Shapes.IShapeOverlay.Draw(WinForms.BitmapDisplay.BitmapDisplayPanel bitmapDisplay, Graphics graphics)

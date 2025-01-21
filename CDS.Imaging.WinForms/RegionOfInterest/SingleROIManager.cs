@@ -408,7 +408,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
 
         /// <summary>
-        /// True if there's an image that the ROI can be applied to.
+        /// True if there's an image that the ROI can be applied to and that 
         /// </summary>
         private bool CanWorkWithROI => (bitmapDisplayPanel != null) && imageSize.HasValue;
 
@@ -462,6 +462,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
         private ROIDragMode DetermineDragModeFromMouseLocation(Point mouseLocationOnDisplay)
         {
+            if (!canEditCommitted) { return ROIDragMode.None; }
             if (committedROI.IsEmpty) { return ROIDragMode.None; }
 
             var mouseLocationOnImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));

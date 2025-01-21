@@ -28,6 +28,12 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
 
         /// <summary>
+        /// True if the grapples are visible.
+        /// </summary>
+        public bool GrapplesVisible { get; set; } = true;
+
+
+        /// <summary>
         /// True if the rectangle is locked and cannot be moved.
         /// </summary>
         public bool Locked { get; set; } = false;
@@ -89,6 +95,13 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
             graphics.FillRectangle(brush, roiOnDisplay);
             graphics.DrawRectangle(pen, roiOnDisplay);
 
+            DrawGrapples(graphics, pen, brush);
+        }
+
+
+        private void DrawGrapples(Graphics graphics, Pen pen, Brush brush)
+        {
+            if(!GrapplesVisible) { return; }
 
             for (int grappleIndex = 0; grappleIndex < grappleRectangles.Length; grappleIndex++)
             {
