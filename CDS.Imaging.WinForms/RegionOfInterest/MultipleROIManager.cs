@@ -7,6 +7,27 @@ using System.Windows.Forms;
 namespace CDS.Imaging.WinForms.RegionOfInterest
 {
     /// <summary>
+    /// Event arguments for when a ROI has been committed.
+    /// </summary>
+    public class CommittedROIChangedEventArgs : EventArgs
+    {
+        /// <summary>
+        /// The ROI that has been committed.
+        /// </summary>
+        public ISingleROIDescriptor ROIDescriptor { get; }
+
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public CommittedROIChangedEventArgs(ISingleROIDescriptor roiDescriptor)
+        {
+            ROIDescriptor = roiDescriptor;
+        }
+    }
+
+
+    /// <summary>
     /// Manages multiple ROIs on a bitmap display.
     /// </summary>
     /// <remarks>
@@ -24,6 +45,13 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         private bool visible = true;
         private BitmapDisplay.BitmapDisplayPanel? bitmapDisplayPanel;
         private ISingleROIDescriptor? activeROIDescriptor;
+
+
+        /// <summary>
+        /// Fired when the committed ROI changes.
+        /// </summary>
+        public event EventHandler<CommittedROIChangedEventArgs>? OnCommittedROIChanged;
+
 
 
         /// <summary>
@@ -70,6 +98,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
                         bitmapDisplayPanel.Click -= BitmapDisplayPanel_Click;
                         bitmapDisplayPanel.OnPaintOver -= BitmapDisplayPanel_OnPaintOver;
                         bitmapDisplayPanel.OnImageSizeChanged -= BitmapDisplayPanel_OnImageSizeChanged;
+                        bitmapDisplayPanel.MouseDown -= BitmapDisplayPanel_OnMouseDown;
                     }
 
                     bitmapDisplayPanel = value;
@@ -79,6 +108,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
                         bitmapDisplayPanel.Click += BitmapDisplayPanel_Click;
                         bitmapDisplayPanel.OnPaintOver += BitmapDisplayPanel_OnPaintOver;
                         bitmapDisplayPanel.OnImageSizeChanged += BitmapDisplayPanel_OnImageSizeChanged;
+                        bitmapDisplayPanel.MouseDown += BitmapDisplayPanel_OnMouseDown;
                     }
 
                     roiSelectionOnBitmapDisplay.BitmapDisplayPanel = bitmapDisplayPanel;
@@ -176,8 +206,14 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
         private void BitmapDisplayPanel_Click(object? sender, EventArgs e)
         {
+            HandleMouseLButtonDown();
+        }
+
+
+        private void HandleMouseLButtonDown()
+        {
             if (!DoesHaveImageToWorkWith) { return; }
-            if(IsSpacebarPressed()) { return; }
+            if (IsSpacebarPressed()) { return; }
 
             var roiDescriptors = GetROIDescriptors!();
             var mouseLocationOnThisControl = bitmapDisplayPanel!.PointToClient(Cursor.Position);
@@ -199,6 +235,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
                 DeselectActiveROI();
             }
         }
+
 
         private void HandleROIClicked(ISingleROIDescriptor roiDescriptor)
         {
@@ -225,6 +262,7 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
             activeROIDescriptor.Visible = true;
             activeROIDescriptor = null;
+            
             roiSelectionOnBitmapDisplay.Visible = false;
             roiSelectionOnBitmapDisplay.CanEditCommitted = false;
 
@@ -244,8 +282,12 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
 
             roiSelectionOnBitmapDisplay.CommittedROI = newROI;
             activeROIDescriptor.ROI = newROI;
+
+            OnCommittedROIChanged?.Invoke(this, new CommittedROIChangedEventArgs(activeROIDescriptor));
         }
 
+
+        bool refreshSelectionSentry = false;
 
 
         /// <summary>
@@ -257,12 +299,17 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         /// </remarks>
         public void RefreshSelection()
         {
-            if((activeROIDescriptor != null) && (!activeROIDescriptor.Visible || activeROIDescriptor.Locked))
+            if(refreshSelectionSentry) { return; }
+            refreshSelectionSentry = true;
+
+            if ((activeROIDescriptor != null) && (!activeROIDescriptor.Visible || activeROIDescriptor.Locked))
             {
                 DeselectActiveROI();
             }
 
             bitmapDisplayPanel?.Invalidate();
+
+            refreshSelectionSentry = false;
         }
 
 
@@ -272,6 +319,17 @@ namespace CDS.Imaging.WinForms.RegionOfInterest
         private bool IsSpacebarPressed()
         {
             return (Win32.GetKeyState(Win32.VK_SPACE) & 0x8000) != 0;
+        }
+
+
+        /// <summary>
+        /// Handles the mouse down event to begin defining an ROI.
+        /// </summary>
+        private void BitmapDisplayPanel_OnMouseDown(object? sender, MouseEventArgs e)
+        {
+            if(e.Button != MouseButtons.Left) { return; }
+
+            HandleMouseLButtonDown();
         }
     }
 }

@@ -7,6 +7,10 @@ namespace CDS.Imaging.Demo.DemoForms.MultipleROIs;
 
 class MyROIDescriptor : WinForms.RegionOfInterest.ISingleROIDescriptor, INotifyPropertyChanged
 {
+    private string name;
+
+    public int ChangeCount {  get; set; }
+
     public WinForms.RegionOfInterest.ROIWithGrapplesShape CoreShape { get; } = new WinForms.RegionOfInterest.ROIWithGrapplesShape();
 
     public bool Locked 
@@ -32,13 +36,20 @@ class MyROIDescriptor : WinForms.RegionOfInterest.ISingleROIDescriptor, INotifyP
 
     public Size MaximumSize { get => CoreShape.MaximumSize; set => CoreShape.MaximumSize = value; }
     public Size MinimumSize { get => CoreShape.MinimumSize; set => CoreShape.MinimumSize = value; }
-    public string Name { get => CoreShape.Name; set => CoreShape.Name = value; }
+    
+    public string Name
+    {
+        get => $"{name}, {ChangeCount} changes";
+        set { }
+    }
+    
     public Rectangle ROI { get => CoreShape.ROI; set => CoreShape.ROI = value; }
     public DisplayPixelAlign PixelAlign { get => CoreShape.PixelAlign; set => CoreShape.PixelAlign = value; }
 
 
-    public MyROIDescriptor()
+    public MyROIDescriptor(string name)
     {
+        this.name = name;
         CoreShape.Rendering = new WinForms.Draw.RenderingSpec();
     }
 

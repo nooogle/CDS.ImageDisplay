@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace CDS.Imaging.Demo.DemoForms.MultipleROIs;
@@ -67,13 +68,23 @@ public partial class FormMultipleROIs : Form
             var newImage = System.Drawing.Image.FromFile(openFileDialog.FileName);
             bitmapDisplayPanel.SetImage((System.Drawing.Bitmap)newImage);
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             MessageBox.Show(
-                exception.Message, 
+                exception.Message,
                 "Error loading image",
-                MessageBoxButtons.OK, 
+                MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
         }
+    }
+
+    private void multipleROIManager_OnCommittedROIChanged(object sender, CDS.Imaging.WinForms.RegionOfInterest.CommittedROIChangedEventArgs e)
+    {
+        var myDesciptor = e.ROIDescriptor as MyROIDescriptor;
+
+        if (myDesciptor == null) { throw new InvalidOperationException("ROI descriptor is not of the expected type"); }
+
+        myDesciptor.ChangeCount++;
+        bitmapDisplayPanel.Invalidate();
     }
 }

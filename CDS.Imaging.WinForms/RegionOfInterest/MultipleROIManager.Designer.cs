@@ -37,7 +37,7 @@
             roiSelectionOnBitmapDisplay.CanCreateNew = false;
             roiSelectionOnBitmapDisplay.CanEditCommitted = false;
             roiSelectionOnBitmapDisplay.CommittedROI = new System.Drawing.Rectangle(0, 0, 0, 0);
-            roiSelectionOnBitmapDisplay.DrawCommittedROIWhenFullSize = false;
+            roiSelectionOnBitmapDisplay.DrawCommittedROIWhenFullSize = true;
             roiSelectionOnBitmapDisplay.Visible = false;
             roiSelectionOnBitmapDisplay.OnCommittedROIChanged += roiSelectionOnBitmapDisplay_OnCommittedROIChanged;
         }

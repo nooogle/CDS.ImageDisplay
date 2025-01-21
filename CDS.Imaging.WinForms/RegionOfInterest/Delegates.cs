@@ -3,19 +3,13 @@
 namespace CDS.Imaging.WinForms.RegionOfInterest
 {
     /// <summary>
-    /// Event handler for when the ROI is committed to the ROISelectionOnBitmapDisplay
+    /// Event handler for when a ROI is committed
     /// </summary>
     public delegate void OnCommittedROIChangedEvent(SingleROIManager sender, Rectangle roi);
 
 
     /// <summary>
-    /// Event handler for when the ROI is being dragged on the ROISelectionOnBitmapDisplay
+    /// Event handler for when a ROI is being dragged
     /// </summary>
     public delegate void OnDraggingROIChangedEvent(SingleROIManager sender, Rectangle roi);
-
-
-    /// <summary>
-    /// Event handler for when the ROI on the multiple ROI manager is clicked
-    /// </summary>
-    public delegate void OnROIClickedEvent(MultipleROIManager sender, ISingleROIDescriptor roiDescriptor);
 }

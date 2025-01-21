@@ -60,16 +60,14 @@ class TestProperties : INotifyPropertyChanged
     {
         var list = new BindingList<MyROIDescriptor>
         {
-            new MyROIDescriptor()
+            new MyROIDescriptor("ROI 1")
             {
-                Name = "ROI 1",
                 ROI = new Rectangle(10, 10, 100, 20),
                 MinimumSize = new Size(100, 20),
             },
 
-            new MyROIDescriptor()
+            new MyROIDescriptor("ROI 2")
             {
-                Name = "ROI 2",
                 ROI = new Rectangle(50, 50, 200, 100),
                 MinimumSize = new Size(100, 40),
             }
