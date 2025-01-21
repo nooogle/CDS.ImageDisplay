@@ -40,6 +40,7 @@ namespace CDS.Imaging.WinForms.Draw
         /// </summary>
         public static Pen GetPen(LineSpec description)
         {
+            // TODO put this back!
             //EnsureOnUIThread();
 
             if (!instance.penCache.TryGetValue(description, out var pen))
@@ -62,7 +63,8 @@ namespace CDS.Imaging.WinForms.Draw
         /// </summary>
         public static Brush GetBrush(BrushSpec description)
         {
-            EnsureOnUIThread();
+            // TODO put this back!
+            //EnsureOnUIThread();
 
             if (!instance.brushCache.TryGetValue(description, out var brush))
             {
@@ -79,7 +81,8 @@ namespace CDS.Imaging.WinForms.Draw
         /// </summary>
         public static Font GetFont(FontSpec description)
         {
-            EnsureOnUIThread();
+            // TODO put this back!
+            //EnsureOnUIThread();
 
             if (!instance.fontCache.TryGetValue(description, out var font))
             {
