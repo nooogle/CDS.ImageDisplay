@@ -9,11 +9,11 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
     class Shapes
     {
         [Browsable(false)]
-        public WinForms.Draw.Layer Layer1 { get; } = new();
+        public Draw.Layer Layer1 { get; } = new();
 
 
 
-        public WinForms.Draw.Shapes.EllipseOverlay Ellipse { get; set; } = new WinForms.Draw.Shapes.EllipseOverlay 
+        public Draw.EllipseShape Ellipse { get; set; } = new Draw.EllipseShape 
         { 
             Centre = new PointF(10, 5), 
             MajorAxis = 20, 
@@ -22,43 +22,43 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
         };
 
 
-        public WinForms.Draw.Shapes.LineOverlay[] Lines { get; set; } =
+        public Draw.LineShape[] Lines { get; set; } =
         {
-            new WinForms.Draw.Shapes.LineOverlay { Start = new PointF(0, 5), End = new PointF(20, 5) },
-            new WinForms.Draw.Shapes.LineOverlay { Start = new PointF(10, 0), End = new PointF(10, 10) },
+            new Draw.LineShape { Start = new PointF(0, 5), End = new PointF(20, 5) },
+            new Draw.LineShape { Start = new PointF(10, 0), End = new PointF(10, 10) },
         };
 
 
-        public WinForms.Draw.Shapes.TextOverlay[] TextMessages { get; set; } =
+        public Draw.TextShape[] TextMessages { get; set; } =
         [
-            new WinForms.Draw.Shapes.TextOverlay { Text = "Look at the ellipse at the top-left!", Location = new PointF(40, 30) },
-            new WinForms.Draw.Shapes.TextOverlay { Text = "The two lines should (by default) cross the ellipse axis", Location = new PointF(60, 50) },
+            new Draw.TextShape { Text = "Look at the ellipse at the top-left!", Location = new PointF(40, 30) },
+            new Draw.TextShape { Text = "The two lines should (by default) cross the ellipse axis", Location = new PointF(60, 50) },
         ];
 
 
-        public WinForms.Draw.Shapes.CircleOverlay[] Circles { get; set; } =
+        public Draw.CircleShape[] Circles { get; set; } =
         {
-            new WinForms.Draw.Shapes.CircleOverlay { Centre = new PointF(500, 300), Radius = 50 },
-            new WinForms.Draw.Shapes.CircleOverlay { Centre = new PointF(300, 500), Radius = 50 },
+            new Draw.CircleShape { Centre = new PointF(500, 300), Radius = 50 },
+            new Draw.CircleShape { Centre = new PointF(300, 500), Radius = 50 },
         };
 
 
 
-        public WinForms.Draw.Shapes.RectangleOverlay[] Rectangles { get; set; } =
+        public Draw.RectangleShape[] Rectangles { get; set; } =
         [
-            new WinForms.Draw.Shapes.RectangleOverlay()
+            new Draw.RectangleShape()
             {
                 Rect= new RectangleF(100, 100, 100, 100),
             },
 
-            new WinForms.Draw.Shapes.RectangleOverlay()
+            new Draw.RectangleShape()
             {
                 Rect= new RectangleF(200, 200, 100, 100),
             },
         ];
 
 
-        public WinForms.Draw.Shapes.PolygonOverlay Polygon { get; set; } = new WinForms.Draw.Shapes.PolygonOverlay()
+        public Draw.PolygonShape Polygon { get; set; } = new Draw.PolygonShape()
         {
             Points =
                 [
@@ -76,7 +76,7 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
         };
 
 
-        public WinForms.Draw.Shapes.CrossHairOverlay CrossHair { get; set; } = new WinForms.Draw.Shapes.CrossHairOverlay()
+        public Draw.CrosshairShape CrossHair { get; set; } = new Draw.CrosshairShape()
         {
             Centre = new PointF(400, 400),
             Length = 40,

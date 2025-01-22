@@ -1,4 +1,4 @@
-﻿using CDS.Imaging.WinForms.BitmapDisplay;
+﻿using CDS.Imaging.BitmapDisplay;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -14,7 +14,7 @@ namespace CDS.Imaging.Demo.DemoForms.LayersDemo;
 public partial class FormOverlays : Form
 {
     private Bitmap bitmap;
-    private WinForms.Draw.Layer shapes;
+    private Draw.Layer shapes;
 
     /// <summary>
     /// Constructor
@@ -65,7 +65,7 @@ public partial class FormOverlays : Form
     /// <summary>
     /// Paint allOverlaySettings over the image
     /// </summary>
-    private void bitmapDisplayPanel_OnPaintOver(CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel sender, System.Drawing.Graphics graphics)
+    private void bitmapDisplayPanel_OnPaintOver(CDS.Imaging.BitmapDisplay.BitmapDisplayPanel sender, System.Drawing.Graphics graphics)
     {
         if (bitmapDisplayPanel == null) { return; }
         if (bitmapDisplayPanel.GetDisplayImage() == null) { return; }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CDS.Imaging.WinForms.BitmapDisplay
+namespace CDS.Imaging.BitmapDisplay
 {
     /// <summary>
     /// Provides read-only access to the properties and pixels for a .Net Bitmap

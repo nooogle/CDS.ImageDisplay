@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 
 
-namespace CDS.Imaging.WinForms.Draw
+namespace CDS.Imaging.Draw
 {
     /// <summary>
     /// Represents the specification of a pen.

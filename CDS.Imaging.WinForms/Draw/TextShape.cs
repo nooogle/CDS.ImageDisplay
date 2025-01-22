@@ -1,15 +1,15 @@
-﻿using CDS.Imaging.WinForms.BitmapDisplay;
+﻿using CDS.Imaging.BitmapDisplay;
 using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.WinForms.Draw.Shapes;
+namespace CDS.Imaging.Draw;
 
 
 /// <summary>
 /// A text overlay combining text information and geometry and rendering properties
 /// </summary>
 [TypeConverter(typeof(ExpandableObjectConverter))]
-public class TextOverlay : IShapeOverlay
+public class TextShape : IShape
 {
     /// <summary>
     /// Simple representation of this instance
@@ -34,7 +34,7 @@ public class TextOverlay : IShapeOverlay
     /// <summary>
     /// The location of the text (in image coordinates)
     /// </summary>
-    [TypeConverter(typeof(WinForms.Draw.PointFConverter))]
+    [TypeConverter(typeof(PointFConverter))]
     public PointF Location { get; set; }
 
 

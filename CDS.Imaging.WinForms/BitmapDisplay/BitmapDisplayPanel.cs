@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 
 
-namespace CDS.Imaging.WinForms.BitmapDisplay
+namespace CDS.Imaging.BitmapDisplay
 {
     /// <summary>
     /// Displays a bitmap

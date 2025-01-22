@@ -1,15 +1,15 @@
-﻿using CDS.Imaging.WinForms.BitmapDisplay;
+﻿using CDS.Imaging.BitmapDisplay;
 using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.WinForms.Draw.Shapes;
+namespace CDS.Imaging.Draw;
 
 
 /// <summary>
 /// A polygon overlay combining polyon geometry and rendering properties
 /// </summary>
 [TypeConverter(typeof(ExpandableObjectConverter))]
-public class PolygonOverlay : IShapeOverlay
+public class PolygonShape : IShape
 {
     /// <summary>
     /// Simple representation of this instance
@@ -28,7 +28,7 @@ public class PolygonOverlay : IShapeOverlay
     /// <summary>
     /// The points of the polygon
     /// </summary>
-    [TypeConverter(typeof(WinForms.Draw.PointFConverter))]
+    [TypeConverter(typeof(PointFConverter))]
     public PointF[] Points { get; set; } = new PointF[0];
 
 
@@ -47,7 +47,7 @@ public class PolygonOverlay : IShapeOverlay
         var brush = RenderingToolsPool.GetBrush(Rendering.Fill);
 
         var pointsOnDisplay = new PointF[Points.Length];
-        
+
         for (int i = 0; i < Points.Length; i++)
         {
             pointsOnDisplay[i] = sender.MapImageToDisplay(Points[i], pixelAdjust: PixelAlign);

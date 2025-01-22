@@ -1,4 +1,4 @@
-﻿using CDS.Imaging.WinForms.BitmapDisplay;
+﻿using CDS.Imaging.BitmapDisplay;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;

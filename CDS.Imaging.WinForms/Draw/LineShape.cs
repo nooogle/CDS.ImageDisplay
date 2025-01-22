@@ -1,14 +1,14 @@
-﻿using CDS.Imaging.WinForms.BitmapDisplay;
+﻿using CDS.Imaging.BitmapDisplay;
 using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.WinForms.Draw.Shapes;
+namespace CDS.Imaging.Draw;
 
 /// <summary>
 /// A line overlay combining a line and rendering properties
 /// </summary>
 [TypeConverter(typeof(ExpandableObjectConverter))]
-public class LineOverlay : IShapeOverlay
+public class LineShape : IShape
 {
     /// <summary>
     /// Simple representation of this instance
@@ -27,14 +27,14 @@ public class LineOverlay : IShapeOverlay
     /// <summary>
     /// The start point of the line (in image coordinates)
     /// </summary>
-    [TypeConverter(typeof(WinForms.Draw.PointFConverter))]
+    [TypeConverter(typeof(PointFConverter))]
     public PointF Start { get; set; }
 
 
     /// <summary>
     /// The end point of the line (in image coordinates)
     /// </summary>
-    [TypeConverter(typeof(WinForms.Draw.PointFConverter))]
+    [TypeConverter(typeof(PointFConverter))]
     public PointF End { get; set; }
 
 

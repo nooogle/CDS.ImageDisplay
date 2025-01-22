@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace CDS.Imaging.WinForms.Draw
+namespace CDS.Imaging.Draw
 {
     /// <summary>
     /// Represents the specification of how shapes or information should be drawn.

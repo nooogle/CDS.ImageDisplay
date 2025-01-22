@@ -30,20 +30,20 @@ namespace CDS.Imaging.Demo.DemoForms.MultipleROIs
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            bitmapDisplayPanel = new WinForms.BitmapDisplay.BitmapDisplayPanel();
+            bitmapDisplayPanel = new BitmapDisplay.BitmapDisplayPanel();
             panel1 = new System.Windows.Forms.Panel();
             propertyGrid = new System.Windows.Forms.PropertyGrid();
             btnLoadImage = new System.Windows.Forms.Button();
-            sysInfoPanel = new WinForms.SysInfoPanel();
+            sysInfoPanel = new SysInfoPanel();
             openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            multipleROIManager = new WinForms.RegionOfInterest.MultipleROIManager(components);
+            multipleROIManager = new RegionOfInterest.MultipleROIManager(components);
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // bitmapDisplayPanel
             // 
             bitmapDisplayPanel.BackgroundImage = Properties.Resources.double_bubble;
-            bitmapDisplayPanel.DisplayMode = WinForms.BitmapDisplay.BitmapDisplayMode.Free;
+            bitmapDisplayPanel.DisplayMode = BitmapDisplay.BitmapDisplayMode.Free;
             bitmapDisplayPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             bitmapDisplayPanel.Location = new System.Drawing.Point(448, 38);
             bitmapDisplayPanel.Name = "bitmapDisplayPanel";
@@ -102,7 +102,7 @@ namespace CDS.Imaging.Demo.DemoForms.MultipleROIs
             multipleROIManager.CommittedROIRenderer.MaximumSize = new System.Drawing.Size(1000000, 1000000);
             multipleROIManager.CommittedROIRenderer.MinimumSize = new System.Drawing.Size(1, 1);
             multipleROIManager.CommittedROIRenderer.Name = "";
-            multipleROIManager.CommittedROIRenderer.PixelAlign = WinForms.BitmapDisplay.DisplayPixelAlign.TopLeft;
+            multipleROIManager.CommittedROIRenderer.PixelAlign = BitmapDisplay.DisplayPixelAlign.TopLeft;
             multipleROIManager.CommittedROIRenderer.Rendering.Fill.Color = System.Drawing.Color.Transparent;
             multipleROIManager.CommittedROIRenderer.Rendering.Font.FontName = "Arial";
             multipleROIManager.CommittedROIRenderer.Rendering.Font.FontSize = 12;
@@ -119,7 +119,7 @@ namespace CDS.Imaging.Demo.DemoForms.MultipleROIs
             multipleROIManager.DraggingROIRenderer.MaximumSize = new System.Drawing.Size(1000000, 1000000);
             multipleROIManager.DraggingROIRenderer.MinimumSize = new System.Drawing.Size(1, 1);
             multipleROIManager.DraggingROIRenderer.Name = "";
-            multipleROIManager.DraggingROIRenderer.PixelAlign = WinForms.BitmapDisplay.DisplayPixelAlign.TopLeft;
+            multipleROIManager.DraggingROIRenderer.PixelAlign = BitmapDisplay.DisplayPixelAlign.TopLeft;
             multipleROIManager.DraggingROIRenderer.Rendering.Fill.Color = System.Drawing.Color.Transparent;
             multipleROIManager.DraggingROIRenderer.Rendering.Font.FontName = "Arial";
             multipleROIManager.DraggingROIRenderer.Rendering.Font.FontSize = 12;
@@ -150,12 +150,12 @@ namespace CDS.Imaging.Demo.DemoForms.MultipleROIs
 
         #endregion
 
-        private WinForms.BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel;
+        private BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnLoadImage;
         private System.Windows.Forms.PropertyGrid propertyGrid;
-        private CDS.Imaging.WinForms.SysInfoPanel sysInfoPanel;
+        private CDS.Imaging.SysInfoPanel sysInfoPanel;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
-        private WinForms.RegionOfInterest.MultipleROIManager multipleROIManager;
+        private RegionOfInterest.MultipleROIManager multipleROIManager;
     }
 }

@@ -30,7 +30,7 @@ namespace CDS.Imaging.Demo.DemoForms
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            bitmapDisplayPanel = new WinForms.BitmapDisplay.BitmapDisplayPanel();
+            bitmapDisplayPanel = new BitmapDisplay.BitmapDisplayPanel();
             panel1 = new System.Windows.Forms.Panel();
             labelPaintBackgroundMetrics = new System.Windows.Forms.Label();
             label5 = new System.Windows.Forms.Label();
@@ -43,16 +43,16 @@ namespace CDS.Imaging.Demo.DemoForms
             labelCommittedROI = new System.Windows.Forms.Label();
             btnClearROI = new System.Windows.Forms.Button();
             btnSetROI = new System.Windows.Forms.Button();
-            sysInfoPanel = new WinForms.SysInfoPanel();
+            sysInfoPanel = new SysInfoPanel();
             timerUpdateMetrics = new System.Windows.Forms.Timer(components);
-            singleROIManager = new WinForms.RegionOfInterest.SingleROIManager(components);
+            singleROIManager = new RegionOfInterest.SingleROIManager(components);
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // bitmapDisplayPanel
             // 
             bitmapDisplayPanel.BackgroundImage = Properties.Resources.double_bubble;
-            bitmapDisplayPanel.DisplayMode = WinForms.BitmapDisplay.BitmapDisplayMode.Free;
+            bitmapDisplayPanel.DisplayMode = BitmapDisplay.BitmapDisplayMode.Free;
             bitmapDisplayPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             bitmapDisplayPanel.Location = new System.Drawing.Point(448, 38);
             bitmapDisplayPanel.Name = "bitmapDisplayPanel";
@@ -206,7 +206,7 @@ namespace CDS.Imaging.Demo.DemoForms
             singleROIManager.CommittedROIRenderer.MaximumSize = new System.Drawing.Size(1000000, 1000000);
             singleROIManager.CommittedROIRenderer.MinimumSize = new System.Drawing.Size(1, 1);
             singleROIManager.CommittedROIRenderer.Name = "";
-            singleROIManager.CommittedROIRenderer.PixelAlign = WinForms.BitmapDisplay.DisplayPixelAlign.TopLeft;
+            singleROIManager.CommittedROIRenderer.PixelAlign = BitmapDisplay.DisplayPixelAlign.TopLeft;
             singleROIManager.CommittedROIRenderer.Rendering.Fill.Color = System.Drawing.Color.Transparent;
             singleROIManager.CommittedROIRenderer.Rendering.Font.FontName = "Arial";
             singleROIManager.CommittedROIRenderer.Rendering.Font.FontSize = 12;
@@ -224,7 +224,7 @@ namespace CDS.Imaging.Demo.DemoForms
             singleROIManager.LiveDraggingROIRenderer.MaximumSize = new System.Drawing.Size(1000000, 1000000);
             singleROIManager.LiveDraggingROIRenderer.MinimumSize = new System.Drawing.Size(1, 1);
             singleROIManager.LiveDraggingROIRenderer.Name = "";
-            singleROIManager.LiveDraggingROIRenderer.PixelAlign = WinForms.BitmapDisplay.DisplayPixelAlign.TopLeft;
+            singleROIManager.LiveDraggingROIRenderer.PixelAlign = BitmapDisplay.DisplayPixelAlign.TopLeft;
             singleROIManager.LiveDraggingROIRenderer.Rendering.Fill.Color = System.Drawing.Color.FromArgb(32, 255, 128, 0);
             singleROIManager.LiveDraggingROIRenderer.Rendering.Lines.Color = System.Drawing.Color.FromArgb(192, 255, 128, 0);
             singleROIManager.LiveDraggingROIRenderer.Rendering.Lines.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
@@ -255,14 +255,14 @@ namespace CDS.Imaging.Demo.DemoForms
 
         #endregion
 
-        private WinForms.BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel;
+        private BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnClearROI;
         private System.Windows.Forms.Button btnSetROI;
         private System.Windows.Forms.Label labelDraggingROI;
         private System.Windows.Forms.Label labelCommittedROI;
         private System.Windows.Forms.PropertyGrid propertyGrid;
-        private CDS.Imaging.WinForms.SysInfoPanel sysInfoPanel;
+        private CDS.Imaging.SysInfoPanel sysInfoPanel;
         private System.Windows.Forms.Label labelPaintBackgroundMetrics;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label labelPaintForegroundMetrics;
@@ -270,6 +270,6 @@ namespace CDS.Imaging.Demo.DemoForms
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Timer timerUpdateMetrics;
-        private WinForms.RegionOfInterest.SingleROIManager singleROIManager;
+        private RegionOfInterest.SingleROIManager singleROIManager;
     }
 }

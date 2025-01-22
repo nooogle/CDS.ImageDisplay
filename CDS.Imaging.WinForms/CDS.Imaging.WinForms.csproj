@@ -8,7 +8,7 @@
     <LangVersion>latest</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Platforms>AnyCPU;ARM64;x64</Platforms>
-    <VersionPrefix>1.6.2</VersionPrefix>
+    <VersionPrefix>1.7.0</VersionPrefix>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>CDS Imaging</Title>
     <Description>Imagine support library</Description>
@@ -16,6 +16,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/nooogle/CDS.Imaging.git</RepositoryUrl>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <RootNamespace>CDS.Imaging</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">

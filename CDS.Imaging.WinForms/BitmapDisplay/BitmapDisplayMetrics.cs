@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CDS.Imaging.WinForms.BitmapDisplay
+namespace CDS.Imaging.BitmapDisplay
 {
 
     /// <summary>

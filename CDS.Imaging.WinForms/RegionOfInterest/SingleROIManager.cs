@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.WinForms.RegionOfInterest
+namespace CDS.Imaging.RegionOfInterest
 {
     /// <summary>
     /// Manages a region of interest (ROI) on a <see cref="BitmapDisplay.BitmapDisplayPanel"/>

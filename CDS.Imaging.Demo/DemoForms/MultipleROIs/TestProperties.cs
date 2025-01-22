@@ -10,12 +10,12 @@ class TestProperties : INotifyPropertyChanged
 {
     [Category("WinForms controls")]
     [DisplayName("Bitmap display")]
-    public WinForms.BitmapDisplay.BitmapDisplayPanel BitmapDisplayPanel { get; }
+    public BitmapDisplay.BitmapDisplayPanel BitmapDisplayPanel { get; }
 
 
     [Category("WinForms controls")]
     [DisplayName("Multiple ROI manager")]
-    public WinForms.RegionOfInterest.MultipleROIManager MultipleROIManager { get; }
+    public RegionOfInterest.MultipleROIManager MultipleROIManager { get; }
 
 
     [Category("Demo form")]
@@ -27,8 +27,8 @@ class TestProperties : INotifyPropertyChanged
     /// Initialise the test properties
     /// </summary>
     public TestProperties(
-        WinForms.BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel,
-        WinForms.RegionOfInterest.MultipleROIManager multipleROIManager)
+        BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel,
+        RegionOfInterest.MultipleROIManager multipleROIManager)
     {
         BitmapDisplayPanel = bitmapDisplayPanel;
         MultipleROIManager = multipleROIManager;

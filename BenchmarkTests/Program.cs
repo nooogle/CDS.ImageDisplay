@@ -7,7 +7,7 @@ namespace BenchmarkTests;
 [MemoryDiagnoser]
 public class PenBenchmark
 {
-    private CDS.Imaging.WinForms.Draw.LineSpec lineSpec = new CDS.Imaging.WinForms.Draw.LineSpec()
+    private CDS.Imaging.Draw.LineSpec lineSpec = new CDS.Imaging.Draw.LineSpec()
     {
         Color = Color.Black,
         Width = 1,
@@ -32,7 +32,7 @@ public class PenBenchmark
     [Benchmark]
     public void AccessPenFromResourcePool()
     {
-        var pen = CDS.Imaging.WinForms.Draw.RenderingToolsPool.GetPen(lineSpec);
+        var pen = CDS.Imaging.Draw.RenderingToolsPool.GetPen(lineSpec);
     }
 }
 
@@ -40,7 +40,7 @@ public class PenBenchmark
 [MemoryDiagnoser]
 public class BrushBenchmark
 {
-    private CDS.Imaging.WinForms.Draw.BrushSpec brushSpec = new CDS.Imaging.WinForms.Draw.BrushSpec()
+    private CDS.Imaging.Draw.BrushSpec brushSpec = new CDS.Imaging.Draw.BrushSpec()
     {
         Color = Color.Aqua,
     };
@@ -57,7 +57,7 @@ public class BrushBenchmark
     [Benchmark]
     public void AccessBrushFromResourcePool()
     {
-        var brush = CDS.Imaging.WinForms.Draw.RenderingToolsPool.GetBrush(brushSpec);
+        var brush = CDS.Imaging.Draw.RenderingToolsPool.GetBrush(brushSpec);
     }
 }
 
@@ -65,7 +65,7 @@ public class BrushBenchmark
 [MemoryDiagnoser]
 public class FontBenchmark
 {
-    private CDS.Imaging.WinForms.Draw.FontSpec fontSpec = new CDS.Imaging.WinForms.Draw.FontSpec()
+    private CDS.Imaging.Draw.FontSpec fontSpec = new CDS.Imaging.Draw.FontSpec()
     {
         FontName = "Arial",
         FontSize = 12,
@@ -83,7 +83,7 @@ public class FontBenchmark
     [Benchmark]
     public void AccessFontFromResourcePool()
     {
-        var font = CDS.Imaging.WinForms.Draw.RenderingToolsPool.GetFont(fontSpec);
+        var font = CDS.Imaging.Draw.RenderingToolsPool.GetFont(fontSpec);
     }
 }
 
@@ -93,7 +93,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine(CDS.Imaging.WinForms.SystemInfo.Get());
+        Console.WriteLine(CDS.Imaging.SystemInfo.Get());
         Console.Write("Press any key to start > ");
         Console.ReadKey();
         Console.WriteLine();

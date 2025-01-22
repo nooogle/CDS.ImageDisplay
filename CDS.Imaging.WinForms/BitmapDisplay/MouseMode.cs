@@ -1,4 +1,4 @@
-﻿//namespace CDS.Imaging.WinForms.BitmapDisplay
+﻿//namespace CDS.Imaging.BitmapDisplay
 //{
 //    /// <summary>
 //    /// Mouse mode for the bitmap display panel.

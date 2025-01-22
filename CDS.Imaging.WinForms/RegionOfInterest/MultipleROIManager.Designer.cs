@@ -1,4 +1,4 @@
-﻿namespace CDS.Imaging.WinForms.RegionOfInterest
+﻿namespace CDS.Imaging.RegionOfInterest
 {
     partial class MultipleROIManager
     {

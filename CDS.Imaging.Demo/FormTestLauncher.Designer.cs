@@ -30,7 +30,7 @@ namespace CDS.Imaging.Demo
         private void InitializeComponent()
         {
             treeView = new System.Windows.Forms.TreeView();
-            sysInfoPanel = new WinForms.SysInfoPanel();
+            sysInfoPanel = new SysInfoPanel();
             SuspendLayout();
             // 
             // treeView
@@ -70,6 +70,6 @@ namespace CDS.Imaging.Demo
         #endregion
 
         private System.Windows.Forms.TreeView treeView;
-        private WinForms.SysInfoPanel sysInfoPanel;
+        private SysInfoPanel sysInfoPanel;
     }
 }

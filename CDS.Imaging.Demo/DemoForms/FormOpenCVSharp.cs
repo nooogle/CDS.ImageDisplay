@@ -86,12 +86,12 @@ namespace CDS.Imaging.Demo.DemoForms
         }
 
 
-        private void bitmapPanel_CDSPaintRectChanged(WinForms.BitmapDisplay.BitmapDisplayPanel sender)
+        private void bitmapPanel_CDSPaintRectChanged(BitmapDisplay.BitmapDisplayPanel sender)
         {
             SyncPaintRects(sender);
         }
 
-        private void SyncPaintRects(WinForms.BitmapDisplay.BitmapDisplayPanel sender)
+        private void SyncPaintRects(BitmapDisplay.BitmapDisplayPanel sender)
         {
             if (changingPaintRectProgramatically) { return; }
             changingPaintRectProgramatically = true;

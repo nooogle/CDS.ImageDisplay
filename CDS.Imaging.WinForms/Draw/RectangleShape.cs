@@ -1,14 +1,14 @@
-﻿using CDS.Imaging.WinForms.BitmapDisplay;
+﻿using CDS.Imaging.BitmapDisplay;
 using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.WinForms.Draw.Shapes;
+namespace CDS.Imaging.Draw;
 
 /// <summary>
 /// A rectangle overlay combining a rectangle and rendering properties
 /// </summary>
 [TypeConverter(typeof(ExpandableObjectConverter))]
-public class RectangleOverlay : IShapeOverlay
+public class RectangleShape : IShape
 {
     /// <summary>
     /// Simple representation of this instance

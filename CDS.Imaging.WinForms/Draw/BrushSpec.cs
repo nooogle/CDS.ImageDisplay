@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.WinForms.Draw
+namespace CDS.Imaging.Draw
 {
     /// <summary>
     /// Represents a brush specification.

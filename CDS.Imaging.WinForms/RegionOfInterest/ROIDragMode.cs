@@ -1,4 +1,4 @@
-﻿namespace CDS.Imaging.WinForms.RegionOfInterest
+﻿namespace CDS.Imaging.RegionOfInterest
 {
     /// <summary>
     /// The different dragging modes for the ROI manager.

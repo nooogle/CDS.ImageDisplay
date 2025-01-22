@@ -29,7 +29,7 @@ namespace CDS.Imaging.Demo.DemoForms
         /// </summary>
         private void InitializeComponent()
         {
-            this.bitmapDisplayPanel = new CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayPanel();
+            this.bitmapDisplayPanel = new CDS.Imaging.BitmapDisplay.BitmapDisplayPanel();
             this.SuspendLayout();
             // 
             // bitmapDisplayPanel
@@ -37,7 +37,7 @@ namespace CDS.Imaging.Demo.DemoForms
             this.bitmapDisplayPanel.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
             this.bitmapDisplayPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bitmapDisplayPanel.Location = new System.Drawing.Point(0, 0);
-            this.bitmapDisplayPanel.DisplayMode = CDS.Imaging.WinForms.BitmapDisplay.BitmapDisplayMode.FitToWindowCentred;
+            this.bitmapDisplayPanel.DisplayMode = CDS.Imaging.BitmapDisplay.BitmapDisplayMode.FitToWindowCentred;
             this.bitmapDisplayPanel.Name = "bitmapDisplayPanel";
             this.bitmapDisplayPanel.Size = new System.Drawing.Size(800, 374);
             this.bitmapDisplayPanel.TabIndex = 0;
@@ -57,6 +57,6 @@ namespace CDS.Imaging.Demo.DemoForms
 
         #endregion
 
-        private WinForms.BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel;
+        private BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel;
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.WinForms
+namespace CDS.Imaging
 {
     /// <summary>
     /// Panel to display system information

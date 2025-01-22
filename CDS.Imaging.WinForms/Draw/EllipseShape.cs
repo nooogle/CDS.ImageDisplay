@@ -1,15 +1,15 @@
-﻿using CDS.Imaging.WinForms.BitmapDisplay;
+﻿using CDS.Imaging.BitmapDisplay;
 using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.WinForms.Draw.Shapes;
+namespace CDS.Imaging.Draw;
 
 
 /// <summary>
 /// An ellipse overlay combining ellipse geometry and rendering properties
 /// </summary>
 [TypeConverter(typeof(ExpandableObjectConverter))]
-public class EllipseOverlay : IShapeOverlay
+public class EllipseShape : IShape
 {
     /// <summary>
     /// Simple representation of this instance
@@ -28,7 +28,7 @@ public class EllipseOverlay : IShapeOverlay
     /// <summary>
     /// The centre of the ellipse (in image coordinates)
     /// </summary>
-    [TypeConverter(typeof(WinForms.Draw.PointFConverter))]
+    [TypeConverter(typeof(PointFConverter))]
     public PointF Centre { get; set; }
 
 
@@ -81,8 +81,8 @@ public class EllipseOverlay : IShapeOverlay
             graphics.RotateTransform(MajorAxisAngleDegrees);
 
             // Draw the ellipse (centered at the origin after translation)
-            graphics.FillEllipse(brush, (-majorAxisOnDisplay / 2), (-minorAxisOnDisplay / 2), majorAxisOnDisplay, minorAxisOnDisplay);
-            graphics.DrawEllipse(pen, (-majorAxisOnDisplay / 2), (-minorAxisOnDisplay) / 2, majorAxisOnDisplay, minorAxisOnDisplay);
+            graphics.FillEllipse(brush, -majorAxisOnDisplay / 2, -minorAxisOnDisplay / 2, majorAxisOnDisplay, minorAxisOnDisplay);
+            graphics.DrawEllipse(pen, -majorAxisOnDisplay / 2, -minorAxisOnDisplay / 2, majorAxisOnDisplay, minorAxisOnDisplay);
         }
         finally
         {

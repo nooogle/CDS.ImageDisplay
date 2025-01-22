@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace CDS.Imaging.WinForms.BitmapDisplay
+namespace CDS.Imaging.BitmapDisplay
 {
     /// <summary>
     /// Provides the drawing rectangle needed to render an image 

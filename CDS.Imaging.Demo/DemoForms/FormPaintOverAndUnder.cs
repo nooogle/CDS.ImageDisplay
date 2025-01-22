@@ -1,4 +1,4 @@
-﻿using CDS.Imaging.WinForms.BitmapDisplay;
+﻿using CDS.Imaging.BitmapDisplay;
 using Humanizer;
 using System;
 using System.Drawing;
@@ -12,7 +12,7 @@ namespace CDS.Imaging.Demo.DemoForms
         Bitmap? loadedBitmap;
         Font fixedWidthFont;
         Brush msgPanelBrush;
-        WinForms.Draw.Shapes.CrossHairOverlay crossHair = new WinForms.Draw.Shapes.CrossHairOverlay();
+        Draw.CrosshairShape crossHair = new Draw.CrosshairShape();
 
 
         public FormPaintOverAndUnder()

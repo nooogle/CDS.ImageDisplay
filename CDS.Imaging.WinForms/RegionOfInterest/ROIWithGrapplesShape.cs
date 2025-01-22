@@ -1,9 +1,9 @@
-﻿using CDS.Imaging.WinForms.BitmapDisplay;
-using CDS.Imaging.WinForms.Draw;
+﻿using CDS.Imaging.BitmapDisplay;
+using CDS.Imaging.Draw;
 using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.WinForms.RegionOfInterest
+namespace CDS.Imaging.RegionOfInterest
 {
     /// <summary>
     /// Renders a rectangle on a graphics object. Supports grapples.

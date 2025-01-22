@@ -1,12 +1,21 @@
 ﻿using System.Drawing;
 
-namespace CDS.Imaging.WinForms.RegionOfInterest
+namespace CDS.Imaging.RegionOfInterest
 {
     /// <summary>
     /// Interface for a descriptor for a single ROI, The <see cref="MultipleROIManager"/> uses these
     /// to manage multiple ROIs on a bitmap display.
     /// </summary>
-    public interface ISingleROIDescriptor : WinForms.Draw.Shapes.IShapeOverlay
+
+    /* Unmerged change from project 'CDS.Imaging.WinForms (net48)'
+    Before:
+        public interface ISingleROIDescriptor : Draw.Shapes.IShape
+        {
+    After:
+        public interface ISingleROIDescriptor : IShape
+        {
+    */
+    public interface ISingleROIDescriptor : Draw.IShape
     {
         /// <summary>
         /// The region of interest.

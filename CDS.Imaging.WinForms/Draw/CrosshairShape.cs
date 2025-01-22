@@ -1,15 +1,15 @@
-﻿using CDS.Imaging.WinForms.BitmapDisplay;
+﻿using CDS.Imaging.BitmapDisplay;
 using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.WinForms.Draw.Shapes;
+namespace CDS.Imaging.Draw;
 
 
 /// <summary>
 /// A crosshair overlay combining crosshair geometry and rendering properties
 /// </summary>
 [TypeConverter(typeof(ExpandableObjectConverter))]
-public class CrossHairOverlay : IShapeOverlay
+public class CrosshairShape : IShape
 {
     /// <summary>
     /// Simple representation of this instance
@@ -28,7 +28,7 @@ public class CrossHairOverlay : IShapeOverlay
     /// <summary>
     /// Centre of the crosshair
     /// </summary>
-    [TypeConverter(typeof(WinForms.Draw.PointFConverter))]
+    [TypeConverter(typeof(PointFConverter))]
     public PointF Centre { get; set; }
 
 

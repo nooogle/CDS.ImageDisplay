@@ -78,7 +78,7 @@ public partial class FormMultipleROIs : Form
         }
     }
 
-    private void multipleROIManager_OnCommittedROIChanged(object sender, CDS.Imaging.WinForms.RegionOfInterest.CommittedROIDescriptorChangedEventArgs e)
+    private void multipleROIManager_OnCommittedROIChanged(object sender, CDS.Imaging.RegionOfInterest.CommittedROIDescriptorChangedEventArgs e)
     {
         var myDesciptor = e.ROIDescriptor as MyROIDescriptor;
 

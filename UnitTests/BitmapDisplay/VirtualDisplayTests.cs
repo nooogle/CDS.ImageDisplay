@@ -1,6 +1,5 @@
-using CDS.Imaging.WinForms.BitmapDisplay;
+using CDS.Imaging.BitmapDisplay;
 using System.Drawing;
-using System.Threading.Tasks;
 
 namespace CDS.Imaging.WinFormsTests.BitmapDisplay
 {

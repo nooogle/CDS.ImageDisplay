@@ -1,4 +1,4 @@
-﻿namespace CDS.Imaging.WinForms
+﻿namespace CDS.Imaging
 {
     partial class SysInfoPanel
     {

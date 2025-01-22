@@ -30,17 +30,17 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            bitmapDisplayPanel = new WinForms.BitmapDisplay.BitmapDisplayPanel();
+            bitmapDisplayPanel = new BitmapDisplay.BitmapDisplayPanel();
             panel1 = new System.Windows.Forms.Panel();
             propertyGrid = new System.Windows.Forms.PropertyGrid();
-            sysInfoPanel = new WinForms.SysInfoPanel();
+            sysInfoPanel = new SysInfoPanel();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // bitmapDisplayPanel
             // 
             bitmapDisplayPanel.BackgroundImage = Properties.Resources.double_bubble;
-            bitmapDisplayPanel.DisplayMode = WinForms.BitmapDisplay.BitmapDisplayMode.Free;
+            bitmapDisplayPanel.DisplayMode = BitmapDisplay.BitmapDisplayMode.Free;
             bitmapDisplayPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             bitmapDisplayPanel.Location = new System.Drawing.Point(448, 38);
             bitmapDisplayPanel.Name = "bitmapDisplayPanel";
@@ -94,9 +94,9 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
 
         #endregion
 
-        private WinForms.BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel;
+        private BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.PropertyGrid propertyGrid;
-        private CDS.Imaging.WinForms.SysInfoPanel sysInfoPanel;
+        private CDS.Imaging.SysInfoPanel sysInfoPanel;
     }
 }

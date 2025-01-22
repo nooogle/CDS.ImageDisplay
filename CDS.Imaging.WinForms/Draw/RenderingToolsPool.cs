@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.WinForms.Draw
+namespace CDS.Imaging.Draw
 {
     /// <summary>
     /// Represents a pool of rendering tools that can be reused.

@@ -1,5 +1,5 @@
-﻿using CDS.Imaging.WinForms.BitmapDisplay;
-using CDS.Imaging.WinForms.Draw;
+﻿using CDS.Imaging.BitmapDisplay;
+using CDS.Imaging.Draw;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +9,7 @@ namespace CDS.Imaging.Demo.DemoForms.LayersDemo;
 
 class X
 {
-    CDS.Imaging.WinForms.Draw.Layer AllLayers = new CDS.Imaging.WinForms.Draw.Layer();
+    CDS.Imaging.Draw.Layer AllLayers = new CDS.Imaging.Draw.Layer();
 }
 
 [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -18,14 +18,14 @@ static class ShapesFactory
     private static Random random = new Random();
     private const int shapesPerLayer = 100;
 
-    public static CDS.Imaging.WinForms.Draw.Layer Create(Size imageSize)
+    public static CDS.Imaging.Draw.Layer Create(Size imageSize)
     {
-        CDS.Imaging.WinForms.Draw.Layer root = new Imaging.WinForms.Draw.Layer() { Name = "Root" };
+        CDS.Imaging.Draw.Layer root = new Imaging.Draw.Layer() { Name = "Root" };
 
         root.ChildLayers.Add(CreateLayers(imageSize, "Small", minSize: 10, maxSize: 50));
         root.ChildLayers.Add(CreateLayers(imageSize, "Large", minSize: 100, maxSize: 200));
 
-        var textLayer = new Imaging.WinForms.Draw.Layer() { Name = "Text" };
+        var textLayer = new Imaging.Draw.Layer() { Name = "Text" };
         AddTextToLayer(textLayer, imageSize);
         root.ChildLayers.Add(textLayer);
 
@@ -47,7 +47,7 @@ static class ShapesFactory
     {
         for (int i = 0; i < shapesPerLayer; i++)
         {
-            var rectangle = new WinForms.Draw.Shapes.RectangleOverlay
+            var rectangle = new Draw.RectangleShape
             {
                 Rect = new RectangleF(random.Next(0, imageSize.Width), random.Next(0, imageSize.Height), random.Next(minSize, maxSize), random.Next(minSize, maxSize)),
             };
@@ -63,7 +63,7 @@ static class ShapesFactory
     {
         for (int i = 0; i < shapesPerLayer; i++)
         {
-            var ellipse = new WinForms.Draw.Shapes.EllipseOverlay
+            var ellipse = new Draw.EllipseShape
             {
                 Centre = new PointF(random.Next(0, imageSize.Width), random.Next(0, imageSize.Height)),
                 MajorAxis = random.Next(minSize, maxSize),
@@ -82,7 +82,7 @@ static class ShapesFactory
     {
         for (int i = 0; i < shapesPerLayer; i++)
         {
-            var line = new WinForms.Draw.Shapes.LineOverlay
+            var line = new Draw.LineShape
             {
                 Start = new PointF(random.Next(0, imageSize.Width), random.Next(0, imageSize.Height)),
                 End = new PointF(random.Next(0, imageSize.Width), random.Next(0, imageSize.Height)),
@@ -100,7 +100,7 @@ static class ShapesFactory
 
         for (int i = 0; i < shapesPerLayer; i++)
         {
-            var text = new WinForms.Draw.Shapes.TextOverlay
+            var text = new Draw.TextShape
             {
                 Text = words[random.Next(0, words.Length)],
                 Location = new PointF(random.Next(0, imageSize.Width), random.Next(0, imageSize.Height)),

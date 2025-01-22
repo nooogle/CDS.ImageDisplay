@@ -16,12 +16,12 @@ public partial class FormROISelection : Form
     {
         [Category("WinForms controls")]
         [DisplayName("Bitmap display")]
-        public WinForms.BitmapDisplay.BitmapDisplayPanel BitmapDisplayPanel { get; }
+        public BitmapDisplay.BitmapDisplayPanel BitmapDisplayPanel { get; }
 
 
         [Category("WinForms controls")]
         [DisplayName("ROI selection")]
-        public WinForms.RegionOfInterest.SingleROIManager SingleROIManager { get; }
+        public RegionOfInterest.SingleROIManager SingleROIManager { get; }
 
 
         [Category("Demo form")]
@@ -33,8 +33,8 @@ public partial class FormROISelection : Form
         /// Initialise the test properties
         /// </summary>
         public TestProperties(
-            WinForms.BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel,
-            WinForms.RegionOfInterest.SingleROIManager singleROIManager)
+            BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel,
+            RegionOfInterest.SingleROIManager singleROIManager)
         {
             BitmapDisplayPanel = bitmapDisplayPanel;
             SingleROIManager = singleROIManager;
@@ -123,7 +123,7 @@ public partial class FormROISelection : Form
     /// <summary>
     /// The ROI has been committed to the singleROIManager
     /// </summary>
-    private void singleROIManager_OnCommittedROIChanged(CDS.Imaging.WinForms.RegionOfInterest.SingleROIManager sender, Rectangle roi)
+    private void singleROIManager_OnCommittedROIChanged(CDS.Imaging.RegionOfInterest.SingleROIManager sender, Rectangle roi)
     {
         var sizeLimitedROI = new Rectangle(
             roi.Location.X,
@@ -143,7 +143,7 @@ public partial class FormROISelection : Form
     /// <summary>
     /// The ROI is being dragged on the singleROIManagery
     /// </summary>
-    private void singleROIManager_OnDraggingROIChanged(CDS.Imaging.WinForms.RegionOfInterest.SingleROIManager sender, Rectangle roi)
+    private void singleROIManager_OnDraggingROIChanged(CDS.Imaging.RegionOfInterest.SingleROIManager sender, Rectangle roi)
     {
         UpdateROILabels();
     }

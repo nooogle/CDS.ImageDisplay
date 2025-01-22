@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 
-namespace CDS.Imaging.WinForms.Draw
+namespace CDS.Imaging.Draw
 {
     /// <summary>
     /// Provides a type converter to convert <see cref="RectangleF"/> objects to and from a string representation.

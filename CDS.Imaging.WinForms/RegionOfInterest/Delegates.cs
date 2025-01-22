@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace CDS.Imaging.WinForms.RegionOfInterest
+namespace CDS.Imaging.RegionOfInterest
 {
     /// <summary>
     /// Event handler for when a ROI is committed

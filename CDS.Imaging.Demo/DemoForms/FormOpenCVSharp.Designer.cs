@@ -33,10 +33,10 @@
             label5 = new System.Windows.Forms.Label();
             label4 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
-            bitmapPanel4 = new WinForms.BitmapDisplay.BitmapDisplayPanel();
-            bitmapPanel3 = new WinForms.BitmapDisplay.BitmapDisplayPanel();
-            bitmapPanel2 = new WinForms.BitmapDisplay.BitmapDisplayPanel();
-            bitmapPanel1 = new WinForms.BitmapDisplay.BitmapDisplayPanel();
+            bitmapPanel4 = new BitmapDisplay.BitmapDisplayPanel();
+            bitmapPanel3 = new BitmapDisplay.BitmapDisplayPanel();
+            bitmapPanel2 = new BitmapDisplay.BitmapDisplayPanel();
+            bitmapPanel1 = new BitmapDisplay.BitmapDisplayPanel();
             trackBarGaussianSize = new System.Windows.Forms.TrackBar();
             label1 = new System.Windows.Forms.Label();
             trackGaussianSigma = new System.Windows.Forms.TrackBar();
@@ -116,7 +116,7 @@
             // bitmapPanel4
             // 
             bitmapPanel4.BackgroundImage = Properties.Resources.double_bubble;
-            bitmapPanel4.DisplayMode = WinForms.BitmapDisplay.BitmapDisplayMode.Free;
+            bitmapPanel4.DisplayMode = BitmapDisplay.BitmapDisplayMode.Free;
             bitmapPanel4.Zoom = 1F;
             bitmapPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             bitmapPanel4.Location = new System.Drawing.Point(727, 452);
@@ -129,7 +129,7 @@
             // bitmapPanel3
             // 
             bitmapPanel3.BackgroundImage = Properties.Resources.double_bubble;
-            bitmapPanel3.DisplayMode = WinForms.BitmapDisplay.BitmapDisplayMode.Free;
+            bitmapPanel3.DisplayMode = BitmapDisplay.BitmapDisplayMode.Free;
             bitmapPanel3.Zoom = 1F;
             bitmapPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             bitmapPanel3.Location = new System.Drawing.Point(8, 452);
@@ -142,7 +142,7 @@
             // bitmapPanel2
             // 
             bitmapPanel2.BackgroundImage = Properties.Resources.double_bubble;
-            bitmapPanel2.DisplayMode = WinForms.BitmapDisplay.BitmapDisplayMode.Free;
+            bitmapPanel2.DisplayMode = BitmapDisplay.BitmapDisplayMode.Free;
             bitmapPanel2.Zoom = 1F;
             bitmapPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             bitmapPanel2.Location = new System.Drawing.Point(727, 53);
@@ -155,7 +155,7 @@
             // bitmapPanel1
             // 
             bitmapPanel1.BackgroundImage = Properties.Resources.double_bubble;
-            bitmapPanel1.DisplayMode = WinForms.BitmapDisplay.BitmapDisplayMode.Free;
+            bitmapPanel1.DisplayMode = BitmapDisplay.BitmapDisplayMode.Free;
             bitmapPanel1.Zoom = 1F;
             bitmapPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             bitmapPanel1.Location = new System.Drawing.Point(8, 53);
@@ -240,10 +240,10 @@
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
-        private WinForms.BitmapDisplay.BitmapDisplayPanel bitmapPanel4;
-        private WinForms.BitmapDisplay.BitmapDisplayPanel bitmapPanel3;
-        private WinForms.BitmapDisplay.BitmapDisplayPanel bitmapPanel2;
-        private WinForms.BitmapDisplay.BitmapDisplayPanel bitmapPanel1;
+        private BitmapDisplay.BitmapDisplayPanel bitmapPanel4;
+        private BitmapDisplay.BitmapDisplayPanel bitmapPanel3;
+        private BitmapDisplay.BitmapDisplayPanel bitmapPanel2;
+        private BitmapDisplay.BitmapDisplayPanel bitmapPanel1;
         private System.Windows.Forms.TrackBar trackBarGaussianSize;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TrackBar trackGaussianSigma;

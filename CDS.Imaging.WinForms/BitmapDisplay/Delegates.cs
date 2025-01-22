@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace CDS.Imaging.WinForms.BitmapDisplay
+namespace CDS.Imaging.BitmapDisplay
 {
     /// <summary>
     /// Callback delegate for getting an image

@@ -6,7 +6,7 @@ using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CDS.Imaging.WinForms.BitmapDisplay
+namespace CDS.Imaging.BitmapDisplay
 {
     /// <summary>
     /// Manages a .Net Bitmap. New images will be copied into the image when

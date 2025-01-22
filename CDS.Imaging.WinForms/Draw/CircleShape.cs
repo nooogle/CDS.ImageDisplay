@@ -1,15 +1,15 @@
-﻿using CDS.Imaging.WinForms.BitmapDisplay;
+﻿using CDS.Imaging.BitmapDisplay;
 using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.WinForms.Draw.Shapes;
+namespace CDS.Imaging.Draw;
 
 
 /// <summary>
 /// A circle overlay combining circle geometry and rendering properties
 /// </summary>
 [TypeConverter(typeof(ExpandableObjectConverter))]
-public class CircleOverlay : IShapeOverlay
+public class CircleShape : IShape
 {
     /// <summary>
     /// Simple representation of this instance
@@ -28,7 +28,7 @@ public class CircleOverlay : IShapeOverlay
     /// <summary>
     /// The centre of the circle (in image coordinates)
     /// </summary>
-    [TypeConverter(typeof(WinForms.Draw.PointFConverter))]
+    [TypeConverter(typeof(PointFConverter))]
     public PointF Centre { get; set; }
 
 
