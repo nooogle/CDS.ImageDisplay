@@ -45,9 +45,16 @@ Task("Build")
         
         Information("✅ Solution cleaned.");
 
-        DotNetBuild(solution, new DotNetBuildSettings
+        //DotNetBuild(solution, new DotNetBuildSettings
+       // {
+         //   Configuration = buildConfiguration,
+        //});
+
+        MSBuild(solution, settings =>
         {
-            Configuration = buildConfiguration,
+            settings
+            .SetConfiguration(buildConfiguration)
+            .SetVerbosity(Verbosity.Minimal);
         });
 
         Information($"✅ Build succeeded for configuration '{buildConfiguration}'.");
