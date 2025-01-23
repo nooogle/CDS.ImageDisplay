@@ -7,8 +7,8 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Platforms>AnyCPU;ARM64;x64</Platforms>
-    <VersionPrefix>1.7.1</VersionPrefix>
+    <Platforms>AnyCPU</Platforms>
+    <VersionPrefix>1.7.2</VersionPrefix>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>CDS Imaging</Title>
     <Description>Imagine support library</Description>
