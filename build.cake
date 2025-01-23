@@ -3,10 +3,12 @@ var target = Argument("target", "Default");
 var buildConfiguration = Argument("configuration", "Release");
 var testConfiguration = "Debug"; // Run unit tests in Debug mode
 
+
 // Paths
 var solution = "./CDS.Imaging.sln";
 var testProject = "./UnitTests/UnitTests.csproj";
 var testResultsDirectory = "./TestResults";
+
 
 // Clean directories
 Task("Clean")
@@ -40,12 +42,14 @@ Task("Build")
         {
             Configuration = buildConfiguration
         });
+        
         Information("✅ Solution cleaned.");
 
         DotNetBuild(solution, new DotNetBuildSettings
         {
             Configuration = buildConfiguration,
         });
+
         Information($"✅ Build succeeded for configuration '{buildConfiguration}'.");
     }
     catch (Exception ex)

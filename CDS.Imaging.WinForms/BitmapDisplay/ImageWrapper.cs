@@ -44,7 +44,7 @@ namespace CDS.Imaging.BitmapDisplay
         /// </summary>
         public void SetNewImage(IImageSource? imageSource)
         {
-            if (imageSource == null)
+            if ((imageSource == null) || (imageSource.Size == Size.Empty))
             {
                 DropImage();
             }
