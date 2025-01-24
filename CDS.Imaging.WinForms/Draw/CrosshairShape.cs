@@ -8,7 +8,7 @@ namespace CDS.Imaging.Draw;
 /// <summary>
 /// A crosshair overlay combining crosshair geometry and rendering properties
 /// </summary>
-[TypeConverter(typeof(ExpandableObjectConverter))]
+[TypeConverter(typeof(SerializableExpandableObjectConverter))]
 public class CrosshairShape : IShape
 {
     /// <summary>

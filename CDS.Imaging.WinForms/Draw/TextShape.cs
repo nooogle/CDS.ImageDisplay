@@ -8,7 +8,7 @@ namespace CDS.Imaging.Draw;
 /// <summary>
 /// A text overlay combining text information and geometry and rendering properties
 /// </summary>
-[TypeConverter(typeof(ExpandableObjectConverter))]
+[TypeConverter(typeof(SerializableExpandableObjectConverter))]
 public class TextShape : IShape
 {
     /// <summary>

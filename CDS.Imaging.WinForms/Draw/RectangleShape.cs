@@ -7,7 +7,7 @@ namespace CDS.Imaging.Draw;
 /// <summary>
 /// A rectangle overlay combining a rectangle and rendering properties
 /// </summary>
-[TypeConverter(typeof(ExpandableObjectConverter))]
+[TypeConverter(typeof(SerializableExpandableObjectConverter))]
 public class RectangleShape : IShape
 {
     /// <summary>

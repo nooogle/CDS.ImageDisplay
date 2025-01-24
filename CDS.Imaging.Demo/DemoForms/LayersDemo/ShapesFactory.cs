@@ -12,7 +12,7 @@ class X
     CDS.Imaging.Draw.Layer AllLayers = new CDS.Imaging.Draw.Layer();
 }
 
-[TypeConverter(typeof(ExpandableObjectConverter))]
+[TypeConverter(typeof(SerializableExpandableObjectConverter))]
 static class ShapesFactory
 {
     private static Random random = new Random();

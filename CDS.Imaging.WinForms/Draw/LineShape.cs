@@ -7,7 +7,7 @@ namespace CDS.Imaging.Draw;
 /// <summary>
 /// A line overlay combining a line and rendering properties
 /// </summary>
-[TypeConverter(typeof(ExpandableObjectConverter))]
+[TypeConverter(typeof(SerializableExpandableObjectConverter))]
 public class LineShape : IShape
 {
     /// <summary>

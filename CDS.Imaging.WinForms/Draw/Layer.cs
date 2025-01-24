@@ -9,7 +9,7 @@ using System.Drawing;
 /// <summary>
 /// A drawing layer containing shapes and child layers.
 /// </summary>
-[TypeConverter(typeof(ExpandableObjectConverter))]
+[TypeConverter(typeof(SerializableExpandableObjectConverter))]
 public class Layer
 {
     /// <summary>

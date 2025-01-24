@@ -5,7 +5,7 @@ namespace CDS.Imaging.Draw
     /// <summary>
     /// Represents a font specification.
     /// </summary>
-    [TypeConverter(typeof(ExpandableObjectConverter))]
+    [TypeConverter(typeof(SerializableExpandableObjectConverter))]
     public class FontSpec
     {
         /// <summary>

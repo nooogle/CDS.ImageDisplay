@@ -8,7 +8,7 @@ namespace CDS.Imaging.Draw;
 /// <summary>
 /// A polygon overlay combining polyon geometry and rendering properties
 /// </summary>
-[TypeConverter(typeof(ExpandableObjectConverter))]
+[TypeConverter(typeof(SerializableExpandableObjectConverter))]
 public class PolygonShape : IShape
 {
     /// <summary>

@@ -8,7 +8,7 @@ namespace CDS.Imaging.Draw;
 /// <summary>
 /// An ellipse overlay combining ellipse geometry and rendering properties
 /// </summary>
-[TypeConverter(typeof(ExpandableObjectConverter))]
+[TypeConverter(typeof(SerializableExpandableObjectConverter))]
 public class EllipseShape : IShape
 {
     /// <summary>

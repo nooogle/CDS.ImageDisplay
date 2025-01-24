@@ -8,7 +8,7 @@ namespace CDS.Imaging.RegionOfInterest
     /// <summary>
     /// Renders a rectangle on a graphics object. Supports grapples.
     /// </summary>
-    [TypeConverter(typeof(ExpandableObjectConverter))]
+    [TypeConverter(typeof(SerializableExpandableObjectConverter))]
     public class ROIWithGrapplesShape : ISingleROIDescriptor
     {
         /// <summary>

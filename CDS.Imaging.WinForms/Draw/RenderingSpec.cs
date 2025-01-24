@@ -5,7 +5,7 @@ namespace CDS.Imaging.Draw
     /// <summary>
     /// Represents the specification of how shapes or information should be drawn.
     /// </summary>
-    [TypeConverter(typeof(ExpandableObjectConverter))]
+    [TypeConverter(typeof(SerializableExpandableObjectConverter))]
     public class RenderingSpec
     {
         /// <summary>

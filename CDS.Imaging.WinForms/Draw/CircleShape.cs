@@ -8,7 +8,7 @@ namespace CDS.Imaging.Draw;
 /// <summary>
 /// A circle overlay combining circle geometry and rendering properties
 /// </summary>
-[TypeConverter(typeof(ExpandableObjectConverter))]
+[TypeConverter(typeof(SerializableExpandableObjectConverter))]
 public class CircleShape : IShape
 {
     /// <summary>

@@ -6,7 +6,7 @@ namespace CDS.Imaging.Draw
     /// <summary>
     /// Represents a brush specification.
     /// </summary>
-    [TypeConverter(typeof(ExpandableObjectConverter))]
+    [TypeConverter(typeof(SerializableExpandableObjectConverter))]
     public class BrushSpec
     {
         /// <summary>

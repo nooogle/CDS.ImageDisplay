@@ -4,7 +4,7 @@ using System.Drawing;
 namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo;
 
 
-[TypeConverter(typeof(ExpandableObjectConverter))]
+[TypeConverter(typeof(SerializableExpandableObjectConverter))]
 class RenderingSettings
 {
     public Draw.RenderingSpec Rectangles { get; set; } = new Draw.RenderingSpec()

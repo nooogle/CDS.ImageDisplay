@@ -9,7 +9,7 @@ namespace CDS.Imaging.Draw
     /// <summary>
     /// Represents the specification of a pen.
     /// </summary>
-    [TypeConverter(typeof(ExpandableObjectConverter))]
+    [TypeConverter(typeof(SerializableExpandableObjectConverter))]
     public class LineSpec
     {
         /// <summary>

@@ -2,7 +2,7 @@
 
 namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
 {
-    [TypeConverter(typeof(ExpandableObjectConverter))]
+    [TypeConverter(typeof(SerializableExpandableObjectConverter))]
     internal class TestSettings
     {
         public Shapes Shapes { get; set; } = new Shapes();
