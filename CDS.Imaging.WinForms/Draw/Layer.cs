@@ -1,6 +1,7 @@
 ﻿namespace CDS.Imaging.Draw;
 
 using CDS.Imaging.BitmapDisplay;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -32,9 +33,10 @@ public class Layer
 
 
     /// <summary>
-    /// The shapes on this layer.
+    /// The shapes on this layer. These are not serialised.
     /// </summary>
     [Browsable(false)]
+    [JsonIgnore]
     public List<Draw.IShape> Shapes { get; } = new List<Draw.IShape>();
 
 

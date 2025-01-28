@@ -1,334 +1,333 @@
 using CDS.Imaging.BitmapDisplay;
 using System.Drawing;
 
-namespace CDS.Imaging.WinFormsTests.BitmapDisplay
+namespace CDS.Imaging.WinFormsTests.BitmapDisplay;
+
+[TestClass]
+public partial class VirtualDisplayTests
 {
-    [TestClass]
-    public partial class VirtualDisplayTests
+    [TestMethod]
+    public Task FitToWindowMode_ImageSameSizeAsDisplay_FillsDisplayExactly()
     {
-        [TestMethod]
-        public Task FitToWindowMode_ImageSameSizeAsDisplay_FillsDisplayExactly()
+        var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
+        vid.DisplaySize = new Size(1000, 600);
+        vid.ImageSize = vid.DisplaySize;
+        vid.Mode = BitmapDisplayMode.FitToWindowCentred;
+
+        var reviewData = new
         {
-            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
-            vid.DisplaySize = new Size(1000, 600);
-            vid.ImageSize = vid.DisplaySize;
-            vid.Mode = BitmapDisplayMode.FitToWindowCentred;
+            vid
+        };
 
-            var reviewData = new
-            {
-                vid
-            };
+        return Verify(reviewData);
+    }
 
-            return Verify(reviewData);
-        }
+    [TestMethod]
+    public Task ActualSizeMode_ImageSameSizeAsDisplay_FillsDisplayExactly()
+    {
+        var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
+        vid.DisplaySize = new Size(1000, 600);
+        vid.ImageSize = vid.DisplaySize;
+        vid.Mode = BitmapDisplayMode.ActualSizeCentred;
 
-        [TestMethod]
-        public Task ActualSizeMode_ImageSameSizeAsDisplay_FillsDisplayExactly()
+        var reviewData = new
         {
-            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
-            vid.DisplaySize = new Size(1000, 600);
-            vid.ImageSize = vid.DisplaySize;
-            vid.Mode = BitmapDisplayMode.ActualSizeCentred;
+            vid
+        };
 
-            var reviewData = new
-            {
-                vid
-            };
+        return Verify(reviewData);
+    }
 
-            return Verify(reviewData);
-        }
+    [TestMethod]
+    [DynamicData(nameof(FitToWindowSampleData.Data), typeof(FitToWindowSampleData))]
+    public Task FitToWindow_Maximumise_DisplayArea(Size imageSize, Size displaySize, RectangleF paintRect)
+    {
+        var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
+        vid.DisplaySize = displaySize;
+        vid.ImageSize = imageSize;
 
-        [TestMethod]
-        [DynamicData(nameof(FitToWindowSampleData.Data), typeof(FitToWindowSampleData))]
-        public Task FitToWindow_Maximumise_DisplayArea(Size imageSize, Size displaySize, RectangleF paintRect)
+        var reviewData = new
         {
-            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
-            vid.DisplaySize = displaySize;
-            vid.ImageSize = imageSize;
+            vid
+        };
 
-            var reviewData = new
-            {
-                vid
-            };
+        return Verify(reviewData);
+    }
 
-            return Verify(reviewData);
-        }
+    [TestMethod]
+    public Task ChangeTargetImageCentre_MovePaintRect()
+    {
+        var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
+        vid.Mode = BitmapDisplayMode.FitToWindowCentred;
+        vid.DisplaySize = new Size(1000, 1000);
+        vid.ImageSize = new Size(200, 200);
 
-        [TestMethod]
-        public Task ChangeTargetImageCentre_MovePaintRect()
+        vid.Mode = BitmapDisplayMode.Free;
+        vid.TargetImageCentre = Point.Empty;
+
+        var reviewData = new
         {
-            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
-            vid.Mode = BitmapDisplayMode.FitToWindowCentred;
-            vid.DisplaySize = new Size(1000, 1000);
-            vid.ImageSize = new Size(200, 200);
+            vid
+        };
 
-            vid.Mode = BitmapDisplayMode.Free;
-            vid.TargetImageCentre = Point.Empty;
+        return Verify(reviewData);
+    }
 
-            var reviewData = new
-            {
-                vid
-            };
+    [TestMethod]
+    public Task DefaultInitialisation_ModeIs_FitToWindow()
+    {
+        var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
 
-            return Verify(reviewData);
-        }
-
-        [TestMethod]
-        public Task DefaultInitialisation_ModeIs_FitToWindow()
+        var reviewData = new
         {
-            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
+            vid
+        };
 
-            var reviewData = new
-            {
-                vid
-            };
+        return Verify(reviewData);
+    }
 
-            return Verify(reviewData);
-        }
+    [TestMethod]
+    public Task DefaultInitialisation_FitsToDisplay()
+    {
+        var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
+        vid.DisplaySize = new Size(1000, 1000);
+        vid.ImageSize = new Size(100, 100);
 
-        [TestMethod]
-        public Task DefaultInitialisation_FitsToDisplay()
+        var reviewData = new
         {
-            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
-            vid.DisplaySize = new Size(1000, 1000);
-            vid.ImageSize = new Size(100, 100);
+            vid
+        };
 
-            var reviewData = new
-            {
-                vid
-            };
+        return Verify(reviewData);
+    }
 
-            return Verify(reviewData);
-        }
+    [TestMethod]
+    [DataRow(0, 0, 300, 400)]
+    public Task MapImageToDisplay_Returns_DisplayRect(
+        float imageX,
+        float imageY,
+        float expectedDisplayX,
+        float expectedDisplayY)
+    {
+        var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
+        vid.Mode = BitmapDisplayMode.ActualSizeCentred;
+        vid.DisplaySize = new Size(1000, 1000);
+        vid.ImageSize = new Size(400, 200);
 
-        [TestMethod]
-        [DataRow(0, 0, 300, 400)]
-        public Task MapImageToDisplay_Returns_DisplayRect(
-            float imageX,
-            float imageY,
-            float expectedDisplayX,
-            float expectedDisplayY)
+        var imageLocation = new PointF(imageX, imageY);
+        var actualDisplayLocation = vid.MapImageToDisplay(imageLocation);
+
+        var reviewData = new
         {
-            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
-            vid.Mode = BitmapDisplayMode.ActualSizeCentred;
-            vid.DisplaySize = new Size(1000, 1000);
-            vid.ImageSize = new Size(400, 200);
+            vid,
+            actualDisplayLocation
+        };
 
-            var imageLocation = new PointF(imageX, imageY);
-            var actualDisplayLocation = vid.MapImageToDisplay(imageLocation);
+        return Verify(reviewData);
+    }
 
-            var reviewData = new
-            {
-                vid,
-                actualDisplayLocation
-            };
+    [TestMethod]
+    [DataRow(0, 0, 300, 400)]
+    public Task MapDisplayToImage_Returns_ImageRect(float imageX, float imageY, float displayX, float displayY)
+    {
+        var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
+        vid.Mode = BitmapDisplayMode.ActualSizeCentred;
+        vid.DisplaySize = new Size(1000, 1000);
+        vid.ImageSize = new Size(400, 200);
 
-            return Verify(reviewData);
-        }
+        var displayLocation = new PointF(displayX, displayY);
+        var actualImageLocation = vid.MapDisplayToImage(displayLocation);
 
-        [TestMethod]
-        [DataRow(0, 0, 300, 400)]
-        public Task MapDisplayToImage_Returns_ImageRect(float imageX, float imageY, float displayX, float displayY)
+        var reviewData = new
         {
-            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
-            vid.Mode = BitmapDisplayMode.ActualSizeCentred;
-            vid.DisplaySize = new Size(1000, 1000);
-            vid.ImageSize = new Size(400, 200);
+            vid,
+            actualImageLocation
+        };
 
-            var displayLocation = new PointF(displayX, displayY);
-            var actualImageLocation = vid.MapDisplayToImage(displayLocation);
+        return Verify(reviewData);
+    }
 
-            var reviewData = new
-            {
-                vid,
-                actualImageLocation
-            };
+    [TestMethod]
+    public Task ChangeImageSizeInFitToWindowMode_Resizes_ToFitWindow()
+    {
+        var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
+        vid.Mode = BitmapDisplayMode.FitToWindowCentred;
+        vid.DisplaySize = new Size(2000, 1000);
+        vid.ImageSize = new Size(200, 200);
 
-            return Verify(reviewData);
-        }
+        vid.ImageSize = new Size(100, 1000);
 
-        [TestMethod]
-        public Task ChangeImageSizeInFitToWindowMode_Resizes_ToFitWindow()
+        var reviewData = new
         {
-            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
-            vid.Mode = BitmapDisplayMode.FitToWindowCentred;
-            vid.DisplaySize = new Size(2000, 1000);
-            vid.ImageSize = new Size(200, 200);
+            vid
+        };
 
-            vid.ImageSize = new Size(100, 1000);
+        return Verify(reviewData);
+    }
 
-            var reviewData = new
-            {
-                vid
-            };
+    [TestMethod]
+    public Task FreshImage_InFreeMode_HasZoom1()
+    {
+        var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
+        vid.Mode = BitmapDisplayMode.Free;
+        vid.DisplaySize = new Size(2000, 1000);
+        vid.ImageSize = new Size(200, 200);
 
-            return Verify(reviewData);
-        }
-
-        [TestMethod]
-        public Task FreshImage_InFreeMode_HasZoom1()
+        var reviewData = new
         {
-            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
-            vid.Mode = BitmapDisplayMode.Free;
-            vid.DisplaySize = new Size(2000, 1000);
-            vid.ImageSize = new Size(200, 200);
+            vid
+        };
 
-            var reviewData = new
-            {
-                vid
-            };
+        return Verify(reviewData);
+    }
 
-            return Verify(reviewData);
-        }
+    [TestMethod]
+    public Task FreshImage_InFreeMode_IsCentred()
+    {
+        var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
+        vid.Mode = BitmapDisplayMode.Free;
+        vid.DisplaySize = new Size(2000, 1000);
+        vid.ImageSize = new Size(200, 200);
 
-        [TestMethod]
-        public Task FreshImage_InFreeMode_IsCentred()
+        var reviewData = new
         {
-            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
-            vid.Mode = BitmapDisplayMode.Free;
-            vid.DisplaySize = new Size(2000, 1000);
-            vid.ImageSize = new Size(200, 200);
+            vid
+        };
 
-            var reviewData = new
-            {
-                vid
-            };
+        return Verify(reviewData);
+    }
 
-            return Verify(reviewData);
-        }
+    [TestMethod]
+    public Task ChangeImageSizeInFreeMode_Leaves_ZoomUnchanged()
+    {
+        var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
+        vid.Mode = BitmapDisplayMode.Free;
+        vid.DisplaySize = new Size(2000, 1000);
+        vid.ImageSize = new Size(200, 200);
 
-        [TestMethod]
-        public Task ChangeImageSizeInFreeMode_Leaves_ZoomUnchanged()
+        vid.ImageSize = new Size(300, 100);
+
+        var reviewData = new
         {
-            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
-            vid.Mode = BitmapDisplayMode.Free;
-            vid.DisplaySize = new Size(2000, 1000);
-            vid.ImageSize = new Size(200, 200);
+            vid
+        };
 
-            vid.ImageSize = new Size(300, 100);
+        return Verify(reviewData);
+    }
 
-            var reviewData = new
-            {
-                vid
-            };
+    [TestMethod]
+    public Task ChangeImageSizeInFreeMode_Leaves_CentresUnchanged()
+    {
+        var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
+        vid.Mode = BitmapDisplayMode.FitToWindowCentred;
+        vid.DisplaySize = new Size(2000, 1000);
+        vid.ImageSize = new Size(200, 200);
 
-            return Verify(reviewData);
-        }
+        vid.ImageSize = new Size(100, 1000);
 
-        [TestMethod]
-        public Task ChangeImageSizeInFreeMode_Leaves_CentresUnchanged()
+        var reviewData = new
         {
-            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
-            vid.Mode = BitmapDisplayMode.FitToWindowCentred;
-            vid.DisplaySize = new Size(2000, 1000);
-            vid.ImageSize = new Size(200, 200);
+            vid
+        };
 
-            vid.ImageSize = new Size(100, 1000);
+        return Verify(reviewData);
+    }
 
-            var reviewData = new
-            {
-                vid
-            };
+    [TestMethod]
+    public Task ChangeTargetImageCentreNotInFreeMode_Leaves_CentreUnchanged()
+    {
+        var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
+        vid.DisplaySize = new Size(2000, 1000);
+        vid.ImageSize = new Size(200, 200);
 
-            return Verify(reviewData);
-        }
+        // Fit to window
+        vid.Mode = BitmapDisplayMode.FitToWindowCentred;
+        var originalPaintRect = vid.PaintRect;
+        vid.TargetImageCentre = new PointF(0, 0);
+        var fitToWindowTargetImageCentre = vid.TargetImageCentre;
 
-        [TestMethod]
-        public Task ChangeTargetImageCentreNotInFreeMode_Leaves_CentreUnchanged()
+        // Actual size
+        vid.Mode = BitmapDisplayMode.ActualSizeCentred;
+        originalPaintRect = vid.PaintRect;
+        vid.TargetImageCentre = new PointF(0, 0);
+        var actualSizeTargetImageCentre = vid.TargetImageCentre;
+
+        var reviewData = new
         {
-            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
-            vid.DisplaySize = new Size(2000, 1000);
-            vid.ImageSize = new Size(200, 200);
+            fitToWindowTargetImageCentre,
+            actualSizeTargetImageCentre
+        };
 
-            // Fit to window
-            vid.Mode = BitmapDisplayMode.FitToWindowCentred;
-            var originalPaintRect = vid.PaintRect;
-            vid.TargetImageCentre = new PointF(0, 0);
-            var fitToWindowTargetImageCentre = vid.TargetImageCentre;
+        return Verify(reviewData);
+    }
 
-            // Actual size
-            vid.Mode = BitmapDisplayMode.ActualSizeCentred;
-            originalPaintRect = vid.PaintRect;
-            vid.TargetImageCentre = new PointF(0, 0);
-            var actualSizeTargetImageCentre = vid.TargetImageCentre;
+    [TestMethod]
+    public Task ChangeTargetImageCentreInFreeMode_Changes_Centre()
+    {
+        var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
+        vid.DisplaySize = new Size(2000, 1000);
+        vid.ImageSize = new Size(200, 200);
 
-            var reviewData = new
-            {
-                fitToWindowTargetImageCentre,
-                actualSizeTargetImageCentre
-            };
+        // Free
+        vid.Mode = BitmapDisplayMode.Free;
+        var originalPaintRect = vid.PaintRect;
+        vid.TargetImageCentre = new PointF(0, 0);
 
-            return Verify(reviewData);
-        }
-
-        [TestMethod]
-        public Task ChangeTargetImageCentreInFreeMode_Changes_Centre()
+        var reviewData = new
         {
-            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
-            vid.DisplaySize = new Size(2000, 1000);
-            vid.ImageSize = new Size(200, 200);
+            vid
+        };
 
-            // Free
-            vid.Mode = BitmapDisplayMode.Free;
-            var originalPaintRect = vid.PaintRect;
-            vid.TargetImageCentre = new PointF(0, 0);
+        return Verify(reviewData);
+    }
 
-            var reviewData = new
-            {
-                vid
-            };
+    [TestMethod]
+    public Task ChangeTargetDisplayCentreNotInFreeMode_Leaves_CentreUnchanged()
+    {
+        var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
+        vid.DisplaySize = new Size(2000, 1000);
+        vid.ImageSize = new Size(200, 200);
 
-            return Verify(reviewData);
-        }
+        // Fit to window
+        vid.Mode = BitmapDisplayMode.FitToWindowCentred;
+        var originalPaintRect = vid.PaintRect;
+        vid.TargetDisplayCentre = new PointF(0, 0);
+        var fitToWindowPaintRect = vid.PaintRect;
+        var fitToWindowTargetDisplayCentre = vid.TargetDisplayCentre;
 
-        [TestMethod]
-        public Task ChangeTargetDisplayCentreNotInFreeMode_Leaves_CentreUnchanged()
+        // Actual size
+        vid.Mode = BitmapDisplayMode.ActualSizeCentred;
+        originalPaintRect = vid.PaintRect;
+        vid.TargetDisplayCentre = new PointF(0, 0);
+        var actualSizePaintRect = vid.PaintRect;
+        var actualSizeTargetDisplayCentre = vid.TargetDisplayCentre;
+
+        var reviewData = new
         {
-            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
-            vid.DisplaySize = new Size(2000, 1000);
-            vid.ImageSize = new Size(200, 200);
+            fitToWindowTargetDisplayCentre,
+            actualSizeTargetDisplayCentre,
+        };
 
-            // Fit to window
-            vid.Mode = BitmapDisplayMode.FitToWindowCentred;
-            var originalPaintRect = vid.PaintRect;
-            vid.TargetDisplayCentre = new PointF(0, 0);
-            var fitToWindowPaintRect = vid.PaintRect;
-            var fitToWindowTargetDisplayCentre = vid.TargetDisplayCentre;
+        return Verify(reviewData);
+    }
 
-            // Actual size
-            vid.Mode = BitmapDisplayMode.ActualSizeCentred;
-            originalPaintRect = vid.PaintRect;
-            vid.TargetDisplayCentre = new PointF(0, 0);
-            var actualSizePaintRect = vid.PaintRect;
-            var actualSizeTargetDisplayCentre = vid.TargetDisplayCentre;
+    [TestMethod]
+    public Task ChangeTargetDisplayCentreInFreeMode_Changes_Centre()
+    {
+        var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
+        vid.DisplaySize = new Size(2000, 1000);
+        vid.ImageSize = new Size(200, 200);
 
-            var reviewData = new
-            {
-                fitToWindowTargetDisplayCentre,
-                actualSizeTargetDisplayCentre,
-            };
+        // Free
+        vid.Mode = BitmapDisplayMode.Free;
+        var originalPaintRect = vid.PaintRect;
+        vid.TargetDisplayCentre = new PointF(0, 0);
 
-            return Verify(reviewData);
-        }
-
-        [TestMethod]
-        public Task ChangeTargetDisplayCentreInFreeMode_Changes_Centre()
+        var reviewData = new
         {
-            var vid = new VirtualDisplay(onPaintRectChanged: (_, _) => { });
-            vid.DisplaySize = new Size(2000, 1000);
-            vid.ImageSize = new Size(200, 200);
+            vid
+        };
 
-            // Free
-            vid.Mode = BitmapDisplayMode.Free;
-            var originalPaintRect = vid.PaintRect;
-            vid.TargetDisplayCentre = new PointF(0, 0);
-
-            var reviewData = new
-            {
-                vid
-            };
-
-            return Verify(reviewData);
-        }
+        return Verify(reviewData);
     }
 }

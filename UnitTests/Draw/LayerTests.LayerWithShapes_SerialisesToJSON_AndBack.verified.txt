@@ -1,0 +1,101 @@
+﻿{
+  layer: {
+    Name: Layer,
+    Rendering: {
+      Visible: true,
+      Lines: {
+        Color: Red,
+        Width: 1.0
+      },
+      Fill: {
+        Color: Transparent
+      },
+      Font: {
+        FontSize: 12,
+        FontName: Arial
+      }
+    },
+    Shapes: [
+      {
+        Visible: true,
+        PixelAlign: Centre,
+        Rect: {
+          Location: {
+            IsEmpty: false,
+            X: 1.0,
+            Y: 2.0
+          },
+          Size: 3, 4,
+          X: 1.0,
+          Y: 2.0,
+          Width: 3.0,
+          Height: 4.0,
+          Left: 1.0,
+          Top: 2.0,
+          Right: 4.0,
+          Bottom: 6.0,
+          IsEmpty: false
+        }
+      },
+      {
+        Visible: false,
+        Rect: {
+          Location: {
+            IsEmpty: false,
+            X: 100.0,
+            Y: 200.0
+          },
+          Size: 300, 400,
+          X: 100.0,
+          Y: 200.0,
+          Width: 300.0,
+          Height: 400.0,
+          Left: 100.0,
+          Top: 200.0,
+          Right: 400.0,
+          Bottom: 600.0,
+          IsEmpty: false
+        }
+      }
+    ]
+  },
+  json:
+{
+  "Name": "Layer",
+  "Rendering": {
+    "Visible": true,
+    "Lines": {
+      "Color": "Red",
+      "Width": 1.0,
+      "DashStyle": 0,
+      "StartCap": 0,
+      "EndCap": 0
+    },
+    "Fill": {
+      "Color": "Transparent"
+    },
+    "Font": {
+      "FontSize": 12,
+      "FontName": "Arial"
+    }
+  },
+  "ChildLayers": []
+},
+  deserialisedLayer: {
+    Name: Layer,
+    Rendering: {
+      Visible: true,
+      Lines: {
+        Color: Red,
+        Width: 1.0
+      },
+      Fill: {
+        Color: Transparent
+      },
+      Font: {
+        FontSize: 12,
+        FontName: Arial
+      }
+    }
+  }
+}
