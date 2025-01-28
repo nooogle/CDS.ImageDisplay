@@ -11,7 +11,7 @@ namespace CDS.Imaging.Draw
         /// <summary>
         /// Simple representation of the rendering specification.
         /// </summary>
-        public override string ToString() => Visible ? "Visible" : "Invisible";
+        public override string ToString() => "";
 
 
         /// <summary>

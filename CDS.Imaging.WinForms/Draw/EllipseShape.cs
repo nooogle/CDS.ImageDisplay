@@ -50,19 +50,13 @@ public class EllipseShape : IShape
     public float MajorAxisAngleDegrees { get; set; }
 
 
-    /// <summary>
-    /// The rendering properties of the rectangle
-    /// </summary>
-    public RenderingSpec Rendering { get; set; } = new RenderingSpec();
-
-
     /// <inheritdoc />
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics)
+    public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
     {
-        if (!Visible || !Rendering.Visible) { return; }
+        if (!Visible || !rendering.Visible) { return; }
 
-        var pen = RenderingToolsPool.GetPen(Rendering.Lines);
-        var brush = RenderingToolsPool.GetBrush(Rendering.Fill);
+        var pen = RenderingToolsPool.GetPen(rendering.Lines);
+        var brush = RenderingToolsPool.GetBrush(rendering.Fill);
 
         // Save the current state of the Graphics object
         var state = graphics.Save();

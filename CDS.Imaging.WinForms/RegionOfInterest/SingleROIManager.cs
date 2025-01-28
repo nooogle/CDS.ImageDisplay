@@ -40,6 +40,43 @@ namespace CDS.Imaging.RegionOfInterest
 
 
         /// <summary>
+        /// How to draw the committed ROI.
+        /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public Draw.RenderingSpec CommittedROIRendering { get; } = new Draw.RenderingSpec()
+        {
+            Lines = new Draw.LineSpec()
+            {
+                Color = Color.FromArgb(128, Color.Green),
+                Width = 2
+            },
+            Fill = new Draw.BrushSpec()
+            {
+                Color = Color.Transparent
+            }
+        };
+
+
+        /// <summary>
+        /// How to draw the live dragging ROI.
+        /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public Draw.RenderingSpec LiveDraggingROIRendering { get; } = new Draw.RenderingSpec()
+        {
+            Lines = new Draw.LineSpec()
+            {
+                Color = Color.FromArgb(128, Color.Orange),
+                Width = 2
+            },
+            Fill = new Draw.BrushSpec()
+            {
+                Color = Color.Transparent
+            }
+        };
+
+
+
+        /// <summary>
         /// The border inside and outside the ROI that will test positive
         /// for a mouse hit test. (E.g. this allows the mouse to drag a corner
         /// or edge even if it's not exactly over the edge.)
@@ -287,32 +324,6 @@ namespace CDS.Imaging.RegionOfInterest
         /// </summary>
         private void CompleteInitialisation()
         {
-            committedROIRenderer.Rendering = new Draw.RenderingSpec()
-            {
-                Lines = new Draw.LineSpec()
-                {
-                    Color = Color.FromArgb(128, Color.Green),
-                    Width = 2
-                },
-                Fill = new Draw.BrushSpec()
-                {
-                    Color = Color.Transparent
-                }
-            };
-
-            LiveDraggingROIRenderer.Rendering = new Draw.RenderingSpec()
-            {
-                Lines = new Draw.LineSpec()
-                {
-                    Color = Color.FromArgb(128, Color.Orange),
-                    Width = 2
-                },
-                Fill = new Draw.BrushSpec()
-                {
-                    Color = Color.Transparent
-                }
-            };
-
             mouseCursors = CreateMouseCursorsDict();
         }
 
@@ -804,13 +815,13 @@ namespace CDS.Imaging.RegionOfInterest
             if (!committedROI.IsEmpty && (DrawCommittedROIWhenFullSize || (committedROI.Size != imageSize)))
             {
                 committedROIRenderer.ROI = committedROI;
-                committedROIRenderer.Draw(sender, graphics);
+                committedROIRenderer.Draw(sender, graphics, CommittedROIRendering);
             }
 
             if (draggingMode != ROIDragMode.None)
             {
                 liveDraggingROIRenderer.ROI = LiveDraggingROI;
-                liveDraggingROIRenderer.Draw(sender, graphics);
+                liveDraggingROIRenderer.Draw(sender, graphics, LiveDraggingROIRendering);
             }
         }
     }

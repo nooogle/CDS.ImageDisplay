@@ -38,19 +38,13 @@ public class TextShape : IShape
     public PointF Location { get; set; }
 
 
-    /// <summary>
-    /// The rendering properties of the text
-    /// </summary>
-    public RenderingSpec Rendering { get; set; } = new RenderingSpec();
-
-
     /// <inheritdoc />
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics)
+    public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
     {
-        if (!Visible || !Rendering.Visible) { return; }
+        if (!Visible || !rendering.Visible) { return; }
 
-        var font = RenderingToolsPool.GetFont(Rendering.Font);
-        var brush = RenderingToolsPool.GetBrush(Rendering.Fill);
+        var font = RenderingToolsPool.GetFont(rendering.Font);
+        var brush = RenderingToolsPool.GetBrush(rendering.Fill);
 
         var pointOnDisplay = sender.MapImageToDisplay(Location, PixelAlign);
 

@@ -82,8 +82,11 @@ namespace CDS.Imaging.Demo.DemoForms
                 Brushes.Navy,
                 new PointF(topLeftBox.X, topLeftBox.Y));
 
+            var crossHairRendering = new Draw.RenderingSpec();
+            crossHairRendering.Lines.Color = Color.Yellow;
+
             crossHair.Centre = bitmapDisplay.TargetImageCentre;
-            crossHair.Draw(bitmapDisplay, graphics);
+            crossHair.Draw(bitmapDisplay, graphics, crossHairRendering);
 
 
             // Line test

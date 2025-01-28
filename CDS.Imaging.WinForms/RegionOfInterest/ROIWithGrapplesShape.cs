@@ -56,13 +56,6 @@ namespace CDS.Imaging.RegionOfInterest
 
 
         /// <summary>
-        /// Specification for how to draw the rectangle and grapples when the rectangle is disabled.
-        /// </summary>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public Draw.RenderingSpec Rendering { get; set; } = new RenderingSpec();
-
-
-        /// <summary>
         /// The diameter of the grapple points.
         /// </summary>
         public int GrappleDiameter { get; set; } = 6;
@@ -70,6 +63,10 @@ namespace CDS.Imaging.RegionOfInterest
 
         /// <inheritdoc/>
         public DisplayPixelAlign PixelAlign { get; set; } = DisplayPixelAlign.TopLeft;
+
+
+        /// <inheritdoc/>
+        public Draw.RenderingSpec Rendering { get; set; } = new Draw.RenderingSpec();
 
 
         /// <summary>
@@ -81,7 +78,7 @@ namespace CDS.Imaging.RegionOfInterest
 
 
         /// <inheritdoc/>
-        public void Draw(BitmapDisplayPanel sender, Graphics graphics)
+        public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
         {
             if (!Visible) { return; }
             if (ROI.IsEmpty) { return; }
@@ -89,8 +86,8 @@ namespace CDS.Imaging.RegionOfInterest
             var roiOnDisplay = sender.MapImageToDisplay(ROI, PixelAlign);
             RecalculateGrapplesRectangles(roiOnDisplay);
 
-            var pen = RenderingToolsPool.GetPen(Rendering.Lines);
-            var brush = RenderingToolsPool.GetBrush(Rendering.Fill);
+            var pen = RenderingToolsPool.GetPen(rendering.Lines);
+            var brush = RenderingToolsPool.GetBrush(rendering.Fill);
 
             graphics.FillRectangle(brush, roiOnDisplay);
             graphics.DrawRectangle(pen, roiOnDisplay);

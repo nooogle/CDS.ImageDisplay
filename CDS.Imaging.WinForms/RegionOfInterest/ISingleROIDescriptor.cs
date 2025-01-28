@@ -6,15 +6,6 @@ namespace CDS.Imaging.RegionOfInterest
     /// Interface for a descriptor for a single ROI, The <see cref="MultipleROIManager"/> uses these
     /// to manage multiple ROIs on a bitmap display.
     /// </summary>
-
-    /* Unmerged change from project 'CDS.Imaging.WinForms (net48)'
-    Before:
-        public interface ISingleROIDescriptor : Draw.Shapes.IShape
-        {
-    After:
-        public interface ISingleROIDescriptor : IShape
-        {
-    */
     public interface ISingleROIDescriptor : Draw.IShape
     {
         /// <summary>
@@ -45,5 +36,11 @@ namespace CDS.Imaging.RegionOfInterest
         /// Name of the ROI.
         /// </summary>
         string Name { get; set; }
+
+
+        /// <summary>
+        /// How to draw this ROI
+        /// </summary>
+        Draw.RenderingSpec Rendering { get; set; }
     }
 }

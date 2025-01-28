@@ -15,7 +15,7 @@ public class Layer
     /// <summary>
     /// Simple representation of this instance
     /// </summary>
-    public override string ToString() => Name + (Visible ? "" : " (Hidden)");
+    public override string ToString() => Name;
 
 
     /// <summary>
@@ -25,27 +25,23 @@ public class Layer
 
 
     /// <summary>
-    /// Whether the layer is visible. This affects the visibility of all shapes and child layers, recursively.
+    /// How to draw the shapes on this layer.
     /// </summary>
-    public bool Visible { get; set; } = true;
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+    public RenderingSpec Rendering { get; set; } = new RenderingSpec();
 
 
     /// <summary>
     /// The shapes on this layer.
     /// </summary>
-
-/* Unmerged change from project 'CDS.Imaging.WinForms (net48)'
-Before:
-    public List<Shapes.IShape> Shapes { get; } = new List<Shapes.IShape>();
-After:
-    public List<IShape> Shapes { get; } = new List<IShape>();
-*/
+    [Browsable(false)]
     public List<Draw.IShape> Shapes { get; } = new List<Draw.IShape>();
 
 
     /// <summary>
     /// The child layers of this layer.
     /// </summary>
+    [Browsable(false)]
     public List<Layer> ChildLayers { get; } = new List<Layer>();
 
 
@@ -56,7 +52,7 @@ After:
     /// <param name="graphics">The graphics object to draw with.</param>
     public void Draw(BitmapDisplay.BitmapDisplayPanel bitmapDisplay, Graphics graphics)
     {
-        if (!Visible) { return; }
+        if(!Rendering.Visible) { return; }
 
         DrawShapes(bitmapDisplay, graphics);
         DrawChildLayers(bitmapDisplay, graphics);
@@ -82,7 +78,7 @@ After:
     {
         for (int i = 0; i < Shapes.Count; i++)
         {
-            Shapes[i].Draw(bitmapDisplay, graphics);
+            Shapes[i].Draw(bitmapDisplay, graphics, Rendering);
         }
     }
 }

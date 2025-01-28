@@ -38,19 +38,13 @@ public class CircleShape : IShape
     public float Radius { get; set; }
 
 
-    /// <summary>
-    /// The rendering properties of the rectangle
-    /// </summary>
-    public RenderingSpec Rendering { get; set; } = new RenderingSpec();
-
-
     /// <inheritdoc />
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics)
+    public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
     {
-        if (!Visible || !Rendering.Visible) { return; }
+        if (!Visible || !rendering.Visible) { return; }
 
-        var pen = RenderingToolsPool.GetPen(Rendering.Lines);
-        var brush = RenderingToolsPool.GetBrush(Rendering.Fill);
+        var pen = RenderingToolsPool.GetPen(rendering.Lines);
+        var brush = RenderingToolsPool.GetBrush(rendering.Fill);
 
         var squareAroundCircle = new RectangleF(Centre.X - Radius, Centre.Y - Radius, 2 * Radius, 2 * Radius);
         var circleOnDisplay = sender.MapImageToDisplay(squareAroundCircle, pixelAdjust: PixelAlign);

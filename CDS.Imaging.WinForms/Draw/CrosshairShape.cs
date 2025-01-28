@@ -44,53 +44,45 @@ public class CrosshairShape : IShape
     public float CentreGap { get; set; } = 2;
 
 
-    /// <summary>
-    /// The rendering properties of the rectangle
-    /// </summary>
-    public RenderingSpec Rendering { get; set; } = new RenderingSpec();
-
-
     /// <inheritdoc />
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics)
+    public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
     {
-        if (!Visible || !Rendering.Visible) { return; }
+        if (!Visible || !rendering.Visible) { return; }
 
-        var pen = RenderingToolsPool.GetPen(Rendering.Lines);
+        var pen = RenderingToolsPool.GetPen(rendering.Lines);
 
         var centreOnDisplay = sender.MapImageToDisplay(Centre, PixelAlign);
-        var lineLengthOnDisplay = sender.MapImageToDisplay(Length);
-        var centreGapOnDisplay = sender.MapImageToDisplay(CentreGap);
 
         // top line
         graphics.DrawLine(
             pen,
             centreOnDisplay.X,
-            centreOnDisplay.Y - lineLengthOnDisplay - centreGapOnDisplay,
+            centreOnDisplay.Y - Length - CentreGap,
             centreOnDisplay.X,
-            centreOnDisplay.Y - centreGapOnDisplay);
+            centreOnDisplay.Y - CentreGap);
 
         // bottom line
         graphics.DrawLine(
             pen,
             centreOnDisplay.X,
-            centreOnDisplay.Y + centreGapOnDisplay,
+            centreOnDisplay.Y + CentreGap,
             centreOnDisplay.X,
-            centreOnDisplay.Y + lineLengthOnDisplay + centreGapOnDisplay);
+            centreOnDisplay.Y + Length + CentreGap);
 
         // left line
         graphics.DrawLine(
             pen,
-            centreOnDisplay.X - lineLengthOnDisplay - centreGapOnDisplay,
+            centreOnDisplay.X - Length - CentreGap,
             centreOnDisplay.Y,
-            centreOnDisplay.X - centreGapOnDisplay,
+            centreOnDisplay.X - CentreGap,
             centreOnDisplay.Y);
 
         // right line
         graphics.DrawLine(
             pen,
-            centreOnDisplay.X + centreGapOnDisplay,
+            centreOnDisplay.X + CentreGap,
             centreOnDisplay.Y,
-            centreOnDisplay.X + lineLengthOnDisplay + centreGapOnDisplay,
+            centreOnDisplay.X + Length + CentreGap,
             centreOnDisplay.Y);
     }
 }

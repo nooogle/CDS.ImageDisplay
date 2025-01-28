@@ -29,9 +29,9 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
             bitmapDisplayPanel = new BitmapDisplay.BitmapDisplayPanel();
             panel1 = new System.Windows.Forms.Panel();
+            layerTreeView = new Draw.LayerTreeView();
             propertyGrid = new System.Windows.Forms.PropertyGrid();
             sysInfoPanel = new SysInfoPanel();
             panel1.SuspendLayout();
@@ -52,6 +52,7 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
             // panel1
             // 
             panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            panel1.Controls.Add(layerTreeView);
             panel1.Controls.Add(propertyGrid);
             panel1.Dock = System.Windows.Forms.DockStyle.Left;
             panel1.Location = new System.Drawing.Point(0, 38);
@@ -60,12 +61,20 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
             panel1.Size = new System.Drawing.Size(448, 412);
             panel1.TabIndex = 2;
             // 
+            // layerTreeView
+            // 
+            layerTreeView.Location = new System.Drawing.Point(11, 5);
+            layerTreeView.Name = "layerTreeView";
+            layerTreeView.Size = new System.Drawing.Size(424, 181);
+            layerTreeView.TabIndex = 7;
+            layerTreeView.LayerTreeNodeSelected += layerTreeView_LayerTreeNodeSelected;
+            // 
             // propertyGrid
             // 
             propertyGrid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            propertyGrid.Location = new System.Drawing.Point(11, 11);
+            propertyGrid.Location = new System.Drawing.Point(11, 207);
             propertyGrid.Name = "propertyGrid";
-            propertyGrid.Size = new System.Drawing.Size(424, 388);
+            propertyGrid.Size = new System.Drawing.Size(424, 192);
             propertyGrid.TabIndex = 6;
             propertyGrid.PropertyValueChanged += propertyGrid_PropertyValueChanged;
             // 
@@ -98,5 +107,6 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.PropertyGrid propertyGrid;
         private CDS.Imaging.SysInfoPanel sysInfoPanel;
+        private Draw.LayerTreeView layerTreeView;
     }
 }

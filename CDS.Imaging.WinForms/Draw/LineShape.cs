@@ -38,18 +38,12 @@ public class LineShape : IShape
     public PointF End { get; set; }
 
 
-    /// <summary>
-    /// The rendering properties of the rectangle
-    /// </summary>
-    public RenderingSpec Rendering { get; set; } = new RenderingSpec();
-
-
     /// <inheritdoc />
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics)
+    public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
     {
-        if (!Visible || !Rendering.Visible) { return; }
+        if (!Visible || !rendering.Visible) { return; }
 
-        var pen = RenderingToolsPool.GetPen(Rendering.Lines);
+        var pen = RenderingToolsPool.GetPen(rendering.Lines);
 
         var startOnDisplay = sender.MapImageToDisplay(Start, pixelAdjust: PixelAlign);
         var endOnDisplay = sender.MapImageToDisplay(End, pixelAdjust: PixelAlign);

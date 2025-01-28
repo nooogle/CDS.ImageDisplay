@@ -1,8 +1,5 @@
-﻿using CDS.Imaging.BitmapDisplay;
-using System;
+﻿using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo;
@@ -34,9 +31,7 @@ public partial class FormOverlays : Form
     {
         base.OnLoad(e);
 
-        testSettings.Shapes.PostLoadConfigure(testSettings.Rendering);
-
-        propertyGrid.SelectedObject = testSettings;
+        layerTreeView.SetRootLayer(testSettings.Overlay.RootLayer);
         bitmapDisplayPanel.SetImage(bitmap);
     }
 
@@ -71,7 +66,7 @@ public partial class FormOverlays : Form
         if (bitmapDisplayPanel == null) { return; }
         if (bitmapDisplayPanel.GetDisplayImage() == null) { return; }
 
-        testSettings.Shapes.Layer1.Draw(sender, graphics);
+        testSettings.Overlay.RootLayer.Draw(sender, graphics);
     }
 
 
@@ -81,5 +76,16 @@ public partial class FormOverlays : Form
     private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
     {
         bitmapDisplayPanel.Invalidate();
+    }
+
+
+    /// <summary>
+    /// User has selected a node in the layer tree view
+    /// </summary>
+    private void layerTreeView_LayerTreeNodeSelected(object sender, CDS.Imaging.Draw.LayerTreeNodeEventArgs e)
+    {
+        if (e?.Layer == null) { return; }
+
+        propertyGrid.SelectedObject = e.Layer.Rendering;
     }
 }

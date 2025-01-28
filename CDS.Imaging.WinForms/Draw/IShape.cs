@@ -25,5 +25,5 @@ public interface IShape
     /// <summary>
     /// Draws the shape on the display
     /// </summary>
-    void Draw(BitmapDisplayPanel sender, Graphics graphics);
+    void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering);
 }

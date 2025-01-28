@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net8.0-windows;net48</TargetFrameworks>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
     <Platforms>AnyCPU</Platforms>
@@ -36,9 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="DemoForms\LayersDemo\FormOverlays.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="DemoForms\OverlaysDemo\FormOverlays.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -46,6 +46,15 @@ class MyROIDescriptor : RegionOfInterest.ISingleROIDescriptor, INotifyPropertyCh
     public Rectangle ROI { get => CoreShape.ROI; set => CoreShape.ROI = value; }
     public DisplayPixelAlign PixelAlign { get => CoreShape.PixelAlign; set => CoreShape.PixelAlign = value; }
 
+    public Draw.RenderingSpec Rendering { get => CoreShape.Rendering; set => CoreShape.Rendering = value; }
+
+    public Draw.RenderingSpec CustomLabelRendering { get; } = new Draw.RenderingSpec()
+    {
+        Fill = new Draw.BrushSpec()
+        {
+            Color = Color.Yellow,
+        },
+    };
 
     public MyROIDescriptor(string name)
     {
@@ -54,15 +63,18 @@ class MyROIDescriptor : RegionOfInterest.ISingleROIDescriptor, INotifyPropertyCh
         CoreShape.GrapplesVisible = false;
     }
 
-    void Draw.IShape.Draw(BitmapDisplay.BitmapDisplayPanel bitmapDisplay, Graphics graphics)
+    void Draw.IShape.Draw(BitmapDisplay.BitmapDisplayPanel bitmapDisplay, Graphics graphics, Draw.RenderingSpec rendering)
     {
         if (!Visible) { return; }
 
-        CoreShape.Draw(bitmapDisplay, graphics);
+        CoreShape.Draw(bitmapDisplay, graphics, rendering);
 
         var locationOnDisplay = bitmapDisplay.MapImageToDisplay(ROI.Location, BitmapDisplay.DisplayPixelAlign.TopLeft);
         locationOnDisplay.Offset(0, -12);
-        graphics.DrawString(Name, SystemFonts.DefaultFont, Brushes.Yellow, locationOnDisplay);
+
+        var font = Draw.RenderingToolsPool.GetFont(CustomLabelRendering.Font);
+        var brush = Draw.RenderingToolsPool.GetBrush(CustomLabelRendering.Fill);
+        graphics.DrawString(Name, font, brush, locationOnDisplay);
     }
 
     public override string ToString() => CoreShape.ToString();
