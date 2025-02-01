@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFrameworks>net8.0-windows</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
@@ -23,6 +23,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CDS.Imaging.WinForms\CDS.Imaging.WinForms.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Draw\" />
   </ItemGroup>
 
 </Project>
