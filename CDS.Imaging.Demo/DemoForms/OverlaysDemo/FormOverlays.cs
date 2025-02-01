@@ -12,16 +12,17 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo;
 /// </summary>
 public partial class FormOverlays : Form
 {
-    private TestSettings testSettings = new TestSettings();
+    private TestSettings? testSettings;
     private Bitmap bitmap;
     private OverlayPainter overlayPainter = new OverlayPainter();
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public FormOverlays()
+    public FormOverlays(TestSettings testSettings)
     {
         InitializeComponent();
+        this.testSettings = testSettings;
         bitmap = BitmapGenerator.Make(new Size(800, 600));
     }
 
@@ -40,6 +41,9 @@ public partial class FormOverlays : Form
     protected override void OnClientSizeChanged(EventArgs e)
     {
         base.OnClientSizeChanged(e);
+
+        if (testSettings == null) { return; }
+
         testSettings.Shapes.RecreateBubbles(bitmapDisplayPanel.Size);
         bitmapDisplayPanel.FitToWindowCentred();
     }
@@ -67,6 +71,7 @@ public partial class FormOverlays : Form
     /// </summary>
     private void bitmapDisplayPanel_OnPaintOver(CDS.Imaging.BitmapDisplay.BitmapDisplayPanel sender, System.Drawing.Graphics graphics)
     {
+        if (testSettings == null) { return; }
         if (bitmapDisplayPanel == null) { return; }
         if (bitmapDisplayPanel.GetDisplayImage() == null) { return; }
 
@@ -120,6 +125,8 @@ public partial class FormOverlays : Form
     /// </summary>
     private void timerBubbles_Tick(object sender, EventArgs e)
     {
+        if (testSettings == null) { return; }
+
         testSettings.Shapes.MoveBubbles();
         bitmapDisplayPanel.Invalidate();
     }

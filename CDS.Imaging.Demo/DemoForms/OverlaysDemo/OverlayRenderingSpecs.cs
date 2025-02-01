@@ -6,7 +6,7 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo;
 
 
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
-class OverlayRenderingSpecs
+public class OverlayRenderingSpecs
 {
     public RenderingSpec Rectangles { get; set; } = new RenderingSpec();
     public RenderingSpec Ellipses { get; set; } = new RenderingSpec();

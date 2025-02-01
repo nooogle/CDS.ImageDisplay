@@ -5,7 +5,7 @@ using System.Drawing;
 namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
 {
     [TypeConverter(typeof(SerializableExpandableObjectConverter))]
-    internal class OverlayShapes
+    public class OverlayShapes
     {
         private Random random = new Random();
 

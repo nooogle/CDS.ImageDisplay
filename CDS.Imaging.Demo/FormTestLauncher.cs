@@ -6,9 +6,18 @@ namespace CDS.Imaging.Demo
 {
     public partial class FormTestLauncher : Form
     {
+        private JSONSettingsManager<AppSettings> settingsManager;
+
         public FormTestLauncher()
         {
             InitializeComponent();
+            settingsManager = new JSONSettingsManager<AppSettings>();
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            settingsManager.Save();
         }
 
         private void FormTestLauncher_Load(object sender, EventArgs e)
@@ -33,20 +42,20 @@ namespace CDS.Imaging.Demo
                 parentNode: basicsNode.Nodes,
                 name: "Fit to window",
                 tooltip: "Form with single image configured to always resize to fit to the window constraints",
-                runDemo: () => RunModalForm<DemoForms.FormFitToWindow>());
+                runDemo: () => RunModalForm(new DemoForms.FormFitToWindow()));
 
             AddDemo(
                 parentNode: basicsNode.Nodes,
                 name: "Actual size, centered",
                 tooltip: "Form with single image configured to use 1:1 zoom and remain centered",
-                runDemo: () => RunModalForm<DemoForms.FormActualSizeCentred>());
+                runDemo: () => RunModalForm(new DemoForms.FormActualSizeCentred()));
 
             AddDemo(
                 parentNode: basicsNode.Nodes,
                 name: "Free",
                 tooltip: "Form with single image configured to allow the mouse to " +
                 "drag (left-button) and zoom in and out (mouse wheel) of the image",
-                runDemo: () => RunModalForm<DemoForms.FormFree>());
+                runDemo: () => RunModalForm(new DemoForms.FormFree()));
         }
 
         private void AddOtherDemoNodes()
@@ -57,25 +66,25 @@ namespace CDS.Imaging.Demo
                 parentNode: otherNode.Nodes,
                 name: "Paint over and under",
                 tooltip: "",
-                runDemo: () => RunModalForm<DemoForms.FormPaintOverAndUnder>());
+                runDemo: () => RunModalForm(new DemoForms.FormPaintOverAndUnder()));
 
             AddDemo(
                 parentNode: otherNode.Nodes,
                 name: "ROI selection",
                 tooltip: "",
-                runDemo: () => RunModalForm<DemoForms.FormROISelection>());
+                runDemo: () => RunModalForm(new DemoForms.FormROISelection()));
 
             AddDemo(
                 parentNode: otherNode.Nodes,
                 name: "Multiple ROIs",
                 tooltip: "",
-                runDemo: () => RunModalForm<DemoForms.MultipleROIs.FormMultipleROIs>());
+                runDemo: () => RunModalForm(new DemoForms.MultipleROIs.FormMultipleROIs()));
 
             AddDemo(
                 parentNode: otherNode.Nodes,
                 name: "Overlays",
                 tooltip: "Demonstrates how to use the overlays tools for drawing on top of an image using image-coordinates regarldess of the current pan and zoom",
-                runDemo: () => RunModalForm<DemoForms.OverlaysDemo.FormOverlays>());
+                runDemo: () => RunModalForm(new DemoForms.OverlaysDemo.FormOverlays(settingsManager.Settings.DemoForms.OverlaysDemo)));
         }
 
         private void AddOpenCVSharpDemoNodes()
@@ -86,7 +95,7 @@ namespace CDS.Imaging.Demo
                 parentNode: node.Nodes,
                 name: "Blurring",
                 tooltip: "",
-                runDemo: () => RunModalForm<DemoForms.FormOpenCVSharp>());
+                runDemo: () => RunModalForm(new DemoForms.FormOpenCVSharp()));
         }
 
         private void AddDemo(
@@ -100,10 +109,10 @@ namespace CDS.Imaging.Demo
             node.Tag = runDemo;
         }
 
-        private void RunModalForm<T>() where T : Form, new()
+        private void RunModalForm(Form form)
         {
-            using T form = new();
             form.ShowDialog(this);
+            form.Dispose();
         }
 
         private void treeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
