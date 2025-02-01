@@ -182,7 +182,7 @@ namespace CDS.Imaging.RegionOfInterest
 
             foreach (var roiDescriptor in GetROIDescriptors!())
             {
-                roiDescriptor.Draw(bitmapDisplayPanel!, graphics, roiDescriptor.Rendering);
+                roiDescriptor.Draw(bitmapDisplayPanel!, graphics);
             }
         }
 

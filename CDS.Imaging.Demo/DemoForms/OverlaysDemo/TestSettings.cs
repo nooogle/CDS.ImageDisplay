@@ -5,6 +5,8 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
     [TypeConverter(typeof(SerializableExpandableObjectConverter))]
     internal class TestSettings
     {
-        public OverlaysSettings Overlay { get; set; } = new OverlaysSettings();
+        public OverlayRenderingSpecs Overlays { get; set; } = new OverlayRenderingSpecs();
+
+        public OverlayShapes Shapes { get; set; } = new OverlayShapes();
     }
 }

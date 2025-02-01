@@ -39,5 +39,11 @@ namespace CDS.Imaging.Draw
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public FontSpec Font { get; set; } = new FontSpec();
+
+
+        /// <summary>
+        /// How to map coordinates onto the display.
+        /// </summary>
+        public MappingMode MappingMode { get; set; } = MappingMode.ImageToDisplay;
     }
 }

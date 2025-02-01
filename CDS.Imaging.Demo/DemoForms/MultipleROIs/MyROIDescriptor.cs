@@ -43,10 +43,11 @@ class MyROIDescriptor : RegionOfInterest.ISingleROIDescriptor, INotifyPropertyCh
         set { }
     }
     
-    public Rectangle ROI { get => CoreShape.ROI; set => CoreShape.ROI = value; }
-    public DisplayPixelAlign PixelAlign { get => CoreShape.PixelAlign; set => CoreShape.PixelAlign = value; }
 
-    public Draw.RenderingSpec Rendering { get => CoreShape.Rendering; set => CoreShape.Rendering = value; }
+    public Rectangle ROI { get => CoreShape.ROI; set => CoreShape.ROI = value; }
+
+
+    public DisplayPixelAlign PixelAlign { get => CoreShape.PixelAlign; set => CoreShape.PixelAlign = value; }
 
     public Draw.RenderingSpec CustomLabelRendering { get; } = new Draw.RenderingSpec()
     {
@@ -63,11 +64,12 @@ class MyROIDescriptor : RegionOfInterest.ISingleROIDescriptor, INotifyPropertyCh
         CoreShape.GrapplesVisible = false;
     }
 
-    void Draw.IShape.Draw(BitmapDisplay.BitmapDisplayPanel bitmapDisplay, Graphics graphics, Draw.RenderingSpec rendering)
+
+    void RegionOfInterest.ISingleROIDescriptor.Draw(BitmapDisplay.BitmapDisplayPanel bitmapDisplay, Graphics graphics)
     {
         if (!Visible) { return; }
 
-        CoreShape.Draw(bitmapDisplay, graphics, rendering);
+        CoreShape.Draw(bitmapDisplay, graphics);
 
         var locationOnDisplay = bitmapDisplay.MapImageToDisplay(ROI.Location, BitmapDisplay.DisplayPixelAlign.TopLeft);
         locationOnDisplay.Offset(0, -12);
@@ -77,10 +79,12 @@ class MyROIDescriptor : RegionOfInterest.ISingleROIDescriptor, INotifyPropertyCh
         graphics.DrawString(Name, font, brush, locationOnDisplay);
     }
 
+
     public override string ToString() => CoreShape.ToString();
 
     
     public event PropertyChangedEventHandler? PropertyChanged;
+
 
     protected void OnPropertyChanged(string propertyName)
     {

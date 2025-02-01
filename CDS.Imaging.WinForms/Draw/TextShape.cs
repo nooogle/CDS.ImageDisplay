@@ -9,7 +9,7 @@ namespace CDS.Imaging.Draw;
 /// A text overlay combining text information and geometry and rendering properties
 /// </summary>
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
-public class TextShape : IShape
+public class TextShape
 {
     /// <summary>
     /// Simple representation of this instance
@@ -17,11 +17,10 @@ public class TextShape : IShape
     public override string ToString() => $"Text: location = {Location}, Text = {Text}";
 
 
-    /// <inheritdoc />
-    public bool Visible { get; set; } = true;
-
-
-    /// <inheritdoc/>
+    /// <summary>
+    /// Controls how the text is aligned with the pixel grid. 
+    /// Only applicable when the mapping mode is set to <see cref="MappingMode.ImageToDisplay"/>.
+    /// </summary>
     public DisplayPixelAlign PixelAlign { get; set; } = DisplayPixelAlign.TopLeft;
 
 
@@ -38,15 +37,20 @@ public class TextShape : IShape
     public PointF Location { get; set; }
 
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Draws the text on the display
+    /// </summary>
     public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
     {
-        if (!Visible || !rendering.Visible) { return; }
+        if (!rendering.Visible) { return; }
 
         var font = RenderingToolsPool.GetFont(rendering.Font);
         var brush = RenderingToolsPool.GetBrush(rendering.Fill);
 
-        var pointOnDisplay = sender.MapImageToDisplay(Location, PixelAlign);
+        var pointOnDisplay =
+            rendering.MappingMode == MappingMode.ImageToDisplay ?
+            sender.MapImageToDisplay(Location, PixelAlign) :
+            Location;
 
         graphics.DrawString(Text, font, brush, pointOnDisplay);
     }

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Humanizer;
+using System;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 
 namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo;
@@ -12,7 +14,7 @@ public partial class FormOverlays : Form
 {
     private TestSettings testSettings = new TestSettings();
     private Bitmap bitmap;
-
+    private OverlayPainter overlayPainter = new OverlayPainter();
 
     /// <summary>
     /// Constructor
@@ -31,13 +33,14 @@ public partial class FormOverlays : Form
     {
         base.OnLoad(e);
 
-        layerTreeView.SetRootLayer(testSettings.Overlay.RootLayer);
         bitmapDisplayPanel.SetImage(bitmap);
+        propertyGrid.SelectedObject = testSettings;
     }
 
     protected override void OnClientSizeChanged(EventArgs e)
     {
         base.OnClientSizeChanged(e);
+        testSettings.Shapes.RecreateBubbles(bitmapDisplayPanel.Size);
         bitmapDisplayPanel.FitToWindowCentred();
     }
 
@@ -46,6 +49,7 @@ public partial class FormOverlays : Form
         base.OnFormClosed(e);
         bitmap.Dispose();
     }
+
 
 
     /// <summary>
@@ -66,7 +70,39 @@ public partial class FormOverlays : Form
         if (bitmapDisplayPanel == null) { return; }
         if (bitmapDisplayPanel.GetDisplayImage() == null) { return; }
 
-        testSettings.Overlay.RootLayer.Draw(sender, graphics);
+        PaintMetrics(sender, graphics);
+        overlayPainter.Paint(bitmapDisplayPanel, graphics, testSettings.Shapes, testSettings.Overlays);
+    }
+
+
+    private void PaintMetrics(BitmapDisplay.BitmapDisplayPanel sender, Graphics graphics)
+    {
+        var info = new StringBuilder();
+        info.Append($"Display mode      {sender.DisplayMode.Humanize()}\n");
+        info.Append($"Display size      {sender.ClientSize}\n");
+        
+        if (!sender.AnythingToDisplay)
+        {
+            info.Append($"Image not loaded\n");
+        }
+        else
+        {
+            var r = sender.PaintRect;
+            info.Append($"Bitmap size       {sender.GetDisplayImage()?.Size}\n");
+            info.Append($"Paint zoom        {sender.Zoom:0.000}\n");
+            info.Append($"Paint rect        {r.X:0.0}, {r.Y:0.0}, {r.Width:0.0}, {r.Height:0:0}\n");
+            info.Append($"Format            {sender.GetDisplayImage()?.PixelFormat.Humanize()}\n");
+        }
+
+        info.Append($"Set image         {sender.TimingMetrics.SetImage.Humanize()}\n");
+        info.Append($"Paint foreground  {sender.TimingMetrics.ForegroundPaint.Humanize()}\n");
+        info.Append($"Paint background  {sender.TimingMetrics.BackgroundPaint.Humanize()}\n");
+        
+        var textTopleft = new PointF(12, 12);
+
+        var font = Draw.RenderingToolsPool.GetFont(new Draw.FontSpec() { FontName = "Courier New", FontSize = 10 });
+
+        graphics.DrawString(info.ToString(), font, Brushes.Navy, textTopleft);
     }
 
 
@@ -80,12 +116,11 @@ public partial class FormOverlays : Form
 
 
     /// <summary>
-    /// User has selected a node in the layer tree view
+    /// Bubble animation timer
     /// </summary>
-    private void layerTreeView_LayerTreeNodeSelected(object sender, CDS.Imaging.Draw.LayerTreeNodeEventArgs e)
+    private void timerBubbles_Tick(object sender, EventArgs e)
     {
-        if (e?.Layer == null) { return; }
-
-        propertyGrid.SelectedObject = e.Layer.Rendering;
+        testSettings.Shapes.MoveBubbles();
+        bitmapDisplayPanel.Invalidate();
     }
 }

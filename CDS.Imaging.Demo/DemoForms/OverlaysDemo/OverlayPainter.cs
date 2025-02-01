@@ -1,0 +1,45 @@
+﻿using CDS.Imaging.BitmapDisplay;
+using System;
+using System.Drawing;
+
+namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
+{
+
+    internal class OverlayPainter
+    {
+        public void Paint(BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, OverlayShapes shapes, OverlayRenderingSpecs overlaySettings)
+        {
+            PaintShapes(bitmapDisplayPanel, graphics, shapes, overlaySettings);
+            PaintFloatingBubbles(bitmapDisplayPanel, graphics, shapes.Bubbles, overlaySettings.Bubbles);
+        }
+
+        private void PaintFloatingBubbles(BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, Bubble[] bubbles, Draw.RenderingSpec renderingSpec)
+        {
+            foreach (var bubble in bubbles)
+            {
+                bubble.Draw(bitmapDisplayPanel, graphics, renderingSpec);
+            }
+        }
+
+        private static void PaintShapes(BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, OverlayShapes shapes, OverlayRenderingSpecs overlaySettings)
+        {
+            shapes.Rectangle1.Draw(bitmapDisplayPanel, graphics, overlaySettings.Rectangles);
+            shapes.Rectangle2.Draw(bitmapDisplayPanel, graphics, overlaySettings.Rectangles);
+
+            shapes.CrossHairShape.Draw(bitmapDisplayPanel, graphics, overlaySettings.CrossHair);
+
+            shapes.EllipseShape.Draw(bitmapDisplayPanel, graphics, overlaySettings.Ellipses);
+
+            shapes.Line1.Draw(bitmapDisplayPanel, graphics, overlaySettings.Lines);
+            shapes.Line2.Draw(bitmapDisplayPanel, graphics, overlaySettings.Lines);
+
+            shapes.Text1.Draw(bitmapDisplayPanel, graphics, overlaySettings.Text);
+            shapes.Text2.Draw(bitmapDisplayPanel, graphics, overlaySettings.Text);
+
+            shapes.Circle1.Draw(bitmapDisplayPanel, graphics, overlaySettings.Circles);
+            shapes.Circle2.Draw(bitmapDisplayPanel, graphics, overlaySettings.Circles);
+
+            shapes.PolygonShape.Draw(bitmapDisplayPanel, graphics, overlaySettings.Polygons);
+        }
+    }
+}

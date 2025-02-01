@@ -26,7 +26,7 @@ namespace CDS.Imaging.BitmapDisplay
             if ((mouseEventArgs.Delta == 0) || (imageDisplayMode != BitmapDisplayMode.Free)) { return; }
 
             var change = mouseEventArgs.Delta;
-            var changeFactor = 1.0f + (Math.Abs(change) / 100.0f);
+            var changeFactor = 1.0f + (Math.Abs(change) / 500.0f);
 
             if (change > 0)
             {

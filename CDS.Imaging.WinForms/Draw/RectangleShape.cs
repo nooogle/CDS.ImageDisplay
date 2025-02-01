@@ -8,7 +8,7 @@ namespace CDS.Imaging.Draw;
 /// A rectangle overlay combining a rectangle and rendering properties
 /// </summary>
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
-public class RectangleShape : IShape
+public class RectangleShape
 {
     /// <summary>
     /// Simple representation of this instance
@@ -16,11 +16,10 @@ public class RectangleShape : IShape
     public override string ToString() => $"Rect: {Rect}";
 
 
-    /// <inheritdoc />
-    public bool Visible { get; set; } = true;
-
-
-    /// <inheritdoc/>
+    /// <summary>
+    /// Controls how the corners of the rectangle are aligned to the display pixels
+    /// Only applicable when the mapping mode is set to <see cref="MappingMode.ImageToDisplay"/>.
+    /// </summary>
     public DisplayPixelAlign PixelAlign { get; set; } = DisplayPixelAlign.TopLeft;
 
 
@@ -31,15 +30,20 @@ public class RectangleShape : IShape
     public RectangleF Rect { get; set; }
 
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Draws the rectangle on the display
+    /// </summary>
     public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
     {
-        if (!Visible || !rendering.Visible) { return; }
+        if (!rendering.Visible) { return; }
 
         var pen = RenderingToolsPool.GetPen(rendering.Lines);
         var brush = RenderingToolsPool.GetBrush(rendering.Fill);
 
-        var rectangleOnDisplay = sender.MapImageToDisplay(Rect, pixelAdjust: PixelAlign);
+        var rectangleOnDisplay = 
+            rendering.MappingMode == MappingMode.ImageToDisplay ?
+            sender.MapImageToDisplay(Rect, pixelAdjust: PixelAlign) :
+            Rect;
 
         graphics.FillRectangle(brush, rectangleOnDisplay);
         graphics.DrawRectangle(pen, rectangleOnDisplay);

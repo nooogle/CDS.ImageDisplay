@@ -9,7 +9,7 @@ namespace CDS.Imaging.Draw;
 /// A crosshair overlay combining crosshair geometry and rendering properties
 /// </summary>
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
-public class CrosshairShape : IShape
+public class CrosshairShape
 {
     /// <summary>
     /// Simple representation of this instance
@@ -17,12 +17,11 @@ public class CrosshairShape : IShape
     public override string ToString() => $"Crosshair: centre = {Centre}";
 
 
-    /// <inheritdoc />
-    public bool Visible { get; set; } = true;
-
-
-    /// <inheritdoc/>
-    public DisplayPixelAlign PixelAlign { get; set; } = DisplayPixelAlign.TopLeft;
+    /// <summary>
+    /// Pixel alignment of the crosshair
+    /// Only applicable when the mapping mode is set to <see cref="MappingMode.ImageToDisplay"/>.
+    /// </summary>
+    public DisplayPixelAlign PixelAlign { get; set; } = DisplayPixelAlign.Centre;
 
 
     /// <summary>
@@ -44,14 +43,19 @@ public class CrosshairShape : IShape
     public float CentreGap { get; set; } = 2;
 
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Draw the crosshair on the display
+    /// </summary>
     public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
     {
-        if (!Visible || !rendering.Visible) { return; }
+        if (!rendering.Visible) { return; }
 
         var pen = RenderingToolsPool.GetPen(rendering.Lines);
 
-        var centreOnDisplay = sender.MapImageToDisplay(Centre, PixelAlign);
+        var centreOnDisplay = 
+            rendering.MappingMode == MappingMode.ImageToDisplay ?
+            sender.MapImageToDisplay(Centre, PixelAlign) :
+            Centre;
 
         // top line
         graphics.DrawLine(

@@ -78,7 +78,7 @@ namespace CDS.Imaging.RegionOfInterest
 
 
         /// <inheritdoc/>
-        public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
+        public void Draw(BitmapDisplayPanel sender, Graphics graphics)
         {
             if (!Visible) { return; }
             if (ROI.IsEmpty) { return; }
@@ -86,8 +86,8 @@ namespace CDS.Imaging.RegionOfInterest
             var roiOnDisplay = sender.MapImageToDisplay(ROI, PixelAlign);
             RecalculateGrapplesRectangles(roiOnDisplay);
 
-            var pen = RenderingToolsPool.GetPen(rendering.Lines);
-            var brush = RenderingToolsPool.GetBrush(rendering.Fill);
+            var pen = RenderingToolsPool.GetPen(Rendering.Lines);
+            var brush = RenderingToolsPool.GetBrush(Rendering.Fill);
 
             graphics.FillRectangle(brush, roiOnDisplay);
             graphics.DrawRectangle(pen, roiOnDisplay);

@@ -9,7 +9,7 @@ namespace CDS.Imaging.Draw;
 /// A polygon overlay combining polyon geometry and rendering properties
 /// </summary>
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
-public class PolygonShape : IShape
+public class PolygonShape
 {
     /// <summary>
     /// Simple representation of this instance
@@ -17,11 +17,11 @@ public class PolygonShape : IShape
     public override string ToString() => $"Polygon: {Points.Length} points";
 
 
-    /// <inheritdoc />
-    public bool Visible { get; set; } = true;
 
-
-    /// <inheritdoc/>
+    /// <summary>
+    /// Controls how the polygon is aligned to the display pixels
+    /// Only applicable when the mapping mode is set to <see cref="MappingMode.ImageToDisplay"/>.
+    /// </summary>
     public DisplayPixelAlign PixelAlign { get; set; } = DisplayPixelAlign.Centre;
 
 
@@ -32,19 +32,29 @@ public class PolygonShape : IShape
     public PointF[] Points { get; set; } = new PointF[0];
 
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Draws the polygon on the display
+    /// </summary>
     public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
     {
-        if (!Visible || !rendering.Visible) { return; }
+        if (!rendering.Visible) { return; }
 
         var pen = RenderingToolsPool.GetPen(rendering.Lines);
         var brush = RenderingToolsPool.GetBrush(rendering.Fill);
 
-        var pointsOnDisplay = new PointF[Points.Length];
+        PointF[] pointsOnDisplay;
 
-        for (int i = 0; i < Points.Length; i++)
+        if (rendering.MappingMode == MappingMode.DirectToDisplay)
         {
-            pointsOnDisplay[i] = sender.MapImageToDisplay(Points[i], pixelAdjust: PixelAlign);
+            pointsOnDisplay = Points;
+        }
+        else
+        {
+            pointsOnDisplay = new PointF[Points.Length];
+            for (int i = 0; i < Points.Length; i++)
+            {
+                pointsOnDisplay[i] = sender.MapImageToDisplay(Points[i], pixelAdjust: PixelAlign);
+            }
         }
 
         graphics.FillPolygon(brush, pointsOnDisplay);

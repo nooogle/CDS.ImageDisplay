@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using CDS.Imaging.BitmapDisplay;
+using CDS.Imaging.Draw;
+using System.Drawing;
 
 namespace CDS.Imaging.RegionOfInterest
 {
@@ -6,7 +8,7 @@ namespace CDS.Imaging.RegionOfInterest
     /// Interface for a descriptor for a single ROI, The <see cref="MultipleROIManager"/> uses these
     /// to manage multiple ROIs on a bitmap display.
     /// </summary>
-    public interface ISingleROIDescriptor : Draw.IShape
+    public interface ISingleROIDescriptor
     {
         /// <summary>
         /// The region of interest.
@@ -39,8 +41,14 @@ namespace CDS.Imaging.RegionOfInterest
 
 
         /// <summary>
-        /// How to draw this ROI
+        /// True if the ROI is visible.
         /// </summary>
-        Draw.RenderingSpec Rendering { get; set; }
+        bool Visible { get; set; }
+
+
+        /// <summary>
+        /// Draws the ROI on the bitmap display.
+        /// </summary>
+        void Draw(BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics);
     }
 }

@@ -9,7 +9,7 @@ namespace CDS.Imaging.Draw;
 /// A circle overlay combining circle geometry and rendering properties
 /// </summary>
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
-public class CircleShape : IShape
+public class CircleShape
 {
     /// <summary>
     /// Simple representation of this instance
@@ -17,11 +17,10 @@ public class CircleShape : IShape
     public override string ToString() => $"Circle: centre = {Centre}, radius = {Radius}";
 
 
-    /// <inheritdoc />
-    public bool Visible { get; set; } = true;
-
-
-    /// <inheritdoc/>
+    /// <summary>
+    /// Controls how the circle centre is aligned to the pixel grid
+    /// Only applicable when the mapping mode is set to <see cref="MappingMode.ImageToDisplay"/>.
+    /// </summary>
     public DisplayPixelAlign PixelAlign { get; set; } = DisplayPixelAlign.Centre;
 
 
@@ -41,15 +40,19 @@ public class CircleShape : IShape
     /// <inheritdoc />
     public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
     {
-        if (!Visible || !rendering.Visible) { return; }
+        if (!rendering.Visible) { return; }
 
         var pen = RenderingToolsPool.GetPen(rendering.Lines);
         var brush = RenderingToolsPool.GetBrush(rendering.Fill);
 
         var squareAroundCircle = new RectangleF(Centre.X - Radius, Centre.Y - Radius, 2 * Radius, 2 * Radius);
-        var circleOnDisplay = sender.MapImageToDisplay(squareAroundCircle, pixelAdjust: PixelAlign);
 
-        graphics.FillEllipse(brush, circleOnDisplay);
-        graphics.DrawEllipse(pen, circleOnDisplay);
+        if (rendering.MappingMode == MappingMode.ImageToDisplay)
+        {
+            squareAroundCircle = sender.MapImageToDisplay(squareAroundCircle, pixelAdjust: PixelAlign);
+        }
+
+        graphics.FillEllipse(brush, squareAroundCircle);
+        graphics.DrawEllipse(pen, squareAroundCircle);
     }
 }

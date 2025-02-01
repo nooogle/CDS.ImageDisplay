@@ -9,7 +9,7 @@ namespace CDS.Imaging.Draw;
 /// An ellipse overlay combining ellipse geometry and rendering properties
 /// </summary>
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
-public class EllipseShape : IShape
+public class EllipseShape
 {
     /// <summary>
     /// Simple representation of this instance
@@ -17,11 +17,10 @@ public class EllipseShape : IShape
     public override string ToString() => $"Ellipse: centre = {Centre}, major = {MajorAxis}, minor = {MinorAxis}, angle = {MajorAxisAngleDegrees}";
 
 
-    /// <inheritdoc />
-    public bool Visible { get; set; } = true;
-
-
-    /// <inheritdoc/>
+    /// <summary>
+    /// Controls how the centre of the ellipse is aligned to the pixel grid
+    /// Only applicable when the mapping mode is set to <see cref="MappingMode.ImageToDisplay"/>.
+    /// </summary>
     public DisplayPixelAlign PixelAlign { get; set; } = DisplayPixelAlign.Centre;
 
 
@@ -50,10 +49,12 @@ public class EllipseShape : IShape
     public float MajorAxisAngleDegrees { get; set; }
 
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Draws the shape
+    /// </summary>
     public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
     {
-        if (!Visible || !rendering.Visible) { return; }
+        if (!rendering.Visible) { return; }
 
         var pen = RenderingToolsPool.GetPen(rendering.Lines);
         var brush = RenderingToolsPool.GetBrush(rendering.Fill);
@@ -63,10 +64,20 @@ public class EllipseShape : IShape
 
         try
         {
-            // Translate the ellipse from image to display coordinates
-            var centreOnDisplay = sender.MapImageToDisplay(Centre, PixelAlign);
-            var majorAxisOnDisplay = sender.MapImageToDisplay(MajorAxis);
-            var minorAxisOnDisplay = sender.MapImageToDisplay(MinorAxis);
+            var centreOnDisplay =
+                rendering.MappingMode == MappingMode.ImageToDisplay ?
+                sender.MapImageToDisplay(Centre, PixelAlign) :
+                Centre;
+            
+            var majorAxisOnDisplay =
+                rendering.MappingMode == MappingMode.ImageToDisplay ?
+                sender.MapImageToDisplay(MajorAxis) :
+                MajorAxis;
+
+            var minorAxisOnDisplay = 
+                rendering.MappingMode == MappingMode.ImageToDisplay ? 
+                sender.MapImageToDisplay(MinorAxis) : 
+                MinorAxis;
 
             // Translate to the center of the ellipse
             graphics.TranslateTransform(centreOnDisplay.X, centreOnDisplay.Y);

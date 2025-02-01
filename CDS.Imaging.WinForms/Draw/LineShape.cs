@@ -8,7 +8,7 @@ namespace CDS.Imaging.Draw;
 /// A line overlay combining a line and rendering properties
 /// </summary>
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
-public class LineShape : IShape
+public class LineShape
 {
     /// <summary>
     /// Simple representation of this instance
@@ -16,11 +16,10 @@ public class LineShape : IShape
     public override string ToString() => $"Line: form {Start} to {End}";
 
 
-    /// <inheritdoc />
-    public bool Visible { get; set; } = true;
-
-
-    /// <inheritdoc/>
+    /// <summary>
+    /// Controls how the end points are aligned to the display pixels
+    /// Only applicable when the mapping mode is set to <see cref="MappingMode.ImageToDisplay"/>.
+    /// </summary>
     public DisplayPixelAlign PixelAlign { get; set; } = DisplayPixelAlign.Centre;
 
 
@@ -38,15 +37,24 @@ public class LineShape : IShape
     public PointF End { get; set; }
 
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Draws the line on the display
+    /// </summary>
     public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
     {
-        if (!Visible || !rendering.Visible) { return; }
+        if (!rendering.Visible) { return; }
 
         var pen = RenderingToolsPool.GetPen(rendering.Lines);
 
-        var startOnDisplay = sender.MapImageToDisplay(Start, pixelAdjust: PixelAlign);
-        var endOnDisplay = sender.MapImageToDisplay(End, pixelAdjust: PixelAlign);
+        var startOnDisplay = 
+            rendering.MappingMode == MappingMode.ImageToDisplay ? 
+            sender.MapImageToDisplay(Start, pixelAdjust: PixelAlign) : 
+            Start;
+        
+        var endOnDisplay = 
+            rendering.MappingMode == MappingMode.ImageToDisplay ? 
+            sender.MapImageToDisplay(End, pixelAdjust: PixelAlign) : 
+            End;
 
         graphics.DrawLine(pen, startOnDisplay, endOnDisplay);
     }
