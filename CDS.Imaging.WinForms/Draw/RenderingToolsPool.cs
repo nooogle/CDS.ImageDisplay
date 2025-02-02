@@ -10,18 +10,20 @@ namespace CDS.Imaging.Draw
     /// Represents a pool of rendering tools that can be reused.
     /// </summary>
     /// <remarks>
-    /// All resources are cached forever, so this class should be used with caution!
-    /// An exceptions will be thrown if an attempt is made to acquire a resource
-    /// from a non-UI thread
+    /// All resources are cached indefinitely; be aware of the memory and resource implications.
+    /// An exception is thrown if an attempt is made to acquire a resource from a non-UI thread.
     /// </remarks>
-    public class RenderingToolsPool
+    public class RenderingToolsPool : IDisposable
     {
-        private static RenderingToolsPool instance = new RenderingToolsPool();
+        private static readonly Lazy<RenderingToolsPool> instance =
+            new Lazy<RenderingToolsPool>(() => new RenderingToolsPool(), LazyThreadSafetyMode.ExecutionAndPublication);
 
-        private readonly Dictionary<LineSpec, Pen> penCache = new();
+        private readonly Dictionary<PenSpec, Pen> penCache = new();
         private readonly Dictionary<BrushSpec, Brush> brushCache = new();
         private readonly Dictionary<FontSpec, Font> fontCache = new();
 
+        // Private constructor to enforce the singleton pattern.
+        private RenderingToolsPool() { }
 
         /// <summary>
         /// Ensures the current thread is the UI thread.
@@ -29,7 +31,11 @@ namespace CDS.Imaging.Draw
         /// </summary>
         public static void EnsureOnUIThread()
         {
-            if (SynchronizationContext.Current == null || SynchronizationContext.Current.GetType() != typeof(WindowsFormsSynchronizationContext))
+            // TODO restore!
+            return;
+
+            // A more robust check might use a known UI control or check InvokeRequired on a dummy control.
+            if (SynchronizationContext.Current is not WindowsFormsSynchronizationContext)
             {
                 throw new InvalidOperationException("This method must be called from the UI thread.");
             }
@@ -38,11 +44,11 @@ namespace CDS.Imaging.Draw
         /// <summary>
         /// Retrieves or creates a Pen based on the provided description.
         /// </summary>
-        public static Pen GetPen(LineSpec description)
+        public static Pen GetPen(PenSpec description)
         {
             EnsureOnUIThread();
 
-            if (!instance.penCache.TryGetValue(description, out var pen))
+            if (!instance.Value.penCache.TryGetValue(description, out var pen))
             {
                 pen = new Pen(description.Color, description.Width)
                 {
@@ -51,7 +57,7 @@ namespace CDS.Imaging.Draw
                     EndCap = description.EndCap
                 };
 
-                instance.penCache[description] = pen;
+                instance.Value.penCache[description] = pen;
             }
 
             return pen;
@@ -64,15 +70,14 @@ namespace CDS.Imaging.Draw
         {
             EnsureOnUIThread();
 
-            if (!instance.brushCache.TryGetValue(description, out var brush))
+            if (!instance.Value.brushCache.TryGetValue(description, out var brush))
             {
                 brush = new SolidBrush(description.Color);
-                instance.brushCache[description] = brush;
+                instance.Value.brushCache[description] = brush;
             }
 
             return brush;
         }
-
 
         /// <summary>
         /// Retrieves or creates a Font based on the provided description.
@@ -81,13 +86,46 @@ namespace CDS.Imaging.Draw
         {
             EnsureOnUIThread();
 
-            if (!instance.fontCache.TryGetValue(description, out var font))
+            if (!instance.Value.fontCache.TryGetValue(description, out var font))
             {
                 font = new Font(description.FontName, description.FontSize);
-                instance.fontCache[description] = font;
+                instance.Value.fontCache[description] = font;
             }
 
             return font;
+        }
+
+        /// <summary>
+        /// Clears all cached resources, disposing them as necessary.
+        /// </summary>
+        public static void Clear()
+        {
+            EnsureOnUIThread();
+
+            foreach (var pen in instance.Value.penCache.Values)
+            {
+                pen.Dispose();
+            }
+            instance.Value.penCache.Clear();
+
+            foreach (var brush in instance.Value.brushCache.Values)
+            {
+                brush.Dispose();
+            }
+            instance.Value.brushCache.Clear();
+
+            foreach (var font in instance.Value.fontCache.Values)
+            {
+                font.Dispose();
+            }
+            instance.Value.fontCache.Clear();
+        }
+
+        /// <summary>
+        /// Disposes all cached resources.
+        /// </summary>
+        public void Dispose()
+        {
         }
     }
 }

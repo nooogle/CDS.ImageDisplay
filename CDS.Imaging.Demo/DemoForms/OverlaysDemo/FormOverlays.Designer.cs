@@ -33,7 +33,7 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
             bitmapDisplayPanel = new BitmapDisplay.BitmapDisplayPanel();
             panel1 = new System.Windows.Forms.Panel();
             propertyGrid = new System.Windows.Forms.PropertyGrid();
-            sysInfoPanel = new SysInfoPanel();
+            sysInfoPanel = new Utils.SystemInfoPanel();
             timerBubbles = new System.Windows.Forms.Timer(components);
             panel1.SuspendLayout();
             SuspendLayout();
@@ -104,7 +104,7 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
         private BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.PropertyGrid propertyGrid;
-        private CDS.Imaging.SysInfoPanel sysInfoPanel;
+        private CDS.Imaging.Utils.SystemInfoPanel sysInfoPanel;
         private System.Windows.Forms.Timer timerBubbles;
     }
 }

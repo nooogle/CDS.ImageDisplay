@@ -43,7 +43,7 @@ namespace CDS.Imaging.Demo.DemoForms
             labelCommittedROI = new System.Windows.Forms.Label();
             btnClearROI = new System.Windows.Forms.Button();
             btnSetROI = new System.Windows.Forms.Button();
-            sysInfoPanel = new SysInfoPanel();
+            sysInfoPanel = new Utils.SystemInfoPanel();
             timerUpdateMetrics = new System.Windows.Forms.Timer(components);
             singleROIManager = new RegionOfInterest.SingleROIManager(components);
             panel1.SuspendLayout();
@@ -262,7 +262,7 @@ namespace CDS.Imaging.Demo.DemoForms
         private System.Windows.Forms.Label labelDraggingROI;
         private System.Windows.Forms.Label labelCommittedROI;
         private System.Windows.Forms.PropertyGrid propertyGrid;
-        private CDS.Imaging.SysInfoPanel sysInfoPanel;
+        private CDS.Imaging.Utils.SystemInfoPanel sysInfoPanel;
         private System.Windows.Forms.Label labelPaintBackgroundMetrics;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label labelPaintForegroundMetrics;

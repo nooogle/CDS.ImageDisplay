@@ -7,6 +7,7 @@ Please generate C# code that adheres to the following practices:
      - Use `camelCase` for private fields, parameters, and local variables.
      - Place braces on a new line, following the standard .NET formatting rules.
      - Don't use underscores in identifiers.
+     - Always use curly braces for control flow statements, even when the body is empty or contains a single statement.
 
 2. **Commenting**:
    - Use XML documentation comments (`///`) for all public methods, properties, and classes.
@@ -26,7 +27,7 @@ Please generate C# code that adheres to the following practices:
    - Ensure methods that return tasks follow the naming convention of ending with "Async" (e.g., `GetDataAsync`).
 
 6. **Creating new code**:
-   - When youa re asked to make some code, or change some code, try to only show new code or changed code, rather then refreshing and entire code file.
+   - When asked to work on a method just show the updated method, don't regenerate the entire class.
 
 7. **Unit Testing**:
    - Write unit tests using MSTest for all public methods.

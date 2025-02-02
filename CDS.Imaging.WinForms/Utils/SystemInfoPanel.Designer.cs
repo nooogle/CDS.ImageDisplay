@@ -1,6 +1,6 @@
-﻿namespace CDS.Imaging
+﻿namespace CDS.Imaging.Utils
 {
-    partial class SysInfoPanel
+    partial class SystemInfoPanel
     {
         /// <summary> 
         /// Required designer variable.

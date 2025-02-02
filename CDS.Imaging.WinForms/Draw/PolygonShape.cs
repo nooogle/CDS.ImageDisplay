@@ -1,4 +1,6 @@
 ﻿using CDS.Imaging.BitmapDisplay;
+using CDS.Imaging.Utils;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 
@@ -37,6 +39,10 @@ public class PolygonShape
     /// </summary>
     public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
     {
+        ArgumentNullException.ThrowIfNull(sender, nameof(sender));
+        ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
+        ArgumentNullException.ThrowIfNull(rendering, nameof(rendering));
+        if(Points == null || Points.Length < 3) { return; }
         if (!rendering.Visible) { return; }
 
         var pen = RenderingToolsPool.GetPen(rendering.Lines);

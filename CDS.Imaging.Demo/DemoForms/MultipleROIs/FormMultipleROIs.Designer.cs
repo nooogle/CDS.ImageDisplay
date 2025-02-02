@@ -34,7 +34,7 @@ namespace CDS.Imaging.Demo.DemoForms.MultipleROIs
             panel1 = new System.Windows.Forms.Panel();
             propertyGrid = new System.Windows.Forms.PropertyGrid();
             btnLoadImage = new System.Windows.Forms.Button();
-            sysInfoPanel = new SysInfoPanel();
+            sysInfoPanel = new Utils.SystemInfoPanel();
             openFileDialog = new System.Windows.Forms.OpenFileDialog();
             multipleROIManager = new RegionOfInterest.MultipleROIManager(components);
             panel1.SuspendLayout();
@@ -154,7 +154,7 @@ namespace CDS.Imaging.Demo.DemoForms.MultipleROIs
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnLoadImage;
         private System.Windows.Forms.PropertyGrid propertyGrid;
-        private CDS.Imaging.SysInfoPanel sysInfoPanel;
+        private CDS.Imaging.Utils.SystemInfoPanel sysInfoPanel;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private RegionOfInterest.MultipleROIManager multipleROIManager;
     }

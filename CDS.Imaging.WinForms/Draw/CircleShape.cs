@@ -1,4 +1,6 @@
 ﻿using CDS.Imaging.BitmapDisplay;
+using CDS.Imaging.Utils;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 
@@ -6,7 +8,7 @@ namespace CDS.Imaging.Draw;
 
 
 /// <summary>
-/// A circle overlay combining circle geometry and rendering properties
+/// A circle shape.
 /// </summary>
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
 public class CircleShape
@@ -37,10 +39,16 @@ public class CircleShape
     public float Radius { get; set; }
 
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Draws the circle.
+    /// </summary>
     public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
     {
+        ArgumentNullException.ThrowIfNull(sender, nameof(sender));
+        ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
+        ArgumentNullException.ThrowIfNull(rendering, nameof(rendering));
         if (!rendering.Visible) { return; }
+        if (Radius <= 0) { return; }
 
         var pen = RenderingToolsPool.GetPen(rendering.Lines);
         var brush = RenderingToolsPool.GetBrush(rendering.Fill);

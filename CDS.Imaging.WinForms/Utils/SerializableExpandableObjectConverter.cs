@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace CDS.Imaging;
+namespace CDS.Imaging.Utils;
 
 
 /// <summary>
@@ -25,7 +25,7 @@ public class SerializableExpandableObjectConverter : ExpandableObjectConverter
     /// </summary>
     public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
     {
-        if (destinationType == typeof(String))
+        if (destinationType == typeof(string))
         {
             return false;
         }
@@ -42,7 +42,7 @@ public class SerializableExpandableObjectConverter : ExpandableObjectConverter
     /// </summary>
     public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
     {
-        if (sourceType == typeof(String))
+        if (sourceType == typeof(string))
         {
             return false;
         }

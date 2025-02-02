@@ -1,9 +1,10 @@
-﻿using System.ComponentModel;
+﻿using CDS.Imaging.Utils;
+using System.ComponentModel;
 
 namespace CDS.Imaging.Draw
 {
     /// <summary>
-    /// Represents the specification of how shapes or information should be drawn.
+    /// Bundles together the settings for lines, fills, and fonts.
     /// </summary>
     [TypeConverter(typeof(SerializableExpandableObjectConverter))]
     public class RenderingSpec
@@ -24,7 +25,7 @@ namespace CDS.Imaging.Draw
         /// Line specification.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public LineSpec Lines { get; set; } = new LineSpec();
+        public PenSpec Lines { get; set; } = new PenSpec();
 
 
         /// <summary>
@@ -42,8 +43,15 @@ namespace CDS.Imaging.Draw
 
 
         /// <summary>
-        /// How to map coordinates onto the display.
+        /// How to map coordinates onto the display. Use <see cref="MappingMode.ImageToDisplay"/> when
+        /// you want the graphics to shift and scale with the image. Use <see cref="MappingMode.DirectToDisplay"/>
+        /// when you want the graphics to remain fixed on the display, regardless of the image position and zoom.
         /// </summary>
+        [Description(
+            "How to map coordinates onto the display. Use ImageToDisplay when you want the " +
+            "graphics to shift and scale with the image. Use DisplayToImage when you " +
+            "want the graphics to remain fixed on the display, " +
+            "regardless of the image position and zoom.")]
         public MappingMode MappingMode { get; set; } = MappingMode.ImageToDisplay;
     }
 }

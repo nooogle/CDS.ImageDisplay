@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Running;
+using CDS.Imaging.Utils;
 
 namespace BenchmarkTests;
 
@@ -7,7 +8,14 @@ class Program
 {
     static void Main(string[] args)
     {
+
+/* Unmerged change from project 'BenchmarkTests (net48)'
+Before:
         Console.WriteLine(CDS.Imaging.SystemInfo.Get());
+After:
+        Console.WriteLine(CDS.Imaging.Utils.SystemInfo.Get());
+*/
+        Console.WriteLine(SystemInfo.Get());
 
         Console.WriteLine(
             "\nNOTE: the resource pool throws an exception if it's used on a non-UI thread. Disable the" +

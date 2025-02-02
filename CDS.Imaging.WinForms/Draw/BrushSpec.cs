@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using CDS.Imaging.Utils;
+using System.ComponentModel;
 using System.Drawing;
 
 namespace CDS.Imaging.Draw

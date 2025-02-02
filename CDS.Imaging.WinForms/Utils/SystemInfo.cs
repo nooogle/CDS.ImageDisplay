@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace CDS.Imaging
+namespace CDS.Imaging.Utils
 {
     /// <summary>
     /// Provides information about the system and application.
