@@ -51,5 +51,14 @@ namespace CDS.Imaging.Draw
         {
             return FontSize.GetHashCode() ^ FontName.GetHashCode();
         }
+
+
+        /// <summary>
+        /// Creates a font from this specification.
+        /// </summary>
+        public System.Drawing.Font Create()
+        {
+            return new System.Drawing.Font(FontName, FontSize);
+        }
     }
 }

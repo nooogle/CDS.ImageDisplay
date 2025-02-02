@@ -33,5 +33,14 @@ namespace CDS.Imaging.Draw
             if (obj is not BrushSpec other) return false;
             return Color == other.Color;
         }
+
+
+        /// <summary>
+        /// Creates a brush from this specification.
+        /// </summary>
+        public Brush Create()
+        {
+            return new SolidBrush(Color);
+        }
     }
 }

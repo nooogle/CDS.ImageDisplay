@@ -31,9 +31,6 @@ namespace CDS.Imaging.Draw
         /// </summary>
         public static void EnsureOnUIThread()
         {
-            // TODO restore!
-            return;
-
             // A more robust check might use a known UI control or check InvokeRequired on a dummy control.
             if (SynchronizationContext.Current is not WindowsFormsSynchronizationContext)
             {
@@ -50,13 +47,7 @@ namespace CDS.Imaging.Draw
 
             if (!instance.Value.penCache.TryGetValue(description, out var pen))
             {
-                pen = new Pen(description.Color, description.Width)
-                {
-                    DashStyle = description.DashStyle,
-                    StartCap = description.StartCap,
-                    EndCap = description.EndCap
-                };
-
+                pen = description.Create();
                 instance.Value.penCache[description] = pen;
             }
 
@@ -72,7 +63,7 @@ namespace CDS.Imaging.Draw
 
             if (!instance.Value.brushCache.TryGetValue(description, out var brush))
             {
-                brush = new SolidBrush(description.Color);
+                brush = description.Create();
                 instance.Value.brushCache[description] = brush;
             }
 
@@ -88,7 +79,7 @@ namespace CDS.Imaging.Draw
 
             if (!instance.Value.fontCache.TryGetValue(description, out var font))
             {
-                font = new Font(description.FontName, description.FontSize);
+                font = description.Create();
                 instance.Value.fontCache[description] = font;
             }
 

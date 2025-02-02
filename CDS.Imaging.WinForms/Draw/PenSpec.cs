@@ -57,10 +57,25 @@ public class PenSpec
     public override bool Equals(object? obj)
     {
         if (obj is not PenSpec other) return false;
+
         return Color == other.Color &&
                Width == other.Width &&
                DashStyle == other.DashStyle &&
                StartCap == other.StartCap &&
                EndCap == other.EndCap;
+    }
+
+
+    /// <summary>
+    /// Creates a pen from this specification.
+    /// </summary>
+    public Pen Create()
+    {
+        return new Pen(Color, Width)
+        {
+            DashStyle = DashStyle,
+            StartCap = StartCap,
+            EndCap = EndCap
+        };
     }
 }
