@@ -4,10 +4,10 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.Draw;
+namespace CDS.Imaging.Overlays;
 
 /// <summary>
-/// A rectangle overlay combining a rectangle and rendering properties
+/// A rectangle shape
 /// </summary>
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
 public class RectangleShape
@@ -35,18 +35,18 @@ public class RectangleShape
     /// <summary>
     /// Draws the rectangle on the display
     /// </summary>
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
+    public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawing)
     {
         ArgumentNullException.ThrowIfNull(sender, nameof(sender));
         ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
-        ArgumentNullException.ThrowIfNull(rendering, nameof(rendering));
-        if (!rendering.Visible) { return; }
+        ArgumentNullException.ThrowIfNull(drawing, nameof(drawing));
+        if (!drawing.Visible) { return; }
 
-        var pen = RenderingToolsPool.GetPen(rendering.Lines);
-        var brush = RenderingToolsPool.GetBrush(rendering.Fill);
+        var pen = DrawingToolsPool.GetPen(drawing.Lines);
+        var brush = DrawingToolsPool.GetBrush(drawing.Fill);
 
         Rectangle rectangleOnDisplay = 
-            rendering.MappingMode == MappingMode.ImageToDisplay ?
+            drawing.MappingMode == MappingMode.ImageToDisplay ?
             sender.MapImageToDisplay(Rect, pixelAdjust: PixelAlign) :
             Rectangle.Truncate(Rect);
 

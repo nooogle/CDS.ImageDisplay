@@ -4,11 +4,11 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.Draw;
+namespace CDS.Imaging.Overlays;
 
 
 /// <summary>
-/// A polygon overlay combining polyon geometry and rendering properties
+/// A polygon shape
 /// </summary>
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
 public class PolygonShape
@@ -37,20 +37,20 @@ public class PolygonShape
     /// <summary>
     /// Draws the polygon on the display
     /// </summary>
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
+    public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawing)
     {
         ArgumentNullException.ThrowIfNull(sender, nameof(sender));
         ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
-        ArgumentNullException.ThrowIfNull(rendering, nameof(rendering));
+        ArgumentNullException.ThrowIfNull(drawing, nameof(drawing));
         if(Points == null || Points.Length < 3) { return; }
-        if (!rendering.Visible) { return; }
+        if (!drawing.Visible) { return; }
 
-        var pen = RenderingToolsPool.GetPen(rendering.Lines);
-        var brush = RenderingToolsPool.GetBrush(rendering.Fill);
+        var pen = DrawingToolsPool.GetPen(drawing.Lines);
+        var brush = DrawingToolsPool.GetBrush(drawing.Fill);
 
         PointF[] pointsOnDisplay;
 
-        if (rendering.MappingMode == MappingMode.DirectToDisplay)
+        if (drawing.MappingMode == MappingMode.DirectToDisplay)
         {
             pointsOnDisplay = Points;
         }

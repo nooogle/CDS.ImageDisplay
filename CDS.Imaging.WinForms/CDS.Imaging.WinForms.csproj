@@ -8,7 +8,7 @@
     <LangVersion>latest</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Platforms>AnyCPU</Platforms>
-    <VersionPrefix>2.0.1</VersionPrefix>
+    <VersionPrefix>2.1.0</VersionPrefix>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>CDS Imaging</Title>
     <Description>Imagine support library</Description>

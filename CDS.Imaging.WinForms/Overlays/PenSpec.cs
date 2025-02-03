@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace CDS.Imaging.Draw;
+namespace CDS.Imaging.Overlays;
 
 /// <summary>
 /// Represents the specification of a pen.

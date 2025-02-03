@@ -1,151 +1,150 @@
 ﻿using CDS.Imaging.BitmapDisplay;
-using CDS.Imaging.Draw;
+using CDS.Imaging.Overlays;
 using CDS.Imaging.Utils;
 using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.RegionOfInterest
+namespace CDS.Imaging.RegionOfInterest;
+
+/// <summary>
+/// Paints a rectangle on a graphics object. Supports grapples.
+/// </summary>
+[TypeConverter(typeof(SerializableExpandableObjectConverter))]
+public class ROIWithGrapplesShape : ISingleROIDescriptor
 {
     /// <summary>
-    /// Renders a rectangle on a graphics object. Supports grapples.
+    /// Last known region of interest (in display coordinates).
     /// </summary>
-    [TypeConverter(typeof(SerializableExpandableObjectConverter))]
-    public class ROIWithGrapplesShape : ISingleROIDescriptor
+    private Rectangle lastROIOnDisplay = Rectangle.Empty;
+
+
+    /// <summary>
+    /// Cached grapple rectangles.
+    /// </summary>
+    private Rectangle[] grappleRectangles = new Rectangle[8];
+
+
+    /// <inheritdoc/>
+    public bool Visible { get; set; } = true;
+
+
+    /// <summary>
+    /// True if the grapples are visible.
+    /// </summary>
+    public bool GrapplesVisible { get; set; } = true;
+
+
+    /// <summary>
+    /// True if the rectangle is locked and cannot be moved.
+    /// </summary>
+    public bool Locked { get; set; } = false;
+
+
+    /// <inheritdoc/>
+    public string Name { get; set; } = "";
+
+
+    /// <inheritdoc/>
+    public Rectangle ROI { get; set; }
+
+
+    /// <inheritdoc/>
+    public Size MinimumSize { get; set; } = new Size(1, 1);
+
+
+    /// <inheritdoc/>
+    public Size MaximumSize { get; set; } = new Size(1000000, 1000000);
+
+
+    /// <summary>
+    /// The diameter of the grapple points.
+    /// </summary>
+    public int GrappleDiameter { get; set; } = 6;
+
+
+    /// <inheritdoc/>
+    public DisplayPixelAlign PixelAlign { get; set; } = DisplayPixelAlign.TopLeft;
+
+
+    /// <inheritdoc/>
+    public DrawingSpec Drawing { get; set; } = new DrawingSpec();
+
+
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    public ROIWithGrapplesShape()
     {
-        /// <summary>
-        /// Last known region of interest (in display coordinates).
-        /// </summary>
-        private Rectangle lastROIOnDisplay = Rectangle.Empty;
-
-
-        /// <summary>
-        /// Cached grapple rectangles.
-        /// </summary>
-        private Rectangle[] grappleRectangles = new Rectangle[8];
-
-
-        /// <inheritdoc/>
-        public bool Visible { get; set; } = true;
-
-
-        /// <summary>
-        /// True if the grapples are visible.
-        /// </summary>
-        public bool GrapplesVisible { get; set; } = true;
-
-
-        /// <summary>
-        /// True if the rectangle is locked and cannot be moved.
-        /// </summary>
-        public bool Locked { get; set; } = false;
-
-
-        /// <inheritdoc/>
-        public string Name { get; set; } = "";
-
-
-        /// <inheritdoc/>
-        public Rectangle ROI { get; set; }
-
-
-        /// <inheritdoc/>
-        public Size MinimumSize { get; set; } = new Size(1, 1);
-
-
-        /// <inheritdoc/>
-        public Size MaximumSize { get; set; } = new Size(1000000, 1000000);
-
-
-        /// <summary>
-        /// The diameter of the grapple points.
-        /// </summary>
-        public int GrappleDiameter { get; set; } = 6;
-
-
-        /// <inheritdoc/>
-        public DisplayPixelAlign PixelAlign { get; set; } = DisplayPixelAlign.TopLeft;
-
-
-        /// <inheritdoc/>
-        public Draw.RenderingSpec Rendering { get; set; } = new Draw.RenderingSpec();
-
-
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public ROIWithGrapplesShape()
-        {
-        }
-
-
-        /// <inheritdoc/>
-        public void Draw(BitmapDisplayPanel sender, Graphics graphics)
-        {
-            if (!Visible) { return; }
-            if (ROI.IsEmpty) { return; }
-
-            var roiOnDisplay = sender.MapImageToDisplay(ROI, PixelAlign);
-            RecalculateGrapplesRectangles(roiOnDisplay);
-
-            var pen = RenderingToolsPool.GetPen(Rendering.Lines);
-            var brush = RenderingToolsPool.GetBrush(Rendering.Fill);
-
-            graphics.FillRectangle(brush, roiOnDisplay);
-            graphics.DrawRectangle(pen, roiOnDisplay);
-
-            DrawGrapples(graphics, pen, brush);
-        }
-
-
-        private void DrawGrapples(Graphics graphics, Pen pen, Brush brush)
-        {
-            if(!GrapplesVisible) { return; }
-
-            for (int grappleIndex = 0; grappleIndex < grappleRectangles.Length; grappleIndex++)
-            {
-                var grappleRect = grappleRectangles[grappleIndex];
-                graphics.FillEllipse(brush, grappleRect);
-                graphics.DrawEllipse(pen, grappleRect);
-            }
-        }
-
-
-        /// <summary>
-        /// Recalculates the rectangles for the grapple points.
-        /// </summary>
-        private void RecalculateGrapplesRectangles(Rectangle roiOnDisplay)
-        {
-            if(lastROIOnDisplay == roiOnDisplay) { return; }
-
-            lastROIOnDisplay = roiOnDisplay;
-
-            grappleRectangles[0] = CreateGrappleRect(location: roiOnDisplay.Location);
-            grappleRectangles[1] = CreateGrappleRect(location: new Point(roiOnDisplay.Right, roiOnDisplay.Top));
-            grappleRectangles[2] = CreateGrappleRect(location: new Point(roiOnDisplay.Right, roiOnDisplay.Bottom));
-            grappleRectangles[3] = CreateGrappleRect(location: new Point(roiOnDisplay.Left, roiOnDisplay.Bottom));
-            grappleRectangles[4] = CreateGrappleRect(location: new Point(roiOnDisplay.Left + roiOnDisplay.Width / 2, roiOnDisplay.Top));
-            grappleRectangles[5] = CreateGrappleRect(location: new Point(roiOnDisplay.Right, roiOnDisplay.Top + roiOnDisplay.Height / 2));
-            grappleRectangles[6] = CreateGrappleRect(location: new Point(roiOnDisplay.Left + roiOnDisplay.Width / 2, roiOnDisplay.Bottom));
-            grappleRectangles[7] = CreateGrappleRect(location: new Point(roiOnDisplay.Left, roiOnDisplay.Top + roiOnDisplay.Height / 2));
-        }
-
-
-        /// <summary>
-        /// Creates a rectangle for a grapple point.
-        /// </summary>
-        private Rectangle CreateGrappleRect(Point location)
-        {
-            return new Rectangle(
-                x: location.X - GrappleDiameter / 2,
-                y: location.Y - GrappleDiameter / 2,
-                width: GrappleDiameter,
-                height: GrappleDiameter);
-        }
-
-
-        /// <summary>
-        /// String representation of the object.
-        /// </summary>
-        public override string ToString() => "";
     }
+
+
+    /// <inheritdoc/>
+    public void Draw(BitmapDisplayPanel sender, Graphics graphics)
+    {
+        if (!Visible) { return; }
+        if (ROI.IsEmpty) { return; }
+
+        var roiOnDisplay = sender.MapImageToDisplay(ROI, PixelAlign);
+        RecalculateGrapplesRectangles(roiOnDisplay);
+
+        var pen = DrawingToolsPool.GetPen(Drawing.Lines);
+        var brush = DrawingToolsPool.GetBrush(Drawing.Fill);
+
+        graphics.FillRectangle(brush, roiOnDisplay);
+        graphics.DrawRectangle(pen, roiOnDisplay);
+
+        DrawGrapples(graphics, pen, brush);
+    }
+
+
+    private void DrawGrapples(Graphics graphics, Pen pen, Brush brush)
+    {
+        if(!GrapplesVisible) { return; }
+
+        for (int grappleIndex = 0; grappleIndex < grappleRectangles.Length; grappleIndex++)
+        {
+            var grappleRect = grappleRectangles[grappleIndex];
+            graphics.FillEllipse(brush, grappleRect);
+            graphics.DrawEllipse(pen, grappleRect);
+        }
+    }
+
+
+    /// <summary>
+    /// Recalculates the rectangles for the grapple points.
+    /// </summary>
+    private void RecalculateGrapplesRectangles(Rectangle roiOnDisplay)
+    {
+        if(lastROIOnDisplay == roiOnDisplay) { return; }
+
+        lastROIOnDisplay = roiOnDisplay;
+
+        grappleRectangles[0] = CreateGrappleRect(location: roiOnDisplay.Location);
+        grappleRectangles[1] = CreateGrappleRect(location: new Point(roiOnDisplay.Right, roiOnDisplay.Top));
+        grappleRectangles[2] = CreateGrappleRect(location: new Point(roiOnDisplay.Right, roiOnDisplay.Bottom));
+        grappleRectangles[3] = CreateGrappleRect(location: new Point(roiOnDisplay.Left, roiOnDisplay.Bottom));
+        grappleRectangles[4] = CreateGrappleRect(location: new Point(roiOnDisplay.Left + roiOnDisplay.Width / 2, roiOnDisplay.Top));
+        grappleRectangles[5] = CreateGrappleRect(location: new Point(roiOnDisplay.Right, roiOnDisplay.Top + roiOnDisplay.Height / 2));
+        grappleRectangles[6] = CreateGrappleRect(location: new Point(roiOnDisplay.Left + roiOnDisplay.Width / 2, roiOnDisplay.Bottom));
+        grappleRectangles[7] = CreateGrappleRect(location: new Point(roiOnDisplay.Left, roiOnDisplay.Top + roiOnDisplay.Height / 2));
+    }
+
+
+    /// <summary>
+    /// Creates a rectangle for a grapple point.
+    /// </summary>
+    private Rectangle CreateGrappleRect(Point location)
+    {
+        return new Rectangle(
+            x: location.X - GrappleDiameter / 2,
+            y: location.Y - GrappleDiameter / 2,
+            width: GrappleDiameter,
+            height: GrappleDiameter);
+    }
+
+
+    /// <summary>
+    /// String representation of the object.
+    /// </summary>
+    public override string ToString() => "";
 }

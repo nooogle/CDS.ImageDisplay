@@ -7,21 +7,21 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
 
     internal class OverlayPainter
     {
-        public void Paint(BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, OverlayShapes shapes, OverlayRenderingSpecs overlaySettings)
+        public void Paint(BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, OverlayShapes shapes, OverlayDrawingSpecs overlaySettings)
         {
             PaintShapes(bitmapDisplayPanel, graphics, shapes, overlaySettings);
             PaintFloatingBubbles(bitmapDisplayPanel, graphics, shapes.Bubbles, overlaySettings.Bubbles);
         }
 
-        private void PaintFloatingBubbles(BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, Bubble[] bubbles, Draw.RenderingSpec renderingSpec)
+        private void PaintFloatingBubbles(BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, Bubble[] bubbles, Overlays.DrawingSpec drawingSpec)
         {
             foreach (var bubble in bubbles)
             {
-                bubble.Draw(bitmapDisplayPanel, graphics, renderingSpec);
+                bubble.Draw(bitmapDisplayPanel, graphics, drawingSpec);
             }
         }
 
-        private static void PaintShapes(BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, OverlayShapes shapes, OverlayRenderingSpecs overlaySettings)
+        private static void PaintShapes(BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, OverlayShapes shapes, OverlayDrawingSpecs overlaySettings)
         {
             shapes.Rectangle1.Draw(bitmapDisplayPanel, graphics, overlaySettings.Rectangles);
             shapes.Rectangle2.Draw(bitmapDisplayPanel, graphics, overlaySettings.Rectangles);

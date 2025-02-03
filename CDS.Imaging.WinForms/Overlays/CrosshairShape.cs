@@ -4,11 +4,11 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.Draw;
+namespace CDS.Imaging.Overlays;
 
 
 /// <summary>
-/// A crosshair overlay combining crosshair geometry and rendering properties
+/// A crosshair overlay combining crosshair geometry and drawing properties
 /// </summary>
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
 public class CrosshairShape
@@ -48,17 +48,17 @@ public class CrosshairShape
     /// <summary>
     /// Draw the crosshair on the display
     /// </summary>
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
+    public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawing)
     {
         ArgumentNullException.ThrowIfNull(sender, nameof(sender));
         ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
-        ArgumentNullException.ThrowIfNull(rendering, nameof(rendering));
-        if (!rendering.Visible) { return; }
+        ArgumentNullException.ThrowIfNull(drawing, nameof(drawing));
+        if (!drawing.Visible) { return; }
 
-        var pen = RenderingToolsPool.GetPen(rendering.Lines);
+        var pen = DrawingToolsPool.GetPen(drawing.Lines);
 
         var centreOnDisplay = 
-            rendering.MappingMode == MappingMode.ImageToDisplay ?
+            drawing.MappingMode == MappingMode.ImageToDisplay ?
             sender.MapImageToDisplay(Centre, PixelAlign) :
             Centre;
 

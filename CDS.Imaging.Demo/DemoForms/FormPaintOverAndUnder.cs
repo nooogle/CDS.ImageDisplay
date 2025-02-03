@@ -12,7 +12,7 @@ namespace CDS.Imaging.Demo.DemoForms
         Bitmap? loadedBitmap;
         Font fixedWidthFont;
         Brush msgPanelBrush;
-        Draw.CrosshairShape crossHair = new Draw.CrosshairShape();
+        Overlays.CrosshairShape crossHair = new Overlays.CrosshairShape();
 
 
         public FormPaintOverAndUnder()
@@ -82,11 +82,11 @@ namespace CDS.Imaging.Demo.DemoForms
                 Brushes.Navy,
                 new PointF(topLeftBox.X, topLeftBox.Y));
 
-            var crossHairRendering = new Draw.RenderingSpec();
-            crossHairRendering.Lines.Color = Color.Yellow;
+            var crossHairDrawingSpec = new Overlays.DrawingSpec();
+            crossHairDrawingSpec.Lines.Color = Color.Yellow;
 
             crossHair.Centre = bitmapDisplay.TargetImageCentre;
-            crossHair.Draw(bitmapDisplay, graphics, crossHairRendering);
+            crossHair.Draw(bitmapDisplay, graphics, crossHairDrawingSpec);
 
 
             // Line test

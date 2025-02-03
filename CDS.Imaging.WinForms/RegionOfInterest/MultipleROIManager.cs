@@ -113,26 +113,26 @@ namespace CDS.Imaging.RegionOfInterest
 
 
         /// <summary>
-        /// The renderer for the dragging ROI.
+        /// The shape for the dragging ROI.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         [Category(categoryCDS)]
-        [DisplayName("Dragging ROI renderer")]
-        public ROIWithGrapplesShape DraggingROIRenderer
+        [DisplayName("Dragging ROI shape")]
+        public ROIWithGrapplesShape DraggingROIShape
         {
-            get => roiSelectionOnBitmapDisplay.LiveDraggingROIRenderer;
+            get => roiSelectionOnBitmapDisplay.LiveDraggingROIShape;
         }
 
 
         /// <summary>
-        /// The renderer for the committed ROI.
+        /// The shape for the committed ROI.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         [Category(categoryCDS)]
-        [DisplayName("Committed ROI renderer")]
-        public ROIWithGrapplesShape CommittedROIRenderer
+        [DisplayName("Committed ROI shape")]
+        public ROIWithGrapplesShape CommittedROIShape
         {
-            get => roiSelectionOnBitmapDisplay.CommittedROIRenderer;
+            get => roiSelectionOnBitmapDisplay.CommittedROIShape;
         }
 
 

@@ -4,11 +4,11 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.Draw;
+namespace CDS.Imaging.Overlays;
 
 
 /// <summary>
-/// An ellipse overlay combining ellipse geometry and rendering properties
+/// An ellipse overlay combining ellipse geometry and drawing properties
 /// </summary>
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
 public class EllipseShape
@@ -54,15 +54,15 @@ public class EllipseShape
     /// <summary>
     /// Draws the shape
     /// </summary>
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
+    public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawing)
     {
         ArgumentNullException.ThrowIfNull(sender, nameof(sender));
         ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
-        ArgumentNullException.ThrowIfNull(rendering, nameof(rendering));
-        if (!rendering.Visible) { return; }
+        ArgumentNullException.ThrowIfNull(drawing, nameof(drawing));
+        if (!drawing.Visible) { return; }
 
-        var pen = RenderingToolsPool.GetPen(rendering.Lines);
-        var brush = RenderingToolsPool.GetBrush(rendering.Fill);
+        var pen = DrawingToolsPool.GetPen(drawing.Lines);
+        var brush = DrawingToolsPool.GetBrush(drawing.Fill);
 
         // Save the current state of the Graphics object
         var state = graphics.Save();
@@ -70,17 +70,17 @@ public class EllipseShape
         try
         {
             var centreOnDisplay =
-                rendering.MappingMode == MappingMode.ImageToDisplay ?
+                drawing.MappingMode == MappingMode.ImageToDisplay ?
                 sender.MapImageToDisplay(Centre, PixelAlign) :
                 Centre;
             
             var majorAxisOnDisplay =
-                rendering.MappingMode == MappingMode.ImageToDisplay ?
+                drawing.MappingMode == MappingMode.ImageToDisplay ?
                 sender.MapImageToDisplay(MajorAxis) :
                 MajorAxis;
 
             var minorAxisOnDisplay = 
-                rendering.MappingMode == MappingMode.ImageToDisplay ? 
+                drawing.MappingMode == MappingMode.ImageToDisplay ? 
                 sender.MapImageToDisplay(MinorAxis) : 
                 MinorAxis;
 

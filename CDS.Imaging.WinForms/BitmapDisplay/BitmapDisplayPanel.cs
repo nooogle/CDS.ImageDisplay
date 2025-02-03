@@ -78,13 +78,13 @@ namespace CDS.Imaging.BitmapDisplay
 
 
         /// <summary>
-        /// Called when the image has been rendered; gives a client an opportunity
+        /// Called when the image has been painted; gives a client an opportunity
         /// to paint graphics on top of the image. This will be flicker-free as long
         /// as the control uses double buffering
         /// </summary>
         [Category(categoryCDS)]
         [Description(
-            "Called when the image has been rendered; gives a client an opportunity " +
+            "Called when the image has been painted; gives a client an opportunity " +
             "to paint flicker-free graphics on top of the image.")]
         public event PaintOverEvent? OnPaintOver;
 
@@ -311,8 +311,7 @@ namespace CDS.Imaging.BitmapDisplay
 
 
         /// <summary>
-        /// The location in the image that should be rendered at 
-        /// <see cref="TargetDisplayCentre"/>.
+        /// Target image centre.
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -325,8 +324,7 @@ namespace CDS.Imaging.BitmapDisplay
 
 
         /// <summary>
-        /// The location on the display that should render the pixel in the image
-        /// at location <see cref="TargetImageCentre"/>.
+        /// Target display centre.
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -572,9 +570,9 @@ namespace CDS.Imaging.BitmapDisplay
         {
             stopwatch.Restart();
 
-            var clippedRenderRect = virtualDisplay.PaintRect;
-            clippedRenderRect.Intersect(ClientRectangle);
-            var shouldPaintBackground = virtualDisplay.PaintRect.IsEmpty || (e.ClipRectangle != clippedRenderRect);
+            var clippedDrawingRect = virtualDisplay.PaintRect;
+            clippedDrawingRect.Intersect(ClientRectangle);
+            var shouldPaintBackground = virtualDisplay.PaintRect.IsEmpty || (e.ClipRectangle != clippedDrawingRect);
             if (shouldPaintBackground)
             {
                 base.OnPaintBackground(e);

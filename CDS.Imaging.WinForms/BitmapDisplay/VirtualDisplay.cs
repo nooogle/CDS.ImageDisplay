@@ -4,18 +4,13 @@ using System.Drawing;
 namespace CDS.Imaging.BitmapDisplay
 {
     /// <summary>
-    /// Provides the drawing rectangle needed to render an image 
+    /// Provides the drawing rectangle needed to paint an image 
     /// under specific zoom and location conditions.
     /// </summary>
     /// <remarks>
     /// <para>
-    /// This code could all be embedded in the <see cref="BitmapDisplayPanel"/> class; 
-    /// however, managing it independently allows for unit testing and also lends itself
-    /// to alternative renderers.
-    /// </para>
-    /// <para>
     /// The paint rectangle is calculated such that the <see cref="TargetImageCentre"/> 
-    /// will be rendered at the <see cref="TargetDisplayCentre"/>, with the size of the 
+    /// will be painted at the <see cref="TargetDisplayCentre"/>, with the size of the 
     /// rectangle being based on the <see cref="ImageSize"/> and <see cref="Zoom"/> level.
     /// </para>
     /// <para>

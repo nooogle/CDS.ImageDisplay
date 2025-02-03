@@ -1,4 +1,4 @@
-﻿using CDS.Imaging.Draw;
+﻿using CDS.Imaging.Overlays;
 using CDS.Imaging.Utils;
 using System.ComponentModel;
 using System.Drawing;
@@ -7,20 +7,20 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo;
 
 
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
-public class OverlayRenderingSpecs
+public class OverlayDrawingSpecs
 {
-    public RenderingSpec Rectangles { get; set; } = new RenderingSpec();
-    public RenderingSpec Ellipses { get; set; } = new RenderingSpec();
-    public RenderingSpec Lines { get; set; } = new RenderingSpec();
-    public RenderingSpec Text { get; set; } = new RenderingSpec();
-    public RenderingSpec Circles { get; set; } = new RenderingSpec();
-    public RenderingSpec Polygons { get; set; } = new RenderingSpec();
-    public RenderingSpec CrossHair { get; set; } = new RenderingSpec();
-    public RenderingSpec Bubbles { get; set; } = new RenderingSpec();
+    public DrawingSpec Rectangles { get; set; } = new DrawingSpec();
+    public DrawingSpec Ellipses { get; set; } = new DrawingSpec();
+    public DrawingSpec Lines { get; set; } = new DrawingSpec();
+    public DrawingSpec Text { get; set; } = new DrawingSpec();
+    public DrawingSpec Circles { get; set; } = new DrawingSpec();
+    public DrawingSpec Polygons { get; set; } = new DrawingSpec();
+    public DrawingSpec CrossHair { get; set; } = new DrawingSpec();
+    public DrawingSpec Bubbles { get; set; } = new DrawingSpec();
 
 
 
-    public OverlayRenderingSpecs()
+    public OverlayDrawingSpecs()
     {
         Rectangles.Fill.Color = Color.FromArgb(64, Color.Red);
         Rectangles.Lines.Color = Color.Red;

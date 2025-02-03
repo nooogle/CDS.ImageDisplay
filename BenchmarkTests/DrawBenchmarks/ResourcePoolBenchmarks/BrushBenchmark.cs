@@ -6,7 +6,7 @@ namespace BenchmarkTests.DrawBenchmarks.ResourcePoolBenchmarks;
 [MemoryDiagnoser]
 public class BrushBenchmark
 {
-    private CDS.Imaging.Draw.BrushSpec brushSpec = new CDS.Imaging.Draw.BrushSpec()
+    private CDS.Imaging.Overlays.BrushSpec brushSpec = new CDS.Imaging.Overlays.BrushSpec()
     {
         Color = Color.Aqua,
     };
@@ -23,6 +23,6 @@ public class BrushBenchmark
     [Benchmark]
     public void AccessBrushFromResourcePool()
     {
-        var brush = CDS.Imaging.Draw.RenderingToolsPool.GetBrush(brushSpec);
+        var brush = CDS.Imaging.Overlays.DrawingToolsPool.GetBrush(brushSpec);
     }
 }

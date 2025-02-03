@@ -4,11 +4,11 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.Draw;
+namespace CDS.Imaging.Overlays;
 
 
 /// <summary>
-/// A text overlay combining text information and geometry and rendering properties
+/// A text shape
 /// </summary>
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
 public class TextShape
@@ -42,19 +42,19 @@ public class TextShape
     /// <summary>
     /// Draws the text on the display
     /// </summary>
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
+    public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawing)
     {
         ArgumentNullException.ThrowIfNull(sender, nameof(sender));
         ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
-        ArgumentNullException.ThrowIfNull(rendering, nameof(rendering));
-        if (!rendering.Visible) { return; }
+        ArgumentNullException.ThrowIfNull(drawing, nameof(drawing));
+        if (!drawing.Visible) { return; }
         if(string.IsNullOrWhiteSpace(Text)) { return; }
 
-        var font = RenderingToolsPool.GetFont(rendering.Font);
-        var brush = RenderingToolsPool.GetBrush(rendering.Fill);
+        var font = DrawingToolsPool.GetFont(drawing.Font);
+        var brush = DrawingToolsPool.GetBrush(drawing.Fill);
 
         var pointOnDisplay =
-            rendering.MappingMode == MappingMode.ImageToDisplay ?
+            drawing.MappingMode == MappingMode.ImageToDisplay ?
             sender.MapImageToDisplay(Location, PixelAlign) :
             Location;
 

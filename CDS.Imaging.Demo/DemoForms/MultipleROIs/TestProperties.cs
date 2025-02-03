@@ -73,8 +73,8 @@ class TestProperties : INotifyPropertyChanged
             }
         };
 
-        list[0].CoreShape.Rendering.Fill.Color = Color.FromArgb(64, Color.AliceBlue);
-        list[1].CoreShape.Rendering.Fill.Color = Color.FromArgb(64, Color.Linen);
+        list[0].CoreShape.Drawing.Fill.Color = Color.FromArgb(64, Color.AliceBlue);
+        list[1].CoreShape.Drawing.Fill.Color = Color.FromArgb(64, Color.Linen);
 
         return list;
     }

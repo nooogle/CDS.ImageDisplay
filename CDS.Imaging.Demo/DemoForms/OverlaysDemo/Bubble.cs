@@ -1,5 +1,5 @@
 ﻿using CDS.Imaging.BitmapDisplay;
-using CDS.Imaging.Draw;
+using CDS.Imaging.Overlays;
 using System;
 using System.Drawing;
 
@@ -8,7 +8,7 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
     public class Bubble
     {
         private Random random = new Random();
-        private Draw.CircleShape shape;
+        private Overlays.CircleShape shape;
 
 
         // Speed (pixels per move, for example)
@@ -30,7 +30,7 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
             double displayWidth, 
             double displayHeight)
         {
-            shape = new Draw.CircleShape()
+            shape = new Overlays.CircleShape()
             {
                 Centre = new PointF(x, y),
                 Radius = radius,
@@ -103,9 +103,9 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
             return angle;
         }
 
-        internal void Draw(BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, RenderingSpec renderingSpec)
+        internal void Draw(BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, DrawingSpec drawingSpec)
         {
-            shape.Draw(bitmapDisplayPanel, graphics, renderingSpec);
+            shape.Draw(bitmapDisplayPanel, graphics, drawingSpec);
         }
     }
 }

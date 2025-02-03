@@ -22,8 +22,8 @@ namespace CDS.Imaging.RegionOfInterest
         private Rectangle liveDraggingROI;
         private Point mouseDownLocationOnDisplay;
 
-        private ROIWithGrapplesShape committedROIRenderer = new ROIWithGrapplesShape();
-        private ROIWithGrapplesShape liveDraggingROIRenderer = new ROIWithGrapplesShape();
+        private ROIWithGrapplesShape committedROIShape = new ROIWithGrapplesShape();
+        private ROIWithGrapplesShape liveDraggingROIShape = new ROIWithGrapplesShape();
 
         private bool visible = true;
         private bool canEditCommitted = true;
@@ -44,7 +44,7 @@ namespace CDS.Imaging.RegionOfInterest
         /// How to draw the committed ROI.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public Draw.RenderingSpec CommittedROIRendering => committedROIRenderer.Rendering;
+        public Overlays.DrawingSpec CommittedROIDrawingSpec => committedROIShape.Drawing;
 
 
 
@@ -52,7 +52,7 @@ namespace CDS.Imaging.RegionOfInterest
         /// How to draw the live dragging ROI.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public Draw.RenderingSpec LiveDraggingROIRendering => liveDraggingROIRenderer.Rendering;
+        public Overlays.DrawingSpec LiveDraggingROIDrawingSpec => liveDraggingROIShape.Drawing;
         
 
         /// <summary>
@@ -80,22 +80,22 @@ namespace CDS.Imaging.RegionOfInterest
 
 
         /// <summary>
-        /// The renderer for the committed ROI.
+        /// The shape for the committed ROI.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public ROIWithGrapplesShape CommittedROIRenderer
+        public ROIWithGrapplesShape CommittedROIShape
         {
-            get => committedROIRenderer;
+            get => committedROIShape;
         }
 
 
         /// <summary>
-        /// The renderer for the ROI that is being dragged.
+        /// The shape for the ROI that is being dragged.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public ROIWithGrapplesShape LiveDraggingROIRenderer
+        public ROIWithGrapplesShape LiveDraggingROIShape
         {
-            get => liveDraggingROIRenderer;
+            get => liveDraggingROIShape;
         }
 
 
@@ -305,13 +305,13 @@ namespace CDS.Imaging.RegionOfInterest
         {
             mouseCursors = CreateMouseCursorsDict();
 
-            committedROIRenderer.Rendering.Lines.Color = Color.FromArgb(128, Color.Green);
-            committedROIRenderer.Rendering.Lines.Width = 2;
-            committedROIRenderer.Rendering.Fill.Color = Color.Transparent;
+            committedROIShape.Drawing.Lines.Color = Color.FromArgb(128, Color.Green);
+            committedROIShape.Drawing.Lines.Width = 2;
+            committedROIShape.Drawing.Fill.Color = Color.Transparent;
 
-            liveDraggingROIRenderer.Rendering.Lines.Color = Color.FromArgb(128, Color.Orange);
-            liveDraggingROIRenderer.Rendering.Lines.Width = 2;
-            liveDraggingROIRenderer.Rendering.Fill.Color = Color.Transparent;
+            liveDraggingROIShape.Drawing.Lines.Color = Color.FromArgb(128, Color.Orange);
+            liveDraggingROIShape.Drawing.Lines.Width = 2;
+            liveDraggingROIShape.Drawing.Fill.Color = Color.Transparent;
         }
 
 
@@ -801,14 +801,14 @@ namespace CDS.Imaging.RegionOfInterest
 
             if (!committedROI.IsEmpty && (DrawCommittedROIWhenFullSize || (committedROI.Size != imageSize)))
             {
-                committedROIRenderer.ROI = committedROI;
-                committedROIRenderer.Draw(sender, graphics);
+                committedROIShape.ROI = committedROI;
+                committedROIShape.Draw(sender, graphics);
             }
 
             if (draggingMode != ROIDragMode.None)
             {
-                liveDraggingROIRenderer.ROI = LiveDraggingROI;
-                liveDraggingROIRenderer.Draw(sender, graphics);
+                liveDraggingROIShape.ROI = LiveDraggingROI;
+                liveDraggingROIShape.Draw(sender, graphics);
             }
         }
     }

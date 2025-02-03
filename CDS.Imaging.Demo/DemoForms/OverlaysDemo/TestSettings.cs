@@ -6,7 +6,7 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
     [TypeConverter(typeof(SerializableExpandableObjectConverter))]
     public class TestSettings
     {
-        public OverlayRenderingSpecs Overlays { get; set; } = new OverlayRenderingSpecs();
+        public OverlayDrawingSpecs Overlays { get; set; } = new OverlayDrawingSpecs();
 
         public OverlayShapes Shapes { get; set; } = new OverlayShapes();
     }

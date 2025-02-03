@@ -4,10 +4,10 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.Draw;
+namespace CDS.Imaging.Overlays;
 
 /// <summary>
-/// A line overlay combining a line and rendering properties
+/// A line shape
 /// </summary>
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
 public class LineShape
@@ -42,22 +42,22 @@ public class LineShape
     /// <summary>
     /// Draws the line on the display
     /// </summary>
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
+    public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawingSpec)
     {
         ArgumentNullException.ThrowIfNull(sender, nameof(sender));
         ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
-        ArgumentNullException.ThrowIfNull(rendering, nameof(rendering));
-        if (!rendering.Visible) { return; }
+        ArgumentNullException.ThrowIfNull(drawingSpec, nameof(drawingSpec));
+        if (!drawingSpec.Visible) { return; }
 
-        var pen = RenderingToolsPool.GetPen(rendering.Lines);
+        var pen = DrawingToolsPool.GetPen(drawingSpec.Lines);
 
         var startOnDisplay = 
-            rendering.MappingMode == MappingMode.ImageToDisplay ? 
+            drawingSpec.MappingMode == MappingMode.ImageToDisplay ? 
             sender.MapImageToDisplay(Start, pixelAdjust: PixelAlign) : 
             Start;
         
         var endOnDisplay = 
-            rendering.MappingMode == MappingMode.ImageToDisplay ? 
+            drawingSpec.MappingMode == MappingMode.ImageToDisplay ? 
             sender.MapImageToDisplay(End, pixelAdjust: PixelAlign) : 
             End;
 

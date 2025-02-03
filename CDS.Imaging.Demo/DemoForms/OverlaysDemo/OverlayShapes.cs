@@ -50,25 +50,25 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
         }
 
 
-        public Draw.RectangleShape Rectangle1 { get; set; } = new Draw.RectangleShape()
+        public Overlays.RectangleShape Rectangle1 { get; set; } = new Overlays.RectangleShape()
         {
             Rect = new RectangleF(100, 100, 101, 101),
         };
 
-        public Draw.RectangleShape Rectangle2 { get; set; } = new Draw.RectangleShape()
+        public Overlays.RectangleShape Rectangle2 { get; set; } = new Overlays.RectangleShape()
         {
             Rect = new RectangleF(300, 200, 100, 100),
             PixelAlign = BitmapDisplay.DisplayPixelAlign.Centre,
         };
 
-        public Draw.CrosshairShape CrossHairShape { get; set; } = new Draw.CrosshairShape()
+        public Overlays.CrosshairShape CrossHairShape { get; set; } = new Overlays.CrosshairShape()
         {
             Centre = new PointF(400, 400),
             Length = 40,
             CentreGap = 10,
         };
 
-        public Draw.EllipseShape EllipseShape { get; set; } = new Draw.EllipseShape
+        public Overlays.EllipseShape EllipseShape { get; set; } = new Overlays.EllipseShape
         {
             Centre = new PointF(10, 5),
             MajorAxis = 20,
@@ -76,16 +76,16 @@ namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
             MajorAxisAngleDegrees = 0,
         };
 
-        public Draw.LineShape Line1 { get; set; } = new Draw.LineShape { Start = new PointF(0, 5), End = new PointF(20, 5) };
-        public Draw.LineShape Line2 { get; set; } = new Draw.LineShape { Start = new PointF(10, 0), End = new PointF(10, 10) };
+        public Overlays.LineShape Line1 { get; set; } = new Overlays.LineShape { Start = new PointF(0, 5), End = new PointF(20, 5) };
+        public Overlays.LineShape Line2 { get; set; } = new Overlays.LineShape { Start = new PointF(10, 0), End = new PointF(10, 10) };
 
-        public Draw.TextShape Text1 { get; set; } = new Draw.TextShape { Text = "Look at the ellipse at the top-left!", Location = new PointF(40, 30) };
-        public Draw.TextShape Text2 { get; set; } = new Draw.TextShape { Text = "The two lines should (by default) cross the ellipse axis", Location = new PointF(60, 50) };
+        public Overlays.TextShape Text1 { get; set; } = new Overlays.TextShape { Text = "Look at the ellipse at the top-left!", Location = new PointF(40, 30) };
+        public Overlays.TextShape Text2 { get; set; } = new Overlays.TextShape { Text = "The two lines should (by default) cross the ellipse axis", Location = new PointF(60, 50) };
 
-        public Draw.CircleShape Circle1 { get; set; } = new Draw.CircleShape { Centre = new PointF(500, 300), Radius = 50 };
-        public Draw.CircleShape Circle2 { get; set; } = new Draw.CircleShape { Centre = new PointF(300, 500), Radius = 50 };
+        public Overlays.CircleShape Circle1 { get; set; } = new Overlays.CircleShape { Centre = new PointF(500, 300), Radius = 50 };
+        public Overlays.CircleShape Circle2 { get; set; } = new Overlays.CircleShape { Centre = new PointF(300, 500), Radius = 50 };
 
-        public Draw.PolygonShape PolygonShape { get; set; } = new Draw.PolygonShape()
+        public Overlays.PolygonShape PolygonShape { get; set; } = new Overlays.PolygonShape()
         {
             Points = new[]
             {

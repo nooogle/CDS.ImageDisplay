@@ -105,7 +105,7 @@ public partial class FormOverlays : Form
         
         var textTopleft = new PointF(12, 12);
 
-        var font = Draw.RenderingToolsPool.GetFont(new Draw.FontSpec() { FontName = "Courier New", FontSize = 10 });
+        var font = Overlays.DrawingToolsPool.GetFont(new Overlays.FontSpec() { FontName = "Courier New", FontSize = 10 });
 
         graphics.DrawString(info.ToString(), font, Brushes.Navy, textTopleft);
     }

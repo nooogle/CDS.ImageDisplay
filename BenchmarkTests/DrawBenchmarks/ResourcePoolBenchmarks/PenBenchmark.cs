@@ -8,7 +8,7 @@ public class PenBenchmark
 {
     private Pen pen = new Pen(Color.White);
 
-    private static readonly CDS.Imaging.Draw.PenSpec lineSpec1 = new CDS.Imaging.Draw.PenSpec()
+    private static readonly CDS.Imaging.Overlays.PenSpec lineSpec1 = new CDS.Imaging.Overlays.PenSpec()
     {
         Color = Color.RebeccaPurple,
         StartCap = System.Drawing.Drawing2D.LineCap.Round,
@@ -17,7 +17,7 @@ public class PenBenchmark
         Width = 2,
     };
 
-    private static readonly CDS.Imaging.Draw.PenSpec lineSpec2 = new CDS.Imaging.Draw.PenSpec()
+    private static readonly CDS.Imaging.Overlays.PenSpec lineSpec2 = new CDS.Imaging.Overlays.PenSpec()
     {
         Color = Color.Wheat,
         StartCap = System.Drawing.Drawing2D.LineCap.DiamondAnchor,
@@ -48,8 +48,8 @@ public class PenBenchmark
     [Benchmark]
     public void AccessPenFromResourcePool()
     {
-        var pen = CDS.Imaging.Draw.RenderingToolsPool.GetPen(lineSpec1);
-        pen = CDS.Imaging.Draw.RenderingToolsPool.GetPen(lineSpec1);
+        var pen = CDS.Imaging.Overlays.DrawingToolsPool.GetPen(lineSpec1);
+        pen = CDS.Imaging.Overlays.DrawingToolsPool.GetPen(lineSpec1);
     }
 
     [Benchmark]

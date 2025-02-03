@@ -4,7 +4,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.Draw;
+namespace CDS.Imaging.Overlays;
 
 
 /// <summary>
@@ -42,20 +42,20 @@ public class CircleShape
     /// <summary>
     /// Draws the circle.
     /// </summary>
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics, RenderingSpec rendering)
+    public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawing)
     {
         ArgumentNullException.ThrowIfNull(sender, nameof(sender));
         ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
-        ArgumentNullException.ThrowIfNull(rendering, nameof(rendering));
-        if (!rendering.Visible) { return; }
+        ArgumentNullException.ThrowIfNull(drawing, nameof(drawing));
+        if (!drawing.Visible) { return; }
         if (Radius <= 0) { return; }
 
-        var pen = RenderingToolsPool.GetPen(rendering.Lines);
-        var brush = RenderingToolsPool.GetBrush(rendering.Fill);
+        var pen = DrawingToolsPool.GetPen(drawing.Lines);
+        var brush = DrawingToolsPool.GetBrush(drawing.Fill);
 
         var squareAroundCircle = new RectangleF(Centre.X - Radius, Centre.Y - Radius, 2 * Radius, 2 * Radius);
 
-        if (rendering.MappingMode == MappingMode.ImageToDisplay)
+        if (drawing.MappingMode == MappingMode.ImageToDisplay)
         {
             squareAroundCircle = sender.MapImageToDisplay(squareAroundCircle, pixelAdjust: PixelAlign);
         }
