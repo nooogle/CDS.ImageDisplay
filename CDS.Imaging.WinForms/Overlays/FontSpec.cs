@@ -10,6 +10,12 @@ namespace CDS.Imaging.Overlays;
 public class FontSpec
 {
     /// <summary>
+    /// Simple string representation of this instance.
+    /// </summary>
+    public override string ToString() => $"Font {FontName}, Size {FontSize}";
+
+
+    /// <summary>
     /// Gets or sets the font size.
     /// </summary>
     /// <value>The size of the font.</value>
@@ -21,13 +27,6 @@ public class FontSpec
     /// </summary>
     /// <value>The name of the font.</value>
     public string FontName { get; set; } = "Arial";
-
-
-    /// <summary>
-    /// Returns a string that represents the current object.
-    /// </summary>
-    /// <returns>A string that represents the current object.</returns>
-    public override string ToString() => $"Font {FontName}, Size {FontSize}";
 
 
     /// <summary>

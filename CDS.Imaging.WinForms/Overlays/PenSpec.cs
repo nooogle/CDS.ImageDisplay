@@ -13,6 +13,12 @@ namespace CDS.Imaging.Overlays;
 public class PenSpec
 {
     /// <summary>
+    /// Simple string representation of this instance.
+    /// </summary>
+    public override string ToString() => $"Color {Color}, Width {Width}, DashStyle {DashStyle}, StartCap {StartCap}, EndCap {EndCap}";
+
+
+    /// <summary>
     /// The color of the pen.
     /// </summary>
     public Color Color { get; set; } = Color.Red;

@@ -11,6 +11,12 @@ namespace CDS.Imaging.Overlays;
 public class BrushSpec
 {
     /// <summary>
+    /// Simple string representation of this instance.
+    /// </summary>
+    public override string ToString() => Color.ToString();
+
+
+    /// <summary>
     /// The color of the brush.
     /// </summary>
     public Color Color { get; set; } = Color.Transparent;

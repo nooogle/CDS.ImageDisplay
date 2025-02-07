@@ -8,13 +8,6 @@ class Program
 {
     static void Main(string[] args)
     {
-
-/* Unmerged change from project 'BenchmarkTests (net48)'
-Before:
-        Console.WriteLine(CDS.Imaging.SystemInfo.Get());
-After:
-        Console.WriteLine(CDS.Imaging.Utils.SystemInfo.Get());
-*/
         Console.WriteLine(SystemInfo.Get());
 
         Console.WriteLine(
