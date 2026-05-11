@@ -9,7 +9,7 @@ Image processing and related utilities
 1. Make code changes.
 1. Add unit tests and/or demo code as appropriate.
 1. Ensure that all unit tests pass.
-1. Edit the AmberOCR project file and change the version, using the Semantic Versioning format.
+1. Create an annotated Git tag using the `V<major>.<minor>.<patch>` format when you are ready to publish a new shared solution version. MinVer derives package and assembly versions from the latest matching tag.
 1. Test the solution and tests formally by running the Cake script (see below).
 1. Deploy the new NuGet package to the local NuGet folder (see below).
 

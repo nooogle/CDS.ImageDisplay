@@ -1,63 +1,56 @@
 ﻿using System.Collections;
 using System.Drawing;
 
-namespace CDS.Imaging.WinFormsTests.BitmapDisplay
+namespace CDS.Imaging.WinFormsTests.BitmapDisplay;
+
+/// <summary>
+/// Provides sample data for fit-to-window layout scenarios.
+/// </summary>
+public class FitToWindowSampleData
 {
-    /// <summary>
-    /// A data provider for the <see cref="FitToWindow_Maximumise_DisplayArea(Size, Size, RectangleF)"/>
-    /// test. We need this because inline params for an xUnit Theory must be constant and we 
-    /// want to pass non-const Size and RectangleF data to the test
-    /// </summary>
-    public class FitToWindowSampleData
+    public static IEnumerable<object[]> Data
     {
-        public static IEnumerable<object[]> Data
+        get
         {
-            get
-            {
-                // SquareImageInLargeWideDisplay
-                yield return new object[]
-                {
-                    new Size(200, 200), // image size
-                    new Size(1000, 500), // display size
-                    new RectangleF(250, 0, 500, 500) // fit-to-window paint rect
-                };
+            // Square image in large wide display.
+            yield return
+            [
+                new Size(200, 200),
+                new Size(1000, 500),
+                new RectangleF(250, 0, 500, 500)
+            ];
 
+            // Square image in large tall display.
+            yield return
+            [
+                new Size(200, 200),
+                new Size(500, 1000),
+                new RectangleF(0, 250, 500, 500)
+            ];
 
-                // SquareImageInLargeTallDisplay
-                yield return new object[]
-                {
-                    new Size(200, 200), // image size
-                    new Size(500, 1000), // display size
-                    new RectangleF(0, 250, 500, 500) // fit-to-window paint rect
-                };
+            // Square image in small wide display.
+            yield return
+            [
+                new Size(200, 200),
+                new Size(100, 50),
+                new RectangleF(25, 0, 50, 50)
+            ];
 
+            // Square image in small tall display.
+            yield return
+            [
+                new Size(200, 200),
+                new Size(50, 100),
+                new RectangleF(0, 25, 50, 50)
+            ];
 
-                // SquareImageInSmallWideDisplay
-                yield return new object[]
-                {
-                    new Size(200, 200), // image size
-                    new Size(100, 50), // display size
-                    new RectangleF(25, 0, 50, 50) // fit-to-window paint rect
-                };
-
-
-                // SquareImageInSmallTallDisplay
-                yield return new object[]
-                {
-                    new Size(200, 200), // image size
-                    new Size(50, 100), // display size
-                    new RectangleF(0, 25, 50, 50) // fit-to-window paint rect
-                };
-
-
-                // RealWorldWasMiscalculated: there was a bug with this image and display, y was going to -0.5
-                yield return new object[]
-                {
-                    new Size(5518, 3104), // image size
-                    new Size(2560, 1417), // display size
-                    new RectangleF(20.5f, 0, 2519, 1417) // fit-to-window paint rect
-                };
-            }
+            // Real-world case that previously produced a negative Y offset.
+            yield return
+            [
+                new Size(5518, 3104),
+                new Size(2560, 1417),
+                new RectangleF(20.5f, 0, 2519, 1417)
+            ];
         }
     }
 }

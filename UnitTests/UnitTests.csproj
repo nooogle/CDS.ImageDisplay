@@ -11,8 +11,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Reflection.Metadata" Version="9.0.1" />
-    <PackageReference Include="Verify.MSTest" Version="28.9.0" />
+    <Compile Remove="Draw\**" />
+    <EmbeddedResource Remove="Draw\**" />
+    <None Remove="Draw\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AwesomeAssertions" Version="9.4.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="4.2.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="4.2.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,10 +29,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CDS.Imaging.WinForms\CDS.Imaging.WinForms.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Draw\" />
   </ItemGroup>
 
 </Project>
