@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"c:\\\\dev\\\\nooogle\\\\CDS.Imaging\" -Force)",
+      "Bash(Select-Object Name, PSIsContainer)"
+    ]
+  }
+}
