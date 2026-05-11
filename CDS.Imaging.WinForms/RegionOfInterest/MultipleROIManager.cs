@@ -47,6 +47,8 @@ namespace CDS.Imaging.RegionOfInterest
         /// <summary>
         /// Controls whether the ROI is visible.
         /// </summary>
+        [DefaultValue(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public bool Visible
         {
             get => visible;
@@ -66,6 +68,8 @@ namespace CDS.Imaging.RegionOfInterest
         /// The bitmap display panel that the ROI is drawn on.
         /// </summary>
         [Category(categoryCDS)]
+        [DefaultValue(null)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public BitmapDisplay.BitmapDisplayPanel? BitmapDisplayPanel
         {
             get => bitmapDisplayPanel;
@@ -280,8 +284,6 @@ namespace CDS.Imaging.RegionOfInterest
 
             timerAutoDeselectActiveROI.Stop();
             timerAutoDeselectActiveROI.Start();
-
-            System.Diagnostics.Debug.WriteLine("Started");
         }
 
 
@@ -338,8 +340,6 @@ namespace CDS.Imaging.RegionOfInterest
             if(roi.IsEmpty) { return; }
 
             timerAutoDeselectActiveROI.Stop();
-
-            System.Diagnostics.Debug.WriteLine("Stopping from drag");
         }
     }
 }

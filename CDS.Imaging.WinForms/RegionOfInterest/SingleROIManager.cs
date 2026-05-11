@@ -60,6 +60,7 @@ namespace CDS.Imaging.RegionOfInterest
         /// for a mouse hit test. (E.g. this allows the mouse to drag a corner
         /// or edge even if it's not exactly over the edge.)
         /// </summary>
+        [DefaultValue(10)]
         public int DragBorder
         {
             get => dragBorder;
@@ -103,6 +104,7 @@ namespace CDS.Imaging.RegionOfInterest
         /// When true the ROI is drawn even when it is the same (full) size as the image.
         /// Normally the ROI is not drawn in this case.
         /// </summary>
+        [DefaultValue(false)]
         public bool DrawCommittedROIWhenFullSize { get; set; } = false;
 
 
@@ -116,6 +118,7 @@ namespace CDS.Imaging.RegionOfInterest
         /// The bitmap display panel that the ROI is drawn on.
         /// </summary>
         [Category(categoryCDS)]
+        [DefaultValue(null)]
         public BitmapDisplay.BitmapDisplayPanel? BitmapDisplayPanel
         {
             get => bitmapDisplayPanel;
@@ -225,6 +228,7 @@ namespace CDS.Imaging.RegionOfInterest
         /// <summary>
         /// Controls whether the ROI is visible.
         /// </summary>
+        [DefaultValue(true)]
         public bool Visible
         {
             get => visible;
@@ -243,6 +247,7 @@ namespace CDS.Imaging.RegionOfInterest
         /// <summary>
         /// Controls whether the ROI can changed. 
         /// </summary>
+        [DefaultValue(true)]
         public bool CanEditCommitted
         {
             get => canEditCommitted;
@@ -261,6 +266,7 @@ namespace CDS.Imaging.RegionOfInterest
         /// <summary>
         /// Controls whether a new ROI can be created.
         /// </summary>
+        [DefaultValue(true)]
         public bool CanCreateNew
         {
             get => canCreateNew;
@@ -318,6 +324,7 @@ namespace CDS.Imaging.RegionOfInterest
         /// <summary>
         /// Gets/sets the current (committed) ROI. An empty rectangle indicates no ROI is set.
         /// </summary>
+        [DefaultValue(typeof(Rectangle), "0, 0, 0, 0")]
         public Rectangle CommittedROI
         {
             get => committedROI;

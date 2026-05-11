@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Text.Json.Serialization;
 
 namespace CDS.Imaging.Overlays;
 
@@ -21,6 +22,7 @@ public class PenSpec
     /// <summary>
     /// The color of the pen.
     /// </summary>
+    [JsonConverter(typeof(ColorJsonConverter))]
     public Color Color { get; set; } = Color.Red;
 
 

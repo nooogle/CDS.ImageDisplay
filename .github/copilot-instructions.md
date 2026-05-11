@@ -50,3 +50,6 @@ Please generate C# code that adheres to the following practices:
 ## File Structure
 - Place each class in its own file.
 - Organize namespaces to match the folder structure.
+
+## JSON Handling
+- Use .NET 10's `System.Text.Json` for JSON serialization and deserialization instead of Newtonsoft.Json.

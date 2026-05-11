@@ -1,16 +1,15 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Windows.Forms;
 
 namespace CDS.Imaging.Demo
 {
     internal class JSONSettingsManager<T> where T : new()
     {
+        private static readonly JsonSerializerOptions JsonSerializerOptions = CreateJsonSerializerOptions();
+
         private readonly string filePath;
         
         public T Settings { get; private set; }
@@ -39,7 +38,7 @@ namespace CDS.Imaging.Demo
                 Directory.CreateDirectory(appFolderPath);
             }
 
-            filePath = Path.Combine(appFolderPath, "AppSettings.json");
+            filePath = Path.Combine(appFolderPath, "AppSettings_V2.json");
             Settings = Load(filePath);
         }
 
@@ -49,7 +48,7 @@ namespace CDS.Imaging.Demo
         /// <param name="settings">The settings object to save.</param>
         public void Save()
         {
-            var json = JsonConvert.SerializeObject(Settings, Formatting.Indented);
+            var json = JsonSerializer.Serialize(Settings, JsonSerializerOptions);
             File.WriteAllText(filePath, json);
         }
 
@@ -66,8 +65,23 @@ namespace CDS.Imaging.Demo
             }
 
             var json = File.ReadAllText(filePath) ?? string.Empty;
-            T settings = JsonConvert.DeserializeObject<T>(json) ?? new T();
+            T settings = JsonSerializer.Deserialize<T>(json, JsonSerializerOptions) ?? new T();
             return settings;
+        }
+
+        private static JsonSerializerOptions CreateJsonSerializerOptions()
+        {
+            var jsonSerializerOptions = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                ReadCommentHandling = JsonCommentHandling.Skip,
+                AllowTrailingCommas = true,
+            };
+
+            jsonSerializerOptions.Converters.Add(new CDS.Imaging.Utils.ColorJsonConverter());
+            jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+
+            return jsonSerializerOptions;
         }
     }
 }

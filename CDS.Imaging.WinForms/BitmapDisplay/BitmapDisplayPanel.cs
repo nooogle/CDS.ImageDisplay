@@ -277,6 +277,8 @@ namespace CDS.Imaging.BitmapDisplay
         /// </summary>
         [Category(categoryCDS)]
         [Description("The image display mode")]
+        [DefaultValue(BitmapDisplayMode.FitToWindowCentred)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public BitmapDisplayMode DisplayMode
         {
             get => virtualDisplay.Mode;
@@ -397,6 +399,8 @@ namespace CDS.Imaging.BitmapDisplay
         /// used.
         /// </summary>
         [Category(categoryCDS)]
+        [DefaultValue(1.0f)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public float Zoom
         {
             get => virtualDisplay.Zoom;

@@ -1,6 +1,7 @@
 ﻿using CDS.Imaging.Utils;
 using System.ComponentModel;
 using System.Drawing;
+using System.Text.Json.Serialization;
 
 namespace CDS.Imaging.Overlays;
 
@@ -19,6 +20,7 @@ public class BrushSpec
     /// <summary>
     /// The color of the brush.
     /// </summary>
+    [JsonConverter(typeof(ColorJsonConverter))]
     public Color Color { get; set; } = Color.Transparent;
 
 
