@@ -117,7 +117,7 @@ namespace CDS.Imaging.Demo
 
         private void treeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            var action = e.Node.Tag as Action;
+            var action = e.Node?.Tag as Action;
             action?.Invoke();
         }
 

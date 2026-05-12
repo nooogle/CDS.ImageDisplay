@@ -8,7 +8,7 @@
 - [ ] **i17** Review: `GetROIDescriptors` callback pattern in `MultipleROIManager`  
   Currently a `Func<IEnumerable<ISingleROIDescriptor>>` property. A collection property (`IReadOnlyList<ISingleROIDescriptor>`) would be more natural, simpler to use from a designer, and easier to observe for membership changes. Review and decide on preferred API shape.
 
-- [ ] **i18** `RectangleShape`: `DirectToDisplay` mode uses `Truncate`, `ImageToDisplay` mode uses `Round`  
+- [x] **i18** `RectangleShape`: `DirectToDisplay` mode uses `Truncate`, `ImageToDisplay` mode uses `Round`  
   The same `Rect` value can render at different pixel positions depending on mapping mode, which is visually inconsistent. Use `Rectangle.Round` in both branches, or keep everything as `RectangleF` (GDI+ `DrawRectangle`/`FillRectangle` both accept `RectangleF`).
 
 - [ ] **i19** Review: pending image drop behaviour in `SetImageIndirectlyFromNonUIThread`  

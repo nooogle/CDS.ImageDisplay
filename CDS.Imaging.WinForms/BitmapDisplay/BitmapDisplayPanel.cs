@@ -476,8 +476,29 @@ namespace CDS.Imaging.BitmapDisplay
                 displayRect.X += SizeOfHalfDisplayPixel.Width;
                 displayRect.Y += SizeOfHalfDisplayPixel.Height;
             }
-            
+
             return Rectangle.Round(displayRect);
+        }
+
+
+        /// <summary>
+        /// Returns the display location where a rectangle at <paramref name="imageRect"/> would
+        /// have been drawn, as a <see cref="RectangleF"/> preserving sub-pixel precision.
+        /// </summary>
+        /// <param name="imageRect">A region on the image</param>
+        /// <param name="pixelAdjust">The pixel adjustment</param>
+        /// <returns>A region on the display or an empty rectangle if there's nothing to display</returns>
+        public RectangleF MapImageToDisplayF(RectangleF imageRect, DisplayPixelAlign pixelAdjust)
+        {
+            var displayRect = virtualDisplay.MapImageToDisplay(imageRect);
+
+            if (pixelAdjust == DisplayPixelAlign.Centre)
+            {
+                displayRect.X += SizeOfHalfDisplayPixel.Width;
+                displayRect.Y += SizeOfHalfDisplayPixel.Height;
+            }
+
+            return displayRect;
         }
 
 

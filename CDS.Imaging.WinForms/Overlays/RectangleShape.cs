@@ -45,10 +45,10 @@ public class RectangleShape
         var pen = DrawingToolsPool.GetPen(drawing.Lines);
         var brush = DrawingToolsPool.GetBrush(drawing.Fill);
 
-        Rectangle rectangleOnDisplay = 
+        RectangleF rectangleOnDisplay =
             drawing.MappingMode == MappingMode.ImageToDisplay ?
-            sender.MapImageToDisplay(Rect, pixelAdjust: PixelAlign) :
-            Rectangle.Truncate(Rect);
+            sender.MapImageToDisplayF(Rect, pixelAdjust: PixelAlign) :
+            Rect;
 
         graphics.FillRectangle(brush, rectangleOnDisplay);
         graphics.DrawRectangle(pen, rectangleOnDisplay);
