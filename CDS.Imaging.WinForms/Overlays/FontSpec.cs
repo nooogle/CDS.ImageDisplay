@@ -59,4 +59,10 @@ public class FontSpec
     {
         return new System.Drawing.Font(FontName, FontSize);
     }
+
+    /// <summary>
+    /// Returns a shallow copy suitable for use as a stable dictionary key.
+    /// FontName is a string (immutable), so a shallow copy is a complete independent copy.
+    /// </summary>
+    internal FontSpec Clone() => (FontSpec)MemberwiseClone();
 }

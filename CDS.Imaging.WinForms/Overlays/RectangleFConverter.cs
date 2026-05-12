@@ -36,7 +36,7 @@ public class RectangleFConverter : ExpandableObjectConverter
     {
         if (destinationType == typeof(string) && value is RectangleF rect)
         {
-            return $"{rect.X}, {rect.Y}, {rect.Width}, {rect.Height}";
+            return FormattableString.Invariant($"{rect.X}, {rect.Y}, {rect.Width}, {rect.Height}");
         }
         return base.ConvertTo(context, culture, value, destinationType);
     }
@@ -66,10 +66,10 @@ public class RectangleFConverter : ExpandableObjectConverter
         {
             var parts = s.Split(',');
             if (parts.Length == 4 &&
-                float.TryParse(parts[0], out float x) &&
-                float.TryParse(parts[1], out float y) &&
-                float.TryParse(parts[2], out float width) &&
-                float.TryParse(parts[3], out float height))
+                float.TryParse(parts[0], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float x) &&
+                float.TryParse(parts[1], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float y) &&
+                float.TryParse(parts[2], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float width) &&
+                float.TryParse(parts[3], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float height))
             {
                 return new RectangleF(x, y, width, height);
             }

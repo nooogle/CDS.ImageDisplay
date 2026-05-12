@@ -75,7 +75,8 @@ namespace CDS.Imaging.RegionOfInterest
 
 
         /// <summary>
-        /// Fired when the ROI is being dragged.
+        /// Fired when the ROI is being dragged. The reported rectangle may extend outside the image
+        /// bounds — only <see cref="CommittedROI"/> is clamped (on mouse-up).
         /// </summary>
         public event OnDraggingROIChangedEvent? OnDraggingROIChanged;
 
@@ -149,6 +150,15 @@ namespace CDS.Imaging.RegionOfInterest
                         bitmapDisplayPanel.OnImageSizeChanged += BitmapDisplayPanel_OnImageSizeChanged;
                         bitmapDisplayPanel.KeyPress += BitmapDisplayPanel_KeyPress;
                         bitmapDisplayPanel.KeyDown += BitmapDisplayPanel_KeyDown;
+
+                        // Seed imageSize from the panel's current image so that ROIs can
+                        // be set immediately, without waiting for the next OnImageSizeChanged event.
+                        var existingSize = bitmapDisplayPanel.ImageSize;
+                        imageSize = existingSize == Size.Empty ? null : existingSize;
+                    }
+                    else
+                    {
+                        imageSize = null;
                     }
                 }
             }
@@ -340,8 +350,6 @@ namespace CDS.Imaging.RegionOfInterest
                 else
                 {
                     var newCommittedROI = value;
-
-                    newCommittedROI = value;
                     newCommittedROI.Intersect(new Rectangle(Point.Empty, imageSize!.Value));
                     if (newCommittedROI.Size.IsEmpty) { newCommittedROI = Rectangle.Empty; }
 
@@ -357,7 +365,9 @@ namespace CDS.Imaging.RegionOfInterest
 
 
         /// <summary>
-        /// Gets the ROI that is currently being dragged, or returns an empty rectangle if no ROI is being dragged.
+        /// Gets the ROI that is currently being dragged, or returns an empty rectangle if no drag is in progress.
+        /// The rectangle is in image coordinates and may extend outside the image bounds; clamping is applied
+        /// only when the drag is committed (see <see cref="CommittedROI"/>).
         /// </summary>
         public Rectangle LiveDraggingROI
         {
@@ -394,21 +404,6 @@ namespace CDS.Imaging.RegionOfInterest
             builder.Add(ROIDragMode.RightEdge, Cursors.SizeWE);
 
             return builder.ToImmutable();
-        }
-
-
-        /// <summary>
-        /// Gets or sets the current ROI.
-        /// </summary>
-        public void SetROI(Rectangle roi)
-        {
-            if (!imageSize.HasValue) { return; }
-
-            var newCommittedROI = roi;
-            newCommittedROI.Intersect(new Rectangle(Point.Empty, imageSize.Value));
-            CommittedROI = newCommittedROI;
-
-            bitmapDisplayPanel?.Invalidate();
         }
 
 
@@ -793,6 +788,7 @@ namespace CDS.Imaging.RegionOfInterest
             LiveDraggingROI = Rectangle.Empty;
             draggingMode = ROIDragMode.None;
             bitmapDisplayPanel!.UnsuppressDragging();
+            bitmapDisplayPanel!.Cursor = Cursors.Default;
 
             bitmapDisplayPanel?.Invalidate();
         }

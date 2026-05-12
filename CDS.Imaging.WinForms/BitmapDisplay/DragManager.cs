@@ -21,7 +21,7 @@ namespace CDS.Imaging.BitmapDisplay
 
         public void OnMouseDown(BitmapDisplayMode imageDisplayMode, MouseEventArgs mouseEventArgs, PointF currentTargetDisplayCentre)
         {
-            if (!IsDragging && (imageDisplayMode == BitmapDisplayMode.Free))
+            if (!IsDragging && (imageDisplayMode == BitmapDisplayMode.Free) && (mouseEventArgs.Button == MouseButtons.Left))
             {
                 dragStartLocation = mouseEventArgs.Location;
                 IsDragging = true;

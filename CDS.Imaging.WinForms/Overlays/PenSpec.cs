@@ -86,4 +86,10 @@ public class PenSpec
             EndCap = EndCap
         };
     }
+
+    /// <summary>
+    /// Returns a shallow copy suitable for use as a stable dictionary key.
+    /// All fields are value types so a shallow copy is a complete independent copy.
+    /// </summary>
+    internal PenSpec Clone() => (PenSpec)MemberwiseClone();
 }

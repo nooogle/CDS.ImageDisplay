@@ -36,7 +36,7 @@ public class PointFConverter : ExpandableObjectConverter
     {
         if (destinationType == typeof(string) && value is PointF point)
         {
-            return $"{point.X}, {point.Y}";
+            return FormattableString.Invariant($"{point.X}, {point.Y}");
         }
         return base.ConvertTo(context, culture, value, destinationType);
     }
@@ -66,8 +66,8 @@ public class PointFConverter : ExpandableObjectConverter
         {
             var parts = s.Split(',');
             if (parts.Length == 2 &&
-                float.TryParse(parts[0], out float x) &&
-                float.TryParse(parts[1], out float y))
+                float.TryParse(parts[0], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float x) &&
+                float.TryParse(parts[1], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float y))
             {
                 return new PointF(x, y);
             }

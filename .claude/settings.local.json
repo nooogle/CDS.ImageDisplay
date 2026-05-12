@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(Get-ChildItem -Path \"c:\\\\dev\\\\nooogle\\\\CDS.Imaging\" -Force)",
-      "Bash(Select-Object Name, PSIsContainer)"
+      "Bash(Select-Object Name, PSIsContainer)",
+      "Bash(dotnet build *)",
+      "Bash(dotnet test *)",
+      "Bash(Remove-Item \"c:\\\\dev\\\\nooogle\\\\CDS.Imaging\\\\todo.html\")"
     ]
   }
 }

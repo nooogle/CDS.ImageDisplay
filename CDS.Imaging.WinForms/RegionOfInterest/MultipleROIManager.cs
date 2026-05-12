@@ -80,7 +80,7 @@ namespace CDS.Imaging.RegionOfInterest
                 {
                     if (bitmapDisplayPanel != null)
                     {
-                        bitmapDisplayPanel.Click -= BitmapDisplayPanel_Click;
+                        bitmapDisplayPanel.MouseClick -= BitmapDisplayPanel_MouseClick;
                         bitmapDisplayPanel.OnPaintOver -= BitmapDisplayPanel_OnPaintOver;
                         bitmapDisplayPanel.OnImageSizeChanged -= BitmapDisplayPanel_OnImageSizeChanged;
                         bitmapDisplayPanel.KeyPress -= BitmapDisplayPanel_KeyPress;
@@ -90,10 +90,19 @@ namespace CDS.Imaging.RegionOfInterest
 
                     if (bitmapDisplayPanel != null)
                     {
-                        bitmapDisplayPanel.Click += BitmapDisplayPanel_Click;
+                        bitmapDisplayPanel.MouseClick += BitmapDisplayPanel_MouseClick;
                         bitmapDisplayPanel.OnPaintOver += BitmapDisplayPanel_OnPaintOver;
                         bitmapDisplayPanel.OnImageSizeChanged += BitmapDisplayPanel_OnImageSizeChanged;
                         bitmapDisplayPanel.KeyPress += BitmapDisplayPanel_KeyPress;
+
+                        // Seed imageSize from the panel's current image so that ROIs can
+                        // be used immediately, without waiting for the next OnImageSizeChanged event.
+                        var existingSize = bitmapDisplayPanel.ImageSize;
+                        imageSize = existingSize == Size.Empty ? null : existingSize;
+                    }
+                    else
+                    {
+                        imageSize = null;
                     }
 
                     roiSelectionOnBitmapDisplay.BitmapDisplayPanel = bitmapDisplayPanel;
@@ -201,19 +210,19 @@ namespace CDS.Imaging.RegionOfInterest
         }
 
 
-        private void BitmapDisplayPanel_Click(object? sender, EventArgs e)
+        private void BitmapDisplayPanel_MouseClick(object? sender, MouseEventArgs e)
         {
-            HandleMouseLButtonDown();
+            if (e.Button != MouseButtons.Left) { return; }
+            HandleMouseLButtonDown(e.Location);
         }
 
 
-        private void HandleMouseLButtonDown()
+        private void HandleMouseLButtonDown(Point mouseLocationOnThisControl)
         {
             if (!DoesHaveImageToWorkWith) { return; }
             if (IsSpacebarPressed()) { return; }
 
             var roiDescriptors = GetROIDescriptors!();
-            var mouseLocationOnThisControl = bitmapDisplayPanel!.PointToClient(Cursor.Position);
             var mouseLocationOnImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnThisControl));
 
             bool didHandleClick = false;

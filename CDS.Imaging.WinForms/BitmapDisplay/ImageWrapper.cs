@@ -108,18 +108,21 @@ namespace CDS.Imaging.BitmapDisplay
             //var sourceBits = source.LockBits(roi, System.Drawing.Imaging.ImageLockMode.ReadOnly, source.PixelFormat);
             var destBits = Image.LockBits(roi, System.Drawing.Imaging.ImageLockMode.WriteOnly, Image.PixelFormat);
 
-            var bytesToCopy = destBits.Stride * destBits.Height;
+            var sourceBytesToCopy = imageSource.Stride * imageSource.Height;
+            var destBytesAvailable = destBits.Stride * destBits.Height;
 
             unsafe
             {
                 System.Diagnostics.Debug.Assert(imageSource.Scan0 != destBits.Scan0);
-                System.Diagnostics.Debug.Assert(bytesToCopy > 0);
+                System.Diagnostics.Debug.Assert(sourceBytesToCopy > 0);
+                System.Diagnostics.Debug.Assert(imageSource.Stride == destBits.Stride,
+                    "Source and destination strides differ; only the destination stride was used before this fix.");
 
                 Buffer.MemoryCopy(
                     source: (void*)imageSource.Scan0,
                     destination: (void*)destBits.Scan0,
-                    destinationSizeInBytes: bytesToCopy,
-                    sourceBytesToCopy: bytesToCopy);
+                    destinationSizeInBytes: destBytesAvailable,
+                    sourceBytesToCopy: sourceBytesToCopy);
             }
 
             Image.UnlockBits(destBits);

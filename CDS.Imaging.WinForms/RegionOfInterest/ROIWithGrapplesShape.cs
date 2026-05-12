@@ -17,6 +17,11 @@ public class ROIWithGrapplesShape : ISingleROIDescriptor
     /// </summary>
     private Rectangle lastROIOnDisplay = Rectangle.Empty;
 
+    /// <summary>
+    /// GrappleDiameter value used to compute the current cached grapple rectangles.
+    /// </summary>
+    private int lastGrappleDiameter;
+
 
     /// <summary>
     /// Cached grapple rectangles.
@@ -115,9 +120,10 @@ public class ROIWithGrapplesShape : ISingleROIDescriptor
     /// </summary>
     private void RecalculateGrapplesRectangles(Rectangle roiOnDisplay)
     {
-        if(lastROIOnDisplay == roiOnDisplay) { return; }
+        if (lastROIOnDisplay == roiOnDisplay && lastGrappleDiameter == GrappleDiameter) { return; }
 
         lastROIOnDisplay = roiOnDisplay;
+        lastGrappleDiameter = GrappleDiameter;
 
         grappleRectangles[0] = CreateGrappleRect(location: roiOnDisplay.Location);
         grappleRectangles[1] = CreateGrappleRect(location: new Point(roiOnDisplay.Right, roiOnDisplay.Top));

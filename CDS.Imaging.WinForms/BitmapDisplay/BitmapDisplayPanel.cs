@@ -15,7 +15,7 @@ namespace CDS.Imaging.BitmapDisplay
 
         private ImageWrapper displayImage = new ImageWrapper();
         private ImageWrapper pendingDisplayImage = new ImageWrapper();
-        private object imageLock = new object();
+        private readonly object imageLock = new();
         private VirtualDisplay virtualDisplay;
         private System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         private DragManager dragManager;
@@ -65,6 +65,15 @@ namespace CDS.Imaging.BitmapDisplay
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Category(categoryCDS)]
         public SizeF SizeOfHalfDisplayPixel => virtualDisplay.SizeOfHalfDisplayPixel;
+
+
+        /// <summary>
+        /// Gets the size of the image currently being displayed, or <see cref="Size.Empty"/> if no image is loaded.
+        /// </summary>
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Category(categoryCDS)]
+        public Size ImageSize => virtualDisplay.ImageSize;
 
 
         /// <summary>
@@ -211,12 +220,17 @@ namespace CDS.Imaging.BitmapDisplay
 
             // Post the following action on the UI thread and return immedately;
             // this will release the lock (applied in SetImage). When the action
-            // is picked up we'll apply the lock again, then take our wrapped
-            // pending image and apply it directly as the displayed image.
+            // is picked up we'll re-acquire the lock so that the flag reset is
+            // atomic with respect to non-UI threads checking it in SetImage.
+            // Monitor.Enter is reentrant, so SetImage (which also locks imageLock)
+            // works correctly when called from within this outer lock.
             BeginInvoke(() =>
             {
-                SetImage(pendingDisplayImage.Image);
-                isWaitingToApplyPendingImage = false;
+                lock (imageLock)
+                {
+                    SetImage(pendingDisplayImage.Image);
+                    isWaitingToApplyPendingImage = false;
+                }
             });
         }
 

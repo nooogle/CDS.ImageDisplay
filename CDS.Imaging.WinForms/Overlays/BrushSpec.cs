@@ -50,4 +50,9 @@ public class BrushSpec
     {
         return new SolidBrush(Color);
     }
+
+    /// <summary>
+    /// Returns a shallow copy suitable for use as a stable dictionary key.
+    /// </summary>
+    internal BrushSpec Clone() => (BrushSpec)MemberwiseClone();
 }
