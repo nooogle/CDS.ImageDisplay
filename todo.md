@@ -11,11 +11,11 @@
 - [x] **i18** `RectangleShape`: `DirectToDisplay` mode uses `Truncate`, `ImageToDisplay` mode uses `Round`  
   The same `Rect` value can render at different pixel positions depending on mapping mode, which is visually inconsistent. Use `Rectangle.Round` in both branches, or keep everything as `RectangleF` (GDI+ `DrawRectangle`/`FillRectangle` both accept `RectangleF`).
 
-- [ ] **i19** Review: pending image drop behaviour in `SetImageIndirectlyFromNonUIThread`  
+- [x] **i19** Review: pending image drop behaviour in `SetImageIndirectlyFromNonUIThread`  
   When a new frame arrives on a non-UI thread while the previous pending frame hasn't been applied yet, the new frame is silently dropped (backpressure). Verify this is the correct policy. An alternative is to replace the pending frame (last-writer-wins), so the displayed image is always the most recent one rather than the one that arrived first.
 
-- [ ] **i20** Auto-deselect timer in `MultipleROIManager` — intent unclear, leave for now  
-  After committing a ROI change, a 1-second timer fires and auto-deselects the active ROI. Origin of this behaviour is uncertain. Leave as-is until the intended UX is confirmed.
+- [x] **i20** Auto-deselect timer in `MultipleROIManager` — intent confirmed; timer now also starts on initial selection  
+  After committing a ROI change, a 1-second timer fires and auto-deselects the active ROI. Timer now also starts in `HandleROIClicked` so a click-only selection (no drag) also auto-deselects.
 
 ---
 

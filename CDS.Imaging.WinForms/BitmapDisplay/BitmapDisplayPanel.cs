@@ -204,18 +204,18 @@ namespace CDS.Imaging.BitmapDisplay
         /// </summary>
         private void SetImageIndirectlyFromNonUIThread(IImageSource? imageSource)
         {
-            // If we're still waiting to apply a previous non-UI image then
-            // let's abandon this one; it's bad becuase we lose an image, but
-            // it will stop us loading up the UI message loop with image updates
-            // that we obviously can't service fast enough
+            // Always store the latest frame so the UI thread picks up the most
+            // recent image when it processes the pending invoke (last-writer-wins).
+            // We're protected by the imageLock held in SetImage.
+            pendingDisplayImage.SetNewImage(imageSource);
+
+            // If a BeginInvoke is already queued to apply the pending image,
+            // don't post another one — the existing callback will use the image
+            // we just stored above. This keeps at most one callback pending,
+            // preventing message-loop buildup regardless of input frame rate.
             if (isWaitingToApplyPendingImage) { return; }
 
-
-            // Store the new image in the pending image wrapper; we're protected
-            // by our lock (in SetImage) so no one else can conflict with this 
-            // wrapper
             isWaitingToApplyPendingImage = true;
-            pendingDisplayImage.SetNewImage(imageSource);
 
 
             // Post the following action on the UI thread and return immedately;

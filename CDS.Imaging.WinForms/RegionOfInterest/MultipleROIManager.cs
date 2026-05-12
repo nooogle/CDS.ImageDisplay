@@ -259,6 +259,9 @@ namespace CDS.Imaging.RegionOfInterest
             roiSelectionOnBitmapDisplay.CanEditCommitted = true;
 
             bitmapDisplayPanel!.Invalidate();
+
+            timerAutoDeselectActiveROI.Stop();
+            timerAutoDeselectActiveROI.Start();
         }
 
 
