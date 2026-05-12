@@ -1,8 +1,9 @@
-﻿using CDS.Imaging.BitmapDisplay;
-using CDS.Imaging.Overlays;
-using CDS.Imaging.Utils;
 using System.ComponentModel;
 using System.Drawing;
+using CDS.Imaging.BitmapDisplay;
+using CDS.Imaging.Overlays;
+using CDS.Imaging.Utils;
+
 
 namespace CDS.Imaging.RegionOfInterest;
 

@@ -1,9 +1,10 @@
-﻿using CDS.Imaging.Utils;
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Text.Json.Serialization;
+using CDS.Imaging.Utils;
+
 
 namespace CDS.Imaging.Overlays;
 

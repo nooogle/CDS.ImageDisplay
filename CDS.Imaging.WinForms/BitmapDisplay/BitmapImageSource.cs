@@ -2,61 +2,60 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace CDS.Imaging.BitmapDisplay
+namespace CDS.Imaging.BitmapDisplay;
+
+/// <summary>
+/// Provides read-only access to the properties and pixels for a .Net Bitmap
+/// </summary>
+public class BitmapImageSource : IImageSource, IDisposable
 {
+    private Bitmap? bitmap;
+    private BitmapData? imageData;
+
+
+    bool IImageSource.IsImageAvailable => (bitmap != null);
+
+    int IImageSource.Stride => (imageData == null) ? 0 : imageData.Stride;
+
+    Size IImageSource.Size => (imageData == null) ? Size.Empty : new Size(imageData.Width, imageData.Height);
+
+    int IImageSource.Width => ((IImageSource)this).Size.Width;
+
+    int IImageSource.Height => ((IImageSource)this).Size.Height;
+
+    IntPtr IImageSource.Scan0 => (imageData == null) ? IntPtr.Zero : imageData.Scan0;
+
+    PixelFormat IImageSource.PixelFormat => (imageData == null) ? PixelFormat.Undefined : imageData.PixelFormat;
+
+
     /// <summary>
-    /// Provides read-only access to the properties and pixels for a .Net Bitmap
+    /// Locks the bitap for reading and provide access via the properties
+    /// to the bitmap properties and pixels. 
     /// </summary>
-    public class BitmapImageSource : IImageSource, IDisposable
+    public BitmapImageSource(Bitmap? bitmap)
     {
-        private Bitmap? bitmap;
-        private BitmapData? imageData;
+        this.bitmap = bitmap;
 
-
-        bool IImageSource.IsImageAvailable => (bitmap != null);
-
-        int IImageSource.Stride => (imageData == null) ? 0 : imageData.Stride;
-
-        Size IImageSource.Size => (imageData == null) ? Size.Empty : new Size(imageData.Width, imageData.Height);
-
-        int IImageSource.Width => ((IImageSource)this).Size.Width;
-
-        int IImageSource.Height => ((IImageSource)this).Size.Height;
-
-        IntPtr IImageSource.Scan0 => (imageData == null) ? IntPtr.Zero : imageData.Scan0;
-
-        PixelFormat IImageSource.PixelFormat => (imageData == null) ? PixelFormat.Undefined : imageData.PixelFormat;
-
-
-        /// <summary>
-        /// Locks the bitap for reading and provide access via the properties
-        /// to the bitmap properties and pixels. 
-        /// </summary>
-        public BitmapImageSource(Bitmap? bitmap)
+        if (bitmap != null)
         {
-            this.bitmap = bitmap;
+            var roi = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
 
-            if (bitmap != null)
-            {
-                var roi = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
-
-                imageData = bitmap.LockBits(
-                    rect: roi,
-                    flags: ImageLockMode.ReadOnly,
-                    format: bitmap.PixelFormat);
-            }
+            imageData = bitmap.LockBits(
+                rect: roi,
+                flags: ImageLockMode.ReadOnly,
+                format: bitmap.PixelFormat);
         }
+    }
 
 
-        /// <summary>
-        /// Unlocks the bitmap
-        /// </summary>
-        public void Dispose()
+    /// <summary>
+    /// Unlocks the bitmap
+    /// </summary>
+    public void Dispose()
+    {
+        if ((bitmap != null) && (imageData != null))
         {
-            if ((bitmap != null) && (imageData != null))
-            {
-                bitmap.UnlockBits(imageData);
-            }
+            bitmap.UnlockBits(imageData);
         }
     }
 }

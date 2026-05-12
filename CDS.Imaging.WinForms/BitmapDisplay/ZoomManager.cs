@@ -2,41 +2,46 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.BitmapDisplay
+namespace CDS.Imaging.BitmapDisplay;
+
+/// <summary>
+/// Handles mouse-wheel zoom gestures for a <see cref="BitmapDisplayPanel"/>.
+/// </summary>
+internal class ZoomManager
 {
-    internal class ZoomManager
+    private Action<float, PointF, PointF> _setNewZoom;
+
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public ZoomManager(
+        Action<float, PointF, PointF> setNewZoom)
     {
-        Action<float, PointF, PointF> SetNewZoom;
+        _setNewZoom = setNewZoom;
+    }
 
 
-        public ZoomManager(
-            Action<float, PointF, PointF> setNewZoom)
+    public void OnMouseWheel(
+        BitmapDisplayMode imageDisplayMode,
+        float currentZoom,
+        PointF mouseLocationInDisplayUnits,
+        PointF mouseLocationInImageUnits,
+        MouseEventArgs mouseEventArgs)
+    {
+        if ((mouseEventArgs.Delta == 0) || (imageDisplayMode != BitmapDisplayMode.Free)) { return; }
+
+        var change = mouseEventArgs.Delta;
+
+        if (change > 0)
         {
-            SetNewZoom = setNewZoom;
+            var changeFactor = 1.0f + (change / 500.0f);
+            _setNewZoom(currentZoom * changeFactor, mouseLocationInDisplayUnits, mouseLocationInImageUnits);
         }
-
-
-        public void OnMouseWheel(
-            BitmapDisplayMode imageDisplayMode, 
-            float currentZoom,
-            PointF mouseLocationInDisplayUnits,
-            PointF mouseLocationInImageUnits,
-            MouseEventArgs mouseEventArgs)
+        else if (change < 0)
         {
-            if ((mouseEventArgs.Delta == 0) || (imageDisplayMode != BitmapDisplayMode.Free)) { return; }
-
-            var change = mouseEventArgs.Delta;
-
-            if (change > 0)
-            {
-                var changeFactor = 1.0f + (change / 500.0f);
-                SetNewZoom(currentZoom * changeFactor, mouseLocationInDisplayUnits, mouseLocationInImageUnits);
-            }
-            else if (change < 0)
-            {
-                var changeFactor = 1.0f + (-change / 500.0f);
-                SetNewZoom(currentZoom / changeFactor, mouseLocationInDisplayUnits, mouseLocationInImageUnits);
-            }
+            var changeFactor = 1.0f + (-change / 500.0f);
+            _setNewZoom(currentZoom / changeFactor, mouseLocationInDisplayUnits, mouseLocationInImageUnits);
         }
     }
 }

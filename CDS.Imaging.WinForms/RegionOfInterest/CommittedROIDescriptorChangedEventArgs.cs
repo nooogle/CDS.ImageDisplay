@@ -1,24 +1,23 @@
 ﻿using System;
 
-namespace CDS.Imaging.RegionOfInterest
+namespace CDS.Imaging.RegionOfInterest;
+
+/// <summary>
+/// Event arguments for when a ROI has been committed.
+/// </summary>
+public class CommittedROIDescriptorChangedEventArgs : EventArgs
 {
     /// <summary>
-    /// Event arguments for when a ROI has been committed.
+    /// The ROI that has been committed.
     /// </summary>
-    public class CommittedROIDescriptorChangedEventArgs : EventArgs
+    public ISingleROIDescriptor ROIDescriptor { get; }
+
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public CommittedROIDescriptorChangedEventArgs(ISingleROIDescriptor roiDescriptor)
     {
-        /// <summary>
-        /// The ROI that has been committed.
-        /// </summary>
-        public ISingleROIDescriptor ROIDescriptor { get; }
-
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public CommittedROIDescriptorChangedEventArgs(ISingleROIDescriptor roiDescriptor)
-        {
-            ROIDescriptor = roiDescriptor;
-        }
+        ROIDescriptor = roiDescriptor;
     }
 }

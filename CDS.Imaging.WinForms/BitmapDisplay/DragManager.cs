@@ -2,54 +2,68 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.BitmapDisplay
+namespace CDS.Imaging.BitmapDisplay;
+
+/// <summary>
+/// Handles mouse-drag panning for a <see cref="BitmapDisplayPanel"/>.
+/// </summary>
+internal class DragManager
 {
-    internal class DragManager
+    private Point _dragStartLocation;
+    private PointF _initialTargetDisplayCentre;
+    private readonly Action<PointF> _setTargetDisplayCentre;
+
+
+    public bool IsDragging { get; private set; }
+
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public DragManager(Action<PointF> setTargetDisplayCentre)
     {
-        Point dragStartLocation;
-        PointF initialTargetDisplayCentre;
-        Action<PointF> SetTargetDisplayCentre;
+        _setTargetDisplayCentre = setTargetDisplayCentre;
+    }
 
-
-        public bool IsDragging { get; private set; }
-
-
-        public DragManager(Action<PointF> setTargetDisplayCentre)
+    /// <summary>
+    /// Call on mouse-down to potentially start a drag.
+    /// </summary>
+    public void OnMouseDown(BitmapDisplayMode imageDisplayMode, MouseEventArgs mouseEventArgs, PointF currentTargetDisplayCentre)
+    {
+        if (!IsDragging && (imageDisplayMode == BitmapDisplayMode.Free) && (mouseEventArgs.Button == MouseButtons.Left))
         {
-            SetTargetDisplayCentre = setTargetDisplayCentre;
+            _dragStartLocation = mouseEventArgs.Location;
+            IsDragging = true;
+            _initialTargetDisplayCentre = currentTargetDisplayCentre;
         }
+    }
 
-        public void OnMouseDown(BitmapDisplayMode imageDisplayMode, MouseEventArgs mouseEventArgs, PointF currentTargetDisplayCentre)
+
+    /// <summary>
+    /// Call on mouse-up to end a drag.
+    /// </summary>
+    public void OnMouseUp(MouseEventArgs mouseEventArgs)
+    {
+        if (IsDragging)
         {
-            if (!IsDragging && (imageDisplayMode == BitmapDisplayMode.Free) && (mouseEventArgs.Button == MouseButtons.Left))
-            {
-                dragStartLocation = mouseEventArgs.Location;
-                IsDragging = true;
-                initialTargetDisplayCentre = currentTargetDisplayCentre;
-            }
+            IsDragging = false;
         }
+    }
 
+    /// <summary>
+    /// Call on mouse-move to update the display centre while dragging.
+    /// </summary>
+    public void OnMouseMove(MouseEventArgs mouseEventArgs)
+    {
+        if (!IsDragging) { return; }
 
-        public void OnMouseUp(MouseEventArgs mouseEventArgs)
-        {
-            if (IsDragging)
-            {
-                IsDragging = false;
-            }
-        }
+        var xDrag = mouseEventArgs.Location.X - _dragStartLocation.X;
+        var yDrag = mouseEventArgs.Location.Y - _dragStartLocation.Y;
 
-        public void OnMouseMove(MouseEventArgs mouseEventArgs)
-        {
-            if (!IsDragging) { return; }
+        var newTargetDisplayCentre = new PointF(
+            x: _initialTargetDisplayCentre.X + xDrag,
+            y: _initialTargetDisplayCentre.Y + yDrag);
 
-            var xDrag = mouseEventArgs.Location.X - dragStartLocation.X;
-            var yDrag = mouseEventArgs.Location.Y - dragStartLocation.Y;
-
-            var newTargetDisplayCentre = new PointF(
-                x: initialTargetDisplayCentre.X + xDrag,
-                y: initialTargetDisplayCentre.Y + yDrag);
-
-            SetTargetDisplayCentre(newTargetDisplayCentre);
-        }
+        _setTargetDisplayCentre(newTargetDisplayCentre);
     }
 }
