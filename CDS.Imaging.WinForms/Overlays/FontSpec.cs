@@ -1,5 +1,7 @@
-﻿using CDS.Imaging.Utils;
+using CDS.Imaging.Utils;
+using System;
 using System.ComponentModel;
+using System.Drawing;
 
 namespace CDS.Imaging.Overlays;
 
@@ -12,7 +14,7 @@ public class FontSpec
     /// <summary>
     /// Simple string representation of this instance.
     /// </summary>
-    public override string ToString() => $"Font {FontName}, Size {FontSize}";
+    public override string ToString() => $"Font {FontName}, Size {FontSize}, Style {FontStyle}";
 
 
     /// <summary>
@@ -30,35 +32,35 @@ public class FontSpec
 
 
     /// <summary>
+    /// Gets or sets the font style.
+    /// </summary>
+    public FontStyle FontStyle { get; set; } = FontStyle.Regular;
+
+
+    /// <summary>
     /// Determines whether the specified object is equal to the current object.
     /// </summary>
-    override public bool Equals(object? obj)
+    public override bool Equals(object? obj)
     {
-        if (obj == null || GetType() != obj.GetType())
-        {
-            return false;
-        }
-        var other = (FontSpec)obj;
-        return FontSize == other.FontSize && FontName == other.FontName;
+        if (obj is not FontSpec other) return false;
+
+        return FontSize == other.FontSize &&
+               FontName == other.FontName &&
+               FontStyle == other.FontStyle;
     }
 
 
     /// <summary>
     /// Returns a hash code for this instance.
     /// </summary>
-    override public int GetHashCode()
-    {
-        return FontSize.GetHashCode() ^ FontName.GetHashCode();
-    }
+    public override int GetHashCode() => HashCode.Combine(FontSize, FontName, FontStyle);
 
 
     /// <summary>
     /// Creates a font from this specification.
     /// </summary>
-    public System.Drawing.Font Create()
-    {
-        return new System.Drawing.Font(FontName, FontSize);
-    }
+    public Font Create() => new Font(FontName, FontSize, FontStyle);
+
 
     /// <summary>
     /// Returns a shallow copy suitable for use as a stable dictionary key.

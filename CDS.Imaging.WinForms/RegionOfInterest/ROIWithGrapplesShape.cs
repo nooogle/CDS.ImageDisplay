@@ -152,5 +152,5 @@ public class ROIWithGrapplesShape : ISingleROIDescriptor
     /// <summary>
     /// String representation of the object.
     /// </summary>
-    public override string ToString() => "";
+    public override string ToString() => $"{Name}: {ROI}";
 }

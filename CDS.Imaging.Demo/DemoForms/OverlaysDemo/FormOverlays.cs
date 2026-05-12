@@ -99,7 +99,6 @@ public partial class FormOverlays : Form
             info.Append($"Format            {sender.GetDisplayImage()?.PixelFormat.Humanize()}\n");
         }
 
-        info.Append($"Set image         {sender.TimingMetrics.SetImage.Humanize()}\n");
         info.Append($"Paint foreground  {sender.TimingMetrics.ForegroundPaint.Humanize()}\n");
         info.Append($"Paint background  {sender.TimingMetrics.BackgroundPaint.Humanize()}\n");
         

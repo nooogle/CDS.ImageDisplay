@@ -1,17 +1,17 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 
 namespace CDS.Imaging.Utils
 {
     /// <summary>
     /// Win32 API functions
     /// </summary>
-    public static class Win32
+    public static partial class Win32
     {
         /// <summary>
         /// Get the state of a key
         /// </summary>
-        [DllImport("user32.dll")]
-        public static extern short GetKeyState(int nVirtKey);
+        [LibraryImport("user32.dll")]
+        public static partial short GetKeyState(int nVirtKey);
 
 
         /// <summary>

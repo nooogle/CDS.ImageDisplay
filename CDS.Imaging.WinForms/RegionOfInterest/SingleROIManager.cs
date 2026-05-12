@@ -135,7 +135,6 @@ namespace CDS.Imaging.RegionOfInterest
                         bitmapDisplayPanel.MouseUp -= BitmapDisplayPanel_MouseUp;
                         bitmapDisplayPanel.OnPaintOver -= BitmapDisplayPanel_OnPaintOver;
                         bitmapDisplayPanel.OnImageSizeChanged -= BitmapDisplayPanel_OnImageSizeChanged;
-                        bitmapDisplayPanel.KeyPress -= BitmapDisplayPanel_KeyPress;
                         bitmapDisplayPanel.KeyDown -= BitmapDisplayPanel_KeyDown;
                     }
 
@@ -148,7 +147,6 @@ namespace CDS.Imaging.RegionOfInterest
                         bitmapDisplayPanel.MouseUp += BitmapDisplayPanel_MouseUp;
                         bitmapDisplayPanel.OnPaintOver += BitmapDisplayPanel_OnPaintOver;
                         bitmapDisplayPanel.OnImageSizeChanged += BitmapDisplayPanel_OnImageSizeChanged;
-                        bitmapDisplayPanel.KeyPress += BitmapDisplayPanel_KeyPress;
                         bitmapDisplayPanel.KeyDown += BitmapDisplayPanel_KeyDown;
 
                         // Seed imageSize from the panel's current image so that ROIs can
@@ -218,12 +216,7 @@ namespace CDS.Imaging.RegionOfInterest
             }
         }
 
-        private void BitmapDisplayPanel_KeyPress(object? sender, KeyPressEventArgs e)
-        {
-            if (draggingMode != ROIDragMode.None) { return; }
-            if (!Visible) { return; }
 
-        }
 
 
         /// <summary>

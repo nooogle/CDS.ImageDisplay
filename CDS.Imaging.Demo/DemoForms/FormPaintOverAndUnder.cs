@@ -53,7 +53,6 @@ namespace CDS.Imaging.Demo.DemoForms
                 info.Append($"Paint rect        {r.X:0.0}, {r.Y:0.0}, {r.Width:0.0}, {r.Height:0:0}\n");
                 info.Append($"Format            {sender.GetDisplayImage()?.PixelFormat.Humanize()}\n");
             }
-            info.Append($"Set image         {sender.TimingMetrics.SetImage.Humanize()}\n");
             info.Append($"Paint foreground  {sender.TimingMetrics.ForegroundPaint.Humanize()}\n");
             info.Append($"Paint background  {sender.TimingMetrics.BackgroundPaint.Humanize()}\n");
 

@@ -26,17 +26,16 @@ namespace CDS.Imaging.BitmapDisplay
             if ((mouseEventArgs.Delta == 0) || (imageDisplayMode != BitmapDisplayMode.Free)) { return; }
 
             var change = mouseEventArgs.Delta;
-            var changeFactor = 1.0f + (Math.Abs(change) / 500.0f);
 
             if (change > 0)
             {
-                var newZoom = currentZoom * changeFactor;
-                SetNewZoom(newZoom, mouseLocationInDisplayUnits, mouseLocationInImageUnits);
+                var changeFactor = 1.0f + (change / 500.0f);
+                SetNewZoom(currentZoom * changeFactor, mouseLocationInDisplayUnits, mouseLocationInImageUnits);
             }
             else if (change < 0)
             {
-                var newZoom = currentZoom / changeFactor;
-                SetNewZoom(newZoom, mouseLocationInDisplayUnits, mouseLocationInImageUnits);
+                var changeFactor = 1.0f + (-change / 500.0f);
+                SetNewZoom(currentZoom / changeFactor, mouseLocationInDisplayUnits, mouseLocationInImageUnits);
             }
         }
     }

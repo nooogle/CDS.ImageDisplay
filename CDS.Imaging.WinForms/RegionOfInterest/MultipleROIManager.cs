@@ -26,6 +26,8 @@ namespace CDS.Imaging.RegionOfInterest
         private BitmapDisplay.BitmapDisplayPanel? bitmapDisplayPanel;
         private ISingleROIDescriptor? activeROIDescriptor;
         private bool refreshSelectionSentry = false;
+        private Timer timerDeselectAfterClick = null!;
+        private Timer timerDeselectAfterMove = null!;
 
 
         /// <summary>
@@ -36,11 +38,28 @@ namespace CDS.Imaging.RegionOfInterest
 
 
         /// <summary>
-        /// Callback to get the ROIs.
+        /// The ROI descriptors to display and interact with.
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Func<IEnumerable<ISingleROIDescriptor>>? GetROIDescriptors { get; set; } = () => [];
+        public IReadOnlyList<ISingleROIDescriptor> ROIDescriptors { get; set; } = [];
+
+
+        /// <summary>
+        /// How long after a ROI is clicked (without being moved) before it is automatically
+        /// deselected. <see langword="null"/> disables auto-deselection for click-only selections.
+        /// </summary>
+        [DefaultValue(null)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public TimeSpan? ClickDeselectDelay { get; set; } = null;
+
+
+        /// <summary>
+        /// How long after a ROI is committed (moved or resized) before it is automatically
+        /// deselected. <see langword="null"/> disables auto-deselection after a move.
+        /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public TimeSpan? MoveDeselectDelay { get; set; } = TimeSpan.FromSeconds(2);
 
 
 
@@ -176,6 +195,24 @@ namespace CDS.Imaging.RegionOfInterest
         /// </summary>
         private void CommonInitialise()
         {
+            timerDeselectAfterClick = new Timer(components);
+            timerDeselectAfterClick.Tick += (_, _) => { timerDeselectAfterClick.Stop(); DeselectActiveROI(); };
+
+            timerDeselectAfterMove = new Timer(components);
+            timerDeselectAfterMove.Tick += (_, _) => { timerDeselectAfterMove.Stop(); DeselectActiveROI(); };
+        }
+
+
+        /// <summary>
+        /// Starts <paramref name="timer"/> after configuring its interval from <paramref name="delay"/>.
+        /// Does nothing if <paramref name="delay"/> is <see langword="null"/>.
+        /// </summary>
+        private static void StartTimer(Timer timer, TimeSpan? delay)
+        {
+            timer.Stop();
+            if (delay is null) { return; }
+            timer.Interval = Math.Max(1, (int)delay.Value.TotalMilliseconds);
+            timer.Start();
         }
 
 
@@ -183,7 +220,7 @@ namespace CDS.Imaging.RegionOfInterest
         /// <summary>
         /// True if there's an image that the ROI can be applied to.
         /// </summary>
-        private bool DoesHaveImageToWorkWith => (bitmapDisplayPanel != null) && imageSize.HasValue && (GetROIDescriptors != null);
+        private bool DoesHaveImageToWorkWith => (bitmapDisplayPanel != null) && imageSize.HasValue;
 
 
         /// <summary>
@@ -194,7 +231,7 @@ namespace CDS.Imaging.RegionOfInterest
             if (!DoesHaveImageToWorkWith) { return; }
             if (!visible) { return; }
 
-            foreach (var roiDescriptor in GetROIDescriptors!())
+            foreach (var roiDescriptor in ROIDescriptors)
             {
                 roiDescriptor.Draw(bitmapDisplayPanel!, graphics);
             }
@@ -222,11 +259,10 @@ namespace CDS.Imaging.RegionOfInterest
             if (!DoesHaveImageToWorkWith) { return; }
             if (IsSpacebarPressed()) { return; }
 
-            var roiDescriptors = GetROIDescriptors!();
             var mouseLocationOnImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnThisControl));
 
             bool didHandleClick = false;
-            foreach (var roiDescriptor in roiDescriptors)
+            foreach (var roiDescriptor in ROIDescriptors)
             {
                 if (roiDescriptor.ROI.Contains(mouseLocationOnImage))
                 {
@@ -260,14 +296,17 @@ namespace CDS.Imaging.RegionOfInterest
 
             bitmapDisplayPanel!.Invalidate();
 
-            timerAutoDeselectActiveROI.Stop();
-            timerAutoDeselectActiveROI.Start();
+            timerDeselectAfterMove.Stop();
+            StartTimer(timerDeselectAfterClick, ClickDeselectDelay);
         }
 
 
         private void DeselectActiveROI()
         {
             if (activeROIDescriptor == null) { return; }
+
+            timerDeselectAfterClick.Stop();
+            timerDeselectAfterMove.Stop();
 
             activeROIDescriptor.Visible = true;
             activeROIDescriptor = null;
@@ -294,8 +333,8 @@ namespace CDS.Imaging.RegionOfInterest
 
             OnCommittedROIDescriptorChanged?.Invoke(this, new CommittedROIDescriptorChangedEventArgs(activeROIDescriptor));
 
-            timerAutoDeselectActiveROI.Stop();
-            timerAutoDeselectActiveROI.Start();
+            timerDeselectAfterClick.Stop();
+            StartTimer(timerDeselectAfterMove, MoveDeselectDelay);
         }
 
 
@@ -332,26 +371,14 @@ namespace CDS.Imaging.RegionOfInterest
 
 
         /// <summary>
-        /// Automatically deselects the active ROI after a period of inactivity.
-        /// </summary>
-        private void timerAutoDeselectActiveROI_Tick(object sender, EventArgs e)
-        {
-            timerAutoDeselectActiveROI.Stop();
-
-            if (activeROIDescriptor == null) { return; }
-
-            DeselectActiveROI();
-        }
-
-
-        /// <summary>
         /// The ROI selection is being dragged.
         /// </summary>
         private void roiSelectionOnBitmapDisplay_OnDraggingROIChanged(SingleROIManager sender, Rectangle roi)
         {
-            if(roi.IsEmpty) { return; }
+            if (roi.IsEmpty) { return; }
 
-            timerAutoDeselectActiveROI.Stop();
+            timerDeselectAfterClick.Stop();
+            timerDeselectAfterMove.Stop();
         }
     }
 }

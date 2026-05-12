@@ -611,7 +611,7 @@ namespace CDS.Imaging.BitmapDisplay
 
             var clippedDrawingRect = virtualDisplay.PaintRect;
             clippedDrawingRect.Intersect(ClientRectangle);
-            var shouldPaintBackground = virtualDisplay.PaintRect.IsEmpty || (e.ClipRectangle != clippedDrawingRect);
+            var shouldPaintBackground = virtualDisplay.PaintRect.IsEmpty || (e.ClipRectangle != Rectangle.Truncate(clippedDrawingRect));
             if (shouldPaintBackground)
             {
                 base.OnPaintBackground(e);

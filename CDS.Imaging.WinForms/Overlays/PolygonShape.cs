@@ -31,7 +31,7 @@ public class PolygonShape
     /// The points of the polygon
     /// </summary>
     [TypeConverter(typeof(PointFConverter))]
-    public PointF[] Points { get; set; } = new PointF[0];
+    public PointF[] Points { get; set; } = [];
 
 
     /// <summary>
@@ -42,7 +42,7 @@ public class PolygonShape
         ArgumentNullException.ThrowIfNull(sender, nameof(sender));
         ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
         ArgumentNullException.ThrowIfNull(drawing, nameof(drawing));
-        if(Points == null || Points.Length < 3) { return; }
+        if (Points.Length < 3) { return; }
         if (!drawing.Visible) { return; }
 
         var pen = DrawingToolsPool.GetPen(drawing.Lines);

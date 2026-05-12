@@ -17,7 +17,7 @@ public interface ISingleROIDescriptor
 
 
     /// <summary>
-    /// True if the ROI is locked and should be editable.
+    /// True if the ROI is locked and should NOT be editable.
     /// </summary>
     bool Locked { get; set; }
 

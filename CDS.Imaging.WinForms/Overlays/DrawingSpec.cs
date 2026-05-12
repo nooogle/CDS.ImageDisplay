@@ -12,7 +12,7 @@ public class DrawingSpec
     /// <summary>
     /// Simple representation of the specification.
     /// </summary>
-    public override string ToString() => "";
+    public override string ToString() => $"Visible={Visible}, Mode={MappingMode}";
 
 
     /// <summary>

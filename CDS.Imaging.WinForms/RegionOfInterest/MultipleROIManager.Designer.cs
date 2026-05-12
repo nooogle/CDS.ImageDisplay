@@ -30,10 +30,9 @@
         {
             components = new System.ComponentModel.Container();
             roiSelectionOnBitmapDisplay = new SingleROIManager(components);
-            timerAutoDeselectActiveROI = new System.Windows.Forms.Timer(components);
-            // 
+            //
             // roiSelectionOnBitmapDisplay
-            // 
+            //
             roiSelectionOnBitmapDisplay.BitmapDisplayPanel = null;
             roiSelectionOnBitmapDisplay.CanCreateNew = false;
             roiSelectionOnBitmapDisplay.CanEditCommitted = false;
@@ -79,16 +78,10 @@
             roiSelectionOnBitmapDisplay.Visible = false;
             roiSelectionOnBitmapDisplay.OnCommittedROIChanged += roiSelectionOnBitmapDisplay_OnCommittedROIChanged;
             roiSelectionOnBitmapDisplay.OnDraggingROIChanged += roiSelectionOnBitmapDisplay_OnDraggingROIChanged;
-            // 
-            // timerAutoDeselectActiveROI
-            // 
-            timerAutoDeselectActiveROI.Interval = 1000;
-            timerAutoDeselectActiveROI.Tick += timerAutoDeselectActiveROI_Tick;
         }
 
         #endregion
 
         private SingleROIManager roiSelectionOnBitmapDisplay;
-        private System.Windows.Forms.Timer timerAutoDeselectActiveROI;
     }
 }

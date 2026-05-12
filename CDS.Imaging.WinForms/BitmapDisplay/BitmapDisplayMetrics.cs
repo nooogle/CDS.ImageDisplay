@@ -9,12 +9,6 @@ namespace CDS.Imaging.BitmapDisplay
     public class BitmapDisplayMetrics
     {
         /// <summary>
-        /// Time taken to set an image
-        /// </summary>
-        public TimeSpan SetImage { get; set; }
-
-
-        /// <summary>
         /// Time taken to paint the foreground, including any overlays
         /// </summary>
         public TimeSpan ForegroundPaint { get; set; }

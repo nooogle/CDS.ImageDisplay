@@ -41,7 +41,7 @@ public partial class FormMultipleROIs : Form
         bitmapDisplayPanel.SetImage(Properties.Resources.Thailand);
 
         propertyGrid.SelectedObject = testProperties;
-        multipleROIManager.GetROIDescriptors = () => testProperties.ROIDescriptors;
+        multipleROIManager.ROIDescriptors = testProperties.ROIDescriptors;
     }
 
 

@@ -5,7 +5,8 @@
       "Bash(Select-Object Name, PSIsContainer)",
       "Bash(dotnet build *)",
       "Bash(dotnet test *)",
-      "Bash(Remove-Item \"c:\\\\dev\\\\nooogle\\\\CDS.Imaging\\\\todo.html\")"
+      "Bash(Remove-Item \"c:\\\\dev\\\\nooogle\\\\CDS.Imaging\\\\todo.html\")",
+      "Bash(Remove-Item \"c:\\\\dev\\\\nooogle\\\\CDS.Imaging\\\\CDS.Imaging.WinForms\\\\BitmapDisplay\\\\MouseMode.cs\")"
     ]
   }
 }
