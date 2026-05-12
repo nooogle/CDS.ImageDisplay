@@ -39,6 +39,12 @@ public partial class FormTestLauncher : Form
         var basics = menuTree.AddGroup("Basics");
 
         basics.AddItem(
+            name: "No image",
+            tooltip: "Form that shows what the bitmap display panel looks like when an image has not been assigned",
+            parent: this,
+            createForm: () => new DemoForms.FormNoImage());
+
+        basics.AddItem(
             name: "Fit to window",
             tooltip: "Form with single image configured to always resize to fit to the window constraints",
             parent: this,

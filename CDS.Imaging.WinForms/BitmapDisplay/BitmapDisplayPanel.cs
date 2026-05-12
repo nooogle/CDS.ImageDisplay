@@ -611,6 +611,10 @@ public partial class BitmapDisplayPanel : UserControl
         {
             PaintBitmap(paintEventArgs);
         }
+        else if (BackgroundImage is null)
+        {
+            PaintNoImageHatch(paintEventArgs);
+        }
 
         OnPaintOver?.Invoke(
             sender: this,
@@ -639,6 +643,19 @@ public partial class BitmapDisplayPanel : UserControl
             rect: _virtualDisplay.PaintRect);
 
         paintEventArgs.Graphics.Restore(graphicsState);
+    }
+
+
+    /// <summary>
+    /// Draws a low-contrast red cross-hatch over the client area when no image is loaded.
+    /// </summary>
+    private void PaintNoImageHatch(PaintEventArgs paintEventArgs)
+    {
+        using var hatchBrush = new HatchBrush(
+            HatchStyle.LargeGrid,
+            foreColor: Color.FromArgb(255, 210, 160, 160),
+            backColor: BackColor);
+        paintEventArgs.Graphics.FillRectangle(hatchBrush, ClientRectangle);
     }
 
 
