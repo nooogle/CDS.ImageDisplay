@@ -29,36 +29,33 @@ namespace CDS.Imaging.Demo
         /// </summary>
         private void InitializeComponent()
         {
-            treeView = new System.Windows.Forms.TreeView();
+            menuTree = new CDS.WinFormsMenus.Basic.MenuTree();
             sysInfoPanel = new Utils.SystemInfoPanel();
             SuspendLayout();
-            // 
-            // treeView
-            // 
-            treeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            treeView.Location = new System.Drawing.Point(0, 38);
-            treeView.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            treeView.Name = "treeView";
-            treeView.ShowNodeToolTips = true;
-            treeView.Size = new System.Drawing.Size(509, 361);
-            treeView.TabIndex = 0;
-            treeView.NodeMouseDoubleClick += treeView_NodeMouseDoubleClick;
-            treeView.KeyPress += treeView_KeyPress;
-            // 
+            //
+            // menuTree
+            //
+            menuTree.Dock = System.Windows.Forms.DockStyle.Fill;
+            menuTree.Location = new System.Drawing.Point(0, 38);
+            menuTree.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            menuTree.Name = "menuTree";
+            menuTree.Size = new System.Drawing.Size(509, 361);
+            menuTree.TabIndex = 0;
+            //
             // sysInfoPanel
-            // 
+            //
             sysInfoPanel.Dock = System.Windows.Forms.DockStyle.Top;
             sysInfoPanel.Location = new System.Drawing.Point(0, 0);
             sysInfoPanel.Name = "sysInfoPanel";
             sysInfoPanel.Size = new System.Drawing.Size(509, 38);
             sysInfoPanel.TabIndex = 8;
-            // 
+            //
             // FormTestLauncher
-            // 
+            //
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(509, 399);
-            Controls.Add(treeView);
+            Controls.Add(menuTree);
             Controls.Add(sysInfoPanel);
             Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             Name = "FormTestLauncher";
@@ -69,7 +66,7 @@ namespace CDS.Imaging.Demo
 
         #endregion
 
-        private System.Windows.Forms.TreeView treeView;
+        private CDS.WinFormsMenus.Basic.MenuTree menuTree;
         private Utils.SystemInfoPanel sysInfoPanel;
     }
 }

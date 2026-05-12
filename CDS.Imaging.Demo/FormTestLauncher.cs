@@ -1,133 +1,100 @@
-﻿using System;
-using System.Runtime.InteropServices;
+using System;
 using System.Windows.Forms;
+using CDS.WinFormsMenus.Basic;
 
-namespace CDS.Imaging.Demo
+namespace CDS.Imaging.Demo;
+
+public partial class FormTestLauncher : Form
 {
-    public partial class FormTestLauncher : Form
+    private JSONSettingsManager<AppSettings> settingsManager;
+
+    public FormTestLauncher()
     {
-        private JSONSettingsManager<AppSettings> settingsManager;
+        InitializeComponent();
+        settingsManager = new JSONSettingsManager<AppSettings>();
+    }
 
-        public FormTestLauncher()
-        {
-            InitializeComponent();
-            settingsManager = new JSONSettingsManager<AppSettings>();
-        }
+    protected override void OnFormClosing(FormClosingEventArgs e)
+    {
+        base.OnFormClosing(e);
+        settingsManager.Save();
+    }
 
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            base.OnFormClosing(e);
-            settingsManager.Save();
-        }
+    private void FormTestLauncher_Load(object sender, EventArgs e)
+    {
+        AddDemos();
+    }
 
-        private void FormTestLauncher_Load(object sender, EventArgs e)
-        {
-            AddDemos();
-        }
+    private void AddDemos()
+    {
+        AddBasicsDemoNodes();
+        AddOtherDemoNodes();
+        AddOpenCVSharpDemoNodes();
 
-        private void AddDemos()
-        {
-            AddBasicsDemoNodes();
-            AddOtherDemoNodes();
-            AddOpenCVSharpDemoNodes();
+        menuTree.ExpandAllGroups();
+    }
 
-            treeView.ExpandAll();
-        }
+    private void AddBasicsDemoNodes()
+    {
+        var basics = menuTree.AddGroup("Basics");
 
-        private void AddBasicsDemoNodes()
-        {
-            var basicsNode = treeView.Nodes.Add("Basics");
+        basics.AddItem(
+            name: "Fit to window",
+            tooltip: "Form with single image configured to always resize to fit to the window constraints",
+            parent: this,
+            createForm: () => new DemoForms.FormFitToWindow());
 
-            AddDemo(
-                parentNode: basicsNode.Nodes,
-                name: "Fit to window",
-                tooltip: "Form with single image configured to always resize to fit to the window constraints",
-                runDemo: () => RunModalForm(new DemoForms.FormFitToWindow()));
+        basics.AddItem(
+            name: "Actual size, centered",
+            tooltip: "Form with single image configured to use 1:1 zoom and remain centered",
+            parent: this,
+            createForm: () => new DemoForms.FormActualSizeCentred());
 
-            AddDemo(
-                parentNode: basicsNode.Nodes,
-                name: "Actual size, centered",
-                tooltip: "Form with single image configured to use 1:1 zoom and remain centered",
-                runDemo: () => RunModalForm(new DemoForms.FormActualSizeCentred()));
+        basics.AddItem(
+            name: "Free",
+            tooltip: "Form with single image configured to allow the mouse to " +
+            "drag (left-button) and zoom in and out (mouse wheel) of the image",
+            parent: this,
+            createForm: () => new DemoForms.FormFree());
+    }
 
-            AddDemo(
-                parentNode: basicsNode.Nodes,
-                name: "Free",
-                tooltip: "Form with single image configured to allow the mouse to " +
-                "drag (left-button) and zoom in and out (mouse wheel) of the image",
-                runDemo: () => RunModalForm(new DemoForms.FormFree()));
-        }
+    private void AddOtherDemoNodes()
+    {
+        var other = menuTree.AddGroup("Other");
 
-        private void AddOtherDemoNodes()
-        {
-            var otherNode = treeView.Nodes.Add("Other");
+        other.AddItem(
+            name: "Paint over and under",
+            tooltip: "",
+            parent: this,
+            createForm: () => new DemoForms.FormPaintOverAndUnder());
 
-            AddDemo(
-                parentNode: otherNode.Nodes,
-                name: "Paint over and under",
-                tooltip: "",
-                runDemo: () => RunModalForm(new DemoForms.FormPaintOverAndUnder()));
+        other.AddItem(
+            name: "ROI selection",
+            tooltip: "",
+            parent: this,
+            createForm: () => new DemoForms.FormROISelection());
 
-            AddDemo(
-                parentNode: otherNode.Nodes,
-                name: "ROI selection",
-                tooltip: "",
-                runDemo: () => RunModalForm(new DemoForms.FormROISelection()));
+        other.AddItem(
+            name: "Multiple ROIs",
+            tooltip: "",
+            parent: this,
+            createForm: () => new DemoForms.MultipleROIs.FormMultipleROIs());
 
-            AddDemo(
-                parentNode: otherNode.Nodes,
-                name: "Multiple ROIs",
-                tooltip: "",
-                runDemo: () => RunModalForm(new DemoForms.MultipleROIs.FormMultipleROIs()));
+        other.AddItem(
+            name: "Overlays",
+            tooltip: "Demonstrates how to use the overlays tools for drawing on top of an image using image-coordinates regardless of the current pan and zoom",
+            parent: this,
+            createForm: () => new DemoForms.OverlaysDemo.FormOverlays(settingsManager.Settings.DemoForms.OverlaysDemo));
+    }
 
-            AddDemo(
-                parentNode: otherNode.Nodes,
-                name: "Overlays",
-                tooltip: "Demonstrates how to use the overlays tools for drawing on top of an image using image-coordinates regarldess of the current pan and zoom",
-                runDemo: () => RunModalForm(new DemoForms.OverlaysDemo.FormOverlays(settingsManager.Settings.DemoForms.OverlaysDemo)));
-        }
+    private void AddOpenCVSharpDemoNodes()
+    {
+        var openCv = menuTree.AddGroup("OpenCV Sharp");
 
-        private void AddOpenCVSharpDemoNodes()
-        {
-            var node = treeView.Nodes.Add("OpenCV Sharp");
-
-            AddDemo(
-                parentNode: node.Nodes,
-                name: "Blurring",
-                tooltip: "",
-                runDemo: () => RunModalForm(new DemoForms.FormOpenCVSharp()));
-        }
-
-        private void AddDemo(
-            TreeNodeCollection parentNode,
-            string name,
-            string tooltip,
-            Action runDemo)
-        {
-            var node = parentNode.Add(name);
-            node.ToolTipText = tooltip;
-            node.Tag = runDemo;
-        }
-
-        private void RunModalForm(Form form)
-        {
-            form.ShowDialog(this);
-            form.Dispose();
-        }
-
-        private void treeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            var action = e.Node?.Tag as Action;
-            action?.Invoke();
-        }
-
-        private void treeView_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            var isEnterKey = (e.KeyChar == '\r');
-            if(!isEnterKey) { return; }
-
-            var action = treeView.SelectedNode?.Tag as Action;
-            action?.Invoke();
-        }
+        openCv.AddItem(
+            name: "Blurring",
+            tooltip: "",
+            parent: this,
+            createForm: () => new DemoForms.FormOpenCVSharp());
     }
 }
