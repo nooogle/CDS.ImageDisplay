@@ -1,8 +1,8 @@
-using Humanizer;
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using Humanizer;
 
 namespace CDS.ImageDisplay.Demo.DemoForms;
 
@@ -12,7 +12,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms;
 /// </summary>
 public partial class FormROISelection : Form
 {
-    class TestProperties
+    private class TestProperties
     {
         [Category("WinForms controls")]
         [DisplayName("Bitmap display")]
@@ -45,7 +45,7 @@ public partial class FormROISelection : Form
     /// <summary>
     /// Information for the properties grid
     /// </summary>
-    private TestProperties testProperties;
+    private readonly TestProperties testProperties;
 
 
     /// <summary>
@@ -95,19 +95,13 @@ public partial class FormROISelection : Form
     /// <summary>
     /// User has clicked the Set ROI button
     /// </summary>
-    private void btnSetROI_Click(object sender, EventArgs e)
-    {
-        singleROIManager.CommittedROI = new Rectangle(10, 20, 100, 200);
-    }
+    private void btnSetROI_Click(object sender, EventArgs e) => singleROIManager.CommittedROI = new Rectangle(10, 20, 100, 200);
 
 
     /// <summary>
     /// User has clicked the Clear ROI button
     /// </summary>
-    private void btnClearROI_Click(object sender, EventArgs e)
-    {
-        singleROIManager.CommittedROI = Rectangle.Empty;
-    }
+    private void btnClearROI_Click(object sender, EventArgs e) => singleROIManager.CommittedROI = Rectangle.Empty;
 
 
     /// <summary>
@@ -143,8 +137,5 @@ public partial class FormROISelection : Form
     /// <summary>
     /// The ROI is being dragged on the singleROIManagery
     /// </summary>
-    private void singleROIManager_OnDraggingROIChanged(CDS.ImageDisplay.RegionOfInterest.SingleROIManager sender, Rectangle roi)
-    {
-        UpdateROILabels();
-    }
+    private void singleROIManager_OnDraggingROIChanged(CDS.ImageDisplay.RegionOfInterest.SingleROIManager sender, Rectangle roi) => UpdateROILabels();
 }

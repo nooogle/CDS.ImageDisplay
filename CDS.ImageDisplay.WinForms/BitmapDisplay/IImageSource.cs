@@ -12,7 +12,7 @@ public interface IImageSource
     /// <summary>
     /// True if an image is available
     /// </summary>
-    bool IsImageAvailable { get; } 
+    bool IsImageAvailable { get; }
 
 
     /// <summary>
@@ -36,7 +36,7 @@ public interface IImageSource
     /// <summary>
     /// Size
     /// </summary>
-    Size Size { get; } 
+    Size Size { get; }
 
 
     /// <summary>

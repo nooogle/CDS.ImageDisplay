@@ -55,10 +55,11 @@ internal class DragManager
     /// </summary>
     public void OnMouseMove(MouseEventArgs mouseEventArgs)
     {
-        if (!IsDragging) { return; }
+        if (!IsDragging)
+        { return; }
 
-        var xDrag = mouseEventArgs.Location.X - _dragStartLocation.X;
-        var yDrag = mouseEventArgs.Location.Y - _dragStartLocation.Y;
+        int xDrag = mouseEventArgs.Location.X - _dragStartLocation.X;
+        int yDrag = mouseEventArgs.Location.Y - _dragStartLocation.Y;
 
         var newTargetDisplayCentre = new PointF(
             x: _initialTargetDisplayCentre.X + xDrag,

@@ -1,12 +1,12 @@
-using BenchmarkDotNet.Attributes;
 using System.Drawing;
+using BenchmarkDotNet.Attributes;
 
 namespace BenchmarkTests.DrawBenchmarks.ResourcePoolBenchmarks;
 
 [MemoryDiagnoser]
 public class FontBenchmark
 {
-    private CDS.ImageDisplay.Overlays.FontSpec fontSpec = new CDS.ImageDisplay.Overlays.FontSpec()
+    private readonly CDS.ImageDisplay.Overlays.FontSpec fontSpec = new()
     {
         FontName = "Arial",
         FontSize = 12,
@@ -24,6 +24,6 @@ public class FontBenchmark
     [Benchmark]
     public void AccessFontFromResourcePool()
     {
-        var font = CDS.ImageDisplay.Overlays.DrawingToolsPool.GetFont(fontSpec);
+        Font font = CDS.ImageDisplay.Overlays.DrawingToolsPool.GetFont(fontSpec);
     }
 }

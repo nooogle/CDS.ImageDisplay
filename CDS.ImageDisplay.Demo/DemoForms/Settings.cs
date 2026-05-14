@@ -1,7 +1,6 @@
-namespace CDS.ImageDisplay.Demo.DemoForms
+namespace CDS.ImageDisplay.Demo.DemoForms;
+
+internal class Settings
 {
-    internal class Settings
-    {
-        public OverlaysDemo.TestSettings OverlaysDemo { get; set; } = new OverlaysDemo.TestSettings();
-    }
+    public OverlaysDemo.TestSettings OverlaysDemo { get; set; } = new OverlaysDemo.TestSettings();
 }

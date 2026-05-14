@@ -54,11 +54,12 @@ public class CrosshairShape
         ArgumentNullException.ThrowIfNull(sender, nameof(sender));
         ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
         ArgumentNullException.ThrowIfNull(drawing, nameof(drawing));
-        if (!drawing.Visible) { return; }
+        if (!drawing.Visible)
+        { return; }
 
-        var pen = DrawingToolsPool.GetPen(drawing.Lines);
+        Pen pen = DrawingToolsPool.GetPen(drawing.Lines);
 
-        var centreOnDisplay = 
+        PointF centreOnDisplay =
             drawing.MappingMode == MappingMode.ImageToDisplay ?
             sender.MapImageToDisplay(Centre, PixelAlign) :
             Centre;

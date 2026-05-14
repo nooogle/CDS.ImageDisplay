@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.CompilerServices;
@@ -6,7 +5,7 @@ using System.Runtime.CompilerServices;
 namespace CDS.ImageDisplay.Demo.DemoForms.MultipleROIs;
 
 
-class TestProperties : INotifyPropertyChanged
+internal class TestProperties : INotifyPropertyChanged
 {
     [Category("WinForms controls")]
     [DisplayName("Bitmap display")]
@@ -34,23 +33,14 @@ class TestProperties : INotifyPropertyChanged
         MultipleROIManager = multipleROIManager;
 
         ROIDescriptors = CreateDefaultROIs();
-        ROIDescriptors.ListChanged += (s, e) =>
-        {
-            NotifyPropertyChanged(nameof(ROIDescriptors));
-        };
+        ROIDescriptors.ListChanged += (s, e) => NotifyPropertyChanged(nameof(ROIDescriptors));
     }
 
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
 
-    private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-    {
-        if (PropertyChanged != null)
-        {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
+    private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 
     /// <summary>
@@ -60,13 +50,13 @@ class TestProperties : INotifyPropertyChanged
     {
         var list = new BindingList<MyROIDescriptor>
         {
-            new MyROIDescriptor("ROI 1")
+            new("ROI 1")
             {
                 ROI = new Rectangle(10, 10, 100, 20),
                 MinimumSize = new Size(100, 20),
             },
 
-            new MyROIDescriptor("ROI 2")
+            new("ROI 2")
             {
                 ROI = new Rectangle(50, 50, 200, 100),
                 MinimumSize = new Size(100, 40),

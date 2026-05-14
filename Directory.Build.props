@@ -1,6 +1,11 @@
 <Project>
   <PropertyGroup>
     <MinVerTagPrefix>V</MinVerTagPrefix>
+    <!-- Run all Roslyn analyzers and EditorConfig style rules during build,
+         so naming/style violations appear in the Error List for every file,
+         not just those currently open in the editor. -->
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
   </PropertyGroup>
 
   <ItemGroup>

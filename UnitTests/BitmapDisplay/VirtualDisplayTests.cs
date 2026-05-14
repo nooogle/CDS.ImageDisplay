@@ -1,10 +1,8 @@
+using System.Drawing;
 using AwesomeAssertions;
-
 using CDS.ImageDisplay.BitmapDisplay;
 
-using System.Drawing;
-
-namespace CDS.ImageDisplay.WinFormsTests.BitmapDisplay;
+namespace UnitTests.BitmapDisplay;
 
 [TestClass]
 public partial class VirtualDisplayTests
@@ -13,7 +11,7 @@ public partial class VirtualDisplayTests
     public void Constructor_DefaultState_UsesFitToWindowMode()
     {
         // Arrange
-        var virtualDisplay = CreateSubject();
+        VirtualDisplay virtualDisplay = CreateSubject();
 
         // Act
         var result = new
@@ -45,13 +43,13 @@ public partial class VirtualDisplayTests
     public void FitToWindowMode_ImageSameSizeAsDisplay_FillsDisplayExactly()
     {
         // Arrange
-        var virtualDisplay = CreateSubject();
+        VirtualDisplay virtualDisplay = CreateSubject();
         virtualDisplay.DisplaySize = new Size(1000, 600);
         virtualDisplay.ImageSize = virtualDisplay.DisplaySize;
         virtualDisplay.Mode = BitmapDisplayMode.FitToWindowCentred;
 
         // Act
-        var result = CaptureDisplayState(virtualDisplay);
+        object result = CaptureDisplayState(virtualDisplay);
 
         // Bundle
         var expected = new
@@ -72,13 +70,13 @@ public partial class VirtualDisplayTests
     public void ActualSizeMode_ImageSameSizeAsDisplay_FillsDisplayExactly()
     {
         // Arrange
-        var virtualDisplay = CreateSubject();
+        VirtualDisplay virtualDisplay = CreateSubject();
         virtualDisplay.DisplaySize = new Size(1000, 600);
         virtualDisplay.ImageSize = virtualDisplay.DisplaySize;
         virtualDisplay.Mode = BitmapDisplayMode.ActualSizeCentred;
 
         // Act
-        var result = CaptureDisplayState(virtualDisplay);
+        object result = CaptureDisplayState(virtualDisplay);
 
         // Bundle
         var expected = new
@@ -100,16 +98,16 @@ public partial class VirtualDisplayTests
     public void FitToWindow_Maximizes_DisplayArea(Size imageSize, Size displaySize, RectangleF expectedPaintRect)
     {
         // Arrange
-        var virtualDisplay = CreateSubject();
+        VirtualDisplay virtualDisplay = CreateSubject();
         virtualDisplay.DisplaySize = displaySize;
         virtualDisplay.ImageSize = imageSize;
 
         // Act
-        var actualPaintRect = virtualDisplay.PaintRect;
-        var actualZoom = virtualDisplay.Zoom;
+        RectangleF actualPaintRect = virtualDisplay.PaintRect;
+        float actualZoom = virtualDisplay.Zoom;
 
         // Bundle
-        var expectedZoom = expectedPaintRect.Width / imageSize.Width;
+        float expectedZoom = expectedPaintRect.Width / imageSize.Width;
 
         // Verify
         actualPaintRect.X.Should().BeApproximately(expectedPaintRect.X, 0.01f);
@@ -123,11 +121,11 @@ public partial class VirtualDisplayTests
     public void ChangeTargetImageCentre_InFreeMode_MovesPaintRect()
     {
         // Arrange
-        var virtualDisplay = CreateConfiguredFreeDisplay();
+        VirtualDisplay virtualDisplay = CreateConfiguredFreeDisplay();
 
         // Act
         virtualDisplay.TargetImageCentre = PointF.Empty;
-        var result = CaptureDisplayState(virtualDisplay);
+        object result = CaptureDisplayState(virtualDisplay);
 
         // Bundle
         var expected = new
@@ -146,12 +144,12 @@ public partial class VirtualDisplayTests
     public void DefaultInitialization_WithDisplayAndImage_FitsToDisplay()
     {
         // Arrange
-        var virtualDisplay = CreateSubject();
+        VirtualDisplay virtualDisplay = CreateSubject();
         virtualDisplay.DisplaySize = new Size(1000, 1000);
         virtualDisplay.ImageSize = new Size(100, 100);
 
         // Act
-        var result = CaptureDisplayState(virtualDisplay);
+        object result = CaptureDisplayState(virtualDisplay);
 
         // Bundle
         var expected = new
@@ -176,11 +174,11 @@ public partial class VirtualDisplayTests
         float expectedDisplayY)
     {
         // Arrange
-        var virtualDisplay = CreateActualSizeCentredDisplay();
+        VirtualDisplay virtualDisplay = CreateActualSizeCentredDisplay();
         var imageLocation = new PointF(imageX, imageY);
 
         // Act
-        var actualDisplayLocation = virtualDisplay.MapImageToDisplay(imageLocation);
+        PointF actualDisplayLocation = virtualDisplay.MapImageToDisplay(imageLocation);
 
         // Bundle
         var result = new
@@ -208,11 +206,11 @@ public partial class VirtualDisplayTests
         float expectedImageY)
     {
         // Arrange
-        var virtualDisplay = CreateActualSizeCentredDisplay();
+        VirtualDisplay virtualDisplay = CreateActualSizeCentredDisplay();
         var displayLocation = new PointF(displayX, displayY);
 
         // Act
-        var actualImageLocation = virtualDisplay.MapDisplayToImage(displayLocation);
+        PointF actualImageLocation = virtualDisplay.MapDisplayToImage(displayLocation);
 
         // Bundle
         var result = new
@@ -234,11 +232,11 @@ public partial class VirtualDisplayTests
     public void MapDisplayRectToImage_ReturnsScaledRectangle()
     {
         // Arrange
-        var virtualDisplay = CreateActualSizeCentredDisplay();
+        VirtualDisplay virtualDisplay = CreateActualSizeCentredDisplay();
         var displayRect = new RectangleF(300, 400, 200, 100);
 
         // Act
-        var actualImageRect = virtualDisplay.MapDisplayToImage(displayRect);
+        RectangleF actualImageRect = virtualDisplay.MapDisplayToImage(displayRect);
 
         // Bundle
         var expected = new RectangleF(0, 0, 200, 100);
@@ -251,11 +249,11 @@ public partial class VirtualDisplayTests
     public void MapImageRectToDisplay_ReturnsScaledRectangle()
     {
         // Arrange
-        var virtualDisplay = CreateActualSizeCentredDisplay();
+        VirtualDisplay virtualDisplay = CreateActualSizeCentredDisplay();
         var imageRect = new RectangleF(0, 0, 200, 100);
 
         // Act
-        var actualDisplayRect = virtualDisplay.MapImageToDisplay(imageRect);
+        RectangleF actualDisplayRect = virtualDisplay.MapImageToDisplay(imageRect);
 
         // Bundle
         var expected = new RectangleF(300, 400, 200, 100);
@@ -268,14 +266,14 @@ public partial class VirtualDisplayTests
     public void ChangeImageSizeInFitToWindowMode_ResizesToFitWindow()
     {
         // Arrange
-        var virtualDisplay = CreateSubject();
+        VirtualDisplay virtualDisplay = CreateSubject();
         virtualDisplay.Mode = BitmapDisplayMode.FitToWindowCentred;
         virtualDisplay.DisplaySize = new Size(2000, 1000);
         virtualDisplay.ImageSize = new Size(200, 200);
 
         // Act
         virtualDisplay.ImageSize = new Size(100, 1000);
-        var result = CaptureDisplayState(virtualDisplay);
+        object result = CaptureDisplayState(virtualDisplay);
 
         // Bundle
         var expected = new
@@ -294,13 +292,13 @@ public partial class VirtualDisplayTests
     public void FreshImage_InFreeMode_HasZoomOneAndIsCentred()
     {
         // Arrange
-        var virtualDisplay = CreateSubject();
+        VirtualDisplay virtualDisplay = CreateSubject();
         virtualDisplay.Mode = BitmapDisplayMode.Free;
         virtualDisplay.DisplaySize = new Size(2000, 1000);
         virtualDisplay.ImageSize = new Size(200, 200);
 
         // Act
-        var result = CaptureDisplayState(virtualDisplay);
+        object result = CaptureDisplayState(virtualDisplay);
 
         // Bundle
         var expected = new
@@ -319,7 +317,7 @@ public partial class VirtualDisplayTests
     public void ChangeImageSizeInFreeMode_LeavesZoomUnchanged()
     {
         // Arrange
-        var virtualDisplay = CreateSubject();
+        VirtualDisplay virtualDisplay = CreateSubject();
         virtualDisplay.Mode = BitmapDisplayMode.Free;
         virtualDisplay.DisplaySize = new Size(2000, 1000);
         virtualDisplay.ImageSize = new Size(200, 200);
@@ -327,7 +325,7 @@ public partial class VirtualDisplayTests
 
         // Act
         virtualDisplay.ImageSize = new Size(300, 100);
-        var result = CaptureDisplayState(virtualDisplay);
+        object result = CaptureDisplayState(virtualDisplay);
 
         // Bundle
         var expected = new
@@ -347,7 +345,7 @@ public partial class VirtualDisplayTests
     public void ChangeImageSizeInAutomaticMode_RecalculatesImageCentre()
     {
         // Arrange
-        var virtualDisplay = CreateSubject();
+        VirtualDisplay virtualDisplay = CreateSubject();
         virtualDisplay.Mode = BitmapDisplayMode.FitToWindowCentred;
         virtualDisplay.DisplaySize = new Size(2000, 1000);
         virtualDisplay.ImageSize = new Size(200, 200);
@@ -375,20 +373,20 @@ public partial class VirtualDisplayTests
     public void ChangeTargetImageCentre_NotInFreeMode_LeavesCentreUnchanged()
     {
         // Arrange
-        var virtualDisplay = CreateSubject();
+        VirtualDisplay virtualDisplay = CreateSubject();
         virtualDisplay.DisplaySize = new Size(2000, 1000);
         virtualDisplay.ImageSize = new Size(200, 200);
 
         // Act
         virtualDisplay.Mode = BitmapDisplayMode.FitToWindowCentred;
-        var fitToWindowOriginal = virtualDisplay.TargetImageCentre;
+        PointF fitToWindowOriginal = virtualDisplay.TargetImageCentre;
         virtualDisplay.TargetImageCentre = PointF.Empty;
-        var fitToWindowResult = virtualDisplay.TargetImageCentre;
+        PointF fitToWindowResult = virtualDisplay.TargetImageCentre;
 
         virtualDisplay.Mode = BitmapDisplayMode.ActualSizeCentred;
-        var actualSizeOriginal = virtualDisplay.TargetImageCentre;
+        PointF actualSizeOriginal = virtualDisplay.TargetImageCentre;
         virtualDisplay.TargetImageCentre = PointF.Empty;
-        var actualSizeResult = virtualDisplay.TargetImageCentre;
+        PointF actualSizeResult = virtualDisplay.TargetImageCentre;
 
         var result = new
         {
@@ -415,7 +413,7 @@ public partial class VirtualDisplayTests
     public void ChangeTargetImageCentre_InFreeMode_ChangesCentre()
     {
         // Arrange
-        var virtualDisplay = CreateSubject();
+        VirtualDisplay virtualDisplay = CreateSubject();
         virtualDisplay.DisplaySize = new Size(2000, 1000);
         virtualDisplay.ImageSize = new Size(200, 200);
         virtualDisplay.Mode = BitmapDisplayMode.Free;
@@ -443,20 +441,20 @@ public partial class VirtualDisplayTests
     public void ChangeTargetDisplayCentre_NotInFreeMode_LeavesCentreUnchanged()
     {
         // Arrange
-        var virtualDisplay = CreateSubject();
+        VirtualDisplay virtualDisplay = CreateSubject();
         virtualDisplay.DisplaySize = new Size(2000, 1000);
         virtualDisplay.ImageSize = new Size(200, 200);
 
         // Act
         virtualDisplay.Mode = BitmapDisplayMode.FitToWindowCentred;
-        var fitToWindowOriginal = virtualDisplay.TargetDisplayCentre;
+        PointF fitToWindowOriginal = virtualDisplay.TargetDisplayCentre;
         virtualDisplay.TargetDisplayCentre = PointF.Empty;
-        var fitToWindowResult = virtualDisplay.TargetDisplayCentre;
+        PointF fitToWindowResult = virtualDisplay.TargetDisplayCentre;
 
         virtualDisplay.Mode = BitmapDisplayMode.ActualSizeCentred;
-        var actualSizeOriginal = virtualDisplay.TargetDisplayCentre;
+        PointF actualSizeOriginal = virtualDisplay.TargetDisplayCentre;
         virtualDisplay.TargetDisplayCentre = PointF.Empty;
-        var actualSizeResult = virtualDisplay.TargetDisplayCentre;
+        PointF actualSizeResult = virtualDisplay.TargetDisplayCentre;
 
         var result = new
         {
@@ -483,7 +481,7 @@ public partial class VirtualDisplayTests
     public void ChangeTargetDisplayCentre_InFreeMode_ChangesCentre()
     {
         // Arrange
-        var virtualDisplay = CreateSubject();
+        VirtualDisplay virtualDisplay = CreateSubject();
         virtualDisplay.DisplaySize = new Size(2000, 1000);
         virtualDisplay.ImageSize = new Size(200, 200);
         virtualDisplay.Mode = BitmapDisplayMode.Free;
@@ -511,7 +509,7 @@ public partial class VirtualDisplayTests
     public void Zoom_WhenValueIsNearOne_SnapsToOne()
     {
         // Arrange
-        var virtualDisplay = CreateConfiguredFreeDisplay();
+        VirtualDisplay virtualDisplay = CreateConfiguredFreeDisplay();
 
         // Act
         virtualDisplay.Zoom = 1.005f;
@@ -538,7 +536,7 @@ public partial class VirtualDisplayTests
     public void Zoom_WhenValueIsBelowMinimum_ClipsToMinimum()
     {
         // Arrange
-        var virtualDisplay = CreateConfiguredFreeDisplay();
+        VirtualDisplay virtualDisplay = CreateConfiguredFreeDisplay();
 
         // Act
         virtualDisplay.Zoom = 0.001f;
@@ -565,7 +563,7 @@ public partial class VirtualDisplayTests
     public void Zoom_WhenValueIsAboveMaximum_ClipsToMaximum()
     {
         // Arrange
-        var virtualDisplay = CreateConfiguredFreeDisplay();
+        VirtualDisplay virtualDisplay = CreateConfiguredFreeDisplay();
 
         // Act
         virtualDisplay.Zoom = 500.0f;
@@ -592,7 +590,7 @@ public partial class VirtualDisplayTests
     public void MapMethods_WhenNothingToDisplay_ReturnEmptyValues()
     {
         // Arrange
-        var virtualDisplay = CreateSubject();
+        VirtualDisplay virtualDisplay = CreateSubject();
 
         // Act
         var result = new
@@ -622,10 +620,10 @@ public partial class VirtualDisplayTests
     public void MapImageDistanceToDisplay_ReturnsZoomScaledDistance()
     {
         // Arrange
-        var virtualDisplay = CreateConfiguredFreeDisplay();
+        VirtualDisplay virtualDisplay = CreateConfiguredFreeDisplay();
 
         // Act
-        var actualDistance = virtualDisplay.MapImageToDisplay(12.5f);
+        float actualDistance = virtualDisplay.MapImageToDisplay(12.5f);
 
         // Bundle
         const float expectedDistance = 62.5f;
@@ -634,14 +632,11 @@ public partial class VirtualDisplayTests
         actualDistance.Should().Be(expectedDistance);
     }
 
-    private static VirtualDisplay CreateSubject()
-    {
-        return new VirtualDisplay(onPaintRectChanged: (_, _) => { });
-    }
+    private static VirtualDisplay CreateSubject() => new(onPaintRectChanged: (_, _) => { });
 
     private static VirtualDisplay CreateActualSizeCentredDisplay()
     {
-        var virtualDisplay = CreateSubject();
+        VirtualDisplay virtualDisplay = CreateSubject();
         virtualDisplay.Mode = BitmapDisplayMode.ActualSizeCentred;
         virtualDisplay.DisplaySize = new Size(1000, 1000);
         virtualDisplay.ImageSize = new Size(400, 200);
@@ -650,7 +645,7 @@ public partial class VirtualDisplayTests
 
     private static VirtualDisplay CreateConfiguredFreeDisplay()
     {
-        var virtualDisplay = CreateSubject();
+        VirtualDisplay virtualDisplay = CreateSubject();
         virtualDisplay.DisplaySize = new Size(1000, 1000);
         virtualDisplay.ImageSize = new Size(200, 200);
         virtualDisplay.Mode = BitmapDisplayMode.Free;

@@ -1,11 +1,8 @@
+using System.Drawing;
 using AwesomeAssertions;
-
 using CDS.ImageDisplay.Overlays;
 
-using System.ComponentModel;
-using System.Drawing;
-
-namespace CDS.ImageDisplay.WinFormsTests.Overlays;
+namespace UnitTests.Overlays;
 
 [TestClass]
 public partial class PointFConverterTests
@@ -18,7 +15,7 @@ public partial class PointFConverterTests
         var point = new PointF(12.5f, 34.75f);
 
         // Act
-        var result = converter.ConvertTo(value: point, destinationType: typeof(string));
+        object? result = converter.ConvertTo(value: point, destinationType: typeof(string));
 
         // Bundle
         const string expected = "12.5, 34.75";
@@ -34,7 +31,7 @@ public partial class PointFConverterTests
         var converter = new PointFConverter();
 
         // Act
-        var result = converter.ConvertFrom("12.5, 34.75");
+        object? result = converter.ConvertFrom("12.5, 34.75");
 
         // Bundle
         var expected = new PointF(12.5f, 34.75f);
@@ -50,7 +47,7 @@ public partial class PointFConverterTests
         var converter = new PointFConverter();
 
         // Act
-        var result = converter.CanConvertFrom(typeof(string));
+        bool result = converter.CanConvertFrom(typeof(string));
 
         // Bundle
         const bool expected = true;
@@ -69,7 +66,7 @@ public partial class PointFConverterTests
         Action action = () => converter.ConvertFrom("bad-value");
 
         // Bundle
-        var expectedExceptionType = typeof(NotSupportedException);
+        Type expectedExceptionType = typeof(NotSupportedException);
 
         // Verify
         action.Should().Throw<NotSupportedException>()
@@ -83,7 +80,7 @@ public partial class PointFConverterTests
         var converter = new PointFConverter();
 
         // Act
-        var result = converter.CanConvertTo(typeof(string));
+        bool result = converter.CanConvertTo(typeof(string));
 
         // Bundle
         const bool expected = true;

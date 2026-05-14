@@ -43,9 +43,7 @@ public class FontSpec
     /// </summary>
     public override bool Equals(object? obj)
     {
-        if (obj is not FontSpec other) return false;
-
-        return FontSize == other.FontSize &&
+        return obj is FontSpec other && FontSize == other.FontSize &&
                FontName == other.FontName &&
                FontStyle == other.FontStyle;
     }
@@ -60,7 +58,7 @@ public class FontSpec
     /// <summary>
     /// Creates a font from this specification.
     /// </summary>
-    public Font Create() => new Font(FontName, FontSize, FontStyle);
+    public Font Create() => new(FontName, FontSize, FontStyle);
 
 
     /// <summary>

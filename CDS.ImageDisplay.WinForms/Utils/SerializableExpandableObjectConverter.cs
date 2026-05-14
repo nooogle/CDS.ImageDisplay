@@ -23,32 +23,12 @@ public class SerializableExpandableObjectConverter : ExpandableObjectConverter
     /// <summary>
     /// True if the conversion can take place
     /// </summary>
-    public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
-    {
-        if (destinationType == typeof(string))
-        {
-            return false;
-        }
-        else
-        {
-            return base.CanConvertTo(context, destinationType);
-        }
-    }
+    public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType) => destinationType != typeof(string) && base.CanConvertTo(context, destinationType);
 
 
 
     /// <summary>
     /// True if the conversion can take place
     /// </summary>
-    public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
-    {
-        if (sourceType == typeof(string))
-        {
-            return false;
-        }
-        else
-        {
-            return base.CanConvertFrom(context, sourceType);
-        }
-    }
+    public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType) => sourceType != typeof(string) && base.CanConvertFrom(context, sourceType);
 }

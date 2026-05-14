@@ -48,32 +48,20 @@ public sealed class ColorJsonConverter : JsonConverter<Color>
 
     private static Color ReadFromString(string? value)
     {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            throw new JsonException("Color string value cannot be null or empty.");
-        }
-
-        if (string.Equals(value, nameof(Color.Empty), StringComparison.OrdinalIgnoreCase))
-        {
-            return Color.Empty;
-        }
-
-        if (value.StartsWith('#'))
-        {
-            return ReadFromHex(value);
-        }
-
-        if (Enum.TryParse<KnownColor>(value, ignoreCase: true, out var knownColor))
-        {
-            return Color.FromKnownColor(knownColor);
-        }
-
-        throw new JsonException($"'{value}' is not a valid Color value.");
+        return string.IsNullOrWhiteSpace(value)
+            ? throw new JsonException("Color string value cannot be null or empty.")
+            : string.Equals(value, nameof(Color.Empty), StringComparison.OrdinalIgnoreCase)
+            ? Color.Empty
+            : value.StartsWith('#')
+            ? ReadFromHex(value)
+            : Enum.TryParse<KnownColor>(value, ignoreCase: true, out KnownColor knownColor)
+            ? Color.FromKnownColor(knownColor)
+            : throw new JsonException($"'{value}' is not a valid Color value.");
     }
 
     private static Color ReadFromHex(string value)
     {
-        var hexValue = value[1..];
+        string hexValue = value[1..];
 
         return hexValue.Length switch
         {
@@ -93,12 +81,9 @@ public sealed class ColorJsonConverter : JsonConverter<Color>
 
     private static int ParseHexByte(ReadOnlySpan<char> value)
     {
-        if (!int.TryParse(value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var result))
-        {
-            throw new JsonException($"'{value.ToString()}' is not a valid hexadecimal byte value.");
-        }
-
-        return result;
+        return !int.TryParse(value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result)
+            ? throw new JsonException($"'{value}' is not a valid hexadecimal byte value.")
+            : result;
     }
 
     private static Color ReadFromLegacyObject(ref Utf8JsonReader reader)
@@ -116,12 +101,9 @@ public sealed class ColorJsonConverter : JsonConverter<Color>
             {
                 if (!hasArgb)
                 {
-                    if (!string.IsNullOrWhiteSpace(name))
-                    {
-                        return ReadFromString(name);
-                    }
-
-                    throw new JsonException("Color object did not contain a usable value.");
+                    return !string.IsNullOrWhiteSpace(name)
+                        ? ReadFromString(name)
+                        : throw new JsonException("Color object did not contain a usable value.");
                 }
 
                 var argbColor = Color.FromArgb(alpha, red, green, blue);
@@ -147,7 +129,7 @@ public sealed class ColorJsonConverter : JsonConverter<Color>
                 continue;
             }
 
-            var propertyName = reader.GetString();
+            string? propertyName = reader.GetString();
             reader.Read();
 
             switch (propertyName)

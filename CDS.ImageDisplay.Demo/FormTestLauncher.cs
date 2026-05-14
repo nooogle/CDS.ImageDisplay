@@ -6,7 +6,7 @@ namespace CDS.ImageDisplay.Demo;
 
 public partial class FormTestLauncher : Form
 {
-    private JSONSettingsManager<AppSettings> settingsManager;
+    private readonly JSONSettingsManager<AppSettings> settingsManager;
 
     public FormTestLauncher()
     {
@@ -20,10 +20,7 @@ public partial class FormTestLauncher : Form
         settingsManager.Save();
     }
 
-    private void FormTestLauncher_Load(object sender, EventArgs e)
-    {
-        AddDemos();
-    }
+    private void FormTestLauncher_Load(object sender, EventArgs e) => AddDemos();
 
     private void AddDemos()
     {
@@ -36,7 +33,7 @@ public partial class FormTestLauncher : Form
 
     private void AddBasicsDemoNodes()
     {
-        var basics = menuTree.AddGroup("Basics");
+        MenuGroup basics = menuTree.AddGroup("Basics");
 
         basics.AddItem(
             name: "No image",
@@ -66,7 +63,7 @@ public partial class FormTestLauncher : Form
 
     private void AddOtherDemoNodes()
     {
-        var other = menuTree.AddGroup("Other");
+        MenuGroup other = menuTree.AddGroup("Other");
 
         other.AddItem(
             name: "Paint over and under",
@@ -95,7 +92,7 @@ public partial class FormTestLauncher : Form
 
     private void AddOpenCVSharpDemoNodes()
     {
-        var openCv = menuTree.AddGroup("OpenCV Sharp");
+        MenuGroup openCv = menuTree.AddGroup("OpenCV Sharp");
 
         openCv.AddItem(
             name: "Blurring",

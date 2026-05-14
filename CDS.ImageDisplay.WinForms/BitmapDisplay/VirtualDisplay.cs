@@ -29,13 +29,12 @@ public class VirtualDisplay
     private PointF targetDisplayCentre;
     private float zoom = 1;
     private RectangleF paintRect;
-    private BitmapDisplayMode mode = BitmapDisplayMode.FitToWindowCentred;
 
 
     /// <summary>
     /// Called whenever <see cref="PaintRect"/> changes
     /// </summary>
-    private OnPaintRectChangedCallback onPaintRectChanged;
+    private readonly OnPaintRectChangedCallback onPaintRectChanged;
 
 
     /// <summary>
@@ -68,8 +67,8 @@ public class VirtualDisplay
 
         set
         {
-            var clippedValue = Math.Max(Consts.MinZoom, Math.Min(Consts.MaxZoom, value));
-            var diffFrom1 = Math.Abs(1.0f - clippedValue);
+            float clippedValue = Math.Max(Consts.MinZoom, Math.Min(Consts.MaxZoom, value));
+            float diffFrom1 = Math.Abs(1.0f - clippedValue);
             if (diffFrom1 <= Consts.SnapToZoom1Tolerance)
             {
                 clippedValue = 1.0f;
@@ -98,7 +97,7 @@ public class VirtualDisplay
 
         set
         {
-            if ((mode == BitmapDisplayMode.Free) && (targetImageCentre != value))
+            if ((Mode == BitmapDisplayMode.Free) && (targetImageCentre != value))
             {
                 targetImageCentre = value;
                 RecalculatePaintRect();
@@ -119,7 +118,7 @@ public class VirtualDisplay
 
         set
         {
-            if ((mode == BitmapDisplayMode.Free) && (targetDisplayCentre != value))
+            if ((Mode == BitmapDisplayMode.Free) && (targetDisplayCentre != value))
             {
                 targetDisplayCentre = value;
                 RecalculatePaintRect();
@@ -191,17 +190,17 @@ public class VirtualDisplay
     /// </summary>
     public BitmapDisplayMode Mode
     {
-        get => mode;
+        get;
 
         set
         {
-            if (mode != value)
+            if (field != value)
             {
-                mode = value;
+                field = value;
                 ForceApplyCurrentAutomaticMode();
             }
         }
-    }
+    } = BitmapDisplayMode.FitToWindowCentred;
 
 
     /// <summary>
@@ -212,9 +211,10 @@ public class VirtualDisplay
     /// </summary>
     private void ForceApplyCurrentAutomaticMode()
     {
-        if (!AnythingToDisplay) { return; }
+        if (!AnythingToDisplay)
+        { return; }
 
-        switch (mode)
+        switch (Mode)
         {
             case BitmapDisplayMode.ActualSizeCentred:
                 ForceActualSizeCentred();
@@ -248,18 +248,13 @@ public class VirtualDisplay
     /// </summary>
     private void RecalculatePaintRect()
     {
-        if (AnythingToDisplay)
-        {
-            PaintRect = new RectangleF(
+        PaintRect = AnythingToDisplay
+            ? new RectangleF(
                 x: targetDisplayCentre.X - (targetImageCentre.X * zoom),
                 y: targetDisplayCentre.Y - (targetImageCentre.Y * zoom),
                 width: imageSize.Width * zoom,
-                height: imageSize.Height * zoom);
-        }
-        else
-        {
-            PaintRect = Rectangle.Empty;
-        }
+                height: imageSize.Height * zoom)
+            : (RectangleF)Rectangle.Empty;
     }
 
 
@@ -278,7 +273,8 @@ public class VirtualDisplay
     /// <returns>A location on the display or an empty point if there's nothing to display</returns>
     public PointF MapImageToDisplay(PointF imageLocation)
     {
-        if (!AnythingToDisplay) { return PointF.Empty; }
+        if (!AnythingToDisplay)
+        { return PointF.Empty; }
 
         var displayLocation = new PointF(
             x: paintRect.X + (paintRect.Width * imageLocation.X / imageSize.Width),
@@ -300,7 +296,8 @@ public class VirtualDisplay
     /// <returns>A location on the image or an empty point if there's nothing to display</returns>
     public PointF MapDisplayToImage(PointF displayLocation)
     {
-        if (!AnythingToDisplay) { return PointF.Empty; }
+        if (!AnythingToDisplay)
+        { return PointF.Empty; }
 
         var imageLocation = new PointF(
             x: (displayLocation.X - paintRect.X) / Zoom,
@@ -324,11 +321,12 @@ public class VirtualDisplay
     /// <returns>A region on the display or an empty rectangle if there's nothing to display</returns>
     public RectangleF MapDisplayToImage(RectangleF displayRect)
     {
-        if (!AnythingToDisplay) { return RectangleF.Empty; }
+        if (!AnythingToDisplay)
+        { return RectangleF.Empty; }
 
         var bottomRight = new PointF(displayRect.Right, displayRect.Bottom);
-        var imageTopLeft = MapDisplayToImage(displayRect.Location);
-        var imageBottomRight = MapDisplayToImage(bottomRight);
+        PointF imageTopLeft = MapDisplayToImage(displayRect.Location);
+        PointF imageBottomRight = MapDisplayToImage(bottomRight);
 
         var imageRect = RectangleF.FromLTRB(
             left: imageTopLeft.X,
@@ -347,7 +345,7 @@ public class VirtualDisplay
     /// </summary>
     public void ActualSizeCentred()
     {
-        if (AnythingToDisplay && (mode == BitmapDisplayMode.Free))
+        if (AnythingToDisplay && (Mode == BitmapDisplayMode.Free))
         {
             ForceActualSizeCentred();
         }
@@ -372,7 +370,7 @@ public class VirtualDisplay
     /// </summary>
     public void Centre()
     {
-        if (AnythingToDisplay && (mode == BitmapDisplayMode.Free))
+        if (AnythingToDisplay && (Mode == BitmapDisplayMode.Free))
         {
             ForceCentre();
         }
@@ -399,7 +397,7 @@ public class VirtualDisplay
     /// </summary>
     public void FitToWindowCentred()
     {
-        if (AnythingToDisplay && (mode == BitmapDisplayMode.Free))
+        if (AnythingToDisplay && (Mode == BitmapDisplayMode.Free))
         {
             ForceFitToWindowCentred();
         }
@@ -412,18 +410,11 @@ public class VirtualDisplay
     /// </summary>
     private void ForceFitToWindowCentred()
     {
-        var imageToDisplayHorizRatio = (double)imageSize.Width / displaySize.Width;
-        var imageToDisplayVerticalRatio = (double)imageSize.Height / displaySize.Height;
-        var shouldMaximiseHeight = (imageToDisplayHorizRatio < imageToDisplayVerticalRatio);
+        double imageToDisplayHorizRatio = (double)imageSize.Width / displaySize.Width;
+        double imageToDisplayVerticalRatio = (double)imageSize.Height / displaySize.Height;
+        bool shouldMaximiseHeight = imageToDisplayHorizRatio < imageToDisplayVerticalRatio;
 
-        if (shouldMaximiseHeight)
-        {
-            zoom = (float)displaySize.Height / imageSize.Height;
-        }
-        else
-        {
-            zoom = (float)displaySize.Width / imageSize.Width;
-        }
+        zoom = shouldMaximiseHeight ? (float)displaySize.Height / imageSize.Height : (float)displaySize.Width / imageSize.Width;
 
         ForceCentre();
     }
@@ -443,11 +434,12 @@ public class VirtualDisplay
     /// <returns>A rectangle on the display or an empty rectangle if there's nothing to display</returns>
     public RectangleF MapImageToDisplay(RectangleF imageRect)
     {
-        if (!AnythingToDisplay) { return RectangleF.Empty; }
+        if (!AnythingToDisplay)
+        { return RectangleF.Empty; }
 
         var bottomRight = new PointF(imageRect.Right, imageRect.Bottom);
-        var displayTopLeft = MapImageToDisplay(imageRect.Location);
-        var displayBottomRight = MapImageToDisplay(bottomRight);
+        PointF displayTopLeft = MapImageToDisplay(imageRect.Location);
+        PointF displayBottomRight = MapImageToDisplay(bottomRight);
 
         var displayRect = RectangleF.FromLTRB(
             left: displayTopLeft.X,
@@ -468,10 +460,5 @@ public class VirtualDisplay
     /// <returns>
     /// Distance in display units, or 0 if there's nothing to display
     /// </returns>
-    public float MapImageToDisplay(float imageDistance)
-    {
-        if (!AnythingToDisplay) { return 0; }
-
-        return imageDistance * zoom;
-    }
+    public float MapImageToDisplay(float imageDistance) => !AnythingToDisplay ? 0 : imageDistance * zoom;
 }

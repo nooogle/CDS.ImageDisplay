@@ -1,7 +1,7 @@
-using CDS.ImageDisplay.Overlays;
-using CDS.ImageDisplay.Utils;
 using System.ComponentModel;
 using System.Drawing;
+using CDS.ImageDisplay.Overlays;
+using CDS.ImageDisplay.Utils;
 
 namespace CDS.ImageDisplay.Demo.DemoForms.OverlaysDemo;
 

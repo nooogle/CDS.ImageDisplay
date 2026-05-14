@@ -48,18 +48,19 @@ public class LineShape
         ArgumentNullException.ThrowIfNull(sender, nameof(sender));
         ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
         ArgumentNullException.ThrowIfNull(drawingSpec, nameof(drawingSpec));
-        if (!drawingSpec.Visible) { return; }
+        if (!drawingSpec.Visible)
+        { return; }
 
-        var pen = DrawingToolsPool.GetPen(drawingSpec.Lines);
+        Pen pen = DrawingToolsPool.GetPen(drawingSpec.Lines);
 
-        var startOnDisplay = 
-            drawingSpec.MappingMode == MappingMode.ImageToDisplay ? 
-            sender.MapImageToDisplay(Start, pixelAdjust: PixelAlign) : 
+        PointF startOnDisplay =
+            drawingSpec.MappingMode == MappingMode.ImageToDisplay ?
+            sender.MapImageToDisplay(Start, pixelAdjust: PixelAlign) :
             Start;
-        
-        var endOnDisplay = 
-            drawingSpec.MappingMode == MappingMode.ImageToDisplay ? 
-            sender.MapImageToDisplay(End, pixelAdjust: PixelAlign) : 
+
+        PointF endOnDisplay =
+            drawingSpec.MappingMode == MappingMode.ImageToDisplay ?
+            sender.MapImageToDisplay(End, pixelAdjust: PixelAlign) :
             End;
 
         graphics.DrawLine(pen, startOnDisplay, endOnDisplay);

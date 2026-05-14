@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using CDS.ImageDisplay.BitmapDisplay;
 using CDS.ImageDisplay.Utils;
 
@@ -60,29 +61,30 @@ public class EllipseShape
         ArgumentNullException.ThrowIfNull(sender, nameof(sender));
         ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
         ArgumentNullException.ThrowIfNull(drawing, nameof(drawing));
-        if (!drawing.Visible) { return; }
+        if (!drawing.Visible)
+        { return; }
 
-        var pen = DrawingToolsPool.GetPen(drawing.Lines);
-        var brush = DrawingToolsPool.GetBrush(drawing.Fill);
+        Pen pen = DrawingToolsPool.GetPen(drawing.Lines);
+        Brush brush = DrawingToolsPool.GetBrush(drawing.Fill);
 
         // Save the current state of the Graphics object
-        var state = graphics.Save();
+        GraphicsState state = graphics.Save();
 
         try
         {
-            var centreOnDisplay =
+            PointF centreOnDisplay =
                 drawing.MappingMode == MappingMode.ImageToDisplay ?
                 sender.MapImageToDisplay(Centre, PixelAlign) :
                 Centre;
-            
-            var majorAxisOnDisplay =
+
+            float majorAxisOnDisplay =
                 drawing.MappingMode == MappingMode.ImageToDisplay ?
                 sender.MapImageToDisplay(MajorAxis) :
                 MajorAxis;
 
-            var minorAxisOnDisplay = 
-                drawing.MappingMode == MappingMode.ImageToDisplay ? 
-                sender.MapImageToDisplay(MinorAxis) : 
+            float minorAxisOnDisplay =
+                drawing.MappingMode == MappingMode.ImageToDisplay ?
+                sender.MapImageToDisplay(MinorAxis) :
                 MinorAxis;
 
             // Translate to the center of the ellipse

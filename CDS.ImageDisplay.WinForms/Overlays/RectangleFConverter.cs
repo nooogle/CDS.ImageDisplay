@@ -18,10 +18,7 @@ public class RectangleFConverter : ExpandableObjectConverter
     /// <param name="context">An <see cref="ITypeDescriptorContext"/> that provides a format context.</param>
     /// <param name="destinationType">A <see cref="Type"/> that represents the type you want to convert to.</param>
     /// <returns><c>true</c> if this converter can perform the conversion; otherwise, <c>false</c>.</returns>
-    public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
-    {
-        return destinationType == typeof(string) || base.CanConvertTo(context, destinationType);
-    }
+    public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType) => destinationType == typeof(string) || base.CanConvertTo(context, destinationType);
 
     /// <summary>
     /// Converts the given value object to the specified type, using the specified context and culture information.
@@ -34,11 +31,9 @@ public class RectangleFConverter : ExpandableObjectConverter
     /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
     public override object? ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, object? value, Type destinationType)
     {
-        if (destinationType == typeof(string) && value is RectangleF rect)
-        {
-            return FormattableString.Invariant($"{rect.X}, {rect.Y}, {rect.Width}, {rect.Height}");
-        }
-        return base.ConvertTo(context, culture, value, destinationType);
+        return destinationType == typeof(string) && value is RectangleF rect
+            ? FormattableString.Invariant($"{rect.X}, {rect.Y}, {rect.Width}, {rect.Height}")
+            : base.ConvertTo(context, culture, value, destinationType);
     }
 
     /// <summary>
@@ -47,10 +42,7 @@ public class RectangleFConverter : ExpandableObjectConverter
     /// <param name="context">An <see cref="ITypeDescriptorContext"/> that provides a format context.</param>
     /// <param name="sourceType">A <see cref="Type"/> that represents the type you want to convert from.</param>
     /// <returns><c>true</c> if this converter can perform the conversion; otherwise, <c>false</c>.</returns>
-    public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
-    {
-        return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
-    }
+    public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType) => sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
 
     /// <summary>
     /// Converts the given object to the type of this converter, using the specified context and culture information.
@@ -64,7 +56,7 @@ public class RectangleFConverter : ExpandableObjectConverter
     {
         if (value is string s)
         {
-            var parts = s.Split(',');
+            string[] parts = s.Split(',');
             if (parts.Length == 4 &&
                 float.TryParse(parts[0], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float x) &&
                 float.TryParse(parts[1], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float y) &&

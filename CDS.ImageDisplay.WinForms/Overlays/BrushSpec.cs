@@ -28,29 +28,19 @@ public class BrushSpec
     /// <summary>
     /// Returns a hash code for this instance.
     /// </summary>
-    public override int GetHashCode()
-    {
-        return Color.GetHashCode();
-    }
+    public override int GetHashCode() => Color.GetHashCode();
 
 
     /// <summary>
     /// Determines whether the specified object is equal to the current object.
     /// </summary>
-    public override bool Equals(object? obj)
-    {
-        if (obj is not BrushSpec other) return false;
-        return Color == other.Color;
-    }
+    public override bool Equals(object? obj) => obj is BrushSpec other && Color == other.Color;
 
 
     /// <summary>
     /// Creates a brush from this specification.
     /// </summary>
-    public Brush Create()
-    {
-        return new SolidBrush(Color);
-    }
+    public Brush Create() => new SolidBrush(Color);
 
     /// <summary>
     /// Returns a shallow copy suitable for use as a stable dictionary key.

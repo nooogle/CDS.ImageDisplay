@@ -1,7 +1,7 @@
-using CDS.ImageDisplay.BitmapDisplay;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using CDS.ImageDisplay.BitmapDisplay;
 
 namespace CDS.ImageDisplay.Demo.OpenCVSharpExtras;
 
@@ -38,10 +38,10 @@ namespace CDS.ImageDisplay.Demo.OpenCVSharpExtras;
 /// </remarks>
 public class MatImageSource : IImageSource
 {
-    private OpenCvSharp.Mat? mat;
-    private PixelFormat pixelFormat = PixelFormat.Undefined;
+    private readonly OpenCvSharp.Mat? mat;
+    private readonly PixelFormat pixelFormat = PixelFormat.Undefined;
 
-    bool IImageSource.IsImageAvailable => (mat != null);
+    bool IImageSource.IsImageAvailable => mat != null;
 
     int IImageSource.Stride => (mat == null) ? 0 : (int)mat.Step();
 

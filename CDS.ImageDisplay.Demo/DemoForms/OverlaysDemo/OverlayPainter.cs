@@ -1,45 +1,43 @@
-using CDS.ImageDisplay.BitmapDisplay;
-using System;
 using System.Drawing;
+using CDS.ImageDisplay.BitmapDisplay;
 
-namespace CDS.ImageDisplay.Demo.DemoForms.OverlaysDemo
+namespace CDS.ImageDisplay.Demo.DemoForms.OverlaysDemo;
+
+
+internal class OverlayPainter
 {
-
-    internal class OverlayPainter
+    public void Paint(BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, OverlayShapes shapes, OverlayDrawingSpecs overlaySettings)
     {
-        public void Paint(BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, OverlayShapes shapes, OverlayDrawingSpecs overlaySettings)
+        PaintShapes(bitmapDisplayPanel, graphics, shapes, overlaySettings);
+        PaintFloatingBubbles(bitmapDisplayPanel, graphics, shapes.Bubbles, overlaySettings.Bubbles);
+    }
+
+    private void PaintFloatingBubbles(BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, Bubble[] bubbles, Overlays.DrawingSpec drawingSpec)
+    {
+        foreach (Bubble bubble in bubbles)
         {
-            PaintShapes(bitmapDisplayPanel, graphics, shapes, overlaySettings);
-            PaintFloatingBubbles(bitmapDisplayPanel, graphics, shapes.Bubbles, overlaySettings.Bubbles);
+            bubble.Draw(bitmapDisplayPanel, graphics, drawingSpec);
         }
+    }
 
-        private void PaintFloatingBubbles(BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, Bubble[] bubbles, Overlays.DrawingSpec drawingSpec)
-        {
-            foreach (var bubble in bubbles)
-            {
-                bubble.Draw(bitmapDisplayPanel, graphics, drawingSpec);
-            }
-        }
+    private static void PaintShapes(BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, OverlayShapes shapes, OverlayDrawingSpecs overlaySettings)
+    {
+        shapes.Rectangle1.Draw(bitmapDisplayPanel, graphics, overlaySettings.Rectangles);
+        shapes.Rectangle2.Draw(bitmapDisplayPanel, graphics, overlaySettings.Rectangles);
 
-        private static void PaintShapes(BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, OverlayShapes shapes, OverlayDrawingSpecs overlaySettings)
-        {
-            shapes.Rectangle1.Draw(bitmapDisplayPanel, graphics, overlaySettings.Rectangles);
-            shapes.Rectangle2.Draw(bitmapDisplayPanel, graphics, overlaySettings.Rectangles);
+        shapes.CrossHairShape.Draw(bitmapDisplayPanel, graphics, overlaySettings.CrossHair);
 
-            shapes.CrossHairShape.Draw(bitmapDisplayPanel, graphics, overlaySettings.CrossHair);
+        shapes.EllipseShape.Draw(bitmapDisplayPanel, graphics, overlaySettings.Ellipses);
 
-            shapes.EllipseShape.Draw(bitmapDisplayPanel, graphics, overlaySettings.Ellipses);
+        shapes.Line1.Draw(bitmapDisplayPanel, graphics, overlaySettings.Lines);
+        shapes.Line2.Draw(bitmapDisplayPanel, graphics, overlaySettings.Lines);
 
-            shapes.Line1.Draw(bitmapDisplayPanel, graphics, overlaySettings.Lines);
-            shapes.Line2.Draw(bitmapDisplayPanel, graphics, overlaySettings.Lines);
+        shapes.Text1.Draw(bitmapDisplayPanel, graphics, overlaySettings.Text);
+        shapes.Text2.Draw(bitmapDisplayPanel, graphics, overlaySettings.Text);
 
-            shapes.Text1.Draw(bitmapDisplayPanel, graphics, overlaySettings.Text);
-            shapes.Text2.Draw(bitmapDisplayPanel, graphics, overlaySettings.Text);
+        shapes.Circle1.Draw(bitmapDisplayPanel, graphics, overlaySettings.Circles);
+        shapes.Circle2.Draw(bitmapDisplayPanel, graphics, overlaySettings.Circles);
 
-            shapes.Circle1.Draw(bitmapDisplayPanel, graphics, overlaySettings.Circles);
-            shapes.Circle2.Draw(bitmapDisplayPanel, graphics, overlaySettings.Circles);
-
-            shapes.PolygonShape.Draw(bitmapDisplayPanel, graphics, overlaySettings.Polygons);
-        }
+        shapes.PolygonShape.Draw(bitmapDisplayPanel, graphics, overlaySettings.Polygons);
     }
 }

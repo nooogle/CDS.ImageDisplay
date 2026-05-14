@@ -24,15 +24,15 @@ public class DrawingToolsPool : IDisposable
     public const int MaxCacheSize = 100;
 
     private static readonly Lazy<DrawingToolsPool> instance =
-        new Lazy<DrawingToolsPool>(() => new DrawingToolsPool(), LazyThreadSafetyMode.ExecutionAndPublication);
+        new(() => new DrawingToolsPool(), LazyThreadSafetyMode.ExecutionAndPublication);
 
-    private readonly Dictionary<PenSpec, Pen> penCache = new();
+    private readonly Dictionary<PenSpec, Pen> penCache = [];
     private readonly LinkedList<PenSpec> penOrder = new();
 
-    private readonly Dictionary<BrushSpec, Brush> brushCache = new();
+    private readonly Dictionary<BrushSpec, Brush> brushCache = [];
     private readonly LinkedList<BrushSpec> brushOrder = new();
 
-    private readonly Dictionary<FontSpec, Font> fontCache = new();
+    private readonly Dictionary<FontSpec, Font> fontCache = [];
     private readonly LinkedList<FontSpec> fontOrder = new();
 
     private DrawingToolsPool() { }
@@ -56,9 +56,9 @@ public class DrawingToolsPool : IDisposable
     {
         EnsureOnUIThread();
 
-        if (!instance.Value.penCache.TryGetValue(description, out var pen))
+        if (!instance.Value.penCache.TryGetValue(description, out Pen? pen))
         {
-            var key = description.Clone();
+            PenSpec key = description.Clone();
             pen = description.Create();
             EvictIfNeeded(instance.Value.penCache, instance.Value.penOrder);
             instance.Value.penCache[key] = pen;
@@ -75,9 +75,9 @@ public class DrawingToolsPool : IDisposable
     {
         EnsureOnUIThread();
 
-        if (!instance.Value.brushCache.TryGetValue(description, out var brush))
+        if (!instance.Value.brushCache.TryGetValue(description, out Brush? brush))
         {
-            var key = description.Clone();
+            BrushSpec key = description.Clone();
             brush = description.Create();
             EvictIfNeeded(instance.Value.brushCache, instance.Value.brushOrder);
             instance.Value.brushCache[key] = brush;
@@ -94,9 +94,9 @@ public class DrawingToolsPool : IDisposable
     {
         EnsureOnUIThread();
 
-        if (!instance.Value.fontCache.TryGetValue(description, out var font))
+        if (!instance.Value.fontCache.TryGetValue(description, out Font? font))
         {
-            var key = description.Clone();
+            FontSpec key = description.Clone();
             font = description.Create();
             EvictIfNeeded(instance.Value.fontCache, instance.Value.fontOrder);
             instance.Value.fontCache[key] = font;
@@ -112,7 +112,7 @@ public class DrawingToolsPool : IDisposable
     {
         if (cache.Count >= MaxCacheSize)
         {
-            var oldest = order.First!.Value;
+            TSpec oldest = order.First!.Value;
             cache[oldest].Dispose();
             cache.Remove(oldest);
             order.RemoveFirst();
@@ -126,18 +126,27 @@ public class DrawingToolsPool : IDisposable
     {
         EnsureOnUIThread();
 
-        foreach (var pen in instance.Value.penCache.Values)
+        foreach (Pen pen in instance.Value.penCache.Values)
+        {
             pen.Dispose();
+        }
+
         instance.Value.penCache.Clear();
         instance.Value.penOrder.Clear();
 
-        foreach (var brush in instance.Value.brushCache.Values)
+        foreach (Brush brush in instance.Value.brushCache.Values)
+        {
             brush.Dispose();
+        }
+
         instance.Value.brushCache.Clear();
         instance.Value.brushOrder.Clear();
 
-        foreach (var font in instance.Value.fontCache.Values)
+        foreach (Font font in instance.Value.fontCache.Values)
+        {
             font.Dispose();
+        }
+
         instance.Value.fontCache.Clear();
         instance.Value.fontOrder.Clear();
     }
