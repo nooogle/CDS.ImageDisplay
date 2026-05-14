@@ -1,61 +1,58 @@
 using System.Drawing;
 
-namespace CDS.ImageDisplay.BitmapDisplay
-{
-    /// <summary>
-    /// Callback delegate for getting an image
-    /// </summary>
-    /// <param name="sender">Sender of the callback</param>
-    /// <returns>An image or null if none is available</returns>
-    public delegate Image GetImageCallback(BitmapDisplayPanel sender);
+namespace CDS.ImageDisplay.BitmapDisplay;
 
 
-    /// <summary>
-    /// Callback delegate
-    /// </summary>
-    /// <param name="sender">Callback sender</param>
-    /// <param name="paintRect">New paint rectangle</param>
-    public delegate void OnPaintRectChangedCallback(VirtualDisplay sender, RectangleF paintRect);
+/// <summary>
+/// Callback delegate for getting an image
+/// </summary>
+/// <param name="sender">Sender of the callback</param>
+/// <returns>An image or null if none is available</returns>
+public delegate Image GetImageCallback(BitmapDisplayPanel sender);
 
 
-    /// <summary>
-    /// Callback delegate
-    /// </summary>
-    /// <param name="sender">Callback sender</param>
-    public delegate void PaintRectChangedEvent(BitmapDisplayPanel sender);
+/// <summary>
+/// Callback delegate
+/// </summary>
+/// <param name="sender">Callback sender</param>
+/// <param name="paintRect">New paint rectangle</param>
+public delegate void OnPaintRectChangedCallback(VirtualDisplay sender, RectangleF paintRect);
 
 
-    /// <summary>
-    /// Event delegate
-    /// </summary>
-    /// <param name="sender">Event sender</param>
-    /// <param name="graphics">For drawing</param>
-    public delegate void PaintOverEvent(BitmapDisplayPanel sender, Graphics graphics);
+/// <summary>
+/// Callback delegate
+/// </summary>
+/// <param name="sender">Callback sender</param>
+public delegate void PaintRectChangedEvent(BitmapDisplayPanel sender);
 
 
-    /// <summary>
-    /// Event delegate
-    /// </summary>
-    /// <param name="sender">Event sender</param>
-    /// <param name="graphics">For drawing</param>
-    public delegate void PaintUnderEvent(BitmapDisplayPanel sender, Graphics graphics);
+/// <summary>
+/// Event delegate
+/// </summary>
+/// <param name="sender">Event sender</param>
+/// <param name="graphics">For drawing</param>
+public delegate void PaintOverEvent(BitmapDisplayPanel sender, Graphics graphics);
 
 
-    /// <summary>
-    /// Event delegate
-    /// </summary>
-    /// <param name="sender">Event sender</param>
-    public delegate void ModeChangedEvent(BitmapDisplayPanel sender);
+/// <summary>
+/// Event delegate
+/// </summary>
+/// <param name="sender">Event sender</param>
+/// <param name="graphics">For drawing</param>
+public delegate void PaintUnderEvent(BitmapDisplayPanel sender, Graphics graphics);
 
 
-    /// <summary>
-    /// Event delegate
-    /// </summary>
-    /// <param name="newSize">New size</param>
-    /// <param name="oldSize">Old size</param>
-    /// <param name="sender">Event sender</param>
-    public delegate void OnImageSizeChangedEvent(BitmapDisplayPanel sender, Size oldSize, Size newSize);
+/// <summary>
+/// Event delegate
+/// </summary>
+/// <param name="sender">Event sender</param>
+public delegate void ModeChangedEvent(BitmapDisplayPanel sender);
 
 
-    //public delegate void OnKeyDownKeyEventArgs e
-}
+/// <summary>
+/// Event delegate
+/// </summary>
+/// <param name="newSize">New size</param>
+/// <param name="oldSize">Old size</param>
+/// <param name="sender">Event sender</param>
+public delegate void OnImageSizeChangedEvent(BitmapDisplayPanel sender, Size oldSize, Size newSize);

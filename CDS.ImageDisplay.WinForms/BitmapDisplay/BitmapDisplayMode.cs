@@ -1,27 +1,26 @@
-namespace CDS.ImageDisplay.BitmapDisplay
+namespace CDS.ImageDisplay.BitmapDisplay;
+
+/// <summary>
+/// Bitmap display modes
+/// </summary>
+public enum BitmapDisplayMode
 {
     /// <summary>
-    /// Bitmap display modes
+    /// Centre the image and make as large as possible within the bounds of the display
     /// </summary>
-    public enum BitmapDisplayMode
-    {
-        /// <summary>
-        /// Centre the image and make as large as possible within the bounds of the display
-        /// </summary>
-        FitToWindowCentred,
+    FitToWindowCentred,
 
 
-        /// <summary>
-        /// Centre the image and set to the zoom to 1
-        /// </summary>
-        ActualSizeCentred,
+    /// <summary>
+    /// Centre the image and set to the zoom to 1
+    /// </summary>
+    ActualSizeCentred,
 
 
-        /// <summary>
-        /// Allow the image zoom and location to change, either programmatically or
-        /// via the mouse. The <see cref="BitmapDisplayPanel.TargetImageCentre"/> is reset
-        /// if the image size changes.
-        /// </summary>
-        Free,
-    }
+    /// <summary>
+    /// Allow the image zoom and location to change, either programmatically or
+    /// via the mouse. The <see cref="BitmapDisplayPanel.TargetImageCentre"/> is reset
+    /// if the image size changes.
+    /// </summary>
+    Free,
 }
