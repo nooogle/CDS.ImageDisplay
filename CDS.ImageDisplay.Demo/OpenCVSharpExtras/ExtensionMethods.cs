@@ -13,7 +13,7 @@ public static class ExtensionMethods
     /// <remarks>
     /// This method wraps the <paramref name="mat"/> in a <see cref="MatImageSource"/> adapter and
     /// passes it to <see cref="BitmapDisplayPanel.SetImage"/>, allowing an OpenCV image to be
-    /// rendered without any intermediate copy or conversion.
+    /// rendered without conversion; note that the control itself will retain a copy of the image data.
     /// </remarks>
     /// <param name="bitmapDisplay">The <see cref="BitmapDisplayPanel"/> on which to display the image.</param>
     /// <param name="mat">The <see cref="OpenCvSharp.Mat"/> image to display.</param>
