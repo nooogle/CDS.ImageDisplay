@@ -16,8 +16,9 @@ namespace CDS.ImageDisplay.Demo.OpenCVSharpExtras;
 /// interface rather than directly consuming framework-specific types such as
 /// <see cref="OpenCvSharp.Mat"/>. <see cref="MatImageSource"/> bridges that gap by wrapping a
 /// <see cref="OpenCvSharp.Mat"/> and exposing its raw pixel data through
-/// <see cref="IImageSource"/>, allowing OpenCV images to be rendered without any intermediate
-/// copy or conversion.
+/// <see cref="IImageSource"/> in a format the control can consume for supported image types,
+/// avoiding additional format conversion in this adapter even though the control still copies
+/// the image into its own backing bitmap.
 /// </para>
 /// <para>
 /// For the most convenient way to display an OpenCV image, use the
