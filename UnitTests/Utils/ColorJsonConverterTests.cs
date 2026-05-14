@@ -1,12 +1,10 @@
+using System.Drawing;
+using System.Text.Json;
 using AwesomeAssertions;
-
 using CDS.ImageDisplay.Overlays;
 using CDS.ImageDisplay.Utils;
 
-using System.Drawing;
-using System.Text.Json;
-
-namespace CDS.ImageDisplay.WinFormsTests.Utils;
+namespace UnitTests.Utils;
 
 [TestClass]
 public partial class ColorJsonConverterTests
@@ -23,10 +21,10 @@ public partial class ColorJsonConverterTests
         };
 
         // Act
-        var json = JsonSerializer.Serialize(spec, JsonSerializerOptions);
+        string json = JsonSerializer.Serialize(spec, JsonSerializerOptions);
 
         // Bundle
-        var expectedFragment = "\"Color\":\"Red\"";
+        string expectedFragment = "\"Color\":\"Red\"";
 
         // Verify
         json.Should().Contain(expectedFragment);
@@ -42,10 +40,10 @@ public partial class ColorJsonConverterTests
         };
 
         // Act
-        var json = JsonSerializer.Serialize(spec, JsonSerializerOptions);
+        string json = JsonSerializer.Serialize(spec, JsonSerializerOptions);
 
         // Bundle
-        var expectedFragment = "\"Color\":\"#40000080\"";
+        string expectedFragment = "\"Color\":\"#40000080\"";
 
         // Verify
         json.Should().Contain(expectedFragment);
@@ -58,7 +56,7 @@ public partial class ColorJsonConverterTests
         const string json = "{\"Color\":\"Orange\",\"Width\":1,\"DashStyle\":0,\"StartCap\":0,\"EndCap\":0}";
 
         // Act
-        var spec = JsonSerializer.Deserialize<PenSpec>(json, JsonSerializerOptions);
+        PenSpec? spec = JsonSerializer.Deserialize<PenSpec>(json, JsonSerializerOptions);
 
         // Bundle
         var result = new
@@ -70,7 +68,7 @@ public partial class ColorJsonConverterTests
 
         var expected = new
         {
-            Name = Color.Orange.Name,
+            Color.Orange.Name,
             Argb = Color.Orange.ToArgb(),
             IsNamedColor = true,
         };
@@ -86,7 +84,7 @@ public partial class ColorJsonConverterTests
         const string json = "{\"Color\":\"#40FF0000\"}";
 
         // Act
-        var spec = JsonSerializer.Deserialize<BrushSpec>(json, JsonSerializerOptions);
+        BrushSpec? spec = JsonSerializer.Deserialize<BrushSpec>(json, JsonSerializerOptions);
 
         // Bundle
         var expected = Color.FromArgb(64, Color.Red);
@@ -103,7 +101,7 @@ public partial class ColorJsonConverterTests
         const string json = "{\"Color\":{\"R\":255,\"G\":0,\"B\":0,\"A\":64,\"IsKnownColor\":false,\"IsEmpty\":false,\"IsNamedColor\":false,\"IsSystemColor\":false,\"Name\":\"40ff0000\"}}";
 
         // Act
-        var spec = JsonSerializer.Deserialize<BrushSpec>(json, JsonSerializerOptions);
+        BrushSpec? spec = JsonSerializer.Deserialize<BrushSpec>(json, JsonSerializerOptions);
 
         // Bundle
         var expected = Color.FromArgb(64, Color.Red);
@@ -123,7 +121,7 @@ public partial class ColorJsonConverterTests
         Action action = () => JsonSerializer.Deserialize<BrushSpec>(json, JsonSerializerOptions);
 
         // Bundle
-        var expectedMessageFragment = "not a valid Color value";
+        string expectedMessageFragment = "not a valid Color value";
 
         // Verify
         action.Should().Throw<JsonException>()

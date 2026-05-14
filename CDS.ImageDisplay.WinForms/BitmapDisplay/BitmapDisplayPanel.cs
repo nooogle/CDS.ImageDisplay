@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace CDS.ImageDisplay.BitmapDisplay;
@@ -12,15 +13,15 @@ namespace CDS.ImageDisplay.BitmapDisplay;
 /// </summary>
 public partial class BitmapDisplayPanel : UserControl
 {
-    private const string categoryCDS = "CDS";
+    private const string s_categoryCDS = "CDS";
 
-    private ImageWrapper _displayImage = new();
-    private ImageWrapper _pendingDisplayImage = new();
-    private readonly object _imageLock = new();
-    private VirtualDisplay _virtualDisplay;
-    private Stopwatch _stopwatch = new();
-    private DragManager _dragManager;
-    private ZoomManager _zoomManager;
+    private readonly ImageWrapper _displayImage = new();
+    private readonly ImageWrapper _pendingDisplayImage = new();
+    private readonly Lock _imageLock = new();
+    private readonly VirtualDisplay _virtualDisplay;
+    private readonly Stopwatch _stopwatch = new();
+    private readonly DragManager _dragManager;
+    private readonly ZoomManager _zoomManager;
     private bool _isWaitingToApplyPendingImage;
 
 
@@ -46,7 +47,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    [Category(categoryCDS)]
+    [Category(s_categoryCDS)]
     public BitmapDisplayMetrics TimingMetrics { get; } = new();
 
 
@@ -64,7 +65,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </remarks>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    [Category(categoryCDS)]
+    [Category(s_categoryCDS)]
     public SizeF SizeOfHalfDisplayPixel => _virtualDisplay.SizeOfHalfDisplayPixel;
 
 
@@ -73,7 +74,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    [Category(categoryCDS)]
+    [Category(s_categoryCDS)]
     public Size ImageSize => _virtualDisplay.ImageSize;
 
 
@@ -83,7 +84,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    [Category(categoryCDS)]
+    [Category(s_categoryCDS)]
     public RectangleF PaintRect => _virtualDisplay.PaintRect;
 
 
@@ -92,7 +93,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// to paint graphics on top of the image. This will be flicker-free as long
     /// as the control uses double buffering
     /// </summary>
-    [Category(categoryCDS)]
+    [Category(s_categoryCDS)]
     [Description(
         "Called when the image has been painted; gives a client an opportunity " +
         "to paint flicker-free graphics on top of the image.")]
@@ -104,7 +105,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// gives a client an opportunity to paint graphics under the image. 
     /// This will be flicker-free as long as the control uses double buffering
     /// </summary>
-    [Category(categoryCDS)]
+    [Category(s_categoryCDS)]
     [Description(
         "Called afer the background has been painted and before the image been painted; " +
         "to paint flicker-free graphics under of the image.")]
@@ -114,7 +115,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// <summary>
     /// Called when the display mode is changed.
     /// </summary>
-    [Category(categoryCDS)]
+    [Category(s_categoryCDS)]
     [Description("Called when the display mode is changed.")]
     public event ModeChangedEvent? OnDisplayModeChanged;
 
@@ -122,7 +123,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// <summary>
     /// Fired when the paint rectangle of the display is changed
     /// </summary>
-    [Category(categoryCDS)]
+    [Category(s_categoryCDS)]
     [Description("Called when the paint rectangle is changed.")]
     public event PaintRectChangedEvent? OnPaintRectChanged;
 
@@ -142,7 +143,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// use this method with caution since it's more of a diagnostics 
     /// tool than for sharing image data.
     /// </remarks>
-    [Category(categoryCDS)]
+    [Category(s_categoryCDS)]
     public Bitmap? GetDisplayImage() => _displayImage.Image;
 
 
@@ -159,7 +160,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// When called on a non-UI thread this returns immediately; it will be a small
     /// amout of time later that the image is finally set as the display image.
     /// </remarks>
-    [Category(categoryCDS)]
+    [Category(s_categoryCDS)]
     public void SetImage(IImageSource? imageSource)
     {
         lock (_imageLock)
@@ -189,7 +190,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// When called on a non-UI thread this returns immediately; it will be a small
     /// amout of time later that the image is finally set as the display image.
     /// </remarks>
-    [Category(categoryCDS)]
+    [Category(s_categoryCDS)]
     public void SetImage(Bitmap? image)
     {
         using var imageSource = new BitmapImageSource(image);
@@ -212,7 +213,8 @@ public partial class BitmapDisplayPanel : UserControl
         // don't post another one — the existing callback will use the image
         // we just stored above. This keeps at most one callback pending,
         // preventing message-loop buildup regardless of input frame rate.
-        if (_isWaitingToApplyPendingImage) { return; }
+        if (_isWaitingToApplyPendingImage)
+        { return; }
 
         _isWaitingToApplyPendingImage = true;
 
@@ -266,10 +268,7 @@ public partial class BitmapDisplayPanel : UserControl
             _displayImage?.Dispose();
             _pendingDisplayImage?.Dispose();
 
-            if (components != null)
-            {
-                components.Dispose();
-            }
+            components?.Dispose();
         }
 
         base.Dispose(disposing);
@@ -281,14 +280,14 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    [Category(categoryCDS)]
+    [Category(s_categoryCDS)]
     public bool AnythingToDisplay => _virtualDisplay.AnythingToDisplay;
 
 
     /// <summary>
     /// The image display mode
     /// </summary>
-    [Category(categoryCDS)]
+    [Category(s_categoryCDS)]
     [Description("The image display mode")]
     [DefaultValue(BitmapDisplayMode.FitToWindowCentred)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
@@ -324,7 +323,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    [Category(categoryCDS)]
+    [Category(s_categoryCDS)]
     public PointF TargetImageCentre
     {
         get => _virtualDisplay.TargetImageCentre;
@@ -337,7 +336,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    [Category(categoryCDS)]
+    [Category(s_categoryCDS)]
     public PointF TargetDisplayCentre
     {
         get => _virtualDisplay.TargetDisplayCentre;
@@ -403,7 +402,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// Set/get the zoom level. The limits in the <see cref="Consts"/> class are
     /// used.
     /// </summary>
-    [Category(categoryCDS)]
+    [Category(s_categoryCDS)]
     [DefaultValue(1.0f)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public float Zoom
@@ -434,7 +433,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// <returns>A location on the display or an empty point if there's nothing to display</returns>
     public Point MapImageToDisplay(PointF imageLocation, DisplayPixelAlign pixelAdjust)
     {
-        var displayCoordinate = _virtualDisplay.MapImageToDisplay(imageLocation);
+        PointF displayCoordinate = _virtualDisplay.MapImageToDisplay(imageLocation);
 
         if (pixelAdjust == DisplayPixelAlign.Centre)
         {
@@ -460,7 +459,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// <returns>A region on the display or an empty rectangle if there's nothing to display</returns>
     public Rectangle MapImageToDisplay(RectangleF imageRect, DisplayPixelAlign pixelAdjust)
     {
-        var displayRect = _virtualDisplay.MapImageToDisplay(imageRect);
+        RectangleF displayRect = _virtualDisplay.MapImageToDisplay(imageRect);
 
         if (pixelAdjust == DisplayPixelAlign.Centre)
         {
@@ -481,7 +480,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// <returns>A region on the display or an empty rectangle if there's nothing to display</returns>
     public RectangleF MapImageToDisplayF(RectangleF imageRect, DisplayPixelAlign pixelAdjust)
     {
-        var displayRect = _virtualDisplay.MapImageToDisplay(imageRect);
+        RectangleF displayRect = _virtualDisplay.MapImageToDisplay(imageRect);
 
         if (pixelAdjust == DisplayPixelAlign.Centre)
         {
@@ -583,9 +582,9 @@ public partial class BitmapDisplayPanel : UserControl
     {
         _stopwatch.Restart();
 
-        var clippedDrawingRect = _virtualDisplay.PaintRect;
+        RectangleF clippedDrawingRect = _virtualDisplay.PaintRect;
         clippedDrawingRect.Intersect(ClientRectangle);
-        var shouldPaintBackground = _virtualDisplay.PaintRect.IsEmpty || (e.ClipRectangle != Rectangle.Truncate(clippedDrawingRect));
+        bool shouldPaintBackground = _virtualDisplay.PaintRect.IsEmpty || (e.ClipRectangle != Rectangle.Truncate(clippedDrawingRect));
         if (shouldPaintBackground)
         {
             base.OnPaintBackground(e);
@@ -630,9 +629,10 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     private void PaintBitmap(PaintEventArgs paintEventArgs)
     {
-        if (_displayImage.Image == null) { return; }
+        if (_displayImage.Image == null)
+        { return; }
 
-        var graphicsState = paintEventArgs.Graphics.Save();
+        GraphicsState graphicsState = paintEventArgs.Graphics.Save();
 
         paintEventArgs.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
         paintEventArgs.Graphics.SmoothingMode = SmoothingMode.None;
@@ -668,8 +668,8 @@ public partial class BitmapDisplayPanel : UserControl
 
         if (AnythingToDisplay)
         {
-            var mouseLocationInDisplayUnits = mouseEventArgs.Location;
-            var mouseLocationInImageUnits = MapDisplayToImage(mouseLocationInDisplayUnits);
+            Point mouseLocationInDisplayUnits = mouseEventArgs.Location;
+            PointF mouseLocationInImageUnits = MapDisplayToImage(mouseLocationInDisplayUnits);
 
             _zoomManager.OnMouseWheel(
                 imageDisplayMode: DisplayMode,

@@ -1,11 +1,9 @@
-using AwesomeAssertions;
-
-using CDS.ImageDisplay.Overlays;
-
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using AwesomeAssertions;
+using CDS.ImageDisplay.Overlays;
 
-namespace CDS.ImageDisplay.WinFormsTests.Overlays;
+namespace UnitTests.Overlays;
 
 [TestClass]
 public partial class SpecTests
@@ -24,7 +22,7 @@ public partial class SpecTests
         };
 
         // Act
-        using var pen = spec.Create();
+        using Pen pen = spec.Create();
         var result = new
         {
             pen.Color,
@@ -97,12 +95,12 @@ public partial class SpecTests
         };
 
         // Act
-        using var brush = spec.Create();
+        using Brush brush = spec.Create();
         var solidBrush = brush as SolidBrush;
         var result = new
         {
             BrushType = brush.GetType(),
-            Color = solidBrush!.Color,
+            solidBrush!.Color,
         };
 
         // Bundle
@@ -127,7 +125,7 @@ public partial class SpecTests
         };
 
         // Act
-        using var font = spec.Create();
+        using Font font = spec.Create();
         var result = new
         {
             font.Name,

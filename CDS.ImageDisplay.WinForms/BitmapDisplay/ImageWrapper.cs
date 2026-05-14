@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace CDS.ImageDisplay.BitmapDisplay;
 
@@ -49,7 +50,7 @@ public class ImageWrapper : IDisposable
         }
         else
         {
-            var sameSpecification =
+            bool sameSpecification =
                 (Image.PixelFormat == imageSource.PixelFormat) &&
                 (Image.Size == imageSource.Size);
 
@@ -76,7 +77,7 @@ public class ImageWrapper : IDisposable
 
         if (imageSource.PixelFormat == System.Drawing.Imaging.PixelFormat.Format8bppIndexed)
         {
-            var palette = Image.Palette;
+            ColorPalette palette = Image.Palette;
             for (int index = 0; index < 256; index++)
             {
                 palette.Entries[index] = Color.FromArgb(index, index, index);
@@ -96,15 +97,16 @@ public class ImageWrapper : IDisposable
     /// </summary>
     private void CopyImageBitsIntoExisting(IImageSource imageSource)
     {
-        if (Image == null) { return; }
+        if (Image == null)
+        { return; }
 
         var roi = new Rectangle(0, 0, Image.Width, Image.Height);
 
         //var sourceBits = source.LockBits(roi, System.Drawing.Imaging.ImageLockMode.ReadOnly, source.PixelFormat);
-        var destBits = Image.LockBits(roi, System.Drawing.Imaging.ImageLockMode.WriteOnly, Image.PixelFormat);
+        BitmapData destBits = Image.LockBits(roi, System.Drawing.Imaging.ImageLockMode.WriteOnly, Image.PixelFormat);
 
-        var sourceBytesToCopy = imageSource.Stride * imageSource.Height;
-        var destBytesAvailable = destBits.Stride * destBits.Height;
+        int sourceBytesToCopy = imageSource.Stride * imageSource.Height;
+        int destBytesAvailable = destBits.Stride * destBits.Height;
 
         unsafe
         {

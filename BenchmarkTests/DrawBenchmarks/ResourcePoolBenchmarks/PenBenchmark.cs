@@ -1,14 +1,14 @@
-using BenchmarkDotNet.Attributes;
 using System.Drawing;
+using BenchmarkDotNet.Attributes;
 
 namespace BenchmarkTests.DrawBenchmarks.ResourcePoolBenchmarks;
 
 [MemoryDiagnoser]
 public class PenBenchmark
 {
-    private Pen pen = new Pen(Color.White);
+    private readonly Pen pen = new(Color.White);
 
-    private static readonly CDS.ImageDisplay.Overlays.PenSpec lineSpec1 = new CDS.ImageDisplay.Overlays.PenSpec()
+    private static readonly CDS.ImageDisplay.Overlays.PenSpec lineSpec1 = new()
     {
         Color = Color.RebeccaPurple,
         StartCap = System.Drawing.Drawing2D.LineCap.Round,
@@ -17,7 +17,7 @@ public class PenBenchmark
         Width = 2,
     };
 
-    private static readonly CDS.ImageDisplay.Overlays.PenSpec lineSpec2 = new CDS.ImageDisplay.Overlays.PenSpec()
+    private static readonly CDS.ImageDisplay.Overlays.PenSpec lineSpec2 = new()
     {
         Color = Color.Wheat,
         StartCap = System.Drawing.Drawing2D.LineCap.DiamondAnchor,
@@ -30,17 +30,21 @@ public class PenBenchmark
     [Benchmark(Baseline = true)]
     public void CreateAndDisposePen()
     {
-        var pen = new Pen(color: lineSpec1.Color, width: lineSpec1.Width);
-        pen.DashStyle = lineSpec1.DashStyle;
-        pen.StartCap = lineSpec1.StartCap;
-        pen.EndCap = lineSpec1.EndCap;
+        var pen = new Pen(color: lineSpec1.Color, width: lineSpec1.Width)
+        {
+            DashStyle = lineSpec1.DashStyle,
+            StartCap = lineSpec1.StartCap,
+            EndCap = lineSpec1.EndCap
+        };
         pen.Dispose();
 
-        pen = new Pen(color: lineSpec2.Color, width: lineSpec2.Width);
-        pen.Width = lineSpec2.Width;
-        pen.DashStyle = lineSpec2.DashStyle;
-        pen.StartCap = lineSpec2.StartCap;
-        pen.EndCap = lineSpec2.EndCap;
+        pen = new Pen(color: lineSpec2.Color, width: lineSpec2.Width)
+        {
+            Width = lineSpec2.Width,
+            DashStyle = lineSpec2.DashStyle,
+            StartCap = lineSpec2.StartCap,
+            EndCap = lineSpec2.EndCap
+        };
         pen.Dispose();
     }
 
@@ -48,7 +52,7 @@ public class PenBenchmark
     [Benchmark]
     public void AccessPenFromResourcePool()
     {
-        var pen = CDS.ImageDisplay.Overlays.DrawingToolsPool.GetPen(lineSpec1);
+        Pen pen = CDS.ImageDisplay.Overlays.DrawingToolsPool.GetPen(lineSpec1);
         pen = CDS.ImageDisplay.Overlays.DrawingToolsPool.GetPen(lineSpec1);
     }
 

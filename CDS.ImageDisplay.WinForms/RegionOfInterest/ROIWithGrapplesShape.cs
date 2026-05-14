@@ -27,7 +27,7 @@ public class ROIWithGrapplesShape : ISingleROIDescriptor
     /// <summary>
     /// Cached grapple rectangles.
     /// </summary>
-    private Rectangle[] grappleRectangles = new Rectangle[8];
+    private readonly Rectangle[] grappleRectangles = new Rectangle[8];
 
 
     /// <inheritdoc/>
@@ -87,14 +87,16 @@ public class ROIWithGrapplesShape : ISingleROIDescriptor
     /// <inheritdoc/>
     public void Draw(BitmapDisplayPanel sender, Graphics graphics)
     {
-        if (!Visible) { return; }
-        if (ROI.IsEmpty) { return; }
+        if (!Visible)
+        { return; }
+        if (ROI.IsEmpty)
+        { return; }
 
-        var roiOnDisplay = sender.MapImageToDisplay(ROI, PixelAlign);
+        Rectangle roiOnDisplay = sender.MapImageToDisplay(ROI, PixelAlign);
         RecalculateGrapplesRectangles(roiOnDisplay);
 
-        var pen = DrawingToolsPool.GetPen(Drawing.Lines);
-        var brush = DrawingToolsPool.GetBrush(Drawing.Fill);
+        Pen pen = DrawingToolsPool.GetPen(Drawing.Lines);
+        Brush brush = DrawingToolsPool.GetBrush(Drawing.Fill);
 
         graphics.FillRectangle(brush, roiOnDisplay);
         graphics.DrawRectangle(pen, roiOnDisplay);
@@ -105,11 +107,12 @@ public class ROIWithGrapplesShape : ISingleROIDescriptor
 
     private void DrawGrapples(Graphics graphics, Pen pen, Brush brush)
     {
-        if(!GrapplesVisible) { return; }
+        if (!GrapplesVisible)
+        { return; }
 
         for (int grappleIndex = 0; grappleIndex < grappleRectangles.Length; grappleIndex++)
         {
-            var grappleRect = grappleRectangles[grappleIndex];
+            Rectangle grappleRect = grappleRectangles[grappleIndex];
             graphics.FillEllipse(brush, grappleRect);
             graphics.DrawEllipse(pen, grappleRect);
         }
@@ -121,7 +124,8 @@ public class ROIWithGrapplesShape : ISingleROIDescriptor
     /// </summary>
     private void RecalculateGrapplesRectangles(Rectangle roiOnDisplay)
     {
-        if (lastROIOnDisplay == roiOnDisplay && lastGrappleDiameter == GrappleDiameter) { return; }
+        if (lastROIOnDisplay == roiOnDisplay && lastGrappleDiameter == GrappleDiameter)
+        { return; }
 
         lastROIOnDisplay = roiOnDisplay;
         lastGrappleDiameter = GrappleDiameter;
@@ -130,10 +134,10 @@ public class ROIWithGrapplesShape : ISingleROIDescriptor
         grappleRectangles[1] = CreateGrappleRect(location: new Point(roiOnDisplay.Right, roiOnDisplay.Top));
         grappleRectangles[2] = CreateGrappleRect(location: new Point(roiOnDisplay.Right, roiOnDisplay.Bottom));
         grappleRectangles[3] = CreateGrappleRect(location: new Point(roiOnDisplay.Left, roiOnDisplay.Bottom));
-        grappleRectangles[4] = CreateGrappleRect(location: new Point(roiOnDisplay.Left + roiOnDisplay.Width / 2, roiOnDisplay.Top));
-        grappleRectangles[5] = CreateGrappleRect(location: new Point(roiOnDisplay.Right, roiOnDisplay.Top + roiOnDisplay.Height / 2));
-        grappleRectangles[6] = CreateGrappleRect(location: new Point(roiOnDisplay.Left + roiOnDisplay.Width / 2, roiOnDisplay.Bottom));
-        grappleRectangles[7] = CreateGrappleRect(location: new Point(roiOnDisplay.Left, roiOnDisplay.Top + roiOnDisplay.Height / 2));
+        grappleRectangles[4] = CreateGrappleRect(location: new Point(roiOnDisplay.Left + (roiOnDisplay.Width / 2), roiOnDisplay.Top));
+        grappleRectangles[5] = CreateGrappleRect(location: new Point(roiOnDisplay.Right, roiOnDisplay.Top + (roiOnDisplay.Height / 2)));
+        grappleRectangles[6] = CreateGrappleRect(location: new Point(roiOnDisplay.Left + (roiOnDisplay.Width / 2), roiOnDisplay.Bottom));
+        grappleRectangles[7] = CreateGrappleRect(location: new Point(roiOnDisplay.Left, roiOnDisplay.Top + (roiOnDisplay.Height / 2)));
     }
 
 
@@ -143,8 +147,8 @@ public class ROIWithGrapplesShape : ISingleROIDescriptor
     private Rectangle CreateGrappleRect(Point location)
     {
         return new Rectangle(
-            x: location.X - GrappleDiameter / 2,
-            y: location.Y - GrappleDiameter / 2,
+            x: location.X - (GrappleDiameter / 2),
+            y: location.Y - (GrappleDiameter / 2),
             width: GrappleDiameter,
             height: GrappleDiameter);
     }

@@ -1,7 +1,6 @@
-using System.Collections;
 using System.Drawing;
 
-namespace CDS.ImageDisplay.WinFormsTests.BitmapDisplay;
+namespace UnitTests.BitmapDisplay;
 
 /// <summary>
 /// Provides sample data for fit-to-window layout scenarios.

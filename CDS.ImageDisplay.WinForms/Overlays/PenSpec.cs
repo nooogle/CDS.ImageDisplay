@@ -54,10 +54,7 @@ public class PenSpec
     /// <summary>
     /// Returns a hash code for this instance.
     /// </summary>
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Color, Width, DashStyle, StartCap, EndCap);
-    }
+    public override int GetHashCode() => HashCode.Combine(Color, Width, DashStyle, StartCap, EndCap);
 
 
     /// <summary>
@@ -65,9 +62,7 @@ public class PenSpec
     /// </summary>
     public override bool Equals(object? obj)
     {
-        if (obj is not PenSpec other) return false;
-
-        return Color == other.Color &&
+        return obj is PenSpec other && Color == other.Color &&
                Width == other.Width &&
                DashStyle == other.DashStyle &&
                StartCap == other.StartCap &&

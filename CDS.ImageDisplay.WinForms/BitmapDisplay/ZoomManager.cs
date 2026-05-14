@@ -9,7 +9,7 @@ namespace CDS.ImageDisplay.BitmapDisplay;
 /// </summary>
 internal class ZoomManager
 {
-    private Action<float, PointF, PointF> _setNewZoom;
+    private readonly Action<float, PointF, PointF> _setNewZoom;
 
 
     /// <summary>
@@ -29,18 +29,19 @@ internal class ZoomManager
         PointF mouseLocationInImageUnits,
         MouseEventArgs mouseEventArgs)
     {
-        if ((mouseEventArgs.Delta == 0) || (imageDisplayMode != BitmapDisplayMode.Free)) { return; }
+        if ((mouseEventArgs.Delta == 0) || (imageDisplayMode != BitmapDisplayMode.Free))
+        { return; }
 
-        var change = mouseEventArgs.Delta;
+        int change = mouseEventArgs.Delta;
 
         if (change > 0)
         {
-            var changeFactor = 1.0f + (change / 500.0f);
+            float changeFactor = 1.0f + (change / 500.0f);
             _setNewZoom(currentZoom * changeFactor, mouseLocationInDisplayUnits, mouseLocationInImageUnits);
         }
         else if (change < 0)
         {
-            var changeFactor = 1.0f + (-change / 500.0f);
+            float changeFactor = 1.0f + (-change / 500.0f);
             _setNewZoom(currentZoom / changeFactor, mouseLocationInDisplayUnits, mouseLocationInImageUnits);
         }
     }

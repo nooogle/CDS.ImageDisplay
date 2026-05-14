@@ -9,11 +9,11 @@ namespace CDS.ImageDisplay.BitmapDisplay;
 /// </summary>
 public class BitmapImageSource : IImageSource, IDisposable
 {
-    private Bitmap? bitmap;
-    private BitmapData? imageData;
+    private readonly Bitmap? bitmap;
+    private readonly BitmapData? imageData;
 
 
-    bool IImageSource.IsImageAvailable => (bitmap != null);
+    bool IImageSource.IsImageAvailable => bitmap != null;
 
     int IImageSource.Stride => (imageData == null) ? 0 : imageData.Stride;
 

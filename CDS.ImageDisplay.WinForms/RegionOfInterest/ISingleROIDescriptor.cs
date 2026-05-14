@@ -1,6 +1,5 @@
-using CDS.ImageDisplay.BitmapDisplay;
-using CDS.ImageDisplay.Overlays;
 using System.Drawing;
+using CDS.ImageDisplay.BitmapDisplay;
 
 namespace CDS.ImageDisplay.RegionOfInterest;
 
@@ -13,7 +12,7 @@ public interface ISingleROIDescriptor
     /// <summary>
     /// The region of interest.
     /// </summary>        
-    public Rectangle ROI { get; set; }
+    Rectangle ROI { get; set; }
 
 
     /// <summary>

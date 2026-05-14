@@ -48,13 +48,15 @@ public class TextShape
         ArgumentNullException.ThrowIfNull(sender, nameof(sender));
         ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
         ArgumentNullException.ThrowIfNull(drawing, nameof(drawing));
-        if (!drawing.Visible) { return; }
-        if(string.IsNullOrWhiteSpace(Text)) { return; }
+        if (!drawing.Visible)
+        { return; }
+        if (string.IsNullOrWhiteSpace(Text))
+        { return; }
 
-        var font = DrawingToolsPool.GetFont(drawing.Font);
-        var brush = DrawingToolsPool.GetBrush(drawing.Fill);
+        Font font = DrawingToolsPool.GetFont(drawing.Font);
+        Brush brush = DrawingToolsPool.GetBrush(drawing.Fill);
 
-        var pointOnDisplay =
+        PointF pointOnDisplay =
             drawing.MappingMode == MappingMode.ImageToDisplay ?
             sender.MapImageToDisplay(Location, PixelAlign) :
             Location;

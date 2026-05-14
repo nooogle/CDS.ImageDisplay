@@ -1,0 +1,151 @@
+# EditorConfig — root configuration for CDS.ImageDisplay
+# Aligned with GitHub Copilot Coding Guidelines (V4)
+# https://editorconfig.org
+root = true
+
+# ── All files ──────────────────────────────────────────────────────────────────
+[*]
+end_of_line              = crlf
+insert_final_newline     = true
+trim_trailing_whitespace = true
+charset                  = utf-8
+
+# ── C# files ───────────────────────────────────────────────────────────────────
+[*.cs]
+indent_style = space
+indent_size  = 4
+tab_width    = 4
+
+# ── Language: var usage ────────────────────────────────────────────────────────
+# Use 'var' only when the type is apparent from the right-hand side.
+csharp_style_var_for_built_in_types                  = false:suggestion
+csharp_style_var_when_type_is_apparent               = true:suggestion
+csharp_style_var_elsewhere                           = false:suggestion
+
+# ── Language: expression-bodied members ───────────────────────────────────────
+csharp_style_expression_bodied_methods               = when_on_single_line:suggestion
+csharp_style_expression_bodied_constructors          = false:suggestion
+csharp_style_expression_bodied_operators             = when_on_single_line:suggestion
+csharp_style_expression_bodied_properties            = when_on_single_line:suggestion
+csharp_style_expression_bodied_indexers              = when_on_single_line:suggestion
+csharp_style_expression_bodied_accessors             = when_on_single_line:suggestion
+csharp_style_expression_bodied_lambdas               = when_on_single_line:suggestion
+csharp_style_expression_bodied_local_functions       = when_on_single_line:suggestion
+
+# ── Language: using declarations (using var) ───────────────────────────────────
+csharp_prefer_simple_using_statement                 = true:suggestion
+
+# ── Language: namespace style ─────────────────────────────────────────────────
+csharp_style_namespace_declarations                  = file_scoped:warning
+
+# ── Language: braces — always require them ────────────────────────────────────
+csharp_prefer_braces                                 = true:warning
+
+# ── Language: braces — Allman style ───────────────────────────────────────────
+csharp_new_line_before_open_brace                    = all
+csharp_new_line_before_else                          = true
+csharp_new_line_before_catch                         = true
+csharp_new_line_before_finally                       = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_anonymous_types    = true
+csharp_new_line_between_query_expression_clauses     = true
+
+# ── Language: pattern matching ────────────────────────────────────────────────
+csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
+csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
+csharp_style_prefer_switch_expression                = true:silent
+csharp_style_prefer_pattern_matching                 = true:silent
+csharp_style_prefer_not_pattern                      = true:suggestion
+
+# ── Language: null checks ─────────────────────────────────────────────────────
+csharp_style_prefer_null_check_over_type_check       = true:suggestion
+dotnet_style_null_propagation                        = true:suggestion
+dotnet_style_coalesce_expression                     = true:suggestion
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true:warning
+
+# ── Language: misc modernisation ──────────────────────────────────────────────
+csharp_style_prefer_primary_constructors             = true:suggestion
+dotnet_style_prefer_collection_expression            = true:suggestion
+csharp_prefer_static_local_function                  = true:suggestion
+csharp_style_prefer_index_operator                   = true:suggestion
+csharp_style_prefer_range_operator                   = true:suggestion
+
+# ── Formatting: indentation & spacing ─────────────────────────────────────────
+csharp_indent_case_contents                          = true
+csharp_indent_switch_labels                          = true
+csharp_indent_labels                                 = flush_left
+csharp_space_after_cast                              = false
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+csharp_space_between_method_call_parameter_list_parentheses = false
+csharp_space_before_colon_in_inheritance_clause      = true
+csharp_space_after_colon_in_inheritance_clause       = true
+csharp_space_around_binary_operators                 = before_and_after
+
+# ── Language: unused value handling ──────────────────────────────────────────
+# Do not suggest assigning unused expression results to a discard (_).
+csharp_style_unused_value_expression_statement_preference = none:none
+csharp_style_unused_value_assignment_preference           = none:none
+
+# ── Formatting: wrapping ───────────────────────────────────────────────────────
+csharp_preserve_single_line_statements               = false
+csharp_preserve_single_line_blocks                   = true
+
+# ── Naming: private fields — _camelCase ───────────────────────────────────────
+dotnet_naming_rule.private_fields_should_be_camel_case.severity = warning
+dotnet_naming_rule.private_fields_should_be_camel_case.symbols  = private_fields
+dotnet_naming_rule.private_fields_should_be_camel_case.style    = prefix_underscore
+
+dotnet_naming_symbols.private_fields.applicable_kinds           = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+
+dotnet_naming_style.prefix_underscore.capitalization            = camel_case
+dotnet_naming_style.prefix_underscore.required_prefix           = _
+
+# ── Naming: static private fields — s_camelCase ───────────────────────────────
+dotnet_naming_rule.static_private_fields_should_be_s_camel_case.severity = warning
+dotnet_naming_rule.static_private_fields_should_be_s_camel_case.symbols  = static_private_fields
+dotnet_naming_rule.static_private_fields_should_be_s_camel_case.style    = s_prefix_underscore
+
+dotnet_naming_symbols.static_private_fields.applicable_kinds           = field
+dotnet_naming_symbols.static_private_fields.applicable_accessibilities = private
+dotnet_naming_symbols.static_private_fields.required_modifiers         = static
+
+dotnet_naming_style.s_prefix_underscore.capitalization   = camel_case
+dotnet_naming_style.s_prefix_underscore.required_prefix  = s_
+
+# ── Naming: public members — PascalCase ───────────────────────────────────────
+dotnet_naming_rule.public_members_must_be_pascal_case.severity = warning
+dotnet_naming_rule.public_members_must_be_pascal_case.symbols  = public_members
+dotnet_naming_rule.public_members_must_be_pascal_case.style    = pascal_case_style
+
+dotnet_naming_symbols.public_members.applicable_kinds           = class,struct,interface,enum,property,method,field,event,delegate
+dotnet_naming_symbols.public_members.applicable_accessibilities = public,protected,protected_internal
+
+dotnet_naming_style.pascal_case_style.capitalization = pascal_case
+
+# ── Naming: interfaces — I prefix ─────────────────────────────────────────────
+dotnet_naming_rule.interfaces_must_have_i_prefix.severity = warning
+dotnet_naming_rule.interfaces_must_have_i_prefix.symbols  = interfaces
+dotnet_naming_rule.interfaces_must_have_i_prefix.style    = interface_style
+
+dotnet_naming_symbols.interfaces.applicable_kinds           = interface
+dotnet_naming_symbols.interfaces.applicable_accessibilities = *
+
+dotnet_naming_style.interface_style.capitalization   = pascal_case
+dotnet_naming_style.interface_style.required_prefix  = I
+
+# ── Organise usings ───────────────────────────────────────────────────────────
+dotnet_sort_system_directives_first                  = true
+dotnet_separate_import_directive_groups              = false
+
+# ── Nullable reference types ──────────────────────────────────────────────────
+dotnet_diagnostic.CS8600.severity = warning   # Converting null literal or possible null value
+dotnet_diagnostic.CS8601.severity = warning   # Possible null reference assignment
+dotnet_diagnostic.CS8602.severity = warning   # Dereference of a possibly null reference
+dotnet_diagnostic.CS8603.severity = warning   # Possible null reference return
+dotnet_diagnostic.CS8604.severity = warning   # Possible null reference argument
+dotnet_diagnostic.CS8618.severity = warning   # Non-nullable field uninitialized
+
+# ── XML documentation ─────────────────────────────────────────────────────────
+dotnet_diagnostic.CS1591.severity = warning  # Missing XML comment for public member

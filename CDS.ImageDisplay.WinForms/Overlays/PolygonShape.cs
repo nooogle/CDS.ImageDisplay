@@ -43,11 +43,13 @@ public class PolygonShape
         ArgumentNullException.ThrowIfNull(sender, nameof(sender));
         ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
         ArgumentNullException.ThrowIfNull(drawing, nameof(drawing));
-        if (Points.Length < 3) { return; }
-        if (!drawing.Visible) { return; }
+        if (Points.Length < 3)
+        { return; }
+        if (!drawing.Visible)
+        { return; }
 
-        var pen = DrawingToolsPool.GetPen(drawing.Lines);
-        var brush = DrawingToolsPool.GetBrush(drawing.Fill);
+        Pen pen = DrawingToolsPool.GetPen(drawing.Lines);
+        Brush brush = DrawingToolsPool.GetBrush(drawing.Fill);
 
         PointF[] pointsOnDisplay;
 

@@ -1,7 +1,6 @@
-namespace CDS.ImageDisplay.Demo
+namespace CDS.ImageDisplay.Demo;
+
+internal class AppSettings
 {
-    internal class AppSettings
-    {
-        public DemoForms.Settings DemoForms { get; set; }= new DemoForms.Settings();
-    }
+    public DemoForms.Settings DemoForms { get; set; } = new DemoForms.Settings();
 }

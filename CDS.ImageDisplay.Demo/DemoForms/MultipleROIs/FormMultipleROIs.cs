@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace CDS.ImageDisplay.Demo.DemoForms.MultipleROIs;
@@ -13,7 +12,7 @@ public partial class FormMultipleROIs : Form
     /// <summary>
     /// Information for the properties grid
     /// </summary>
-    private TestProperties testProperties;
+    private readonly TestProperties testProperties;
 
 
     /// <summary>
@@ -54,14 +53,12 @@ public partial class FormMultipleROIs : Form
         bitmapDisplayPanel.FitToWindowCentred();
     }
 
-    private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
-    {
-        multipleROIManager.RefreshSelection();
-    }
+    private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e) => multipleROIManager.RefreshSelection();
 
     private void btnLoadImage_Click(object sender, EventArgs e)
     {
-        if (openFileDialog.ShowDialog(this) != DialogResult.OK) { return; }
+        if (openFileDialog.ShowDialog(this) != DialogResult.OK)
+        { return; }
 
         try
         {
@@ -80,9 +77,8 @@ public partial class FormMultipleROIs : Form
 
     private void multipleROIManager_OnCommittedROIChanged(object sender, CDS.ImageDisplay.RegionOfInterest.CommittedROIDescriptorChangedEventArgs e)
     {
-        var myDesciptor = e.ROIDescriptor as MyROIDescriptor;
-
-        if (myDesciptor == null) { throw new InvalidOperationException("ROI descriptor is not of the expected type"); }
+        if (e.ROIDescriptor is not MyROIDescriptor myDesciptor)
+        { throw new InvalidOperationException("ROI descriptor is not of the expected type"); }
 
         myDesciptor.ChangeCount++;
         bitmapDisplayPanel.Invalidate();

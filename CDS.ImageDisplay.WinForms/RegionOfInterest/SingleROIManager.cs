@@ -22,29 +22,12 @@ public partial class SingleROIManager : Component
     private Rectangle liveDraggingROI;
     private Point mouseDownLocationOnDisplay;
 
-    private ROIWithGrapplesShape committedROIShape = new ROIWithGrapplesShape();
-    private ROIWithGrapplesShape liveDraggingROIShape = new ROIWithGrapplesShape();
-
-    private bool visible = true;
-    private bool canEditCommitted = true;
-    private bool canCreateNew = true;
-
-    private BitmapDisplay.BitmapDisplayPanel? bitmapDisplayPanel;
-
-
-    /// <summary>
-    /// The border inside and outside the ROI that will test positive
-    /// for a mouse hit test. (E.g. this allows the mouse to drag a corner
-    /// or edge even if it's not exactly over the edge.)
-    /// </summary>
-    private int dragBorder = 10;
-
 
     /// <summary>
     /// How to draw the committed ROI.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-    public Overlays.DrawingSpec CommittedROIDrawingSpec => committedROIShape.Drawing;
+    public Overlays.DrawingSpec CommittedROIDrawingSpec => CommittedROIShape.Drawing;
 
 
 
@@ -52,7 +35,7 @@ public partial class SingleROIManager : Component
     /// How to draw the live dragging ROI.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-    public Overlays.DrawingSpec LiveDraggingROIDrawingSpec => liveDraggingROIShape.Drawing;
+    public Overlays.DrawingSpec LiveDraggingROIDrawingSpec => LiveDraggingROIShape.Drawing;
 
 
     /// <summary>
@@ -63,9 +46,9 @@ public partial class SingleROIManager : Component
     [DefaultValue(10)]
     public int DragBorder
     {
-        get => dragBorder;
-        set => dragBorder = Math.Max(0, Math.Min(value, 100));
-    }
+        get;
+        set => field = Math.Max(0, Math.Min(value, 100));
+    } = 10;
 
 
     /// <summary>
@@ -85,20 +68,14 @@ public partial class SingleROIManager : Component
     /// The shape for the committed ROI.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-    public ROIWithGrapplesShape CommittedROIShape
-    {
-        get => committedROIShape;
-    }
+    public ROIWithGrapplesShape CommittedROIShape { get; } = new ROIWithGrapplesShape();
 
 
     /// <summary>
     /// The shape for the ROI that is being dragged.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-    public ROIWithGrapplesShape LiveDraggingROIShape
-    {
-        get => liveDraggingROIShape;
-    }
+    public ROIWithGrapplesShape LiveDraggingROIShape { get; } = new ROIWithGrapplesShape();
 
 
     /// <summary>
@@ -112,7 +89,7 @@ public partial class SingleROIManager : Component
     /// <summary>
     /// True if the ROI is currently being dragged.
     /// </summary>
-    public bool IsDragging => (draggingMode != ROIDragMode.None);
+    public bool IsDragging => draggingMode != ROIDragMode.None;
 
 
     /// <summary>
@@ -122,36 +99,34 @@ public partial class SingleROIManager : Component
     [DefaultValue(null)]
     public BitmapDisplay.BitmapDisplayPanel? BitmapDisplayPanel
     {
-        get => bitmapDisplayPanel;
-
-        set
+        get; set
         {
-            if (bitmapDisplayPanel != value)
+            if (field != value)
             {
-                if (bitmapDisplayPanel != null)
+                if (field != null)
                 {
-                    bitmapDisplayPanel.MouseDown -= BitmapDisplayPanel_MouseDown;
-                    bitmapDisplayPanel.MouseMove -= BitmapDisplayPanel_MouseMove;
-                    bitmapDisplayPanel.MouseUp -= BitmapDisplayPanel_MouseUp;
-                    bitmapDisplayPanel.OnPaintOver -= BitmapDisplayPanel_OnPaintOver;
-                    bitmapDisplayPanel.OnImageSizeChanged -= BitmapDisplayPanel_OnImageSizeChanged;
-                    bitmapDisplayPanel.KeyDown -= BitmapDisplayPanel_KeyDown;
+                    field.MouseDown -= BitmapDisplayPanel_MouseDown;
+                    field.MouseMove -= BitmapDisplayPanel_MouseMove;
+                    field.MouseUp -= BitmapDisplayPanel_MouseUp;
+                    field.OnPaintOver -= BitmapDisplayPanel_OnPaintOver;
+                    field.OnImageSizeChanged -= BitmapDisplayPanel_OnImageSizeChanged;
+                    field.KeyDown -= BitmapDisplayPanel_KeyDown;
                 }
 
-                bitmapDisplayPanel = value;
+                field = value;
 
-                if (bitmapDisplayPanel != null)
+                if (field != null)
                 {
-                    bitmapDisplayPanel.MouseDown += BitmapDisplayPanel_MouseDown;
-                    bitmapDisplayPanel.MouseMove += BitmapDisplayPanel_MouseMove;
-                    bitmapDisplayPanel.MouseUp += BitmapDisplayPanel_MouseUp;
-                    bitmapDisplayPanel.OnPaintOver += BitmapDisplayPanel_OnPaintOver;
-                    bitmapDisplayPanel.OnImageSizeChanged += BitmapDisplayPanel_OnImageSizeChanged;
-                    bitmapDisplayPanel.KeyDown += BitmapDisplayPanel_KeyDown;
+                    field.MouseDown += BitmapDisplayPanel_MouseDown;
+                    field.MouseMove += BitmapDisplayPanel_MouseMove;
+                    field.MouseUp += BitmapDisplayPanel_MouseUp;
+                    field.OnPaintOver += BitmapDisplayPanel_OnPaintOver;
+                    field.OnImageSizeChanged += BitmapDisplayPanel_OnImageSizeChanged;
+                    field.KeyDown += BitmapDisplayPanel_KeyDown;
 
                     // Seed imageSize from the panel's current image so that ROIs can
                     // be set immediately, without waiting for the next OnImageSizeChanged event.
-                    var existingSize = bitmapDisplayPanel.ImageSize;
+                    Size existingSize = field.ImageSize;
                     imageSize = existingSize == Size.Empty ? null : existingSize;
                 }
                 else
@@ -164,55 +139,38 @@ public partial class SingleROIManager : Component
 
     private void BitmapDisplayPanel_KeyDown(object? sender, KeyEventArgs e)
     {
-        if (draggingMode != ROIDragMode.None) { return; }
-        if (!Visible) { return; }
+        if (draggingMode != ROIDragMode.None)
+        { return; }
+        if (!Visible)
+        { return; }
 
         int change = 1;
-        if (e.Control) { change = 10; }
+        if (e.Control)
+        { change = 10; }
 
         if (e.KeyCode == Keys.Left)
         {
-            if (e.Shift)
-            {
-                CommittedROI = new Rectangle(CommittedROI.Left, CommittedROI.Top, CommittedROI.Width - change, CommittedROI.Height);
-            }
-            else
-            {
-                CommittedROI = new Rectangle(CommittedROI.Left - change, CommittedROI.Top, CommittedROI.Width, CommittedROI.Height);
-            }
+            CommittedROI = e.Shift
+                ? new Rectangle(CommittedROI.Left, CommittedROI.Top, CommittedROI.Width - change, CommittedROI.Height)
+                : new Rectangle(CommittedROI.Left - change, CommittedROI.Top, CommittedROI.Width, CommittedROI.Height);
         }
         else if (e.KeyCode == Keys.Right)
         {
-            if (e.Shift)
-            {
-                CommittedROI = new Rectangle(CommittedROI.Left, CommittedROI.Top, CommittedROI.Width + change, CommittedROI.Height);
-            }
-            else
-            {
-                CommittedROI = new Rectangle(CommittedROI.Left + change, CommittedROI.Top, CommittedROI.Width, CommittedROI.Height);
-            }
+            CommittedROI = e.Shift
+                ? new Rectangle(CommittedROI.Left, CommittedROI.Top, CommittedROI.Width + change, CommittedROI.Height)
+                : new Rectangle(CommittedROI.Left + change, CommittedROI.Top, CommittedROI.Width, CommittedROI.Height);
         }
         else if (e.KeyCode == Keys.Up)
         {
-            if (e.Shift)
-            {
-                CommittedROI = new Rectangle(CommittedROI.Left, CommittedROI.Top, CommittedROI.Width, CommittedROI.Height - change);
-            }
-            else
-            {
-                CommittedROI = new Rectangle(CommittedROI.Left, CommittedROI.Top - change, CommittedROI.Width, CommittedROI.Height);
-            }
+            CommittedROI = e.Shift
+                ? new Rectangle(CommittedROI.Left, CommittedROI.Top, CommittedROI.Width, CommittedROI.Height - change)
+                : new Rectangle(CommittedROI.Left, CommittedROI.Top - change, CommittedROI.Width, CommittedROI.Height);
         }
         else if (e.KeyCode == Keys.Down)
         {
-            if (e.Shift)
-            {
-                CommittedROI = new Rectangle(CommittedROI.Left, CommittedROI.Top, CommittedROI.Width, CommittedROI.Height + change);
-            }
-            else
-            {
-                CommittedROI = new Rectangle(CommittedROI.Left, CommittedROI.Top + change, CommittedROI.Width, CommittedROI.Height);
-            }
+            CommittedROI = e.Shift
+                ? new Rectangle(CommittedROI.Left, CommittedROI.Top, CommittedROI.Width, CommittedROI.Height + change)
+                : new Rectangle(CommittedROI.Left, CommittedROI.Top + change, CommittedROI.Width, CommittedROI.Height);
         }
     }
 
@@ -222,10 +180,7 @@ public partial class SingleROIManager : Component
     /// <summary>
     /// Handle a change to the image size
     /// </summary>
-    private void BitmapDisplayPanel_OnImageSizeChanged(BitmapDisplay.BitmapDisplayPanel sender, Size oldSize, Size newSize)
-    {
-        imageSize = newSize;
-    }
+    private void BitmapDisplayPanel_OnImageSizeChanged(BitmapDisplay.BitmapDisplayPanel sender, Size oldSize, Size newSize) => imageSize = newSize;
 
 
     /// <summary>
@@ -234,17 +189,15 @@ public partial class SingleROIManager : Component
     [DefaultValue(true)]
     public bool Visible
     {
-        get => visible;
-
-        set
+        get; set
         {
-            if (visible != value)
+            if (field != value)
             {
-                visible = value;
-                bitmapDisplayPanel?.Invalidate();
+                field = value;
+                BitmapDisplayPanel?.Invalidate();
             }
         }
-    }
+    } = true;
 
 
     /// <summary>
@@ -253,17 +206,15 @@ public partial class SingleROIManager : Component
     [DefaultValue(true)]
     public bool CanEditCommitted
     {
-        get => canEditCommitted;
-
-        set
+        get; set
         {
-            if (canEditCommitted != value)
+            if (field != value)
             {
-                canEditCommitted = value;
-                bitmapDisplayPanel?.Invalidate();
+                field = value;
+                BitmapDisplayPanel?.Invalidate();
             }
         }
-    }
+    } = true;
 
 
     /// <summary>
@@ -272,17 +223,15 @@ public partial class SingleROIManager : Component
     [DefaultValue(true)]
     public bool CanCreateNew
     {
-        get => canCreateNew;
-
-        set
+        get; set
         {
-            if (canCreateNew != value)
+            if (field != value)
             {
-                canCreateNew = value;
-                bitmapDisplayPanel?.Invalidate();
+                field = value;
+                BitmapDisplayPanel?.Invalidate();
             }
         }
-    }
+    } = true;
 
 
 
@@ -314,13 +263,13 @@ public partial class SingleROIManager : Component
     {
         mouseCursors = CreateMouseCursorsDict();
 
-        committedROIShape.Drawing.Lines.Color = Color.FromArgb(128, Color.Green);
-        committedROIShape.Drawing.Lines.Width = 2;
-        committedROIShape.Drawing.Fill.Color = Color.Transparent;
+        CommittedROIShape.Drawing.Lines.Color = Color.FromArgb(128, Color.Green);
+        CommittedROIShape.Drawing.Lines.Width = 2;
+        CommittedROIShape.Drawing.Fill.Color = Color.Transparent;
 
-        liveDraggingROIShape.Drawing.Lines.Color = Color.FromArgb(128, Color.Orange);
-        liveDraggingROIShape.Drawing.Lines.Width = 2;
-        liveDraggingROIShape.Drawing.Fill.Color = Color.Transparent;
+        LiveDraggingROIShape.Drawing.Lines.Color = Color.FromArgb(128, Color.Orange);
+        LiveDraggingROIShape.Drawing.Lines.Width = 2;
+        LiveDraggingROIShape.Drawing.Fill.Color = Color.Transparent;
     }
 
 
@@ -334,7 +283,7 @@ public partial class SingleROIManager : Component
 
         set
         {
-            var originalCommittedROI = committedROI;
+            Rectangle originalCommittedROI = committedROI;
 
             if (!imageSize.HasValue)
             {
@@ -342,15 +291,16 @@ public partial class SingleROIManager : Component
             }
             else
             {
-                var newCommittedROI = value;
+                Rectangle newCommittedROI = value;
                 newCommittedROI.Intersect(new Rectangle(Point.Empty, imageSize!.Value));
-                if (newCommittedROI.Size.IsEmpty) { newCommittedROI = Rectangle.Empty; }
+                if (newCommittedROI.Size.IsEmpty)
+                { newCommittedROI = Rectangle.Empty; }
 
                 if (newCommittedROI != committedROI)
                 {
                     committedROI = newCommittedROI;
                     OnCommittedROIChanged?.Invoke(this, committedROI);
-                    bitmapDisplayPanel?.Invalidate();
+                    BitmapDisplayPanel?.Invalidate();
                 }
             }
         }
@@ -372,7 +322,7 @@ public partial class SingleROIManager : Component
             {
                 liveDraggingROI = value;
                 OnDraggingROIChanged?.Invoke(this, liveDraggingROI);
-                bitmapDisplayPanel?.Invalidate();
+                BitmapDisplayPanel?.Invalidate();
             }
         }
     }
@@ -383,7 +333,7 @@ public partial class SingleROIManager : Component
     /// </summary>
     private static ImmutableDictionary<ROIDragMode, Cursor> CreateMouseCursorsDict()
     {
-        var builder = ImmutableDictionary.CreateBuilder<ROIDragMode, Cursor>();
+        ImmutableDictionary<ROIDragMode, Cursor>.Builder builder = ImmutableDictionary.CreateBuilder<ROIDragMode, Cursor>();
 
         builder.Add(ROIDragMode.None, Cursors.Default);
         builder.Add(ROIDragMode.WholeROI, Cursors.Hand);
@@ -403,17 +353,14 @@ public partial class SingleROIManager : Component
     /// <summary>
     /// True if there's an image that the ROI can be applied to and that 
     /// </summary>
-    private bool CanWorkWithROI => (bitmapDisplayPanel != null) && imageSize.HasValue;
+    private bool CanWorkWithROI => (BitmapDisplayPanel != null) && imageSize.HasValue;
 
 
 
     /// <summary>
     /// True if the spacebar is pressed.
     /// </summary>
-    private bool IsSpacebarPressed()
-    {
-        return (Win32.GetKeyState(Win32.VK_SPACE) & 0x8000) != 0;
-    }
+    private bool IsSpacebarPressed() => (Win32.GetKeyState(Win32.VK_SPACE) & 0x8000) != 0;
 
 
     /// <summary>
@@ -421,7 +368,8 @@ public partial class SingleROIManager : Component
     /// </summary>
     private void BitmapDisplayPanel_MouseDown(object? sender, MouseEventArgs e)
     {
-        if (!CanWorkWithROI) { return; }
+        if (!CanWorkWithROI)
+        { return; }
 
         if (!IsSpacebarPressed() && (e.Button == MouseButtons.Left))
         {
@@ -437,8 +385,8 @@ public partial class SingleROIManager : Component
     {
         mouseDownLocationOnDisplay = e.Location;
 
-        var imagePoint = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(e.Location));
-        var newDragMode = DetermineDragModeFromMouseLocation(mouseLocationOnDisplay: e.Location);
+        var imagePoint = Point.Round(BitmapDisplayPanel!.MapDisplayToImage(e.Location));
+        ROIDragMode newDragMode = DetermineDragModeFromMouseLocation(mouseLocationOnDisplay: e.Location);
 
         if (newDragMode != ROIDragMode.None)
         {
@@ -449,87 +397,67 @@ public partial class SingleROIManager : Component
             StartDraggingNewROI(imagePoint);
         }
 
-        bitmapDisplayPanel?.Invalidate();
+        BitmapDisplayPanel?.Invalidate();
     }
 
 
     private ROIDragMode DetermineDragModeFromMouseLocation(Point mouseLocationOnDisplay)
     {
-        if (!canEditCommitted) { return ROIDragMode.None; }
-        if (committedROI.IsEmpty) { return ROIDragMode.None; }
+        if (!CanEditCommitted)
+        { return ROIDragMode.None; }
+        if (committedROI.IsEmpty)
+        { return ROIDragMode.None; }
 
-        var mouseLocationOnImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
+        var mouseLocationOnImage = Point.Round(BitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
 
-        var committedROIInDisplayCoordinates = bitmapDisplayPanel!.MapImageToDisplay(committedROI, BitmapDisplay.DisplayPixelAlign.TopLeft);
+        Rectangle committedROIInDisplayCoordinates = BitmapDisplayPanel!.MapImageToDisplay(committedROI, BitmapDisplay.DisplayPixelAlign.TopLeft);
 
-        var hitTestROI = committedROIInDisplayCoordinates;
+        Rectangle hitTestROI = committedROIInDisplayCoordinates;
         hitTestROI.Inflate(DragBorder, DragBorder);
 
-        if (!hitTestROI.Contains(mouseLocationOnDisplay)) { return ROIDragMode.None; }
+        if (!hitTestROI.Contains(mouseLocationOnDisplay))
+        { return ROIDragMode.None; }
 
-        if (mouseLocationOnDisplay.X < committedROIInDisplayCoordinates.Left + DragBorder)
-        {
-            if (mouseLocationOnDisplay.Y < committedROIInDisplayCoordinates.Top + DragBorder)
-            {
-                return ROIDragMode.TopLeftCorner;
-            }
-            else if (mouseLocationOnDisplay.Y > committedROIInDisplayCoordinates.Bottom - DragBorder)
-            {
-                return ROIDragMode.BottomLeftCorner;
-            }
-            else
-            {
-                return ROIDragMode.LeftEdge;
-            }
-        }
-        else if (mouseLocationOnDisplay.X > committedROIInDisplayCoordinates.Right - DragBorder)
-        {
-            if (mouseLocationOnDisplay.Y < committedROIInDisplayCoordinates.Top + DragBorder)
-            {
-                return ROIDragMode.TopRightCorner;
-            }
-            else if (mouseLocationOnDisplay.Y > committedROIInDisplayCoordinates.Bottom - DragBorder)
-            {
-                return ROIDragMode.BottomRightCorner;
-            }
-            else
-            {
-                return ROIDragMode.RightEdge;
-            }
-        }
-        else if (mouseLocationOnDisplay.Y < committedROIInDisplayCoordinates.Top + DragBorder)
-        {
-            return ROIDragMode.TopEdge;
-        }
-        else if (mouseLocationOnDisplay.Y > committedROIInDisplayCoordinates.Bottom - DragBorder)
-        {
-            return ROIDragMode.BottomEdge;
-        }
-        else
-        {
-            return ROIDragMode.WholeROI;
-        }
+        return mouseLocationOnDisplay.X < committedROIInDisplayCoordinates.Left + DragBorder
+            ? mouseLocationOnDisplay.Y < committedROIInDisplayCoordinates.Top + DragBorder
+                ? ROIDragMode.TopLeftCorner
+                : mouseLocationOnDisplay.Y > committedROIInDisplayCoordinates.Bottom - DragBorder
+                    ? ROIDragMode.BottomLeftCorner
+                    : ROIDragMode.LeftEdge
+            : mouseLocationOnDisplay.X > committedROIInDisplayCoordinates.Right - DragBorder
+                ? mouseLocationOnDisplay.Y < committedROIInDisplayCoordinates.Top + DragBorder
+                            ? ROIDragMode.TopRightCorner
+                            : mouseLocationOnDisplay.Y > committedROIInDisplayCoordinates.Bottom - DragBorder
+                                ? ROIDragMode.BottomRightCorner
+                                : ROIDragMode.RightEdge
+                : mouseLocationOnDisplay.Y < committedROIInDisplayCoordinates.Top + DragBorder
+                            ? ROIDragMode.TopEdge
+                            : mouseLocationOnDisplay.Y > committedROIInDisplayCoordinates.Bottom - DragBorder
+                                        ? ROIDragMode.BottomEdge
+                                        : ROIDragMode.WholeROI;
     }
 
 
     private void StartDraggingNewROI(Point imagePoint)
     {
-        if (!canCreateNew) { return; }
+        if (!CanCreateNew)
+        { return; }
 
         originalDraggingROI = new Rectangle(imagePoint, Size.Empty);
         LiveDraggingROI = originalDraggingROI;
         draggingMode = ROIDragMode.BottomRightCorner;
-        bitmapDisplayPanel!.SuppressDragging();
+        BitmapDisplayPanel!.SuppressDragging();
     }
 
     private void StartDraggingCommittedROI(ROIDragMode newDragMode)
     {
-        if (!canEditCommitted) { return; }
+        if (!CanEditCommitted)
+        { return; }
 
         originalDraggingROI = committedROI;
         LiveDraggingROI = originalDraggingROI;
         draggingMode = newDragMode;
-        bitmapDisplayPanel!.SuppressDragging();
+        BitmapDisplayPanel!.SuppressDragging();
     }
 
 
@@ -538,7 +466,8 @@ public partial class SingleROIManager : Component
     /// </summary>
     private void BitmapDisplayPanel_MouseMove(object? sender, MouseEventArgs e)
     {
-        if (!CanWorkWithROI) { return; }
+        if (!CanWorkWithROI)
+        { return; }
 
         if (draggingMode != ROIDragMode.None)
         {
@@ -546,15 +475,16 @@ public partial class SingleROIManager : Component
         }
         else if (!committedROI.IsEmpty)
         {
-            var dragModeIfMouseClicked = DetermineDragModeFromMouseLocation(mouseLocationOnDisplay: e.Location);
+            ROIDragMode dragModeIfMouseClicked = DetermineDragModeFromMouseLocation(mouseLocationOnDisplay: e.Location);
 
-            bitmapDisplayPanel!.Cursor = mouseCursors![dragModeIfMouseClicked];
+            BitmapDisplayPanel!.Cursor = mouseCursors![dragModeIfMouseClicked];
         }
     }
 
     private void UpdateDraggingROI(Point mouseLocationOnDisplay)
     {
-        if ((bitmapDisplayPanel == null) || mouseCursors == null) { return; }
+        if ((BitmapDisplayPanel == null) || mouseCursors == null)
+        { return; }
 
         switch (draggingMode)
         {
@@ -589,124 +519,101 @@ public partial class SingleROIManager : Component
                 break;
         }
 
-        bitmapDisplayPanel.Cursor = mouseCursors[draggingMode];
-        bitmapDisplayPanel?.Invalidate();
+        BitmapDisplayPanel.Cursor = mouseCursors[draggingMode];
+        BitmapDisplayPanel?.Invalidate();
     }
 
 
     private void UpdateRightEdgeDragging(Point mouseLocationOnDisplay)
     {
-        var currentMouseLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
+        var currentMouseLocationOverImage = Point.Round(BitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
 
-        var isMouseLeftOfLeftEdgeOfOriginalROI = currentMouseLocationOverImage.X < originalDraggingROI.Left;
+        bool isMouseLeftOfLeftEdgeOfOriginalROI = currentMouseLocationOverImage.X < originalDraggingROI.Left;
 
-        if (isMouseLeftOfLeftEdgeOfOriginalROI)
-        {
-            LiveDraggingROI = Rectangle.FromLTRB(
+        LiveDraggingROI = isMouseLeftOfLeftEdgeOfOriginalROI
+            ? Rectangle.FromLTRB(
                 currentMouseLocationOverImage.X,
                 originalDraggingROI.Top,
                 originalDraggingROI.Left,
-                originalDraggingROI.Bottom);
-        }
-        else
-        {
-            LiveDraggingROI = Rectangle.FromLTRB(
+                originalDraggingROI.Bottom)
+            : Rectangle.FromLTRB(
                 originalDraggingROI.Left,
                 originalDraggingROI.Top,
                 currentMouseLocationOverImage.X,
                 originalDraggingROI.Bottom);
-        }
     }
 
     private void UpdateLeftEdgeDragging(Point mouseLocationOnDisplay)
     {
-        var currentMouseLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
-        var isMouseRightOfRightEdgeOfOriginalROI = currentMouseLocationOverImage.X > originalDraggingROI.Right;
+        var currentMouseLocationOverImage = Point.Round(BitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
+        bool isMouseRightOfRightEdgeOfOriginalROI = currentMouseLocationOverImage.X > originalDraggingROI.Right;
 
-        if (isMouseRightOfRightEdgeOfOriginalROI)
-        {
-            LiveDraggingROI = Rectangle.FromLTRB(
+        LiveDraggingROI = isMouseRightOfRightEdgeOfOriginalROI
+            ? Rectangle.FromLTRB(
                 originalDraggingROI.Right,
                 originalDraggingROI.Top,
                 currentMouseLocationOverImage.X,
-                originalDraggingROI.Bottom);
-        }
-        else
-        {
-            LiveDraggingROI = Rectangle.FromLTRB(
+                originalDraggingROI.Bottom)
+            : Rectangle.FromLTRB(
                 currentMouseLocationOverImage.X,
                 originalDraggingROI.Top,
                 originalDraggingROI.Right,
                 originalDraggingROI.Bottom);
-        }
     }
 
     private void UpdateTopEdgeDragging(Point mouseLocationOnDisplay)
     {
-        var currentMouseLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
+        var currentMouseLocationOverImage = Point.Round(BitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
 
-        var isMouseBelowBottomOfOriginalROI = currentMouseLocationOverImage.Y > originalDraggingROI.Bottom;
+        bool isMouseBelowBottomOfOriginalROI = currentMouseLocationOverImage.Y > originalDraggingROI.Bottom;
 
-        if (isMouseBelowBottomOfOriginalROI)
-        {
-            LiveDraggingROI = Rectangle.FromLTRB(
+        LiveDraggingROI = isMouseBelowBottomOfOriginalROI
+            ? Rectangle.FromLTRB(
                 originalDraggingROI.Left,
                 originalDraggingROI.Bottom,
                 originalDraggingROI.Right,
-                currentMouseLocationOverImage.Y);
-        }
-        else
-        {
-            LiveDraggingROI = Rectangle.FromLTRB(
+                currentMouseLocationOverImage.Y)
+            : Rectangle.FromLTRB(
                 originalDraggingROI.Left,
                 currentMouseLocationOverImage.Y,
                 originalDraggingROI.Right,
                 originalDraggingROI.Bottom);
-        }
     }
 
     private void UpdateBottomEdgeDragging(Point mouseLocationOnDisplay)
     {
-        var currentMouseLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
-        var isMouseAboveTopOfOriginalROI = currentMouseLocationOverImage.Y < originalDraggingROI.Top;
+        var currentMouseLocationOverImage = Point.Round(BitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
+        bool isMouseAboveTopOfOriginalROI = currentMouseLocationOverImage.Y < originalDraggingROI.Top;
 
-        if (isMouseAboveTopOfOriginalROI)
-        {
-            LiveDraggingROI = Rectangle.FromLTRB(
+        LiveDraggingROI = isMouseAboveTopOfOriginalROI
+            ? Rectangle.FromLTRB(
                 originalDraggingROI.Left,
                 currentMouseLocationOverImage.Y,
                 originalDraggingROI.Right,
-                originalDraggingROI.Top);
-        }
-        else
-        {
-            LiveDraggingROI = Rectangle.FromLTRB(
+                originalDraggingROI.Top)
+            : Rectangle.FromLTRB(
                 originalDraggingROI.Left,
                 originalDraggingROI.Top,
                 originalDraggingROI.Right,
                 currentMouseLocationOverImage.Y);
-        }
     }
 
-    private void Swap(ref int left, ref int right)
-    {
-        int temp = left;
-        left = right;
-        right = temp;
-    }
+    private void Swap(ref int left, ref int right) => (right, left) = (left, right);
 
 
     private void UpdateTopLeftCornerDragging(Point mouseLocationOnDisplay)
     {
-        var currentMouseLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
+        var currentMouseLocationOverImage = Point.Round(BitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
 
-        var left = currentMouseLocationOverImage.X;
-        var right = originalDraggingROI.Right;
-        var top = currentMouseLocationOverImage.Y;
-        var bottom = originalDraggingROI.Bottom;
+        int left = currentMouseLocationOverImage.X;
+        int right = originalDraggingROI.Right;
+        int top = currentMouseLocationOverImage.Y;
+        int bottom = originalDraggingROI.Bottom;
 
-        if (left > right) { Swap(ref left, ref right); }
-        if (top > bottom) { Swap(ref top, ref bottom); }
+        if (left > right)
+        { Swap(ref left, ref right); }
+        if (top > bottom)
+        { Swap(ref top, ref bottom); }
 
         LiveDraggingROI = Rectangle.FromLTRB(left, top, right, bottom);
     }
@@ -714,15 +621,17 @@ public partial class SingleROIManager : Component
 
     private void UpdateBottomRightCornerDragging(Point mouseLocationOnDisplay)
     {
-        var currentMouseLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
+        var currentMouseLocationOverImage = Point.Round(BitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
 
-        var left = originalDraggingROI.Left;
-        var right = currentMouseLocationOverImage.X;
-        var top = originalDraggingROI.Top;
-        var bottom = currentMouseLocationOverImage.Y;
+        int left = originalDraggingROI.Left;
+        int right = currentMouseLocationOverImage.X;
+        int top = originalDraggingROI.Top;
+        int bottom = currentMouseLocationOverImage.Y;
 
-        if (left > right) { Swap(ref left, ref right); }
-        if (top > bottom) { Swap(ref top, ref bottom); }
+        if (left > right)
+        { Swap(ref left, ref right); }
+        if (top > bottom)
+        { Swap(ref top, ref bottom); }
 
         LiveDraggingROI = Rectangle.FromLTRB(left, top, right, bottom);
     }
@@ -730,36 +639,40 @@ public partial class SingleROIManager : Component
 
     private void UpdateTopRightCornerDragging(Point mouseLocationOnDisplay)
     {
-        var currentMouseLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
-        var left = originalDraggingROI.Left;
-        var right = currentMouseLocationOverImage.X;
-        var top = currentMouseLocationOverImage.Y;
-        var bottom = originalDraggingROI.Bottom;
-        if (left > right) { Swap(ref left, ref right); }
-        if (top > bottom) { Swap(ref top, ref bottom); }
+        var currentMouseLocationOverImage = Point.Round(BitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
+        int left = originalDraggingROI.Left;
+        int right = currentMouseLocationOverImage.X;
+        int top = currentMouseLocationOverImage.Y;
+        int bottom = originalDraggingROI.Bottom;
+        if (left > right)
+        { Swap(ref left, ref right); }
+        if (top > bottom)
+        { Swap(ref top, ref bottom); }
         LiveDraggingROI = Rectangle.FromLTRB(left, top, right, bottom);
     }
 
     private void UpdateBottomLeftCornerDragging(Point mouseLocationOnDisplay)
     {
-        var currentMouseLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
-        var left = currentMouseLocationOverImage.X;
-        var right = originalDraggingROI.Right;
-        var top = originalDraggingROI.Top;
-        var bottom = currentMouseLocationOverImage.Y;
-        if (left > right) { Swap(ref left, ref right); }
-        if (top > bottom) { Swap(ref top, ref bottom); }
+        var currentMouseLocationOverImage = Point.Round(BitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
+        int left = currentMouseLocationOverImage.X;
+        int right = originalDraggingROI.Right;
+        int top = originalDraggingROI.Top;
+        int bottom = currentMouseLocationOverImage.Y;
+        if (left > right)
+        { Swap(ref left, ref right); }
+        if (top > bottom)
+        { Swap(ref top, ref bottom); }
         LiveDraggingROI = Rectangle.FromLTRB(left, top, right, bottom);
     }
 
 
     private void UpdateWholeROIDragging(Point mouseLocationOnDisplay)
     {
-        var currentMouseLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
-        var mouseDownLocationOverImage = Point.Round(bitmapDisplayPanel!.MapDisplayToImage(mouseDownLocationOnDisplay));
+        var currentMouseLocationOverImage = Point.Round(BitmapDisplayPanel!.MapDisplayToImage(mouseLocationOnDisplay));
+        var mouseDownLocationOverImage = Point.Round(BitmapDisplayPanel!.MapDisplayToImage(mouseDownLocationOnDisplay));
 
-        var deltaX = currentMouseLocationOverImage.X - mouseDownLocationOverImage.X;
-        var deltaY = currentMouseLocationOverImage.Y - mouseDownLocationOverImage.Y;
+        int deltaX = currentMouseLocationOverImage.X - mouseDownLocationOverImage.X;
+        int deltaY = currentMouseLocationOverImage.Y - mouseDownLocationOverImage.Y;
 
         LiveDraggingROI = Rectangle.FromLTRB(
             originalDraggingROI.Left + deltaX,
@@ -774,16 +687,18 @@ public partial class SingleROIManager : Component
     /// </summary>
     private void BitmapDisplayPanel_MouseUp(object? sender, MouseEventArgs e)
     {
-        if (!CanWorkWithROI) { return; }
-        if (draggingMode == ROIDragMode.None) { return; }
+        if (!CanWorkWithROI)
+        { return; }
+        if (draggingMode == ROIDragMode.None)
+        { return; }
 
         CommittedROI = LiveDraggingROI;
         LiveDraggingROI = Rectangle.Empty;
         draggingMode = ROIDragMode.None;
-        bitmapDisplayPanel!.UnsuppressDragging();
-        bitmapDisplayPanel!.Cursor = Cursors.Default;
+        BitmapDisplayPanel!.UnsuppressDragging();
+        BitmapDisplayPanel!.Cursor = Cursors.Default;
 
-        bitmapDisplayPanel?.Invalidate();
+        BitmapDisplayPanel?.Invalidate();
     }
 
 
@@ -792,19 +707,21 @@ public partial class SingleROIManager : Component
     /// </summary>
     private void BitmapDisplayPanel_OnPaintOver(BitmapDisplay.BitmapDisplayPanel sender, Graphics graphics)
     {
-        if (!CanWorkWithROI) { return; }
-        if (!visible) { return; }
+        if (!CanWorkWithROI)
+        { return; }
+        if (!Visible)
+        { return; }
 
         if (!committedROI.IsEmpty && (DrawCommittedROIWhenFullSize || (committedROI.Size != imageSize)))
         {
-            committedROIShape.ROI = committedROI;
-            committedROIShape.Draw(sender, graphics);
+            CommittedROIShape.ROI = committedROI;
+            CommittedROIShape.Draw(sender, graphics);
         }
 
         if (draggingMode != ROIDragMode.None)
         {
-            liveDraggingROIShape.ROI = LiveDraggingROI;
-            liveDraggingROIShape.Draw(sender, graphics);
+            LiveDraggingROIShape.ROI = LiveDraggingROI;
+            LiveDraggingROIShape.Draw(sender, graphics);
         }
     }
 }

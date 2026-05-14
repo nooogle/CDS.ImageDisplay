@@ -48,11 +48,13 @@ public class CircleShape
         ArgumentNullException.ThrowIfNull(sender, nameof(sender));
         ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
         ArgumentNullException.ThrowIfNull(drawing, nameof(drawing));
-        if (!drawing.Visible) { return; }
-        if (Radius <= 0) { return; }
+        if (!drawing.Visible)
+        { return; }
+        if (Radius <= 0)
+        { return; }
 
-        var pen = DrawingToolsPool.GetPen(drawing.Lines);
-        var brush = DrawingToolsPool.GetBrush(drawing.Fill);
+        Pen pen = DrawingToolsPool.GetPen(drawing.Lines);
+        Brush brush = DrawingToolsPool.GetBrush(drawing.Fill);
 
         var squareAroundCircle = new RectangleF(Centre.X - Radius, Centre.Y - Radius, 2 * Radius, 2 * Radius);
 

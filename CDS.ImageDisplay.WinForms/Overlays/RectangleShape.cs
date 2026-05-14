@@ -41,10 +41,11 @@ public class RectangleShape
         ArgumentNullException.ThrowIfNull(sender, nameof(sender));
         ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
         ArgumentNullException.ThrowIfNull(drawing, nameof(drawing));
-        if (!drawing.Visible) { return; }
+        if (!drawing.Visible)
+        { return; }
 
-        var pen = DrawingToolsPool.GetPen(drawing.Lines);
-        var brush = DrawingToolsPool.GetBrush(drawing.Fill);
+        Pen pen = DrawingToolsPool.GetPen(drawing.Lines);
+        Brush brush = DrawingToolsPool.GetBrush(drawing.Fill);
 
         RectangleF rectangleOnDisplay =
             drawing.MappingMode == MappingMode.ImageToDisplay ?
