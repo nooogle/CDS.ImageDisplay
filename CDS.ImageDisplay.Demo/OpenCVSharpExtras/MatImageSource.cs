@@ -1,9 +1,9 @@
-﻿using CDS.Imaging.BitmapDisplay;
+using CDS.ImageDisplay.BitmapDisplay;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace CDS.Imaging.Demo.OpenCVSharpExtras
+namespace CDS.ImageDisplay.Demo.OpenCVSharpExtras
 {
     public class MatImageSource : IImageSource
     {

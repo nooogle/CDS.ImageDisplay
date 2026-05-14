@@ -1,11 +1,11 @@
-﻿using CDS.Imaging.BitmapDisplay;
+using CDS.ImageDisplay.BitmapDisplay;
 using Humanizer;
 using System;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.Demo.DemoForms
+namespace CDS.ImageDisplay.Demo.DemoForms
 {
     public partial class FormPaintOverAndUnder : Form
     {

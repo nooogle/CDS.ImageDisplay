@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace CDS.Imaging.Utils;
+namespace CDS.ImageDisplay.Utils;
 
 /// <summary>
 /// Win32 API functions

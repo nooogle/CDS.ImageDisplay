@@ -1,9 +1,9 @@
-﻿using CDS.Imaging.BitmapDisplay;
-using CDS.Imaging.Overlays;
+using CDS.ImageDisplay.BitmapDisplay;
+using CDS.ImageDisplay.Overlays;
 using System;
 using System.Drawing;
 
-namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
+namespace CDS.ImageDisplay.Demo.DemoForms.OverlaysDemo
 {
     public class Bubble
     {

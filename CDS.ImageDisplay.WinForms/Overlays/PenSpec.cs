@@ -3,10 +3,10 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Text.Json.Serialization;
-using CDS.Imaging.Utils;
+using CDS.ImageDisplay.Utils;
 
 
-namespace CDS.Imaging.Overlays;
+namespace CDS.ImageDisplay.Overlays;
 
 /// <summary>
 /// Represents the specification of a pen.

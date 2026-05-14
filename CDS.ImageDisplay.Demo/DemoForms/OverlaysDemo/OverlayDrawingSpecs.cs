@@ -1,9 +1,9 @@
-﻿using CDS.Imaging.Overlays;
-using CDS.Imaging.Utils;
+using CDS.ImageDisplay.Overlays;
+using CDS.ImageDisplay.Utils;
 using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo;
+namespace CDS.ImageDisplay.Demo.DemoForms.OverlaysDemo;
 
 
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]

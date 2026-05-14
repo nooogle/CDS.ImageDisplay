@@ -1,5 +1,5 @@
-﻿
-namespace CDS.Imaging.Demo.DemoForms
+
+namespace CDS.ImageDisplay.Demo.DemoForms
 {
     partial class FormROISelection
     {
@@ -262,7 +262,7 @@ namespace CDS.Imaging.Demo.DemoForms
         private System.Windows.Forms.Label labelDraggingROI;
         private System.Windows.Forms.Label labelCommittedROI;
         private System.Windows.Forms.PropertyGrid propertyGrid;
-        private CDS.Imaging.Utils.SystemInfoPanel sysInfoPanel;
+        private CDS.ImageDisplay.Utils.SystemInfoPanel sysInfoPanel;
         private System.Windows.Forms.Label labelPaintBackgroundMetrics;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label labelPaintForegroundMetrics;

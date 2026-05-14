@@ -1,6 +1,6 @@
-﻿using System.Drawing;
+using System.Drawing;
 
-namespace CDS.Imaging.Demo
+namespace CDS.ImageDisplay.Demo
 {
     /// <summary>
     /// Encapsulates a resource image name and the actual resource - for use with a 

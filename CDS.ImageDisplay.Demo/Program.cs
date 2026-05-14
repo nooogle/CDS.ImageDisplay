@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.Demo
+namespace CDS.ImageDisplay.Demo
 {
     static class Program
     {

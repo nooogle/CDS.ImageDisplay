@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace CDS.Imaging.BitmapDisplay;
+namespace CDS.ImageDisplay.BitmapDisplay;
 
 /// <summary>
 /// Timing metrics

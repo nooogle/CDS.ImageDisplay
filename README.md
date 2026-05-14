@@ -1,4 +1,4 @@
-# CDS.Imaging
+# CDS.ImageDisplay
 Image processing and related utilities
 
 

@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.BitmapDisplay;
+namespace CDS.ImageDisplay.BitmapDisplay;
 
 /// <summary>
 /// Displays a bitmap

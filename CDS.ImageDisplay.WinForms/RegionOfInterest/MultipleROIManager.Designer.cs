@@ -1,4 +1,4 @@
-﻿namespace CDS.Imaging.RegionOfInterest
+namespace CDS.ImageDisplay.RegionOfInterest
 {
     partial class MultipleROIManager
     {

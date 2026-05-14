@@ -1,5 +1,5 @@
-﻿using BenchmarkDotNet.Running;
-using CDS.Imaging.Utils;
+using BenchmarkDotNet.Running;
+using CDS.ImageDisplay.Utils;
 
 namespace BenchmarkTests;
 

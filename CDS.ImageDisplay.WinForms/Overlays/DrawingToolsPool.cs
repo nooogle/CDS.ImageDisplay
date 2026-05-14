@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.Overlays;
+namespace CDS.ImageDisplay.Overlays;
 
 
 /// <summary>

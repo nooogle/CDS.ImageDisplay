@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.Utils;
+namespace CDS.ImageDisplay.Utils;
 
 /// <summary>
 /// Provides information about the system and application.

@@ -1,8 +1,8 @@
-﻿using CDS.Imaging.BitmapDisplay;
+using CDS.ImageDisplay.BitmapDisplay;
 using System;
 using System.Drawing;
 
-namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
+namespace CDS.ImageDisplay.Demo.DemoForms.OverlaysDemo
 {
 
     internal class OverlayPainter

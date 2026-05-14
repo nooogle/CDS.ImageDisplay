@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 
-namespace CDS.Imaging.Overlays;
+namespace CDS.ImageDisplay.Overlays;
 
 
 /// <summary>

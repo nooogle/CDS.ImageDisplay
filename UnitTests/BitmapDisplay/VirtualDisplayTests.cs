@@ -1,10 +1,10 @@
 using AwesomeAssertions;
 
-using CDS.Imaging.BitmapDisplay;
+using CDS.ImageDisplay.BitmapDisplay;
 
 using System.Drawing;
 
-namespace CDS.Imaging.WinFormsTests.BitmapDisplay;
+namespace CDS.ImageDisplay.WinFormsTests.BitmapDisplay;
 
 [TestClass]
 public partial class VirtualDisplayTests

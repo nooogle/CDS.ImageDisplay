@@ -1,8 +1,8 @@
-﻿using CDS.Imaging.BitmapDisplay;
-using CDS.Imaging.Overlays;
+using CDS.ImageDisplay.BitmapDisplay;
+using CDS.ImageDisplay.Overlays;
 using System.Drawing;
 
-namespace CDS.Imaging.RegionOfInterest;
+namespace CDS.ImageDisplay.RegionOfInterest;
 
 /// <summary>
 /// Interface for a descriptor for a single ROI, The <see cref="MultipleROIManager"/> uses these

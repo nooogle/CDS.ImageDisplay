@@ -1,5 +1,5 @@
-﻿
-namespace CDS.Imaging.Demo
+
+namespace CDS.ImageDisplay.Demo
 {
     partial class FormTestLauncher
     {

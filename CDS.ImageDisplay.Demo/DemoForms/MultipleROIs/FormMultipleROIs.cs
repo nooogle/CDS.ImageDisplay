@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.Demo.DemoForms.MultipleROIs;
+namespace CDS.ImageDisplay.Demo.DemoForms.MultipleROIs;
 
 
 /// <summary>
@@ -78,7 +78,7 @@ public partial class FormMultipleROIs : Form
         }
     }
 
-    private void multipleROIManager_OnCommittedROIChanged(object sender, CDS.Imaging.RegionOfInterest.CommittedROIDescriptorChangedEventArgs e)
+    private void multipleROIManager_OnCommittedROIChanged(object sender, CDS.ImageDisplay.RegionOfInterest.CommittedROIDescriptorChangedEventArgs e)
     {
         var myDesciptor = e.ROIDescriptor as MyROIDescriptor;
 

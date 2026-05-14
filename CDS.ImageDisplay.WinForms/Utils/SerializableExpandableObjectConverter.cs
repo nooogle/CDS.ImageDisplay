@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 
-namespace CDS.Imaging.Utils;
+namespace CDS.ImageDisplay.Utils;
 
 
 /// <summary>

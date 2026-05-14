@@ -1,7 +1,7 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace CDS.Imaging.Demo.DemoForms;
+namespace CDS.ImageDisplay.Demo.DemoForms;
 
 
 /// <summary>

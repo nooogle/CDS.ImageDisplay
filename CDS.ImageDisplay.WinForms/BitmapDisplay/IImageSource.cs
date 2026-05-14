@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace CDS.Imaging.BitmapDisplay
+namespace CDS.ImageDisplay.BitmapDisplay
 {
     /// <summary>
     /// Provides access to an image's properties and pixel data

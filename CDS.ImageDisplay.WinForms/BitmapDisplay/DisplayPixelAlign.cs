@@ -1,4 +1,4 @@
-﻿namespace CDS.Imaging.BitmapDisplay
+namespace CDS.ImageDisplay.BitmapDisplay
 {
     /// <summary>
     /// Control show to map an image pixel to a display pixel

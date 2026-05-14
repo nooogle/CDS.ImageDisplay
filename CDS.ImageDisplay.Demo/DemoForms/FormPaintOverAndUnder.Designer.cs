@@ -1,5 +1,5 @@
-﻿
-namespace CDS.Imaging.Demo.DemoForms
+
+namespace CDS.ImageDisplay.Demo.DemoForms
 {
     partial class FormPaintOverAndUnder
     {
@@ -30,7 +30,7 @@ namespace CDS.Imaging.Demo.DemoForms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.bitmapDisplay = new CDS.Imaging.BitmapDisplay.BitmapDisplayPanel();
+            this.bitmapDisplay = new CDS.ImageDisplay.BitmapDisplay.BitmapDisplayPanel();
             this.menu = new System.Windows.Forms.MenuStrip();
             this.menuImage = new System.Windows.Forms.ToolStripMenuItem();
             this.menuImageBuiltIn = new System.Windows.Forms.ToolStripComboBox();
@@ -55,17 +55,17 @@ namespace CDS.Imaging.Demo.DemoForms
             // 
             // bitmapDisplay
             // 
-            this.bitmapDisplay.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
-            this.bitmapDisplay.DisplayMode = CDS.Imaging.BitmapDisplay.BitmapDisplayMode.FitToWindowCentred;
+            this.bitmapDisplay.BackgroundImage = global::CDS.ImageDisplay.Demo.Properties.Resources.double_bubble;
+            this.bitmapDisplay.DisplayMode = CDS.ImageDisplay.BitmapDisplay.BitmapDisplayMode.FitToWindowCentred;
             this.bitmapDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bitmapDisplay.Location = new System.Drawing.Point(0, 24);
             this.bitmapDisplay.Name = "bitmapDisplay";
             this.bitmapDisplay.Size = new System.Drawing.Size(722, 459);
             this.bitmapDisplay.TabIndex = 0;
             this.bitmapDisplay.Zoom = 1F;
-            this.bitmapDisplay.OnPaintOver += new CDS.Imaging.BitmapDisplay.PaintOverEvent(this.bitmapDisplay_PaintOver);
-            this.bitmapDisplay.OnPaintUnder += new CDS.Imaging.BitmapDisplay.PaintUnderEvent(this.bitmapDisplay_PaintUnder);
-            this.bitmapDisplay.OnDisplayModeChanged += new CDS.Imaging.BitmapDisplay.ModeChangedEvent(this.bitmapDisplay_DisplayModeChanged);
+            this.bitmapDisplay.OnPaintOver += new CDS.ImageDisplay.BitmapDisplay.PaintOverEvent(this.bitmapDisplay_PaintOver);
+            this.bitmapDisplay.OnPaintUnder += new CDS.ImageDisplay.BitmapDisplay.PaintUnderEvent(this.bitmapDisplay_PaintUnder);
+            this.bitmapDisplay.OnDisplayModeChanged += new CDS.ImageDisplay.BitmapDisplay.ModeChangedEvent(this.bitmapDisplay_DisplayModeChanged);
             // 
             // menu
             // 

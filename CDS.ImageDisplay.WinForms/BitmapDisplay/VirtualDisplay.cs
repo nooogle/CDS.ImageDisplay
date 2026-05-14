@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Drawing;
 
-namespace CDS.Imaging.BitmapDisplay;
+namespace CDS.ImageDisplay.BitmapDisplay;
 
 /// <summary>
 /// Provides the drawing rectangle needed to paint an image 

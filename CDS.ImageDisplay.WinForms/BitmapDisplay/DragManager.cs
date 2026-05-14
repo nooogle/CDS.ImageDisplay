@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.BitmapDisplay;
+namespace CDS.ImageDisplay.BitmapDisplay;
 
 /// <summary>
 /// Handles mouse-drag panning for a <see cref="BitmapDisplayPanel"/>.

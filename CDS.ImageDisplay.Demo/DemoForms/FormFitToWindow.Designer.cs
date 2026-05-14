@@ -1,5 +1,5 @@
-﻿
-namespace CDS.Imaging.Demo.DemoForms
+
+namespace CDS.ImageDisplay.Demo.DemoForms
 {
     partial class FormFitToWindow
     {
@@ -29,15 +29,15 @@ namespace CDS.Imaging.Demo.DemoForms
         /// </summary>
         private void InitializeComponent()
         {
-            this.bitmapDisplayPanel = new CDS.Imaging.BitmapDisplay.BitmapDisplayPanel();
+            this.bitmapDisplayPanel = new CDS.ImageDisplay.BitmapDisplay.BitmapDisplayPanel();
             this.SuspendLayout();
             // 
             // bitmapDisplayPanel
             // 
-            this.bitmapDisplayPanel.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
+            this.bitmapDisplayPanel.BackgroundImage = global::CDS.ImageDisplay.Demo.Properties.Resources.double_bubble;
             this.bitmapDisplayPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bitmapDisplayPanel.Location = new System.Drawing.Point(0, 0);
-            this.bitmapDisplayPanel.DisplayMode = CDS.Imaging.BitmapDisplay.BitmapDisplayMode.FitToWindowCentred;
+            this.bitmapDisplayPanel.DisplayMode = CDS.ImageDisplay.BitmapDisplay.BitmapDisplayMode.FitToWindowCentred;
             this.bitmapDisplayPanel.Name = "bitmapDisplayPanel";
             this.bitmapDisplayPanel.Size = new System.Drawing.Size(800, 374);
             this.bitmapDisplayPanel.TabIndex = 0;

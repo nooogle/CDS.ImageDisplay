@@ -1,11 +1,11 @@
 using AwesomeAssertions;
 
-using CDS.Imaging.Overlays;
+using CDS.ImageDisplay.Overlays;
 
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace CDS.Imaging.WinFormsTests.Overlays;
+namespace CDS.ImageDisplay.WinFormsTests.Overlays;
 
 [TestClass]
 public partial class SpecTests

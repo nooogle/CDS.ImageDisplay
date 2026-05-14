@@ -1,12 +1,12 @@
 using AwesomeAssertions;
 
-using CDS.Imaging.Overlays;
-using CDS.Imaging.Utils;
+using CDS.ImageDisplay.Overlays;
+using CDS.ImageDisplay.Utils;
 
 using System.Drawing;
 using System.Text.Json;
 
-namespace CDS.Imaging.WinFormsTests.Utils;
+namespace CDS.ImageDisplay.WinFormsTests.Utils;
 
 [TestClass]
 public partial class ColorJsonConverterTests

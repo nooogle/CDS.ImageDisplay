@@ -1,11 +1,11 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using CDS.Imaging.BitmapDisplay;
-using CDS.Imaging.Utils;
+using CDS.ImageDisplay.BitmapDisplay;
+using CDS.ImageDisplay.Utils;
 
 
-namespace CDS.Imaging.Overlays;
+namespace CDS.ImageDisplay.Overlays;
 
 /// <summary>
 /// A line shape

@@ -1,11 +1,11 @@
 using System.ComponentModel;
 using System.Drawing;
-using CDS.Imaging.BitmapDisplay;
-using CDS.Imaging.Overlays;
-using CDS.Imaging.Utils;
+using CDS.ImageDisplay.BitmapDisplay;
+using CDS.ImageDisplay.Overlays;
+using CDS.ImageDisplay.Utils;
 
 
-namespace CDS.Imaging.RegionOfInterest;
+namespace CDS.ImageDisplay.RegionOfInterest;
 
 /// <summary>
 /// Paints a rectangle on a graphics object. Supports grapples.

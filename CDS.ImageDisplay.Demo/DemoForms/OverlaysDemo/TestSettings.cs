@@ -1,7 +1,7 @@
-﻿using CDS.Imaging.Utils;
+using CDS.ImageDisplay.Utils;
 using System.ComponentModel;
 
-namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo
+namespace CDS.ImageDisplay.Demo.DemoForms.OverlaysDemo
 {
     [TypeConverter(typeof(SerializableExpandableObjectConverter))]
     public class TestSettings

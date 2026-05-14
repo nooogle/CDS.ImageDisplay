@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.Demo
+namespace CDS.ImageDisplay.Demo
 {
     internal class JSONSettingsManager<T> where T : new()
     {
@@ -78,7 +78,7 @@ namespace CDS.Imaging.Demo
                 AllowTrailingCommas = true,
             };
 
-            jsonSerializerOptions.Converters.Add(new CDS.Imaging.Utils.ColorJsonConverter());
+            jsonSerializerOptions.Converters.Add(new CDS.ImageDisplay.Utils.ColorJsonConverter());
             jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 
             return jsonSerializerOptions;

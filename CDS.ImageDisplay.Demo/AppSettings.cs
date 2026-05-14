@@ -1,4 +1,4 @@
-﻿namespace CDS.Imaging.Demo
+namespace CDS.ImageDisplay.Demo
 {
     internal class AppSettings
     {

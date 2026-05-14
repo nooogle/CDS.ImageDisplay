@@ -1,10 +1,10 @@
-﻿using Humanizer;
+using Humanizer;
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.Demo.DemoForms;
+namespace CDS.ImageDisplay.Demo.DemoForms;
 
 
 /// <summary>
@@ -123,7 +123,7 @@ public partial class FormROISelection : Form
     /// <summary>
     /// The ROI has been committed to the singleROIManager
     /// </summary>
-    private void singleROIManager_OnCommittedROIChanged(CDS.Imaging.RegionOfInterest.SingleROIManager sender, Rectangle roi)
+    private void singleROIManager_OnCommittedROIChanged(CDS.ImageDisplay.RegionOfInterest.SingleROIManager sender, Rectangle roi)
     {
         var sizeLimitedROI = new Rectangle(
             roi.Location.X,
@@ -143,7 +143,7 @@ public partial class FormROISelection : Form
     /// <summary>
     /// The ROI is being dragged on the singleROIManagery
     /// </summary>
-    private void singleROIManager_OnDraggingROIChanged(CDS.Imaging.RegionOfInterest.SingleROIManager sender, Rectangle roi)
+    private void singleROIManager_OnDraggingROIChanged(CDS.ImageDisplay.RegionOfInterest.SingleROIManager sender, Rectangle roi)
     {
         UpdateROILabels();
     }

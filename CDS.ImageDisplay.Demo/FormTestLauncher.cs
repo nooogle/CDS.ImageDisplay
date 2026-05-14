@@ -2,7 +2,7 @@ using System;
 using System.Windows.Forms;
 using CDS.WinFormsMenus.Basic;
 
-namespace CDS.Imaging.Demo;
+namespace CDS.ImageDisplay.Demo;
 
 public partial class FormTestLauncher : Form
 {

@@ -1,4 +1,4 @@
-﻿namespace CDS.Imaging.Utils
+namespace CDS.ImageDisplay.Utils
 {
     partial class SystemInfoPanel
     {

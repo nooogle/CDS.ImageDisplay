@@ -1,4 +1,4 @@
-﻿namespace CDS.Imaging.Demo.DemoForms
+namespace CDS.ImageDisplay.Demo.DemoForms
 {
     partial class FormNoImage
     {
@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            bitmapDisplayPanel1 = new CDS.Imaging.BitmapDisplay.BitmapDisplayPanel();
+            bitmapDisplayPanel1 = new CDS.ImageDisplay.BitmapDisplay.BitmapDisplayPanel();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             label1 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
-            bitmapDisplayPanel2 = new CDS.Imaging.BitmapDisplay.BitmapDisplayPanel();
+            bitmapDisplayPanel2 = new CDS.ImageDisplay.BitmapDisplay.BitmapDisplayPanel();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 

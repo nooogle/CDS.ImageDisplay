@@ -1,6 +1,6 @@
-﻿using System.Drawing;
+using System.Drawing;
 
-namespace CDS.Imaging.BitmapDisplay
+namespace CDS.ImageDisplay.BitmapDisplay
 {
     /// <summary>
     /// Callback delegate for getting an image

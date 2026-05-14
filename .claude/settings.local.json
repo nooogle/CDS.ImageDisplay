@@ -1,13 +1,20 @@
 {
   "permissions": {
     "allow": [
-      "Bash(Get-ChildItem -Path \"c:\\\\dev\\\\nooogle\\\\CDS.Imaging\" -Force)",
+      "Bash(Get-ChildItem -Path \"c:\\\\dev\\\\nooogle\\\\CDS.ImageDisplay\" -Force)",
       "Bash(Select-Object Name, PSIsContainer)",
       "Bash(dotnet build *)",
       "Bash(dotnet test *)",
-      "Bash(Remove-Item \"c:\\\\dev\\\\nooogle\\\\CDS.Imaging\\\\todo.html\")",
-      "Bash(Remove-Item \"c:\\\\dev\\\\nooogle\\\\CDS.Imaging\\\\CDS.Imaging.WinForms\\\\BitmapDisplay\\\\MouseMode.cs\")",
-      "Bash(dotnet pack *)"
+      "Bash(Remove-Item \"c:\\\\dev\\\\nooogle\\\\CDS.ImageDisplay\\\\todo.html\")",
+      "Bash(Remove-Item \"c:\\\\dev\\\\nooogle\\\\CDS.ImageDisplay\\\\CDS.ImageDisplay.WinForms\\\\BitmapDisplay\\\\MouseMode.cs\")",
+      "Bash(dotnet pack *)",
+      "PowerShell(Get-ChildItem -Path \"c:\\\\dev\\\\nooogle\\\\CDS.ImageDisplay\" -Directory -Recurse | Where-Object { $_.Name -match \"CDS\\\\.Imaging\" } | ForEach-Object { $_.FullName })",
+      "PowerShell(Get-ChildItem -Path \"c:\\\\dev\\\\nooogle\\\\CDS.ImageDisplay\" -Directory | Where-Object { $_.Parent.Name -eq \"CDS.ImageDisplay\" } | Select-Object Name | Sort-Object Name)",
+      "PowerShell(Get-ChildItem -Path \"c:\\\\dev\\\\nooogle\\\\CDS.ImageDisplay\" | Where-Object { $_.PSIsContainer } | Select-Object -ExpandProperty Name | Sort-Object)",
+      "Bash(gh repo *)",
+      "Bash(git mv *)",
+      "PowerShell(Move-Item -Path \"c:\\\\dev\\\\nooogle\\\\CDS.ImageDisplay\\\\CDS.ImageDisplay.WinForms\" -Destination \"c:\\\\dev\\\\nooogle\\\\CDS.ImageDisplay\\\\CDS.ImageDisplay.WinForms\" -Force 2>&1)",
+      "PowerShell(Move-Item -Path \"c:\\\\dev\\\\nooogle\\\\CDS.ImageDisplay\\\\CDS.ImageDisplay.Demo\" -Destination \"c:\\\\dev\\\\nooogle\\\\CDS.ImageDisplay\\\\CDS.ImageDisplay.Demo\" -Force 2>&1)"
     ]
   }
 }

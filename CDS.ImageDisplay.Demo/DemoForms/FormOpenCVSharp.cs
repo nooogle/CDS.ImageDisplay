@@ -1,9 +1,9 @@
-﻿using CDS.Imaging.Demo.OpenCVSharpExtras;
+using CDS.ImageDisplay.Demo.OpenCVSharpExtras;
 using OpenCvSharp.Extensions;
 using System;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.Demo.DemoForms
+namespace CDS.ImageDisplay.Demo.DemoForms
 {
     public partial class FormOpenCVSharp : Form
     {

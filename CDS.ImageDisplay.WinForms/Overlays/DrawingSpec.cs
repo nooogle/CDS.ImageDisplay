@@ -1,8 +1,8 @@
 using System.ComponentModel;
-using CDS.Imaging.Utils;
+using CDS.ImageDisplay.Utils;
 
 
-namespace CDS.Imaging.Overlays;
+namespace CDS.ImageDisplay.Overlays;
 
 /// <summary>
 /// Bundles together the settings for lines, fills, and fonts.

@@ -1,6 +1,6 @@
-﻿using System.Drawing;
+using System.Drawing;
 
-namespace CDS.Imaging.RegionOfInterest
+namespace CDS.ImageDisplay.RegionOfInterest
 {
     /// <summary>
     /// Event handler for when a ROI is committed

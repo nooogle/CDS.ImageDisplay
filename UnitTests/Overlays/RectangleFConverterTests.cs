@@ -1,10 +1,10 @@
 using AwesomeAssertions;
 
-using CDS.Imaging.Overlays;
+using CDS.ImageDisplay.Overlays;
 
 using System.Drawing;
 
-namespace CDS.Imaging.WinFormsTests.Overlays;
+namespace CDS.ImageDisplay.WinFormsTests.Overlays;
 
 [TestClass]
 public partial class RectangleFConverterTests

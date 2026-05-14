@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CDS.Imaging.WinForms\CDS.Imaging.WinForms.csproj" />
+    <ProjectReference Include="..\CDS.ImageDisplay.WinForms\CDS.ImageDisplay.WinForms.csproj" />
   </ItemGroup>
 
   <ItemGroup>

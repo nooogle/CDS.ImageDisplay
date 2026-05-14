@@ -1,8 +1,8 @@
-﻿using CDS.Imaging.BitmapDisplay;
+using CDS.ImageDisplay.BitmapDisplay;
 using System.ComponentModel;
 using System.Drawing;
 
-namespace CDS.Imaging.Demo.DemoForms.MultipleROIs;
+namespace CDS.ImageDisplay.Demo.DemoForms.MultipleROIs;
 
 
 class MyROIDescriptor : RegionOfInterest.ISingleROIDescriptor, INotifyPropertyChanged

@@ -1,10 +1,10 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Text.Json.Serialization;
-using CDS.Imaging.Utils;
+using CDS.ImageDisplay.Utils;
 
 
-namespace CDS.Imaging.Overlays;
+namespace CDS.ImageDisplay.Overlays;
 
 /// <summary>
 /// Represents a brush specification.

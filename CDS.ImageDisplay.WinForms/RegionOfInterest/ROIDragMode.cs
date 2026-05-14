@@ -1,4 +1,4 @@
-﻿namespace CDS.Imaging.RegionOfInterest
+namespace CDS.ImageDisplay.RegionOfInterest
 {
     /// <summary>
     /// The different dragging modes for the ROI manager.

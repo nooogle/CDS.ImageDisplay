@@ -1,10 +1,10 @@
-﻿using Humanizer;
+using Humanizer;
 using System;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace CDS.Imaging.Demo.DemoForms.OverlaysDemo;
+namespace CDS.ImageDisplay.Demo.DemoForms.OverlaysDemo;
 
 
 /// <summary>
@@ -69,7 +69,7 @@ public partial class FormOverlays : Form
     /// <summary>
     /// Paint allOverlaySettings over the image
     /// </summary>
-    private void bitmapDisplayPanel_OnPaintOver(CDS.Imaging.BitmapDisplay.BitmapDisplayPanel sender, System.Drawing.Graphics graphics)
+    private void bitmapDisplayPanel_OnPaintOver(CDS.ImageDisplay.BitmapDisplay.BitmapDisplayPanel sender, System.Drawing.Graphics graphics)
     {
         if (testSettings == null) { return; }
         if (bitmapDisplayPanel == null) { return; }

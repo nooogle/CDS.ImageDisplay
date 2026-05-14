@@ -1,6 +1,6 @@
-﻿using System.Windows.Forms;
+using System.Windows.Forms;
 
-namespace CDS.Imaging.Demo.DemoForms;
+namespace CDS.ImageDisplay.Demo.DemoForms;
 
 
 /// <summary>

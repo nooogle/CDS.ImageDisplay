@@ -1,4 +1,4 @@
-﻿namespace CDS.Imaging.Demo.DemoForms
+namespace CDS.ImageDisplay.Demo.DemoForms
 {
     internal class Settings
     {

@@ -1,4 +1,4 @@
-﻿namespace CDS.Imaging.BitmapDisplay
+namespace CDS.ImageDisplay.BitmapDisplay
 {
     /// <summary>
     /// Bitmap display modes

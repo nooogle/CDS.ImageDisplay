@@ -1,5 +1,5 @@
-﻿
-namespace CDS.Imaging.Demo.DemoForms
+
+namespace CDS.ImageDisplay.Demo.DemoForms
 {
     partial class FormActualSizeCentred
     {
@@ -29,15 +29,15 @@ namespace CDS.Imaging.Demo.DemoForms
         /// </summary>
         private void InitializeComponent()
         {
-            this.bitmapDisplayPanel1 = new CDS.Imaging.BitmapDisplay.BitmapDisplayPanel();
+            this.bitmapDisplayPanel1 = new CDS.ImageDisplay.BitmapDisplay.BitmapDisplayPanel();
             this.SuspendLayout();
             // 
             // bitmapDisplayPanel1
             // 
-            this.bitmapDisplayPanel1.BackgroundImage = global::CDS.Imaging.Demo.Properties.Resources.double_bubble;
+            this.bitmapDisplayPanel1.BackgroundImage = global::CDS.ImageDisplay.Demo.Properties.Resources.double_bubble;
             this.bitmapDisplayPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bitmapDisplayPanel1.Location = new System.Drawing.Point(0, 0);
-            this.bitmapDisplayPanel1.DisplayMode = CDS.Imaging.BitmapDisplay.BitmapDisplayMode.ActualSizeCentred;
+            this.bitmapDisplayPanel1.DisplayMode = CDS.ImageDisplay.BitmapDisplay.BitmapDisplayMode.ActualSizeCentred;
             this.bitmapDisplayPanel1.Name = "bitmapDisplayPanel1";
             this.bitmapDisplayPanel1.Size = new System.Drawing.Size(800, 450);
             this.bitmapDisplayPanel1.TabIndex = 0;

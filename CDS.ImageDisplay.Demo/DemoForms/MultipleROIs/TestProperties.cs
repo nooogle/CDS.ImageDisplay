@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 
-namespace CDS.Imaging.Demo.DemoForms.MultipleROIs;
+namespace CDS.ImageDisplay.Demo.DemoForms.MultipleROIs;
 
 
 class TestProperties : INotifyPropertyChanged

@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace CDS.Imaging.RegionOfInterest;
+namespace CDS.ImageDisplay.RegionOfInterest;
 
 /// <summary>
 /// Event arguments for when a ROI has been committed.

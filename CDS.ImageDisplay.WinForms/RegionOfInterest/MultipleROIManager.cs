@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using CDS.Imaging.Utils;
+using CDS.ImageDisplay.Utils;
 
-namespace CDS.Imaging.RegionOfInterest;
+namespace CDS.ImageDisplay.RegionOfInterest;
 
 /// <summary>
 /// Manages multiple ROIs on a bitmap display.

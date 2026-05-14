@@ -1,5 +1,5 @@
-﻿
-namespace CDS.Imaging.Demo.DemoForms.MultipleROIs
+
+namespace CDS.ImageDisplay.Demo.DemoForms.MultipleROIs
 {
     partial class FormMultipleROIs
     {
@@ -154,7 +154,7 @@ namespace CDS.Imaging.Demo.DemoForms.MultipleROIs
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnLoadImage;
         private System.Windows.Forms.PropertyGrid propertyGrid;
-        private CDS.Imaging.Utils.SystemInfoPanel sysInfoPanel;
+        private CDS.ImageDisplay.Utils.SystemInfoPanel sysInfoPanel;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private RegionOfInterest.MultipleROIManager multipleROIManager;
     }

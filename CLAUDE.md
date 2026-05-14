@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-CDS.Imaging is a Windows Forms library (targeting `net10.0-windows`) for displaying, zooming, panning, and annotating images. It is published to NuGet as "CDS Imaging" and versioned via MinVer with a `V` tag prefix (e.g. `V2.2.0`).
+CDS.ImageDisplay is a Windows Forms library (targeting `net10.0-windows`) for displaying, zooming, panning, and annotating images. It is published to NuGet as "CDS Imaging" and versioned via MinVer with a `V` tag prefix (e.g. `V2.2.0`).
 
 ## Build & test commands
 
@@ -13,7 +13,7 @@ dotnet build                          # build all projects
 dotnet test                           # run unit tests
 dotnet test --filter "FullyQualifiedName~VirtualDisplay"  # run a single test class
 dotnet run --project BenchmarkTests   # run benchmarks (Release config recommended)
-dotnet pack CDS.Imaging.WinForms      # produce NuGet package
+dotnet pack CDS.ImageDisplay.WinForms      # produce NuGet package
 ```
 
 **Solution build quirks**: `BenchmarkTests` is excluded from Debug builds; `UnitTests` is excluded from Release builds. This is intentional in the `.slnx`.
@@ -22,10 +22,10 @@ dotnet pack CDS.Imaging.WinForms      # produce NuGet package
 
 | Project | Role |
 |---|---|
-| `CDS.Imaging.WinForms` | Core library — the NuGet deliverable |
+| `CDS.ImageDisplay.WinForms` | Core library — the NuGet deliverable |
 | `UnitTests` | MSTest + AwesomeAssertions unit tests |
 | `BenchmarkTests` | BenchmarkDotNet performance tests for resource pooling |
-| `CDS.Imaging.Demo` | WinForms demo app; uses OpenCvSharp4 — not part of the library |
+| `CDS.ImageDisplay.Demo` | WinForms demo app; uses OpenCvSharp4 — not part of the library |
 
 ## Architecture
 
