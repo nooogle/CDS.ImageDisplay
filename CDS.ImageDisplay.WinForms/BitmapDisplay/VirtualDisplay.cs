@@ -36,6 +36,11 @@ public class VirtualDisplay
     /// </summary>
     private readonly OnPaintRectChangedCallback onPaintRectChanged;
 
+    /// <summary>
+    /// Called whenever <see cref="Zoom"/> changes
+    /// </summary>
+    private readonly Action<float>? onZoomChanged;
+
 
     /// <summary>
     /// The size of half a display pixel
@@ -77,8 +82,8 @@ public class VirtualDisplay
             if (clippedValue != zoom)
             {
                 zoom = clippedValue;
-                SizeOfHalfDisplayPixel = new SizeF(zoom / 2, zoom / 2);
                 RecalculatePaintRect();
+                onZoomChanged?.Invoke(zoom);
             }
         }
     }
@@ -237,9 +242,13 @@ public class VirtualDisplay
     /// <param name="onPaintRectChanged">
     /// A callback which is fired whenever the <see cref="PaintRect"/> has changed.
     /// </param>
-    public VirtualDisplay(OnPaintRectChangedCallback onPaintRectChanged)
+    /// <param name="onZoomChanged">
+    /// An optional callback fired whenever the <see cref="Zoom"/> level changes.
+    /// </param>
+    public VirtualDisplay(OnPaintRectChangedCallback onPaintRectChanged, Action<float>? onZoomChanged = null)
     {
         this.onPaintRectChanged = onPaintRectChanged;
+        this.onZoomChanged = onZoomChanged;
     }
 
 
@@ -248,6 +257,8 @@ public class VirtualDisplay
     /// </summary>
     private void RecalculatePaintRect()
     {
+        SizeOfHalfDisplayPixel = new SizeF(zoom / 2, zoom / 2);
+
         PaintRect = AnythingToDisplay
             ? new RectangleF(
                 x: targetDisplayCentre.X - (targetImageCentre.X * zoom),
@@ -353,13 +364,18 @@ public class VirtualDisplay
 
 
     /// <summary>
-    /// Force the image be be centred and drawn with 1:1 zoom, 
+    /// Force the image be be centred and drawn with 1:1 zoom,
     /// regardless of the current mode
     /// </summary>
     private void ForceActualSizeCentred()
     {
+        float previousZoom = zoom;
         zoom = 1;
         ForceCentre();
+        if (zoom != previousZoom)
+        {
+            onZoomChanged?.Invoke(zoom);
+        }
     }
 
 
@@ -405,18 +421,28 @@ public class VirtualDisplay
 
 
     /// <summary>
-    /// Centres the image and adjusts the zoom so the image is as large as possible 
+    /// Centres the image and adjusts the zoom so the image is as large as possible
     /// within the display, regardless of the current display mode.
     /// </summary>
     private void ForceFitToWindowCentred()
     {
+        float previousZoom = zoom;
+
         double imageToDisplayHorizRatio = (double)imageSize.Width / displaySize.Width;
         double imageToDisplayVerticalRatio = (double)imageSize.Height / displaySize.Height;
         bool shouldMaximiseHeight = imageToDisplayHorizRatio < imageToDisplayVerticalRatio;
 
-        zoom = shouldMaximiseHeight ? (float)displaySize.Height / imageSize.Height : (float)displaySize.Width / imageSize.Width;
+        float rawZoom = shouldMaximiseHeight
+            ? (float)displaySize.Height / imageSize.Height
+            : (float)displaySize.Width / imageSize.Width;
+
+        zoom = Math.Clamp(rawZoom, Consts.MinZoom, Consts.MaxZoom);
 
         ForceCentre();
+        if (zoom != previousZoom)
+        {
+            onZoomChanged?.Invoke(zoom);
+        }
     }
 
 

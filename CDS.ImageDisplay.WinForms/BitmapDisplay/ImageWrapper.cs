@@ -6,10 +6,10 @@ namespace CDS.ImageDisplay.BitmapDisplay;
 
 /// <summary>
 /// Manages a .Net Bitmap. New images will be copied into the image when
-/// the specification is the same; otherwise a new image is created and 
+/// the specification is the same; otherwise a new image is created and
 /// a clone taken of the new image.
 /// </summary>
-public sealed class ImageWrapper : IDisposable
+internal sealed class ImageWrapper : IDisposable
 {
     /// <summary>
     /// The image
@@ -101,8 +101,6 @@ public sealed class ImageWrapper : IDisposable
         { return; }
 
         var roi = new Rectangle(0, 0, Image.Width, Image.Height);
-
-        //var sourceBits = source.LockBits(roi, System.Drawing.Imaging.ImageLockMode.ReadOnly, source.PixelFormat);
         BitmapData destBits = Image.LockBits(roi, System.Drawing.Imaging.ImageLockMode.WriteOnly, Image.PixelFormat);
 
         int sourceBytesToCopy = imageSource.Stride * imageSource.Height;

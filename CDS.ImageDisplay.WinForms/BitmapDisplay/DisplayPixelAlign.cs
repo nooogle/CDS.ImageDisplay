@@ -1,7 +1,7 @@
 namespace CDS.ImageDisplay.BitmapDisplay;
 
 /// <summary>
-/// Control show to map an image pixel to a display pixel
+/// Controls how to map an image pixel to a display pixel.
 /// </summary>
 public enum DisplayPixelAlign
 {

@@ -66,7 +66,7 @@ public sealed class VirtualDisplayTests
             PaintRect = new RectangleF(0, 0, 1000, 600),
             TargetDisplayCentre = new PointF(500, 300),
             TargetImageCentre = new PointF(500, 300),
-            SizeOfHalfDisplayPixel = new SizeF(0, 0),
+            SizeOfHalfDisplayPixel = new SizeF(0.5f, 0.5f),
             AnythingToDisplay = true,
         };
 
@@ -95,7 +95,7 @@ public sealed class VirtualDisplayTests
             PaintRect = new RectangleF(0, 0, 1000, 600),
             TargetDisplayCentre = new PointF(500, 300),
             TargetImageCentre = new PointF(500, 300),
-            SizeOfHalfDisplayPixel = new SizeF(0, 0),
+            SizeOfHalfDisplayPixel = new SizeF(0.5f, 0.5f),
             AnythingToDisplay = true,
         };
 

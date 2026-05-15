@@ -39,7 +39,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// <summary>
     /// True if dragging is allowed
     /// </summary>
-    private bool IsDraggingAllowed => _suppressDraggingCounter == 0;
+    private bool IsDraggingAllowed => _suppressDraggingCounter <= 0;
 
 
     /// <summary>
@@ -135,6 +135,14 @@ public partial class BitmapDisplayPanel : UserControl
 
 
     /// <summary>
+    /// Fired when the zoom level changes.
+    /// </summary>
+    [Category(s_categoryCDS)]
+    [Description("Called when the zoom level changes.")]
+    public event EventHandler<ZoomChangedEventArgs>? OnZoomChanged;
+
+
+    /// <summary>
     /// Gets the image currently being displayed. 
     /// </summary>
     /// <remarks>
@@ -221,17 +229,17 @@ public partial class BitmapDisplayPanel : UserControl
         _isWaitingToApplyPendingImage = true;
 
 
-        // Post the following action on the UI thread and return immediately;
-        // this will release the lock (applied in SetImage). When the action
-        // is picked up we'll re-acquire the lock so that the flag reset is
-        // atomic with respect to non-UI threads checking it in SetImage.
-        // The lock is reentrant, so SetImage (which also locks _imageLock)
-        // works correctly when called from within this outer lock.
+        // Post the following action on the UI thread and return immediately.
+        // When the action is picked up we re-acquire the lock so that the flag
+        // reset is atomic with respect to non-UI threads checking it in SetImage.
+        // We call SetImageDirectlyFromUIThread rather than SetImage to avoid a
+        // nested lock acquisition: System.Threading.Lock is non-reentrant.
         BeginInvoke(() =>
         {
             lock (_imageLock)
             {
-                SetImage(_pendingDisplayImage.Image);
+                using var imageSource = new BitmapImageSource(_pendingDisplayImage.Image);
+                SetImageDirectlyFromUIThread(imageSource);
                 _isWaitingToApplyPendingImage = false;
             }
         });
@@ -361,12 +369,12 @@ public partial class BitmapDisplayPanel : UserControl
 
         _dragManager = new DragManager(DragManager_SetNewTargetDisplayCentre);
         _zoomManager = new ZoomManager(ZoomManager_SetNewZoom);
-        _virtualDisplay = new VirtualDisplay(VirtualImageOnDisplay_OnPaintRectChanged);
+        _virtualDisplay = new VirtualDisplay(VirtualImageOnDisplay_OnPaintRectChanged, VirtualDisplay_OnZoomChanged);
     }
 
 
     /// <summary>
-    /// Ensure arrow keys are treated as input keys
+    /// Ensure arrow keys are treated as input keys so they reach <see cref="OnKeyDown"/>.
     /// </summary>
     protected override bool IsInputKey(Keys keyData)
     {
@@ -375,10 +383,41 @@ public partial class BitmapDisplayPanel : UserControl
             (keyData & Keys.KeyCode) == Keys.Up ||
             (keyData & Keys.KeyCode) == Keys.Down)
         {
-            return true; // Treat arrow keys as input keys
+            return true;
         }
 
         return base.IsInputKey(keyData);
+    }
+
+
+    /// <summary>
+    /// Arrow keys pan the image when in <see cref="BitmapDisplayMode.Free"/> mode.
+    /// </summary>
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        ArgumentNullException.ThrowIfNull(e);
+
+        base.OnKeyDown(e);
+
+        if (!AnythingToDisplay || DisplayMode != BitmapDisplayMode.Free)
+        {
+            return;
+        }
+
+        const float panStep = 20f;
+        PointF centre = _virtualDisplay.TargetDisplayCentre;
+
+        switch (e.KeyCode)
+        {
+            case Keys.Left:  centre.X += panStep; break;
+            case Keys.Right: centre.X -= panStep; break;
+            case Keys.Up:    centre.Y += panStep; break;
+            case Keys.Down:  centre.Y -= panStep; break;
+            default: return;
+        }
+
+        _virtualDisplay.TargetDisplayCentre = centre;
+        e.Handled = true;
     }
 
 
@@ -422,6 +461,13 @@ public partial class BitmapDisplayPanel : UserControl
         Invalidate();
         OnPaintRectChanged?.Invoke(this, EventArgs.Empty);
     }
+
+
+    /// <summary>
+    /// The virtual display zoom has changed
+    /// </summary>
+    private void VirtualDisplay_OnZoomChanged(float zoom) =>
+        OnZoomChanged?.Invoke(this, new ZoomChangedEventArgs(zoom));
 
 
     /// <summary>
@@ -705,13 +751,11 @@ public partial class BitmapDisplayPanel : UserControl
     {
         ArgumentNullException.ThrowIfNull(e);
 
+        base.OnMouseMove(e);
+
         if (_dragManager.IsDragging)
         {
             _dragManager.OnMouseMove(e);
-        }
-        else
-        {
-            base.OnMouseMove(e);
         }
     }
 

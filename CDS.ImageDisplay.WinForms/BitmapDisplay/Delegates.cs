@@ -4,13 +4,6 @@ using System.Drawing;
 namespace CDS.ImageDisplay.BitmapDisplay;
 
 /// <summary>
-/// Callback delegate for getting an image.
-/// </summary>
-/// <param name="sender">Sender of the callback.</param>
-/// <returns>An image, or <see langword="null"/> if none is available.</returns>
-public delegate Image GetImageCallback(BitmapDisplayPanel sender);
-
-/// <summary>
 /// Callback delegate raised when the paint rectangle changes on a <see cref="VirtualDisplay"/>.
 /// </summary>
 /// <param name="sender">The <see cref="VirtualDisplay"/> whose paint rectangle changed.</param>
@@ -67,5 +60,21 @@ public sealed class ImageSizeChangedEventArgs : EventArgs
     {
         OldSize = oldSize;
         NewSize = newSize;
+    }
+}
+
+/// <summary>
+/// Provides data for the <see cref="BitmapDisplayPanel.OnZoomChanged"/> event.
+/// </summary>
+public sealed class ZoomChangedEventArgs : EventArgs
+{
+    /// <summary>Gets the new zoom level.</summary>
+    public float Zoom { get; }
+
+    /// <summary>Initialises a new instance of <see cref="ZoomChangedEventArgs"/>.</summary>
+    /// <param name="zoom">The new zoom level.</param>
+    public ZoomChangedEventArgs(float zoom)
+    {
+        Zoom = zoom;
     }
 }
