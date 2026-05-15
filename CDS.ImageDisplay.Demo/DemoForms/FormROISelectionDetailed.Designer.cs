@@ -1,7 +1,7 @@
 
 namespace CDS.ImageDisplay.Demo.DemoForms
 {
-    partial class FormROISelection
+    partial class FormROISelectionDetailed
     {
         /// <summary>
         /// Required designer variable.

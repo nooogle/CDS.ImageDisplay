@@ -10,7 +10,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms;
 /// <summary>
 /// Form for demonstrating the singleROIManager
 /// </summary>
-internal sealed partial class FormROISelection : Form
+internal sealed partial class FormROISelectionDetailed : Form
 {
     private sealed class TestProperties
     {
@@ -51,7 +51,7 @@ internal sealed partial class FormROISelection : Form
     /// <summary>
     /// Constructor
     /// </summary>
-    public FormROISelection()
+    public FormROISelectionDetailed()
     {
         InitializeComponent();
 

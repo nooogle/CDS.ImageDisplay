@@ -72,10 +72,16 @@ internal sealed partial class FormTestLauncher : Form
             createForm: () => new DemoForms.FormPaintOverAndUnder());
 
         other.AddItem(
-            name: "ROI selection",
-            tooltip: "",
+            name: "ROI selection: simple",
+            tooltip: "Basic demo of ROI selection",
             parent: this,
-            createForm: () => new DemoForms.FormROISelection());
+            createForm: () => new DemoForms.FormROISelectionSimple());
+
+        other.AddItem(
+            name: "ROI selection: detailed",
+            tooltip: "Detailed demo of ROI selection",
+            parent: this,
+            createForm: () => new DemoForms.FormROISelectionDetailed());
 
         other.AddItem(
             name: "Multiple ROIs",

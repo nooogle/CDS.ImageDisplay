@@ -27,13 +27,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="DemoForms\FormROISelectionSimple.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="DemoForms\OverlaysDemo\FormOverlays.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="DemoForms\MultipleROIs\FormMultipleROIs.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="DemoForms\FormROISelection.cs">
+    <Compile Update="DemoForms\FormROISelectionDetailed.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
