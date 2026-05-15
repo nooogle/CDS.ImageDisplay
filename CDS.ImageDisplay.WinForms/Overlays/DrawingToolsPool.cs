@@ -15,7 +15,7 @@ namespace CDS.ImageDisplay.Overlays;
 /// When the limit is reached the oldest entry is disposed and evicted.
 /// All methods must be called from the UI thread.
 /// </remarks>
-public class DrawingToolsPool : IDisposable
+public sealed class DrawingToolsPool : IDisposable
 {
     /// <summary>
     /// Maximum number of entries cached per resource type (Pen, Brush, Font).
@@ -54,6 +54,8 @@ public class DrawingToolsPool : IDisposable
     /// </summary>
     public static Pen GetPen(PenSpec description)
     {
+        ArgumentNullException.ThrowIfNull(description);
+
         EnsureOnUIThread();
 
         if (!instance.Value.penCache.TryGetValue(description, out Pen? pen))
@@ -73,6 +75,8 @@ public class DrawingToolsPool : IDisposable
     /// </summary>
     public static Brush GetBrush(BrushSpec description)
     {
+        ArgumentNullException.ThrowIfNull(description);
+
         EnsureOnUIThread();
 
         if (!instance.Value.brushCache.TryGetValue(description, out Brush? brush))
@@ -92,6 +96,8 @@ public class DrawingToolsPool : IDisposable
     /// </summary>
     public static Font GetFont(FontSpec description)
     {
+        ArgumentNullException.ThrowIfNull(description);
+
         EnsureOnUIThread();
 
         if (!instance.Value.fontCache.TryGetValue(description, out Font? font))

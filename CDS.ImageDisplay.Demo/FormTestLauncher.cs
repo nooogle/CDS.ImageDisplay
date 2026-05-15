@@ -6,18 +6,18 @@ namespace CDS.ImageDisplay.Demo;
 
 internal sealed partial class FormTestLauncher : Form
 {
-    private readonly JSONSettingsManager<AppSettings> settingsManager;
+    private readonly JSONSettingsManager<AppSettings> _settingsManager;
 
     public FormTestLauncher()
     {
         InitializeComponent();
-        settingsManager = new JSONSettingsManager<AppSettings>();
+        _settingsManager = new JSONSettingsManager<AppSettings>();
     }
 
     protected override void OnFormClosing(FormClosingEventArgs e)
     {
         base.OnFormClosing(e);
-        settingsManager.Save();
+        _settingsManager.Save();
     }
 
     private void FormTestLauncher_Load(object sender, EventArgs e) => AddDemos();
@@ -87,7 +87,7 @@ internal sealed partial class FormTestLauncher : Form
             name: "Overlays",
             tooltip: "Demonstrates how to use the overlays tools for drawing on top of an image using image-coordinates regardless of the current pan and zoom",
             parent: this,
-            createForm: () => new DemoForms.OverlaysDemo.FormOverlays(settingsManager.Settings.DemoForms.OverlaysDemo));
+            createForm: () => new DemoForms.OverlaysDemo.FormOverlays(_settingsManager.Settings.DemoForms.OverlaysDemo));
     }
 
     private void AddOpenCVSharpDemoNodes()
@@ -101,3 +101,4 @@ internal sealed partial class FormTestLauncher : Form
             createForm: () => new DemoForms.FormOpenCVSharp());
     }
 }
+

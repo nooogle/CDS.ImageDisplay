@@ -43,7 +43,7 @@ public class ROIWithGrapplesShape : ISingleROIDescriptor
     /// <summary>
     /// True if the rectangle is locked and cannot be moved.
     /// </summary>
-    public bool Locked { get; set; } = false;
+    public bool Locked { get; set; }
 
 
     /// <inheritdoc/>
@@ -85,14 +85,14 @@ public class ROIWithGrapplesShape : ISingleROIDescriptor
 
 
     /// <inheritdoc/>
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics)
+    public void Draw(BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics)
     {
-        if (!Visible)
-        { return; }
-        if (ROI.IsEmpty)
-        { return; }
+        if (!Visible || ROI.IsEmpty || bitmapDisplayPanel == null || graphics == null)
+        {
+            return;
+        }
 
-        Rectangle roiOnDisplay = sender.MapImageToDisplay(ROI, PixelAlign);
+        Rectangle roiOnDisplay = bitmapDisplayPanel.MapImageToDisplay(ROI, PixelAlign);
         RecalculateGrapplesRectangles(roiOnDisplay);
 
         Pen pen = DrawingToolsPool.GetPen(Drawing.Lines);

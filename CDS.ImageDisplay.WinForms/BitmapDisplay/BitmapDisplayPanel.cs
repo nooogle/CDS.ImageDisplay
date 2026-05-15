@@ -607,6 +607,8 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnPaint(PaintEventArgs e)
     {
+        ArgumentNullException.ThrowIfNull(e);
+
         _stopwatch.Restart();
 
         OnPaintUnder?.Invoke(this, new PaintUnderEventArgs(e.Graphics));
@@ -665,13 +667,15 @@ public partial class BitmapDisplayPanel : UserControl
     /// <summary>
     /// Use has used the mouse wheel - we use this for zoom
     /// </summary>
-    protected override void OnMouseWheel(MouseEventArgs mouseEventArgs)
+    protected override void OnMouseWheel(MouseEventArgs e)
     {
-        base.OnMouseWheel(mouseEventArgs);
+        ArgumentNullException.ThrowIfNull(e);
+
+        base.OnMouseWheel(e);
 
         if (AnythingToDisplay)
         {
-            Point mouseLocationInDisplayUnits = mouseEventArgs.Location;
+            Point mouseLocationInDisplayUnits = e.Location;
             PointF mouseLocationInImageUnits = MapDisplayToImage(mouseLocationInDisplayUnits);
 
             _zoomManager.OnMouseWheel(
@@ -679,7 +683,7 @@ public partial class BitmapDisplayPanel : UserControl
                 currentZoom: _virtualDisplay.Zoom,
                 mouseLocationInDisplayUnits: mouseLocationInDisplayUnits,
                 mouseLocationInImageUnits: mouseLocationInImageUnits,
-                mouseEventArgs: mouseEventArgs);
+                mouseEventArgs: e);
         }
     }
 
@@ -697,15 +701,17 @@ public partial class BitmapDisplayPanel : UserControl
     /// <summary>
     /// Mouse has moved - we can use this for dragging
     /// </summary>
-    protected override void OnMouseMove(MouseEventArgs mouseEventArgs)
+    protected override void OnMouseMove(MouseEventArgs e)
     {
+        ArgumentNullException.ThrowIfNull(e);
+
         if (_dragManager.IsDragging)
         {
-            _dragManager.OnMouseMove(mouseEventArgs);
+            _dragManager.OnMouseMove(e);
         }
         else
         {
-            base.OnMouseMove(mouseEventArgs);
+            base.OnMouseMove(e);
         }
     }
 
@@ -713,15 +719,17 @@ public partial class BitmapDisplayPanel : UserControl
     /// <summary>
     /// Mouse button down - we can use this for dragging
     /// </summary>
-    protected override void OnMouseDown(MouseEventArgs mouseEventArgs)
+    protected override void OnMouseDown(MouseEventArgs e)
     {
-        base.OnMouseDown(mouseEventArgs);
+        ArgumentNullException.ThrowIfNull(e);
+
+        base.OnMouseDown(e);
 
         if (AnythingToDisplay && IsDraggingAllowed)
         {
             _dragManager.OnMouseDown(
                 imageDisplayMode: DisplayMode,
-                mouseEventArgs: mouseEventArgs,
+                mouseEventArgs: e,
                 currentTargetDisplayCentre: _virtualDisplay.TargetDisplayCentre);
         }
     }
@@ -730,13 +738,15 @@ public partial class BitmapDisplayPanel : UserControl
     /// <summary>
     /// Mouse button is up - we can use this for dragging
     /// </summary>
-    protected override void OnMouseUp(MouseEventArgs mouseEventArgs)
+    protected override void OnMouseUp(MouseEventArgs e)
     {
-        base.OnMouseUp(mouseEventArgs);
+        ArgumentNullException.ThrowIfNull(e);
+
+        base.OnMouseUp(e);
 
         if (AnythingToDisplay && _dragManager.IsDragging)
         {
-            _dragManager.OnMouseUp(mouseEventArgs);
+            _dragManager.OnMouseUp(e);
         }
     }
 
@@ -765,6 +775,8 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     public void SyncPaintRectFromOther(BitmapDisplayPanel sender)
     {
+        ArgumentNullException.ThrowIfNull(sender, nameof(sender));
+
         Zoom = sender.Zoom;
         TargetDisplayCentre = sender.TargetDisplayCentre;
         TargetImageCentre = sender.TargetImageCentre;

@@ -9,7 +9,7 @@ namespace CDS.ImageDisplay.BitmapDisplay;
 /// the specification is the same; otherwise a new image is created and 
 /// a clone taken of the new image.
 /// </summary>
-public class ImageWrapper : IDisposable
+public sealed class ImageWrapper : IDisposable
 {
     /// <summary>
     /// The image

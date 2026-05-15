@@ -5,17 +5,18 @@ namespace CDS.ImageDisplay.Utils;
 /// <summary>
 /// Win32 API functions
 /// </summary>
-public static partial class Win32
+public static partial class Win32Imports
 {
     /// <summary>
     /// Get the state of a key
     /// </summary>
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     [LibraryImport("user32.dll")]
-    public static partial short GetKeyState(int nVirtKey);
+    internal static partial short GetKeyState(int nVirtKey);
 
 
     /// <summary>
     /// Keycode for the space key
     /// </summary>
-    public const int VK_SPACE = 0x20;
+    internal const int VK_SPACE = 0x20;
 }

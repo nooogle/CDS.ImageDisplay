@@ -177,6 +177,8 @@ public partial class MultipleROIManager : Component
     /// </summary>
     public MultipleROIManager(IContainer container)
     {
+        ArgumentNullException.ThrowIfNull(container, nameof(container));
+
         container.Add(this);
         InitializeComponent();
         CommonInitialise();
@@ -370,7 +372,7 @@ public partial class MultipleROIManager : Component
     /// <summary>
     /// True if the spacebar is pressed.
     /// </summary>
-    private static bool IsSpacebarPressed() => (Win32.GetKeyState(Win32.VK_SPACE) & 0x8000) != 0;
+    private static bool IsSpacebarPressed() => (Win32Imports.GetKeyState(Win32Imports.VK_SPACE) & 0x8000) != 0;
 
 
     /// <summary>

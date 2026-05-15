@@ -4,13 +4,15 @@ using CDS.ImageDisplay.Overlays;
 
 namespace UnitTests.Overlays;
 
-
 /// <summary>
 /// Point converter tests for <see cref="PointFConverter"/>.
 /// </summary>
 [TestClass]
-internal sealed class PointFConverterTests
+public sealed class PointFConverterTests
 {
+    /// <summary>
+    /// Verifies that converting a <see cref="PointF"/> to a string returns the expected formatted value.
+    /// </summary>
     [TestMethod]
     public void ConvertToWithPointFReturnsFormattedString()
     {
@@ -21,13 +23,14 @@ internal sealed class PointFConverterTests
         // Act
         object? result = converter.ConvertTo(value: point, destinationType: typeof(string));
 
-        // Bundle
+        // Assert
         const string expected = "12.5, 34.75";
-
-        // Verify
         result.Should().Be(expected);
     }
 
+    /// <summary>
+    /// Verifies that converting a valid string returns the expected <see cref="PointF"/>.
+    /// </summary>
     [TestMethod]
     public void ConvertFromWithValidStringReturnsPointF()
     {
@@ -37,13 +40,14 @@ internal sealed class PointFConverterTests
         // Act
         object? result = converter.ConvertFrom("12.5, 34.75");
 
-        // Bundle
+        // Assert
         var expected = new PointF(12.5f, 34.75f);
-
-        // Verify
         result.Should().Be(expected);
     }
 
+    /// <summary>
+    /// Verifies that the converter can convert from a string.
+    /// </summary>
     [TestMethod]
     public void CanConvertFromWithStringReturnsTrue()
     {
@@ -53,13 +57,14 @@ internal sealed class PointFConverterTests
         // Act
         bool result = converter.CanConvertFrom(typeof(string));
 
-        // Bundle
+        // Assert
         const bool expected = true;
-
-        // Verify
         result.Should().Be(expected);
     }
 
+    /// <summary>
+    /// Verifies that converting an invalid string throws <see cref="NotSupportedException"/>.
+    /// </summary>
     [TestMethod]
     public void ConvertFromWithInvalidStringThrowsNotSupportedException()
     {
@@ -69,14 +74,15 @@ internal sealed class PointFConverterTests
         // Act
         Action action = () => converter.ConvertFrom("bad-value");
 
-        // Bundle
+        // Assert
         Type expectedExceptionType = typeof(NotSupportedException);
-
-        // Verify
         action.Should().Throw<NotSupportedException>()
             .Where(exception => exception.GetType() == expectedExceptionType);
     }
 
+    /// <summary>
+    /// Verifies that the converter can convert to a string.
+    /// </summary>
     [TestMethod]
     public void CanConvertToWithStringReturnsTrue()
     {
@@ -86,10 +92,8 @@ internal sealed class PointFConverterTests
         // Act
         bool result = converter.CanConvertTo(typeof(string));
 
-        // Bundle
+        // Assert
         const bool expected = true;
-
-        // Verify
         result.Should().Be(expected);
     }
 }

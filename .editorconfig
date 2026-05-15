@@ -147,5 +147,12 @@ dotnet_diagnostic.CS8603.severity = warning   # Possible null reference return
 dotnet_diagnostic.CS8604.severity = warning   # Possible null reference argument
 dotnet_diagnostic.CS8618.severity = warning   # Non-nullable field uninitialized
 
+# ── Security analyzers ────────────────────────────────────────────────────────
+dotnet_diagnostic.CA5394.severity = none      # Demo code may use System.Random for non-cryptographic purposes
+
+# ── Unit tests ─────────────────────────────────────────────────────────────────
+[UnitTests/**/*.cs]
+dotnet_diagnostic.CA1515.severity = none      # Test classes are intentionally public for discovery/convention
+
 # ── XML documentation ─────────────────────────────────────────────────────────
 dotnet_diagnostic.CS1591.severity = warning  # Missing XML comment for public member

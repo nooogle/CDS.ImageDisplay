@@ -8,9 +8,6 @@
     <Platforms>AnyCPU</Platforms>
     <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
     <LangVersion>latest</LangVersion>
-    <!-- Demo is an executable, not a library; suppress doc-comment and
-         insecure-Random warnings that are not meaningful for a demo app. -->
-    <NoWarn>$(NoWarn);CS1591;CA5394</NoWarn>
   </PropertyGroup>
 	
 	<ItemGroup>

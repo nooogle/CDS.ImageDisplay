@@ -250,6 +250,8 @@ public partial class SingleROIManager : Component
     /// </summary>
     public SingleROIManager(IContainer container)
     {
+        ArgumentNullException.ThrowIfNull(container, nameof(container));
+
         container.Add(this);
         InitializeComponent();
         CompleteInitialisation();
@@ -360,7 +362,10 @@ public partial class SingleROIManager : Component
     /// <summary>
     /// True if the spacebar is pressed.
     /// </summary>
-    private bool IsSpacebarPressed() => (Win32.GetKeyState(Win32.VK_SPACE) & 0x8000) != 0;
+    private static bool IsSpacebarPressed()
+    {
+        return (Win32Imports.GetKeyState(Win32Imports.VK_SPACE) & 0x8000) != 0;
+    }
 
 
     /// <summary>
@@ -598,7 +603,7 @@ public partial class SingleROIManager : Component
                 currentMouseLocationOverImage.Y);
     }
 
-    private void Swap(ref int left, ref int right) => (right, left) = (left, right);
+    private static void Swap(ref int left, ref int right) => (right, left) = (left, right);
 
 
     private void UpdateTopLeftCornerDragging(Point mouseLocationOnDisplay)

@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Text.Json.Serialization;
 using CDS.ImageDisplay.BitmapDisplay;
 using CDS.ImageDisplay.Utils;
 
@@ -14,10 +15,14 @@ namespace CDS.ImageDisplay.Overlays;
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
 public class PolygonShape
 {
+    [JsonPropertyName("Points")]
+    private PointF[] _points = [];
+
+
     /// <summary>
     /// Simple representation of this instance
     /// </summary>
-    public override string ToString() => $"Polygon: {Points.Length} points";
+    public override string ToString() => $"Polygon: {_points.Length} points";
 
 
 
@@ -28,11 +33,15 @@ public class PolygonShape
     public DisplayPixelAlign PixelAlign { get; set; } = DisplayPixelAlign.Centre;
 
 
+
     /// <summary>
-    /// The points of the polygon
+    /// Takes a copy of the provided points to use as the points of the polygon
     /// </summary>
-    [TypeConverter(typeof(PointFConverter))]
-    public PointF[] Points { get; set; } = [];
+    public void SetPoints(PointF[] points)
+    {
+        ArgumentNullException.ThrowIfNull(points, nameof(points));
+        _points = [.. points];
+    }
 
 
     /// <summary>
@@ -43,10 +52,10 @@ public class PolygonShape
         ArgumentNullException.ThrowIfNull(sender, nameof(sender));
         ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
         ArgumentNullException.ThrowIfNull(drawing, nameof(drawing));
-        if (Points.Length < 3)
-        { return; }
-        if (!drawing.Visible)
-        { return; }
+        if ((_points.Length < 3) || !drawing.Visible)
+        {
+            return;
+        }
 
         Pen pen = DrawingToolsPool.GetPen(drawing.Lines);
         Brush brush = DrawingToolsPool.GetBrush(drawing.Fill);
@@ -55,14 +64,14 @@ public class PolygonShape
 
         if (drawing.MappingMode == MappingMode.DirectToDisplay)
         {
-            pointsOnDisplay = Points;
+            pointsOnDisplay = _points;
         }
         else
         {
-            pointsOnDisplay = new PointF[Points.Length];
-            for (int i = 0; i < Points.Length; i++)
+            pointsOnDisplay = new PointF[_points.Length];
+            for (int i = 0; i < _points.Length; i++)
             {
-                pointsOnDisplay[i] = sender.MapImageToDisplay(Points[i], pixelAdjust: PixelAlign);
+                pointsOnDisplay[i] = sender.MapImageToDisplay(_points[i], pixelAdjust: PixelAlign);
             }
         }
 

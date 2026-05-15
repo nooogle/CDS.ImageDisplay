@@ -8,17 +8,30 @@ namespace CDS.ImageDisplay.Demo.DemoForms.OverlaysDemo;
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
 internal sealed class OverlayShapes
 {
-    private readonly Random random = new();
+    private readonly Random _random = new();
 
     [Browsable(false)]
-#pragma warning disable CA1819 // Properties should not return arrays — intentional for internal demo use
     public Bubble[] Bubbles { get; private set; } = [];
-#pragma warning restore CA1819
 
 
     public OverlayShapes()
     {
         RecreateBubbles(new Size(100, 100));
+
+        PolygonShape = new Overlays.PolygonShape();
+        PolygonShape.SetPoints(
+            [
+            new PointF(100, 500),
+            new PointF(120, 550),
+            new PointF(160, 550),
+            new PointF(130, 570),
+            new PointF(140, 610),
+            new PointF(100, 590),
+            new PointF(60, 610),
+            new PointF(70, 570),
+            new PointF(40, 550),
+            new PointF(80, 550),
+        ]);
     }
 
     public void RecreateBubbles(Size displaySize)
@@ -33,11 +46,11 @@ internal sealed class OverlayShapes
         for (int i = 0; i < Bubbles.Length; i++)
         {
             Bubbles[i] = new Bubble(
-                x: random.Next(50, displaySize.Width - 100),
-                y: random.Next(50, displaySize.Height - 100),
-                radius: random.Next(10, 100),
-                velocity: random.Next(1, 5),
-                direction: random.Next(0, 360),
+                x: _random.Next(50, displaySize.Width - 100),
+                y: _random.Next(50, displaySize.Height - 100),
+                radius: _random.Next(10, 100),
+                velocity: _random.Next(1, 5),
+                direction: _random.Next(0, 360),
                 displaySize.Width,
                 displaySize.Height);
         }
@@ -87,22 +100,7 @@ internal sealed class OverlayShapes
     public Overlays.CircleShape Circle1 { get; set; } = new Overlays.CircleShape { Centre = new PointF(500, 300), Radius = 50 };
     public Overlays.CircleShape Circle2 { get; set; } = new Overlays.CircleShape { Centre = new PointF(300, 500), Radius = 50 };
 
-    public Overlays.PolygonShape PolygonShape { get; set; } = new Overlays.PolygonShape()
-    {
-        Points = new[]
-        {
-            new PointF(100, 500),
-            new PointF(120, 550),
-            new PointF(160, 550),
-            new PointF(130, 570),
-            new PointF(140, 610),
-            new PointF(100, 590),
-            new PointF(60, 610),
-            new PointF(70, 570),
-            new PointF(40, 550),
-            new PointF(80, 550),
-        }
-    };
+    public Overlays.PolygonShape PolygonShape { get; set; }
 }
 
 

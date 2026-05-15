@@ -6,13 +6,19 @@ using CDS.ImageDisplay.Utils;
 
 namespace UnitTests.Utils;
 
+/// <summary>
+/// Tests for <see cref="ColorJsonConverter"/> to ensure that <see cref="Color"/> values are correctly serialized and deserialized in JSON, including both named colors and ARGB hex formats.
+/// </summary>
 [TestClass]
-public partial class ColorJsonConverterTests
+public sealed class ColorJsonConverterTests
 {
-    private static readonly JsonSerializerOptions JsonSerializerOptions = CreateJsonSerializerOptions();
+    private static readonly JsonSerializerOptions s_jsonSerializerOptions = CreateJsonSerializerOptions();
 
+    /// <summary>
+    /// Verifies that named colors are serialized using the color name.
+    /// </summary>
     [TestMethod]
-    public void Serialize_WhenColorIsNamed_WritesColorName()
+    public void SerializeWhenColorIsNamedWritesColorName()
     {
         // Arrange
         var spec = new PenSpec
@@ -21,17 +27,18 @@ public partial class ColorJsonConverterTests
         };
 
         // Act
-        string json = JsonSerializer.Serialize(spec, JsonSerializerOptions);
+        string json = JsonSerializer.Serialize(spec, s_jsonSerializerOptions);
 
-        // Bundle
+        // Assert
         string expectedFragment = "\"Color\":\"Red\"";
-
-        // Verify
         json.Should().Contain(expectedFragment);
     }
 
+    /// <summary>
+    /// Verifies that colors with alpha are serialized using ARGB hex.
+    /// </summary>
     [TestMethod]
-    public void Serialize_WhenColorHasAlpha_WritesArgbHex()
+    public void SerializeWhenColorHasAlphaWritesArgbHex()
     {
         // Arrange
         var spec = new BrushSpec
@@ -40,25 +47,26 @@ public partial class ColorJsonConverterTests
         };
 
         // Act
-        string json = JsonSerializer.Serialize(spec, JsonSerializerOptions);
+        string json = JsonSerializer.Serialize(spec, s_jsonSerializerOptions);
 
-        // Bundle
+        // Assert
         string expectedFragment = "\"Color\":\"#40000080\"";
-
-        // Verify
         json.Should().Contain(expectedFragment);
     }
 
+    /// <summary>
+    /// Verifies that a named color payload restores the original named color.
+    /// </summary>
     [TestMethod]
-    public void Deserialize_WhenColorIsNamed_RestoresNamedColor()
+    public void DeserializeWhenColorIsNamedRestoresNamedColor()
     {
         // Arrange
         const string json = "{\"Color\":\"Orange\",\"Width\":1,\"DashStyle\":0,\"StartCap\":0,\"EndCap\":0}";
 
         // Act
-        PenSpec? spec = JsonSerializer.Deserialize<PenSpec>(json, JsonSerializerOptions);
+        PenSpec? spec = JsonSerializer.Deserialize<PenSpec>(json, s_jsonSerializerOptions);
 
-        // Bundle
+        // Assert
         var result = new
         {
             spec!.Color.Name,
@@ -72,62 +80,66 @@ public partial class ColorJsonConverterTests
             Argb = Color.Orange.ToArgb(),
             IsNamedColor = true,
         };
-
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that an ARGB hex payload restores the original color value.
+    /// </summary>
     [TestMethod]
-    public void Deserialize_WhenColorIsArgbHex_RestoresArgbColor()
+    public void DeserializeWhenColorIsArgbHexRestoresArgbColor()
     {
         // Arrange
         const string json = "{\"Color\":\"#40FF0000\"}";
 
         // Act
-        BrushSpec? spec = JsonSerializer.Deserialize<BrushSpec>(json, JsonSerializerOptions);
+        BrushSpec? spec = JsonSerializer.Deserialize<BrushSpec>(json, s_jsonSerializerOptions);
 
-        // Bundle
+        // Assert
         var expected = Color.FromArgb(64, Color.Red);
-
-        // Verify
         spec.Should().NotBeNull();
         spec!.Color.ToArgb().Should().Be(expected.ToArgb());
     }
 
+    /// <summary>
+    /// Verifies that the legacy object payload format still restores the original color value.
+    /// </summary>
     [TestMethod]
-    public void Deserialize_WhenUsingLegacyObjectPayload_RestoresArgbColor()
+    public void DeserializeWhenUsingLegacyObjectPayloadRestoresArgbColor()
     {
         // Arrange
         const string json = "{\"Color\":{\"R\":255,\"G\":0,\"B\":0,\"A\":64,\"IsKnownColor\":false,\"IsEmpty\":false,\"IsNamedColor\":false,\"IsSystemColor\":false,\"Name\":\"40ff0000\"}}";
 
         // Act
-        BrushSpec? spec = JsonSerializer.Deserialize<BrushSpec>(json, JsonSerializerOptions);
+        BrushSpec? spec = JsonSerializer.Deserialize<BrushSpec>(json, s_jsonSerializerOptions);
 
-        // Bundle
+        // Assert
         var expected = Color.FromArgb(64, Color.Red);
-
-        // Verify
         spec.Should().NotBeNull();
         spec!.Color.ToArgb().Should().Be(expected.ToArgb());
     }
 
+    /// <summary>
+    /// Verifies that invalid color values produce a <see cref="JsonException"/>.
+    /// </summary>
     [TestMethod]
-    public void Deserialize_WhenColorIsInvalid_ThrowsJsonException()
+    public void DeserializeWhenColorIsInvalidThrowsJsonException()
     {
         // Arrange
         const string json = "{\"Color\":\"not-a-color\"}";
 
         // Act
-        Action action = () => JsonSerializer.Deserialize<BrushSpec>(json, JsonSerializerOptions);
+        Action action = () => JsonSerializer.Deserialize<BrushSpec>(json, s_jsonSerializerOptions);
 
-        // Bundle
+        // Assert
         string expectedMessageFragment = "not a valid Color value";
-
-        // Verify
         action.Should().Throw<JsonException>()
             .WithMessage($"*{expectedMessageFragment}*");
     }
 
+    /// <summary>
+    /// Creates serializer options with the color converter registered.
+    /// </summary>
     private static JsonSerializerOptions CreateJsonSerializerOptions()
     {
         var jsonSerializerOptions = new JsonSerializerOptions();

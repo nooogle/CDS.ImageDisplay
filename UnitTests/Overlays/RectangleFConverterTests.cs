@@ -8,7 +8,7 @@ namespace UnitTests.Overlays;
 /// Tests for <see cref="RectangleFConverter"/>.
 /// </summary>
 [TestClass]
-public sealed partial class RectangleFConverterTests
+public sealed class RectangleFConverterTests
 {
     /// <summary>
     /// Verifies that converting a <see cref="RectangleF"/> to a string returns the expected formatted value.
@@ -80,3 +80,4 @@ public sealed partial class RectangleFConverterTests
             .Where(exception => exception.GetType() == expectedExceptionType);
     }
 }
+

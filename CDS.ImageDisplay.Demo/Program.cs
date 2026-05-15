@@ -11,11 +11,10 @@ internal static class Program
     [STAThread]
     private static void Main()
     {
-#if NET5_0_OR_GREATER
         Application.SetHighDpiMode(HighDpiMode.SystemAware);
-#endif
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
+
         using var form = new FormTestLauncher();
         Application.Run(form);
     }

@@ -7,7 +7,7 @@ namespace CDS.ImageDisplay.BitmapDisplay;
 /// <summary>
 /// Handles mouse-wheel zoom gestures for a <see cref="BitmapDisplayPanel"/>.
 /// </summary>
-internal class ZoomManager
+internal sealed class ZoomManager
 {
     private readonly Action<float, PointF, PointF> _setNewZoom;
 

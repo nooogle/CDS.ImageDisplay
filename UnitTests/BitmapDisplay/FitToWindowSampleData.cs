@@ -5,7 +5,7 @@ namespace UnitTests.BitmapDisplay;
 /// <summary>
 /// Provides sample data for fit-to-window layout scenarios.
 /// </summary>
-internal sealed class FitToWindowSampleData
+internal static class FitToWindowSampleData
 {
     /// <summary>
     /// Gets the sample data for fit-to-window layout scenarios, including various image and display sizes along with the expected layout rectangles.
@@ -56,3 +56,4 @@ internal sealed class FitToWindowSampleData
         }
     }
 }
+

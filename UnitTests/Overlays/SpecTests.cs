@@ -4,12 +4,17 @@ using AwesomeAssertions;
 using CDS.ImageDisplay.Overlays;
 
 namespace UnitTests.Overlays;
-
+/// <summary>
+/// Tests for specification types in <see cref="CDS.ImageDisplay.Overlays"/>.
+/// </summary>
 [TestClass]
-public partial class SpecTests
+public sealed class SpecTests
 {
+    /// <summary>
+    /// Verifies that <see cref="PenSpec.Create"/> returns a configured <see cref="Pen"/>.
+    /// </summary>
     [TestMethod]
-    public void PenSpec_Create_ReturnsConfiguredPen()
+    public void PenSpecCreateReturnsConfiguredPen()
     {
         // Arrange
         var spec = new PenSpec
@@ -32,7 +37,7 @@ public partial class SpecTests
             pen.EndCap,
         };
 
-        // Bundle
+        // Assert
         var expected = new
         {
             Color = Color.Blue,
@@ -42,12 +47,14 @@ public partial class SpecTests
             EndCap = LineCap.ArrowAnchor,
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that equivalent <see cref="PenSpec"/> instances are equal and produce the same hash code.
+    /// </summary>
     [TestMethod]
-    public void PenSpec_Equals_WithEquivalentValues_ReturnsTrue()
+    public void PenSpecEqualsWithEquivalentValuesReturnsTrue()
     {
         // Arrange
         var first = new PenSpec
@@ -74,19 +81,21 @@ public partial class SpecTests
             HashCodesMatch = first.GetHashCode() == second.GetHashCode(),
         };
 
-        // Bundle
+        // Assert
         var expected = new
         {
             Equals = true,
             HashCodesMatch = true,
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that <see cref="BrushSpec.Create"/> returns a <see cref="SolidBrush"/> with the configured color.
+    /// </summary>
     [TestMethod]
-    public void BrushSpec_Create_ReturnsSolidBrushWithConfiguredColor()
+    public void BrushSpecCreateReturnsSolidBrushWithConfiguredColor()
     {
         // Arrange
         var spec = new BrushSpec
@@ -103,19 +112,21 @@ public partial class SpecTests
             solidBrush!.Color,
         };
 
-        // Bundle
+        // Assert
         var expected = new
         {
             BrushType = typeof(SolidBrush),
             Color = Color.FromArgb(10, 20, 30, 40),
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that <see cref="FontSpec.Create"/> returns a configured <see cref="Font"/>.
+    /// </summary>
     [TestMethod]
-    public void FontSpec_Create_ReturnsConfiguredFont()
+    public void FontSpecCreateReturnsConfiguredFont()
     {
         // Arrange
         var spec = new FontSpec
@@ -132,19 +143,21 @@ public partial class SpecTests
             font.Size,
         };
 
-        // Bundle
+        // Assert
         var expected = new
         {
             Name = "Arial",
             Size = 16.0f,
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that <see cref="DrawingSpec"/> initializes with the expected default values.
+    /// </summary>
     [TestMethod]
-    public void DrawingSpec_DefaultInitialization_UsesExpectedDefaults()
+    public void DrawingSpecDefaultInitializationUsesExpectedDefaults()
     {
         // Arrange
         var spec = new DrawingSpec();
@@ -160,7 +173,7 @@ public partial class SpecTests
             spec.Font.FontSize,
         };
 
-        // Bundle
+        // Assert
         var expected = new
         {
             Visible = true,
@@ -171,7 +184,6 @@ public partial class SpecTests
             FontSize = 12,
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 }

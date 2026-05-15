@@ -8,7 +8,7 @@ namespace UnitTests.BitmapDisplay;
 /// Tests for <see cref="VirtualDisplay"/>.
 /// </summary>
 [TestClass]
-internal sealed class VirtualDisplayTests
+public sealed class VirtualDisplayTests
 {
     /// <summary>
     /// Verifies that the default state uses fit-to-window mode.
