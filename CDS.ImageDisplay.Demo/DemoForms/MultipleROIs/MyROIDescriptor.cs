@@ -5,7 +5,7 @@ using CDS.ImageDisplay.BitmapDisplay;
 namespace CDS.ImageDisplay.Demo.DemoForms.MultipleROIs;
 
 
-internal class MyROIDescriptor : RegionOfInterest.ISingleROIDescriptor, INotifyPropertyChanged
+internal sealed class MyROIDescriptor : RegionOfInterest.ISingleROIDescriptor, INotifyPropertyChanged
 {
     private readonly string name;
 
@@ -87,5 +87,5 @@ internal class MyROIDescriptor : RegionOfInterest.ISingleROIDescriptor, INotifyP
     public event PropertyChangedEventHandler? PropertyChanged;
 
 
-    protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }

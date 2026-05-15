@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace CDS.ImageDisplay.Demo.DemoForms;
 
-public partial class FormFitToWindow : Form
+internal sealed partial class FormFitToWindow : Form
 {
     public FormFitToWindow()
     {

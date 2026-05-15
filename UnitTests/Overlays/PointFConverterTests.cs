@@ -4,11 +4,15 @@ using CDS.ImageDisplay.Overlays;
 
 namespace UnitTests.Overlays;
 
+
+/// <summary>
+/// Point converter tests for <see cref="PointFConverter"/>.
+/// </summary>
 [TestClass]
-public partial class PointFConverterTests
+internal sealed class PointFConverterTests
 {
     [TestMethod]
-    public void ConvertTo_WithPointF_ReturnsFormattedString()
+    public void ConvertToWithPointFReturnsFormattedString()
     {
         // Arrange
         var converter = new PointFConverter();
@@ -25,7 +29,7 @@ public partial class PointFConverterTests
     }
 
     [TestMethod]
-    public void ConvertFrom_WithValidString_ReturnsPointF()
+    public void ConvertFromWithValidStringReturnsPointF()
     {
         // Arrange
         var converter = new PointFConverter();
@@ -41,7 +45,7 @@ public partial class PointFConverterTests
     }
 
     [TestMethod]
-    public void CanConvertFrom_WithString_ReturnsTrue()
+    public void CanConvertFromWithStringReturnsTrue()
     {
         // Arrange
         var converter = new PointFConverter();
@@ -57,7 +61,7 @@ public partial class PointFConverterTests
     }
 
     [TestMethod]
-    public void ConvertFrom_WithInvalidString_ThrowsNotSupportedException()
+    public void ConvertFromWithInvalidStringThrowsNotSupportedException()
     {
         // Arrange
         var converter = new PointFConverter();
@@ -74,7 +78,7 @@ public partial class PointFConverterTests
     }
 
     [TestMethod]
-    public void CanConvertTo_WithString_ReturnsTrue()
+    public void CanConvertToWithStringReturnsTrue()
     {
         // Arrange
         var converter = new PointFConverter();

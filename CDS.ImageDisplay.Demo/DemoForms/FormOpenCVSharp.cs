@@ -5,12 +5,11 @@ using OpenCvSharp.Extensions;
 
 namespace CDS.ImageDisplay.Demo.DemoForms;
 
-public partial class FormOpenCVSharp : Form
+internal sealed partial class FormOpenCVSharp : Form
 {
     private bool _changingPaintRectProgramatically;
     private OpenCvSharp.Mat? _cvImageGrey;
     private OpenCvSharp.Mat? _cvImageBlurred;
-
 
     public FormOpenCVSharp()
     {
@@ -81,7 +80,7 @@ public partial class FormOpenCVSharp : Form
     }
 
 
-    private void bitmapPanel_CDSPaintRectChanged(BitmapDisplay.BitmapDisplayPanel sender) => SyncPaintRects(sender);
+    private void bitmapPanel_CDSPaintRectChanged(object sender, EventArgs e) => SyncPaintRects((BitmapDisplay.BitmapDisplayPanel)sender);
 
     private void SyncPaintRects(BitmapDisplay.BitmapDisplayPanel sender)
     {

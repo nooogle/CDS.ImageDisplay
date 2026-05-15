@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace CDS.ImageDisplay.Demo.DemoForms;
 
-public partial class FormFree : Form
+internal sealed partial class FormFree : Form
 {
     public FormFree()
     {

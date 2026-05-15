@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 using Humanizer;
@@ -10,11 +11,10 @@ namespace CDS.ImageDisplay.Demo.DemoForms.OverlaysDemo;
 /// <summary>
 /// Form for demonstrating the ROISelectionOnBitmapDisplay
 /// </summary>
-public partial class FormOverlays : Form
+internal sealed partial class FormOverlays : Form
 {
     private readonly TestSettings? testSettings;
     private readonly Bitmap bitmap;
-    private readonly OverlayPainter overlayPainter = new();
 
     /// <summary>
     /// Constructor
@@ -52,7 +52,6 @@ public partial class FormOverlays : Form
     protected override void OnFormClosed(FormClosedEventArgs e)
     {
         base.OnFormClosed(e);
-        bitmap.Dispose();
     }
 
 
@@ -70,41 +69,42 @@ public partial class FormOverlays : Form
     /// <summary>
     /// Paint allOverlaySettings over the image
     /// </summary>
-    private void bitmapDisplayPanel_OnPaintOver(CDS.ImageDisplay.BitmapDisplay.BitmapDisplayPanel sender, System.Drawing.Graphics graphics)
+    private void bitmapDisplayPanel_OnPaintOver(object sender, CDS.ImageDisplay.BitmapDisplay.PaintOverEventArgs e)
     {
         if (testSettings == null)
         { return; }
         if (bitmapDisplayPanel == null)
         { return; }
-        if (bitmapDisplayPanel.GetDisplayImage() == null)
+        if (bitmapDisplayPanel.DisplayImage == null)
         { return; }
 
-        PaintMetrics(sender, graphics);
-        overlayPainter.Paint(bitmapDisplayPanel, graphics, testSettings.Shapes, testSettings.Overlays);
+        var bitmapDisplay = (CDS.ImageDisplay.BitmapDisplay.BitmapDisplayPanel)sender;
+        PaintMetrics(bitmapDisplay, e.Graphics);
+        OverlayPainter.Paint(bitmapDisplayPanel, e.Graphics, testSettings.Shapes, testSettings.Overlays);
     }
 
 
-    private void PaintMetrics(BitmapDisplay.BitmapDisplayPanel sender, Graphics graphics)
+    private static void PaintMetrics(BitmapDisplay.BitmapDisplayPanel sender, Graphics graphics)
     {
         var info = new StringBuilder();
-        info.Append($"Display mode      {sender.DisplayMode.Humanize()}\n");
-        info.Append($"Display size      {sender.ClientSize}\n");
+        info.Append(CultureInfo.CurrentCulture, $"Display mode      {sender.DisplayMode.Humanize()}\n");
+        info.Append(CultureInfo.CurrentCulture, $"Display size      {sender.ClientSize}\n");
 
         if (!sender.AnythingToDisplay)
         {
-            info.Append($"Image not loaded\n");
+            info.Append("Image not loaded\n");
         }
         else
         {
             RectangleF r = sender.PaintRect;
-            info.Append($"Bitmap size       {sender.GetDisplayImage()?.Size}\n");
-            info.Append($"Paint zoom        {sender.Zoom:0.000}\n");
-            info.Append($"Paint rect        {r.X:0.0}, {r.Y:0.0}, {r.Width:0.0}, {r.Height:0:0}\n");
-            info.Append($"Format            {sender.GetDisplayImage()?.PixelFormat.Humanize()}\n");
+            info.Append(CultureInfo.CurrentCulture, $"Bitmap size       {sender.DisplayImage?.Size}\n");
+            info.Append(CultureInfo.CurrentCulture, $"Paint zoom        {sender.Zoom:0.000}\n");
+            info.Append(CultureInfo.CurrentCulture, $"Paint rect        {r.X:0.0}, {r.Y:0.0}, {r.Width:0.0}, {r.Height:0:0}\n");
+            info.Append(CultureInfo.CurrentCulture, $"Format            {sender.DisplayImage?.PixelFormat.Humanize()}\n");
         }
 
-        info.Append($"Paint foreground  {sender.TimingMetrics.ForegroundPaint.Humanize()}\n");
-        info.Append($"Paint background  {sender.TimingMetrics.BackgroundPaint.Humanize()}\n");
+        info.Append(CultureInfo.CurrentCulture, $"Paint foreground  {sender.TimingMetrics.ForegroundPaint.Humanize()}\n");
+        info.Append(CultureInfo.CurrentCulture, $"Paint background  {sender.TimingMetrics.BackgroundPaint.Humanize()}\n");
 
         var textTopleft = new PointF(12, 12);
 

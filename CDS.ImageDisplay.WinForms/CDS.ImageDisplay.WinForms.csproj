@@ -1,28 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
-    <Company>CDS</Company>
-    <Nullable>enable</Nullable>
-    <LangVersion>latest</LangVersion>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Platforms>AnyCPU</Platforms>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>CDS ImageDisplay</Title>
-    <Description>WinForms image display library — zoom, pan, annotate</Description>
-    <Copyright>Carpe Diem Systems (c) 2025</Copyright>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/nooogle/CDS.ImageDisplay.git</RepositoryUrl>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <RootNamespace>CDS.ImageDisplay</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0-windows</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+		<Company>CDS</Company>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<Platforms>AnyCPU</Platforms>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>CDS ImageDisplay</Title>
+		<Description>WinForms image display library — zoom, pan, annotate</Description>
+		<Copyright>Carpe Diem Systems (c) 2025</Copyright>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/nooogle/CDS.ImageDisplay.git</RepositoryUrl>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<RootNamespace>CDS.ImageDisplay</RootNamespace>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\README.md" Link="README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
-
+	<ItemGroup>
+		<None Include="..\README.md" Link="README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 </Project>

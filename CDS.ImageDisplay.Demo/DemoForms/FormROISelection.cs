@@ -10,9 +10,9 @@ namespace CDS.ImageDisplay.Demo.DemoForms;
 /// <summary>
 /// Form for demonstrating the singleROIManager
 /// </summary>
-public partial class FormROISelection : Form
+internal sealed partial class FormROISelection : Form
 {
-    private class TestProperties
+    private sealed class TestProperties
     {
         [Category("WinForms controls")]
         [DisplayName("Bitmap display")]
@@ -65,7 +65,8 @@ public partial class FormROISelection : Form
     protected override void OnLoad(EventArgs e)
     {
         base.OnLoad(e);
-        bitmapDisplayPanel.SetImage(BitmapGenerator.Make(new Size(800, 600)));
+        using var generatedBitmap = BitmapGenerator.Make(new Size(800, 600));
+        bitmapDisplayPanel.SetImage(generatedBitmap);
         UpdateROILabels();
 
         propertyGrid.SelectedObject = testProperties;
@@ -117,8 +118,9 @@ public partial class FormROISelection : Form
     /// <summary>
     /// The ROI has been committed to the singleROIManager
     /// </summary>
-    private void singleROIManager_OnCommittedROIChanged(CDS.ImageDisplay.RegionOfInterest.SingleROIManager sender, Rectangle roi)
+    private void singleROIManager_OnCommittedROIChanged(object sender, CDS.ImageDisplay.RegionOfInterest.CommittedROIChangedEventArgs e)
     {
+        var roi = e.ROI;
         var sizeLimitedROI = new Rectangle(
             roi.Location.X,
             roi.Location.Y,
@@ -137,5 +139,5 @@ public partial class FormROISelection : Form
     /// <summary>
     /// The ROI is being dragged on the singleROIManagery
     /// </summary>
-    private void singleROIManager_OnDraggingROIChanged(CDS.ImageDisplay.RegionOfInterest.SingleROIManager sender, Rectangle roi) => UpdateROILabels();
+    private void singleROIManager_OnDraggingROIChanged(object sender, CDS.ImageDisplay.RegionOfInterest.DraggingROIChangedEventArgs e) => UpdateROILabels();
 }

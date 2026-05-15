@@ -7,7 +7,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms.MultipleROIs;
 /// <summary>
 /// Form for demonstrating the ROISelectionOnBitmapDisplay
 /// </summary>
-public partial class FormMultipleROIs : Form
+internal sealed partial class FormMultipleROIs : Form
 {
     /// <summary>
     /// Information for the properties grid
@@ -65,6 +65,7 @@ public partial class FormMultipleROIs : Form
             var newImage = System.Drawing.Image.FromFile(openFileDialog.FileName);
             bitmapDisplayPanel.SetImage((System.Drawing.Bitmap)newImage);
         }
+#pragma warning disable CA1031 // Broad catch is intentional: any image-load failure should be shown to the user
         catch (Exception exception)
         {
             MessageBox.Show(
@@ -73,6 +74,7 @@ public partial class FormMultipleROIs : Form
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
         }
+#pragma warning restore CA1031
     }
 
     private void multipleROIManager_OnCommittedROIChanged(object sender, CDS.ImageDisplay.RegionOfInterest.CommittedROIDescriptorChangedEventArgs e)

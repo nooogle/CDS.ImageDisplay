@@ -16,6 +16,7 @@ internal static class Program
 #endif
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
-        Application.Run(new FormTestLauncher());
+        using var form = new FormTestLauncher();
+        Application.Run(form);
     }
 }

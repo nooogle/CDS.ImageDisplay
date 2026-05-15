@@ -7,7 +7,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms.OverlaysDemo;
 
 
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
-public class OverlayDrawingSpecs
+internal sealed class OverlayDrawingSpecs
 {
     public DrawingSpec Rectangles { get; set; } = new DrawingSpec();
     public DrawingSpec Ellipses { get; set; } = new DrawingSpec();

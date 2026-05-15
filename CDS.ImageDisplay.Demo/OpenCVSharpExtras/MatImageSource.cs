@@ -24,7 +24,7 @@ namespace CDS.ImageDisplay.Demo.OpenCVSharpExtras;
 /// For the most convenient way to display an OpenCV image, use the
 /// <see cref="ExtensionMethods.CDSSetImage"/> extension method on
 /// <see cref="BitmapDisplayPanel"/>, which constructs a <see cref="MatImageSource"/> and calls
-/// <see cref="BitmapDisplayPanel.SetImage"/> in a single step.
+/// <see cref="BitmapDisplayPanel.SetImage(IImageSource?)"/> in a single step.
 /// </para>
 /// <para>
 /// Supported <see cref="OpenCvSharp.Mat"/> types are:
@@ -37,7 +37,7 @@ namespace CDS.ImageDisplay.Demo.OpenCVSharpExtras;
 /// constructor.
 /// </para>
 /// </remarks>
-public class MatImageSource : IImageSource
+internal sealed class MatImageSource : IImageSource
 {
     private readonly OpenCvSharp.Mat? mat;
     private readonly PixelFormat pixelFormat = PixelFormat.Undefined;

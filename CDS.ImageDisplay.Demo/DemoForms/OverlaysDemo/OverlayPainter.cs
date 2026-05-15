@@ -4,15 +4,15 @@ using CDS.ImageDisplay.BitmapDisplay;
 namespace CDS.ImageDisplay.Demo.DemoForms.OverlaysDemo;
 
 
-internal class OverlayPainter
+internal static class OverlayPainter
 {
-    public void Paint(BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, OverlayShapes shapes, OverlayDrawingSpecs overlaySettings)
+    public static void Paint(BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, OverlayShapes shapes, OverlayDrawingSpecs overlaySettings)
     {
         PaintShapes(bitmapDisplayPanel, graphics, shapes, overlaySettings);
         PaintFloatingBubbles(bitmapDisplayPanel, graphics, shapes.Bubbles, overlaySettings.Bubbles);
     }
 
-    private void PaintFloatingBubbles(BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, Bubble[] bubbles, Overlays.DrawingSpec drawingSpec)
+    private static void PaintFloatingBubbles(BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, Bubble[] bubbles, Overlays.DrawingSpec drawingSpec)
     {
         foreach (Bubble bubble in bubbles)
         {

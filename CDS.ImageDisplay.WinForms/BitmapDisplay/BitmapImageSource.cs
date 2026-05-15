@@ -7,25 +7,25 @@ namespace CDS.ImageDisplay.BitmapDisplay;
 /// <summary>
 /// Provides read-only access to the properties and pixels for a .Net Bitmap
 /// </summary>
-public class BitmapImageSource : IImageSource, IDisposable
+public sealed class BitmapImageSource : IImageSource, IDisposable
 {
-    private readonly Bitmap? bitmap;
-    private readonly BitmapData? imageData;
+    private readonly Bitmap? _bitmap;
+    private readonly BitmapData? _imageData;
 
 
-    bool IImageSource.IsImageAvailable => bitmap != null;
+    bool IImageSource.IsImageAvailable => _bitmap != null;
 
-    int IImageSource.Stride => (imageData == null) ? 0 : imageData.Stride;
+    int IImageSource.Stride => (_imageData == null) ? 0 : _imageData.Stride;
 
-    Size IImageSource.Size => (imageData == null) ? Size.Empty : new Size(imageData.Width, imageData.Height);
+    Size IImageSource.Size => (_imageData == null) ? Size.Empty : new Size(_imageData.Width, _imageData.Height);
 
     int IImageSource.Width => ((IImageSource)this).Size.Width;
 
     int IImageSource.Height => ((IImageSource)this).Size.Height;
 
-    IntPtr IImageSource.Scan0 => (imageData == null) ? IntPtr.Zero : imageData.Scan0;
+    IntPtr IImageSource.Scan0 => (_imageData == null) ? IntPtr.Zero : _imageData.Scan0;
 
-    PixelFormat IImageSource.PixelFormat => (imageData == null) ? PixelFormat.Undefined : imageData.PixelFormat;
+    PixelFormat IImageSource.PixelFormat => (_imageData == null) ? PixelFormat.Undefined : _imageData.PixelFormat;
 
 
     /// <summary>
@@ -34,13 +34,13 @@ public class BitmapImageSource : IImageSource, IDisposable
     /// </summary>
     public BitmapImageSource(Bitmap? bitmap)
     {
-        this.bitmap = bitmap;
+        this._bitmap = bitmap;
 
         if (bitmap != null)
         {
             var roi = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
 
-            imageData = bitmap.LockBits(
+            _imageData = bitmap.LockBits(
                 rect: roi,
                 flags: ImageLockMode.ReadOnly,
                 format: bitmap.PixelFormat);
@@ -53,9 +53,9 @@ public class BitmapImageSource : IImageSource, IDisposable
     /// </summary>
     public void Dispose()
     {
-        if ((bitmap != null) && (imageData != null))
+        if ((_bitmap != null) && (_imageData != null))
         {
-            bitmap.UnlockBits(imageData);
+            _bitmap.UnlockBits(_imageData);
         }
     }
 }

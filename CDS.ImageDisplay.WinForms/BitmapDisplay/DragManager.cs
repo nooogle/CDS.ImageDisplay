@@ -7,7 +7,7 @@ namespace CDS.ImageDisplay.BitmapDisplay;
 /// <summary>
 /// Handles mouse-drag panning for a <see cref="BitmapDisplayPanel"/>.
 /// </summary>
-internal class DragManager
+internal sealed class DragManager
 {
     private Point _dragStartLocation;
     private PointF _initialTargetDisplayCentre;

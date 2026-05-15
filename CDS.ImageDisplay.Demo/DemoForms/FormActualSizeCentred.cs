@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace CDS.ImageDisplay.Demo.DemoForms;
 
-public partial class FormActualSizeCentred : Form
+internal sealed partial class FormActualSizeCentred : Form
 {
     public FormActualSizeCentred()
     {

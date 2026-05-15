@@ -97,19 +97,19 @@ public partial class BitmapDisplayPanel : UserControl
     [Description(
         "Called when the image has been painted; gives a client an opportunity " +
         "to paint flicker-free graphics on top of the image.")]
-    public event PaintOverEvent? OnPaintOver;
+    public event EventHandler<PaintOverEventArgs>? OnPaintOver;
 
 
     /// <summary>
-    /// Called afer the background has been painted and before the image been painted;
+    /// Called after the background has been painted and before the image has been painted;
     /// gives a client an opportunity to paint graphics under the image. 
-    /// This will be flicker-free as long as the control uses double buffering
+    /// This will be flicker-free as long as the control uses double buffering.
     /// </summary>
     [Category(s_categoryCDS)]
     [Description(
-        "Called afer the background has been painted and before the image been painted; " +
-        "to paint flicker-free graphics under of the image.")]
-    public event PaintUnderEvent? OnPaintUnder;
+        "Called after the background has been painted and before the image has been painted; " +
+        "to paint flicker-free graphics under the image.")]
+    public event EventHandler<PaintUnderEventArgs>? OnPaintUnder;
 
 
     /// <summary>
@@ -117,7 +117,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     [Category(s_categoryCDS)]
     [Description("Called when the display mode is changed.")]
-    public event ModeChangedEvent? OnDisplayModeChanged;
+    public event EventHandler? OnDisplayModeChanged;
 
 
     /// <summary>
@@ -125,13 +125,13 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     [Category(s_categoryCDS)]
     [Description("Called when the paint rectangle is changed.")]
-    public event PaintRectChangedEvent? OnPaintRectChanged;
+    public event EventHandler? OnPaintRectChanged;
 
 
     /// <summary>
     /// Fired when the image size changes
     /// </summary>
-    public event OnImageSizeChangedEvent? OnImageSizeChanged;
+    public event EventHandler<ImageSizeChangedEventArgs>? OnImageSizeChanged;
 
 
     /// <summary>
@@ -144,13 +144,13 @@ public partial class BitmapDisplayPanel : UserControl
     /// tool than for sharing image data.
     /// </remarks>
     [Category(s_categoryCDS)]
-    public Bitmap? GetDisplayImage() => _displayImage.Image;
+    public Bitmap? DisplayImage => _displayImage.Image;
 
 
     /// <summary>
-    /// A copy of the image is taken and then set as image the image to be displayd.
-    /// This takes immediate effect when called  from the UI thread, 
-    /// otherwise takes place asap by invoking an update procedure on the UI thread 
+    /// A copy of the image is taken and then set as the image to be displayed.
+    /// This takes immediate effect when called from the UI thread;
+    /// otherwise takes place asap by invoking an update procedure on the UI thread
     /// and returning immediately.
     /// </summary>
     /// <remarks>
@@ -158,7 +158,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// displayed and a new image of a different size is set.
     /// 
     /// When called on a non-UI thread this returns immediately; it will be a small
-    /// amout of time later that the image is finally set as the display image.
+    /// amount of time later that the image is finally set as the display image.
     /// </remarks>
     [Category(s_categoryCDS)]
     public void SetImage(IImageSource? imageSource)
@@ -178,9 +178,9 @@ public partial class BitmapDisplayPanel : UserControl
 
 
     /// <summary>
-    /// A copy of the image is taken and then set as image the image to be displayd.
-    /// This takes immediate effect when called  from the UI thread, 
-    /// otherwise takes place asap by invoking an update procedure on the UI thread 
+    /// A copy of the image is taken and then set as the image to be displayed.
+    /// This takes immediate effect when called from the UI thread;
+    /// otherwise takes place asap by invoking an update procedure on the UI thread
     /// and returning immediately.
     /// </summary>
     /// <remarks>
@@ -188,7 +188,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// displayed and a new image of a different size is set.
     /// 
     /// When called on a non-UI thread this returns immediately; it will be a small
-    /// amout of time later that the image is finally set as the display image.
+    /// amount of time later that the image is finally set as the display image.
     /// </remarks>
     [Category(s_categoryCDS)]
     public void SetImage(Bitmap? image)
@@ -214,16 +214,18 @@ public partial class BitmapDisplayPanel : UserControl
         // we just stored above. This keeps at most one callback pending,
         // preventing message-loop buildup regardless of input frame rate.
         if (_isWaitingToApplyPendingImage)
-        { return; }
+        {
+            return;
+        }
 
         _isWaitingToApplyPendingImage = true;
 
 
-        // Post the following action on the UI thread and return immedately;
+        // Post the following action on the UI thread and return immediately;
         // this will release the lock (applied in SetImage). When the action
         // is picked up we'll re-acquire the lock so that the flag reset is
         // atomic with respect to non-UI threads checking it in SetImage.
-        // Monitor.Enter is reentrant, so SetImage (which also locks _imageLock)
+        // The lock is reentrant, so SetImage (which also locks _imageLock)
         // works correctly when called from within this outer lock.
         BeginInvoke(() =>
         {
@@ -250,7 +252,7 @@ public partial class BitmapDisplayPanel : UserControl
 
         if (originalImageSize != _virtualDisplay.ImageSize)
         {
-            OnImageSizeChanged?.Invoke(this, originalImageSize, _virtualDisplay.ImageSize);
+            OnImageSizeChanged?.Invoke(this, new ImageSizeChangedEventArgs(originalImageSize, _virtualDisplay.ImageSize));
         }
 
         Invalidate();
@@ -299,7 +301,7 @@ public partial class BitmapDisplayPanel : UserControl
             if (_virtualDisplay.Mode != value)
             {
                 _virtualDisplay.Mode = value;
-                OnDisplayModeChanged?.Invoke(this);
+                OnDisplayModeChanged?.Invoke(this, EventArgs.Empty);
             }
         }
     }
@@ -418,7 +420,7 @@ public partial class BitmapDisplayPanel : UserControl
     private void VirtualImageOnDisplay_OnPaintRectChanged(VirtualDisplay sender, RectangleF paintRect)
     {
         Invalidate();
-        OnPaintRectChanged?.Invoke(this);
+        OnPaintRectChanged?.Invoke(this, EventArgs.Empty);
     }
 
 
@@ -580,6 +582,11 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnPaintBackground(PaintEventArgs e)
     {
+        if (e == null)
+        {
+            return;
+        }
+
         _stopwatch.Restart();
 
         RectangleF clippedDrawingRect = _virtualDisplay.PaintRect;
@@ -598,26 +605,22 @@ public partial class BitmapDisplayPanel : UserControl
     /// <summary>
     /// Paint the image
     /// </summary>
-    protected override void OnPaint(PaintEventArgs paintEventArgs)
+    protected override void OnPaint(PaintEventArgs e)
     {
         _stopwatch.Restart();
 
-        OnPaintUnder?.Invoke(
-            sender: this,
-            graphics: paintEventArgs.Graphics);
+        OnPaintUnder?.Invoke(this, new PaintUnderEventArgs(e.Graphics));
 
         if (AnythingToDisplay)
         {
-            PaintBitmap(paintEventArgs);
+            PaintBitmap(e);
         }
         else if (BackgroundImage is null)
         {
-            PaintNoImageHatch(paintEventArgs);
+            PaintNoImageHatch(e);
         }
 
-        OnPaintOver?.Invoke(
-            sender: this,
-            graphics: paintEventArgs.Graphics);
+        OnPaintOver?.Invoke(this, new PaintOverEventArgs(e.Graphics));
 
         _stopwatch.Stop();
         TimingMetrics.ForegroundPaint = _stopwatch.Elapsed;

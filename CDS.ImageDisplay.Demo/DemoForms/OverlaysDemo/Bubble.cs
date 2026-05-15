@@ -5,9 +5,8 @@ using CDS.ImageDisplay.Overlays;
 
 namespace CDS.ImageDisplay.Demo.DemoForms.OverlaysDemo;
 
-public class Bubble
+internal sealed class Bubble
 {
-    private readonly Random random = new();
     private readonly Overlays.CircleShape shape;
 
 
@@ -93,7 +92,7 @@ public class Bubble
     /// <summary>
     /// Normalises an angle to be within 0 to 360 degrees.
     /// </summary>
-    private double NormalizeAngle(double angle)
+    private static double NormalizeAngle(double angle)
     {
         angle %= 360;
         if (angle < 0)

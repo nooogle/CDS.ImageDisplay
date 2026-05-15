@@ -4,11 +4,17 @@ using CDS.ImageDisplay.BitmapDisplay;
 
 namespace UnitTests.BitmapDisplay;
 
+/// <summary>
+/// Tests for <see cref="VirtualDisplay"/>.
+/// </summary>
 [TestClass]
-public partial class VirtualDisplayTests
+internal sealed class VirtualDisplayTests
 {
+    /// <summary>
+    /// Verifies that the default state uses fit-to-window mode.
+    /// </summary>
     [TestMethod]
-    public void Constructor_DefaultState_UsesFitToWindowMode()
+    public void ConstructorDefaultStateUsesFitToWindowMode()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateSubject();
@@ -24,7 +30,7 @@ public partial class VirtualDisplayTests
             virtualDisplay.TargetImageCentre,
         };
 
-        // Bundle
+        // Assert
         var expected = new
         {
             Mode = BitmapDisplayMode.FitToWindowCentred,
@@ -35,12 +41,14 @@ public partial class VirtualDisplayTests
             TargetImageCentre = PointF.Empty,
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that fit-to-window mode fills the display when the image and display sizes match.
+    /// </summary>
     [TestMethod]
-    public void FitToWindowMode_ImageSameSizeAsDisplay_FillsDisplayExactly()
+    public void FitToWindowModeImageSameSizeAsDisplayFillsDisplayExactly()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateSubject();
@@ -51,7 +59,7 @@ public partial class VirtualDisplayTests
         // Act
         object result = CaptureDisplayState(virtualDisplay);
 
-        // Bundle
+        // Assert
         var expected = new
         {
             Zoom = 1.0f,
@@ -62,12 +70,14 @@ public partial class VirtualDisplayTests
             AnythingToDisplay = true,
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that actual-size mode fills the display when the image and display sizes match.
+    /// </summary>
     [TestMethod]
-    public void ActualSizeMode_ImageSameSizeAsDisplay_FillsDisplayExactly()
+    public void ActualSizeModeImageSameSizeAsDisplayFillsDisplayExactly()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateSubject();
@@ -78,7 +88,7 @@ public partial class VirtualDisplayTests
         // Act
         object result = CaptureDisplayState(virtualDisplay);
 
-        // Bundle
+        // Assert
         var expected = new
         {
             Zoom = 1.0f,
@@ -89,13 +99,15 @@ public partial class VirtualDisplayTests
             AnythingToDisplay = true,
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that fit-to-window mode maximizes the display area for each sample.
+    /// </summary>
     [TestMethod]
     [DynamicData(nameof(FitToWindowSampleData.Data), typeof(FitToWindowSampleData))]
-    public void FitToWindow_Maximizes_DisplayArea(Size imageSize, Size displaySize, RectangleF expectedPaintRect)
+    public void FitToWindowMaximizesDisplayArea(Size imageSize, Size displaySize, RectangleF expectedPaintRect)
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateSubject();
@@ -106,10 +118,9 @@ public partial class VirtualDisplayTests
         RectangleF actualPaintRect = virtualDisplay.PaintRect;
         float actualZoom = virtualDisplay.Zoom;
 
-        // Bundle
+        // Assert
         float expectedZoom = expectedPaintRect.Width / imageSize.Width;
 
-        // Verify
         actualPaintRect.X.Should().BeApproximately(expectedPaintRect.X, 0.01f);
         actualPaintRect.Y.Should().BeApproximately(expectedPaintRect.Y, 0.01f);
         actualPaintRect.Width.Should().BeApproximately(expectedPaintRect.Width, 0.02f);
@@ -117,8 +128,11 @@ public partial class VirtualDisplayTests
         actualZoom.Should().BeApproximately(expectedZoom, 0.00001f);
     }
 
+    /// <summary>
+    /// Verifies that changing the target image centre in free mode moves the paint rectangle.
+    /// </summary>
     [TestMethod]
-    public void ChangeTargetImageCentre_InFreeMode_MovesPaintRect()
+    public void ChangeTargetImageCentreInFreeModeMovesPaintRect()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateConfiguredFreeDisplay();
@@ -127,7 +141,7 @@ public partial class VirtualDisplayTests
         virtualDisplay.TargetImageCentre = PointF.Empty;
         object result = CaptureDisplayState(virtualDisplay);
 
-        // Bundle
+        // Assert
         var expected = new
         {
             Zoom = 5.0f,
@@ -136,12 +150,14 @@ public partial class VirtualDisplayTests
             TargetImageCentre = PointF.Empty,
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that the default initialization fits the image to the display.
+    /// </summary>
     [TestMethod]
-    public void DefaultInitialization_WithDisplayAndImage_FitsToDisplay()
+    public void DefaultInitializationWithDisplayAndImageFitsToDisplay()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateSubject();
@@ -151,7 +167,7 @@ public partial class VirtualDisplayTests
         // Act
         object result = CaptureDisplayState(virtualDisplay);
 
-        // Bundle
+        // Assert
         var expected = new
         {
             Zoom = 10.0f,
@@ -160,14 +176,16 @@ public partial class VirtualDisplayTests
             TargetImageCentre = new PointF(50, 50),
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that mapping image coordinates to display coordinates returns the expected location.
+    /// </summary>
     [TestMethod]
     [DataRow(0, 0, 300, 400)]
     [DataRow(200, 100, 500, 500)]
-    public void MapImageToDisplay_ReturnsExpectedDisplayLocation(
+    public void MapImageToDisplayReturnsExpectedDisplayLocation(
         float imageX,
         float imageY,
         float expectedDisplayX,
@@ -180,7 +198,7 @@ public partial class VirtualDisplayTests
         // Act
         PointF actualDisplayLocation = virtualDisplay.MapImageToDisplay(imageLocation);
 
-        // Bundle
+        // Assert
         var result = new
         {
             actualDisplayLocation.X,
@@ -192,14 +210,16 @@ public partial class VirtualDisplayTests
             Y = expectedDisplayY,
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that mapping display coordinates to image coordinates returns the expected location.
+    /// </summary>
     [TestMethod]
     [DataRow(300, 400, 0, 0)]
     [DataRow(500, 500, 200, 100)]
-    public void MapDisplayToImage_ReturnsExpectedImageLocation(
+    public void MapDisplayToImageReturnsExpectedImageLocation(
         float displayX,
         float displayY,
         float expectedImageX,
@@ -212,7 +232,7 @@ public partial class VirtualDisplayTests
         // Act
         PointF actualImageLocation = virtualDisplay.MapDisplayToImage(displayLocation);
 
-        // Bundle
+        // Assert
         var result = new
         {
             actualImageLocation.X,
@@ -224,12 +244,14 @@ public partial class VirtualDisplayTests
             Y = expectedImageY,
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that mapping a display rectangle to image coordinates returns the expected rectangle.
+    /// </summary>
     [TestMethod]
-    public void MapDisplayRectToImage_ReturnsScaledRectangle()
+    public void MapDisplayRectToImageReturnsScaledRectangle()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateActualSizeCentredDisplay();
@@ -238,15 +260,17 @@ public partial class VirtualDisplayTests
         // Act
         RectangleF actualImageRect = virtualDisplay.MapDisplayToImage(displayRect);
 
-        // Bundle
+        // Assert
         var expected = new RectangleF(0, 0, 200, 100);
 
-        // Verify
         actualImageRect.Should().Be(expected);
     }
 
+    /// <summary>
+    /// Verifies that mapping an image rectangle to display coordinates returns the expected rectangle.
+    /// </summary>
     [TestMethod]
-    public void MapImageRectToDisplay_ReturnsScaledRectangle()
+    public void MapImageRectToDisplayReturnsScaledRectangle()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateActualSizeCentredDisplay();
@@ -255,15 +279,17 @@ public partial class VirtualDisplayTests
         // Act
         RectangleF actualDisplayRect = virtualDisplay.MapImageToDisplay(imageRect);
 
-        // Bundle
+        // Assert
         var expected = new RectangleF(300, 400, 200, 100);
 
-        // Verify
         actualDisplayRect.Should().Be(expected);
     }
 
+    /// <summary>
+    /// Verifies that changing the image size in fit-to-window mode resizes the image to fit the window.
+    /// </summary>
     [TestMethod]
-    public void ChangeImageSizeInFitToWindowMode_ResizesToFitWindow()
+    public void ChangeImageSizeInFitToWindowModeResizesToFitWindow()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateSubject();
@@ -275,7 +301,7 @@ public partial class VirtualDisplayTests
         virtualDisplay.ImageSize = new Size(100, 1000);
         object result = CaptureDisplayState(virtualDisplay);
 
-        // Bundle
+        // Assert
         var expected = new
         {
             Zoom = 1.0f,
@@ -284,12 +310,14 @@ public partial class VirtualDisplayTests
             TargetImageCentre = new PointF(50, 500),
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that a fresh image in free mode has zoom one and is centered.
+    /// </summary>
     [TestMethod]
-    public void FreshImage_InFreeMode_HasZoomOneAndIsCentred()
+    public void FreshImageInFreeModeHasZoomOneAndIsCentred()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateSubject();
@@ -300,7 +328,7 @@ public partial class VirtualDisplayTests
         // Act
         object result = CaptureDisplayState(virtualDisplay);
 
-        // Bundle
+        // Assert
         var expected = new
         {
             Zoom = 1.0f,
@@ -309,12 +337,14 @@ public partial class VirtualDisplayTests
             TargetImageCentre = new PointF(100, 100),
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that changing the image size in free mode leaves the zoom unchanged.
+    /// </summary>
     [TestMethod]
-    public void ChangeImageSizeInFreeMode_LeavesZoomUnchanged()
+    public void ChangeImageSizeInFreeModeLeavesZoomUnchanged()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateSubject();
@@ -327,7 +357,7 @@ public partial class VirtualDisplayTests
         virtualDisplay.ImageSize = new Size(300, 100);
         object result = CaptureDisplayState(virtualDisplay);
 
-        // Bundle
+        // Assert
         var expected = new
         {
             Zoom = 2.5f,
@@ -337,12 +367,14 @@ public partial class VirtualDisplayTests
             SizeOfHalfDisplayPixel = new SizeF(1.25f, 1.25f),
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that changing the image size in automatic mode recalculates the image centre.
+    /// </summary>
     [TestMethod]
-    public void ChangeImageSizeInAutomaticMode_RecalculatesImageCentre()
+    public void ChangeImageSizeInAutomaticModeRecalculatesImageCentre()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateSubject();
@@ -358,19 +390,21 @@ public partial class VirtualDisplayTests
             virtualDisplay.TargetDisplayCentre,
         };
 
-        // Bundle
+        // Assert
         var expected = new
         {
             TargetImageCentre = new PointF(50, 500),
             TargetDisplayCentre = new PointF(1000, 500),
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that changing the target image centre outside free mode leaves the centre unchanged.
+    /// </summary>
     [TestMethod]
-    public void ChangeTargetImageCentre_NotInFreeMode_LeavesCentreUnchanged()
+    public void ChangeTargetImageCentreNotInFreeModeLeavesCentreUnchanged()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateSubject();
@@ -396,7 +430,7 @@ public partial class VirtualDisplayTests
             ActualSizeResult = actualSizeResult,
         };
 
-        // Bundle
+        // Assert
         var expected = new
         {
             FitToWindowOriginal = new PointF(100, 100),
@@ -405,12 +439,14 @@ public partial class VirtualDisplayTests
             ActualSizeResult = new PointF(100, 100),
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that changing the target image centre in free mode changes the centre.
+    /// </summary>
     [TestMethod]
-    public void ChangeTargetImageCentre_InFreeMode_ChangesCentre()
+    public void ChangeTargetImageCentreInFreeModeChangesCentre()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateSubject();
@@ -426,19 +462,21 @@ public partial class VirtualDisplayTests
             virtualDisplay.PaintRect,
         };
 
-        // Bundle
+        // Assert
         var expected = new
         {
             TargetImageCentre = PointF.Empty,
             PaintRect = new RectangleF(1000, 500, 1000, 1000),
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that changing the target display centre outside free mode leaves the centre unchanged.
+    /// </summary>
     [TestMethod]
-    public void ChangeTargetDisplayCentre_NotInFreeMode_LeavesCentreUnchanged()
+    public void ChangeTargetDisplayCentreNotInFreeModeLeavesCentreUnchanged()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateSubject();
@@ -464,7 +502,7 @@ public partial class VirtualDisplayTests
             ActualSizeResult = actualSizeResult,
         };
 
-        // Bundle
+        // Assert
         var expected = new
         {
             FitToWindowOriginal = new PointF(1000, 500),
@@ -473,12 +511,14 @@ public partial class VirtualDisplayTests
             ActualSizeResult = new PointF(1000, 500),
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that changing the target display centre in free mode changes the centre.
+    /// </summary>
     [TestMethod]
-    public void ChangeTargetDisplayCentre_InFreeMode_ChangesCentre()
+    public void ChangeTargetDisplayCentreInFreeModeChangesCentre()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateSubject();
@@ -494,19 +534,21 @@ public partial class VirtualDisplayTests
             virtualDisplay.PaintRect,
         };
 
-        // Bundle
+        // Assert
         var expected = new
         {
             TargetDisplayCentre = PointF.Empty,
             PaintRect = new RectangleF(-500, -500, 1000, 1000),
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that zoom values near one snap to one.
+    /// </summary>
     [TestMethod]
-    public void Zoom_WhenValueIsNearOne_SnapsToOne()
+    public void ZoomWhenValueIsNearOneSnapsToOne()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateConfiguredFreeDisplay();
@@ -520,7 +562,7 @@ public partial class VirtualDisplayTests
             virtualDisplay.PaintRect,
         };
 
-        // Bundle
+        // Assert
         var expected = new
         {
             Zoom = 1.0f,
@@ -528,12 +570,14 @@ public partial class VirtualDisplayTests
             PaintRect = new RectangleF(400, 400, 200, 200),
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that zoom values below the minimum are clipped to the minimum.
+    /// </summary>
     [TestMethod]
-    public void Zoom_WhenValueIsBelowMinimum_ClipsToMinimum()
+    public void ZoomWhenValueIsBelowMinimumClipsToMinimum()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateConfiguredFreeDisplay();
@@ -547,7 +591,7 @@ public partial class VirtualDisplayTests
             virtualDisplay.PaintRect,
         };
 
-        // Bundle
+        // Assert
         var expected = new
         {
             Zoom = Consts.MinZoom,
@@ -555,12 +599,14 @@ public partial class VirtualDisplayTests
             PaintRect = new RectangleF(499, 499, 2, 2),
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that zoom values above the maximum are clipped to the maximum.
+    /// </summary>
     [TestMethod]
-    public void Zoom_WhenValueIsAboveMaximum_ClipsToMaximum()
+    public void ZoomWhenValueIsAboveMaximumClipsToMaximum()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateConfiguredFreeDisplay();
@@ -574,7 +620,7 @@ public partial class VirtualDisplayTests
             virtualDisplay.PaintRect,
         };
 
-        // Bundle
+        // Assert
         var expected = new
         {
             Zoom = Consts.MaxZoom,
@@ -582,12 +628,14 @@ public partial class VirtualDisplayTests
             PaintRect = new RectangleF(-19500, -19500, 40000, 40000),
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that mapping methods return empty values when there is nothing to display.
+    /// </summary>
     [TestMethod]
-    public void MapMethods_WhenNothingToDisplay_ReturnEmptyValues()
+    public void MapMethodsWhenNothingToDisplayReturnEmptyValues()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateSubject();
@@ -602,7 +650,7 @@ public partial class VirtualDisplayTests
             DisplayDistance = virtualDisplay.MapImageToDisplay(123),
         };
 
-        // Bundle
+        // Assert
         var expected = new
         {
             ImagePoint = PointF.Empty,
@@ -612,12 +660,14 @@ public partial class VirtualDisplayTests
             DisplayDistance = 0.0f,
         };
 
-        // Verify
         result.Should().BeEquivalentTo(expected);
     }
 
+    /// <summary>
+    /// Verifies that mapping image distance to display distance scales by the zoom factor.
+    /// </summary>
     [TestMethod]
-    public void MapImageDistanceToDisplay_ReturnsZoomScaledDistance()
+    public void MapImageDistanceToDisplayReturnsZoomScaledDistance()
     {
         // Arrange
         VirtualDisplay virtualDisplay = CreateConfiguredFreeDisplay();
@@ -625,10 +675,9 @@ public partial class VirtualDisplayTests
         // Act
         float actualDistance = virtualDisplay.MapImageToDisplay(12.5f);
 
-        // Bundle
+        // Assert
         const float expectedDistance = 62.5f;
 
-        // Verify
         actualDistance.Should().Be(expectedDistance);
     }
 

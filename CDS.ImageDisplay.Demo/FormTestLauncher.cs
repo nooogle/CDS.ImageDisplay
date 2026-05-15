@@ -4,7 +4,7 @@ using CDS.WinFormsMenus.Basic;
 
 namespace CDS.ImageDisplay.Demo;
 
-public partial class FormTestLauncher : Form
+internal sealed partial class FormTestLauncher : Form
 {
     private readonly JSONSettingsManager<AppSettings> settingsManager;
 

@@ -14,9 +14,12 @@ namespace CDS.ImageDisplay.Demo.DemoForms
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing)
             {
-                components.Dispose();
+                components?.Dispose();
+                loadedBitmap?.Dispose();
+                fixedWidthFont?.Dispose();
+                msgPanelBrush?.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -63,9 +66,9 @@ namespace CDS.ImageDisplay.Demo.DemoForms
             this.bitmapDisplay.Size = new System.Drawing.Size(722, 459);
             this.bitmapDisplay.TabIndex = 0;
             this.bitmapDisplay.Zoom = 1F;
-            this.bitmapDisplay.OnPaintOver += new CDS.ImageDisplay.BitmapDisplay.PaintOverEvent(this.bitmapDisplay_PaintOver);
-            this.bitmapDisplay.OnPaintUnder += new CDS.ImageDisplay.BitmapDisplay.PaintUnderEvent(this.bitmapDisplay_PaintUnder);
-            this.bitmapDisplay.OnDisplayModeChanged += new CDS.ImageDisplay.BitmapDisplay.ModeChangedEvent(this.bitmapDisplay_DisplayModeChanged);
+            this.bitmapDisplay.OnPaintOver += this.bitmapDisplay_PaintOver;
+            this.bitmapDisplay.OnPaintUnder += this.bitmapDisplay_PaintUnder;
+            this.bitmapDisplay.OnDisplayModeChanged += this.bitmapDisplay_DisplayModeChanged;
             // 
             // menu
             // 

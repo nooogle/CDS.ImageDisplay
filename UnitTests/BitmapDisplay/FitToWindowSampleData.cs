@@ -5,8 +5,11 @@ namespace UnitTests.BitmapDisplay;
 /// <summary>
 /// Provides sample data for fit-to-window layout scenarios.
 /// </summary>
-public class FitToWindowSampleData
+internal sealed class FitToWindowSampleData
 {
+    /// <summary>
+    /// Gets the sample data for fit-to-window layout scenarios, including various image and display sizes along with the expected layout rectangles.
+    /// </summary>
     public static IEnumerable<object[]> Data
     {
         get

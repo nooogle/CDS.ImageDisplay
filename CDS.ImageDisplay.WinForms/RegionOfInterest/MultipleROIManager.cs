@@ -19,13 +19,13 @@ namespace CDS.ImageDisplay.RegionOfInterest;
 /// </remarks>
 public partial class MultipleROIManager : Component
 {
-    private const string categoryCDS = "CDS";
+    private const string s_categoryCDS = "CDS";
 
-    private Size? imageSize;
-    private ISingleROIDescriptor? activeROIDescriptor;
-    private bool refreshSelectionSentry = false;
-    private Timer timerDeselectAfterClick = null!;
-    private Timer timerDeselectAfterMove = null!;
+    private ISingleROIDescriptor? _activeROIDescriptor;
+    private Size? _imageSize;
+    private bool _refreshSelectionSentry;
+    private Timer _timerDeselectAfterClick = null!;
+    private Timer _timerDeselectAfterMove = null!;
 
 
     /// <summary>
@@ -84,7 +84,7 @@ public partial class MultipleROIManager : Component
     /// <summary>
     /// The bitmap display panel that the ROI is drawn on.
     /// </summary>
-    [Category(categoryCDS)]
+    [Category(s_categoryCDS)]
     [DefaultValue(null)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public BitmapDisplay.BitmapDisplayPanel? BitmapDisplayPanel
@@ -115,11 +115,11 @@ public partial class MultipleROIManager : Component
                     // Seed imageSize from the panel's current image so that ROIs can
                     // be used immediately, without waiting for the next OnImageSizeChanged event.
                     Size existingSize = field.ImageSize;
-                    imageSize = existingSize == Size.Empty ? null : existingSize;
+                    _imageSize = existingSize == Size.Empty ? null : existingSize;
                 }
                 else
                 {
-                    imageSize = null;
+                    _imageSize = null;
                 }
 
                 roiSelectionOnBitmapDisplay.BitmapDisplayPanel = field;
@@ -130,7 +130,7 @@ public partial class MultipleROIManager : Component
 
     private void BitmapDisplayPanel_KeyPress(object? sender, KeyPressEventArgs e)
     {
-        if (activeROIDescriptor == null)
+        if (_activeROIDescriptor == null)
         { return; }
 
         const int escapeKeyCode = 27;
@@ -147,7 +147,7 @@ public partial class MultipleROIManager : Component
     /// The shape for the dragging ROI.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-    [Category(categoryCDS)]
+    [Category(s_categoryCDS)]
     [DisplayName("Dragging ROI shape")]
     public ROIWithGrapplesShape DraggingROIShape => roiSelectionOnBitmapDisplay.LiveDraggingROIShape;
 
@@ -156,7 +156,7 @@ public partial class MultipleROIManager : Component
     /// The shape for the committed ROI.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-    [Category(categoryCDS)]
+    [Category(s_categoryCDS)]
     [DisplayName("Committed ROI shape")]
     public ROIWithGrapplesShape CommittedROIShape => roiSelectionOnBitmapDisplay.CommittedROIShape;
 
@@ -188,11 +188,11 @@ public partial class MultipleROIManager : Component
     /// </summary>
     private void CommonInitialise()
     {
-        timerDeselectAfterClick = new Timer(components);
-        timerDeselectAfterClick.Tick += (_, _) => { timerDeselectAfterClick.Stop(); DeselectActiveROI(); };
+        _timerDeselectAfterClick = new Timer(components);
+        _timerDeselectAfterClick.Tick += (_, _) => { _timerDeselectAfterClick.Stop(); DeselectActiveROI(); };
 
-        timerDeselectAfterMove = new Timer(components);
-        timerDeselectAfterMove.Tick += (_, _) => { timerDeselectAfterMove.Stop(); DeselectActiveROI(); };
+        _timerDeselectAfterMove = new Timer(components);
+        _timerDeselectAfterMove.Tick += (_, _) => { _timerDeselectAfterMove.Stop(); DeselectActiveROI(); };
     }
 
 
@@ -214,13 +214,13 @@ public partial class MultipleROIManager : Component
     /// <summary>
     /// True if there's an image that the ROI can be applied to.
     /// </summary>
-    private bool DoesHaveImageToWorkWith => (BitmapDisplayPanel != null) && imageSize.HasValue;
+    private bool DoesHaveImageToWorkWith => (BitmapDisplayPanel != null) && _imageSize.HasValue;
 
 
     /// <summary>
     /// Draws the current ROI.
     /// </summary>
-    private void BitmapDisplayPanel_OnPaintOver(BitmapDisplay.BitmapDisplayPanel sender, Graphics graphics)
+    private void BitmapDisplayPanel_OnPaintOver(object? sender, CDS.ImageDisplay.BitmapDisplay.PaintOverEventArgs e)
     {
         if (!DoesHaveImageToWorkWith)
         { return; }
@@ -229,7 +229,7 @@ public partial class MultipleROIManager : Component
 
         foreach (ISingleROIDescriptor roiDescriptor in ROIDescriptors)
         {
-            roiDescriptor.Draw(BitmapDisplayPanel!, graphics);
+            roiDescriptor.Draw(BitmapDisplayPanel!, e.Graphics);
         }
     }
 
@@ -237,8 +237,10 @@ public partial class MultipleROIManager : Component
     /// <summary>
     /// Handle a change to the image size
     /// </summary>
-    private void BitmapDisplayPanel_OnImageSizeChanged(BitmapDisplay.BitmapDisplayPanel sender, Size oldSize, Size newSize) => imageSize = newSize;
-
+    private void BitmapDisplayPanel_OnImageSizeChanged(object? sender, BitmapDisplay.ImageSizeChangedEventArgs e)
+    {
+        _imageSize = e.NewSize;
+    }
 
     private void BitmapDisplayPanel_MouseClick(object? sender, MouseEventArgs e)
     {
@@ -277,7 +279,7 @@ public partial class MultipleROIManager : Component
 
     private void HandleROIClicked(ISingleROIDescriptor roiDescriptor)
     {
-        if (roiDescriptor == activeROIDescriptor)
+        if (roiDescriptor == _activeROIDescriptor)
         { return; }
         if (roiSelectionOnBitmapDisplay.IsDragging)
         { return; }
@@ -287,29 +289,29 @@ public partial class MultipleROIManager : Component
         DeselectActiveROI();
 
         roiDescriptor.Visible = false;
-        activeROIDescriptor = roiDescriptor;
+        _activeROIDescriptor = roiDescriptor;
 
-        roiSelectionOnBitmapDisplay.CommittedROI = activeROIDescriptor.ROI;
+        roiSelectionOnBitmapDisplay.CommittedROI = _activeROIDescriptor.ROI;
         roiSelectionOnBitmapDisplay.Visible = true;
         roiSelectionOnBitmapDisplay.CanEditCommitted = true;
 
         BitmapDisplayPanel!.Invalidate();
 
-        timerDeselectAfterMove.Stop();
-        StartTimer(timerDeselectAfterClick, ClickDeselectDelay);
+        _timerDeselectAfterMove.Stop();
+        StartTimer(_timerDeselectAfterClick, ClickDeselectDelay);
     }
 
 
     private void DeselectActiveROI()
     {
-        if (activeROIDescriptor == null)
+        if (_activeROIDescriptor == null)
         { return; }
 
-        timerDeselectAfterClick.Stop();
-        timerDeselectAfterMove.Stop();
+        _timerDeselectAfterClick.Stop();
+        _timerDeselectAfterMove.Stop();
 
-        activeROIDescriptor.Visible = true;
-        activeROIDescriptor = null;
+        _activeROIDescriptor.Visible = true;
+        _activeROIDescriptor = null;
 
         roiSelectionOnBitmapDisplay.Visible = false;
         roiSelectionOnBitmapDisplay.CanEditCommitted = false;
@@ -318,24 +320,26 @@ public partial class MultipleROIManager : Component
     }
 
 
-    private void roiSelectionOnBitmapDisplay_OnCommittedROIChanged(SingleROIManager sender, Rectangle roi)
+    private void roiSelectionOnBitmapDisplay_OnCommittedROIChanged(object? sender, CommittedROIChangedEventArgs e)
     {
+        var roi = e.ROI;
+
         var newROI = new Rectangle(
             x: roi.Location.X,
             y: roi.Location.Y,
-            width: Math.Min(Math.Max(roi.Width, activeROIDescriptor!.MinimumSize.Width), activeROIDescriptor.MaximumSize.Width),
-            height: Math.Min(Math.Max(roi.Height, activeROIDescriptor.MinimumSize.Height), activeROIDescriptor.MaximumSize.Height));
+            width: Math.Min(Math.Max(roi.Width, _activeROIDescriptor!.MinimumSize.Width), _activeROIDescriptor.MaximumSize.Width),
+            height: Math.Min(Math.Max(roi.Height, _activeROIDescriptor.MinimumSize.Height), _activeROIDescriptor.MaximumSize.Height));
 
-        if (activeROIDescriptor.ROI == roi)
+        if (_activeROIDescriptor.ROI == roi)
         { return; }
 
         roiSelectionOnBitmapDisplay.CommittedROI = newROI;
-        activeROIDescriptor.ROI = newROI;
+        _activeROIDescriptor.ROI = newROI;
 
-        OnCommittedROIDescriptorChanged?.Invoke(this, new CommittedROIDescriptorChangedEventArgs(activeROIDescriptor));
+        OnCommittedROIDescriptorChanged?.Invoke(this, new CommittedROIDescriptorChangedEventArgs(_activeROIDescriptor));
 
-        timerDeselectAfterClick.Stop();
-        StartTimer(timerDeselectAfterMove, MoveDeselectDelay);
+        _timerDeselectAfterClick.Stop();
+        StartTimer(_timerDeselectAfterMove, MoveDeselectDelay);
     }
 
 
@@ -348,36 +352,58 @@ public partial class MultipleROIManager : Component
     /// </remarks>
     public void RefreshSelection()
     {
-        if (refreshSelectionSentry)
+        if (_refreshSelectionSentry)
         { return; }
-        refreshSelectionSentry = true;
+        _refreshSelectionSentry = true;
 
-        if ((activeROIDescriptor != null) && (!activeROIDescriptor.Visible || activeROIDescriptor.Locked))
+        if ((_activeROIDescriptor != null) && (!_activeROIDescriptor.Visible || _activeROIDescriptor.Locked))
         {
             DeselectActiveROI();
         }
 
         BitmapDisplayPanel?.Invalidate();
 
-        refreshSelectionSentry = false;
+        _refreshSelectionSentry = false;
     }
 
 
     /// <summary>
     /// True if the spacebar is pressed.
     /// </summary>
-    private bool IsSpacebarPressed() => (Win32.GetKeyState(Win32.VK_SPACE) & 0x8000) != 0;
+    private static bool IsSpacebarPressed() => (Win32.GetKeyState(Win32.VK_SPACE) & 0x8000) != 0;
 
 
     /// <summary>
     /// The ROI selection is being dragged.
     /// </summary>
-    private void roiSelectionOnBitmapDisplay_OnDraggingROIChanged(SingleROIManager sender, Rectangle roi)
+    private void roiSelectionOnBitmapDisplay_OnDraggingROIChanged(object? sender, DraggingROIChangedEventArgs e)
     {
+        var roi = e.ROI;
         if (roi.IsEmpty)
-        { return; }
+        {
+            return;
+        }
 
-        timerDeselectAfterClick.Stop();
-        timerDeselectAfterMove.Stop();
+        _timerDeselectAfterClick.Stop();
+        _timerDeselectAfterMove.Stop();
+    }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _timerDeselectAfterClick?.Dispose();
+            _timerDeselectAfterMove?.Dispose();
+
+            if (components != null)
+            {
+                components.Dispose();
+            }
+        }
+        base.Dispose(disposing);
     }
 }

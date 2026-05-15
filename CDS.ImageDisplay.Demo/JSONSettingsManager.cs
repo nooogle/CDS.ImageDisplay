@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace CDS.ImageDisplay.Demo;
 
-internal class JSONSettingsManager<T> where T : new()
+internal sealed class JSONSettingsManager<T> where T : new()
 {
     private static readonly JsonSerializerOptions s_jsonSerializerOptions = CreateJsonSerializerOptions();
 
@@ -16,10 +16,8 @@ internal class JSONSettingsManager<T> where T : new()
 
 
     /// <summary>
-    /// Initialises a new instance of the SettingsManager class.
+    /// Initialises a new instance of the <see cref="JSONSettingsManager{T}"/> class.
     /// </summary>
-    /// <param name="fileName">The name of the settings file (default is "settings.json").</param>
-    /// <param name="appFolderName">The name of the folder within Application Data (default is "MyApp").</param>
     public JSONSettingsManager()
     {
         // Obtain the path for the per-user Application Data folder.
@@ -45,7 +43,6 @@ internal class JSONSettingsManager<T> where T : new()
     /// <summary>
     /// Saves the settings by serialising them to JSON and writing to a file.
     /// </summary>
-    /// <param name="settings">The settings object to save.</param>
     public void Save()
     {
         string json = JsonSerializer.Serialize(Settings, s_jsonSerializerOptions);

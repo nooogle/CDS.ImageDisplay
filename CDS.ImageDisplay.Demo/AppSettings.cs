@@ -1,6 +1,6 @@
 namespace CDS.ImageDisplay.Demo;
 
-internal class AppSettings
+internal sealed class AppSettings
 {
     public DemoForms.Settings DemoForms { get; set; } = new DemoForms.Settings();
 }

@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 namespace CDS.ImageDisplay.Demo.DemoForms.MultipleROIs;
 
 
-internal class TestProperties : INotifyPropertyChanged
+internal sealed class TestProperties : INotifyPropertyChanged
 {
     [Category("WinForms controls")]
     [DisplayName("Bitmap display")]
@@ -46,7 +46,7 @@ internal class TestProperties : INotifyPropertyChanged
     /// <summary>
     /// Create some default ROIs
     /// </summary>
-    private BindingList<MyROIDescriptor> CreateDefaultROIs()
+    private static BindingList<MyROIDescriptor> CreateDefaultROIs()
     {
         var list = new BindingList<MyROIDescriptor>
         {

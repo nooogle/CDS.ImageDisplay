@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 using CDS.ImageDisplay.BitmapDisplay;
@@ -7,13 +8,12 @@ using Humanizer;
 
 namespace CDS.ImageDisplay.Demo.DemoForms;
 
-public partial class FormPaintOverAndUnder : Form
+internal sealed partial class FormPaintOverAndUnder : Form
 {
     private Bitmap? loadedBitmap;
     private readonly Font fixedWidthFont;
     private readonly Brush msgPanelBrush;
     private readonly Overlays.CrosshairShape crossHair = new();
-
 
     public FormPaintOverAndUnder()
     {
@@ -36,25 +36,27 @@ public partial class FormPaintOverAndUnder : Form
     }
 
 
-    private void bitmapDisplay_PaintOver(BitmapDisplayPanel sender, Graphics graphics)
+    private void bitmapDisplay_PaintOver(object sender, PaintOverEventArgs e)
     {
+        var bitmapDisplay = (BitmapDisplayPanel)sender;
+        var graphics = e.Graphics;
         var info = new StringBuilder();
-        info.Append($"Display mode      {sender.DisplayMode.Humanize()}\n");
-        info.Append($"Display size      {sender.ClientSize}\n");
-        if (!sender.AnythingToDisplay)
+        info.Append(CultureInfo.CurrentCulture, $"Display mode      {bitmapDisplay.DisplayMode.Humanize()}\n");
+        info.Append(CultureInfo.CurrentCulture, $"Display size      {bitmapDisplay.ClientSize}\n");
+        if (!bitmapDisplay.AnythingToDisplay)
         {
-            info.Append($"Image not loaded\n");
+            info.Append("Image not loaded\n");
         }
         else
         {
-            RectangleF r = sender.PaintRect;
-            info.Append($"Bitmap size       {sender.GetDisplayImage()?.Size}\n");
-            info.Append($"Paint zoom        {sender.Zoom:0.000}\n");
-            info.Append($"Paint rect        {r.X:0.0}, {r.Y:0.0}, {r.Width:0.0}, {r.Height:0:0}\n");
-            info.Append($"Format            {sender.GetDisplayImage()?.PixelFormat.Humanize()}\n");
+            RectangleF r = bitmapDisplay.PaintRect;
+            info.Append(CultureInfo.CurrentCulture, $"Bitmap size       {bitmapDisplay.DisplayImage?.Size}\n");
+            info.Append(CultureInfo.CurrentCulture, $"Paint zoom        {bitmapDisplay.Zoom:0.000}\n");
+            info.Append(CultureInfo.CurrentCulture, $"Paint rect        {r.X:0.0}, {r.Y:0.0}, {r.Width:0.0}, {r.Height:0:0}\n");
+            info.Append(CultureInfo.CurrentCulture, $"Format            {bitmapDisplay.DisplayImage?.PixelFormat.Humanize()}\n");
         }
-        info.Append($"Paint foreground  {sender.TimingMetrics.ForegroundPaint.Humanize()}\n");
-        info.Append($"Paint background  {sender.TimingMetrics.BackgroundPaint.Humanize()}\n");
+        info.Append(CultureInfo.CurrentCulture, $"Paint foreground  {bitmapDisplay.TimingMetrics.ForegroundPaint.Humanize()}\n");
+        info.Append(CultureInfo.CurrentCulture, $"Paint background  {bitmapDisplay.TimingMetrics.BackgroundPaint.Humanize()}\n");
 
         var textTopleft = new PointF(12, 12);
         SizeF textBlockSize = graphics.MeasureString(info.ToString(), fixedWidthFont);
@@ -72,7 +74,7 @@ public partial class FormPaintOverAndUnder : Form
             Brushes.Yellow,
             textTopleft);
 
-        Rectangle topLeftBox = sender.MapImageToDisplay(new RectangleF(0, 0, 10, 5), DisplayPixelAlign.TopLeft);
+        Rectangle topLeftBox = bitmapDisplay.MapImageToDisplay(new RectangleF(0, 0, 10, 5), DisplayPixelAlign.TopLeft);
         graphics.DrawRectangle(Pens.Red, topLeftBox.X, topLeftBox.Y, topLeftBox.Width, topLeftBox.Height);
 
         graphics.DrawString(
@@ -91,8 +93,8 @@ public partial class FormPaintOverAndUnder : Form
         // Line test
         graphics.DrawLine(
             Pens.Black,
-            sender.MapImageToDisplay(new Point(50, 50), DisplayPixelAlign.Centre),
-            sender.MapImageToDisplay(new Point(100, 60), DisplayPixelAlign.Centre));
+            bitmapDisplay.MapImageToDisplay(new Point(50, 50), DisplayPixelAlign.Centre),
+            bitmapDisplay.MapImageToDisplay(new Point(100, 60), DisplayPixelAlign.Centre));
     }
 
     private void menuDisplayModeFree_Click(object sender, EventArgs e)
@@ -135,20 +137,22 @@ public partial class FormPaintOverAndUnder : Form
     }
 
 
-    private void bitmapDisplay_PaintUnder(BitmapDisplayPanel sender, Graphics graphics)
+    private void bitmapDisplay_PaintUnder(object sender, PaintUnderEventArgs e)
     {
-        if (sender.PaintRect.IsEmpty)
+        var bitmapDisplay = (BitmapDisplayPanel)sender;
+        var graphics = e.Graphics;
+        if (bitmapDisplay.PaintRect.IsEmpty)
         { return; }
 
         graphics.DrawLine(
             Pens.Navy,
-            sender.PaintRect.Location,
-            new PointF(sender.PaintRect.Right - 1, sender.PaintRect.Bottom - 1));
+            bitmapDisplay.PaintRect.Location,
+            new PointF(bitmapDisplay.PaintRect.Right - 1, bitmapDisplay.PaintRect.Bottom - 1));
 
         graphics.DrawLine(
             Pens.Navy,
-            new PointF(sender.PaintRect.Right - 1, sender.PaintRect.Top),
-            new PointF(sender.PaintRect.Left, sender.PaintRect.Bottom - 1));
+            new PointF(bitmapDisplay.PaintRect.Right - 1, bitmapDisplay.PaintRect.Top),
+            new PointF(bitmapDisplay.PaintRect.Left, bitmapDisplay.PaintRect.Bottom - 1));
     }
 
 
@@ -171,6 +175,7 @@ public partial class FormPaintOverAndUnder : Form
             loadedBitmap = (Bitmap)Image.FromFile(fileName);
             bitmapDisplay.SetImage(loadedBitmap);
         }
+#pragma warning disable CA1031 // Broad catch is intentional: any image-load failure should be shown to the user
         catch (Exception exception)
         {
             MessageBox.Show(
@@ -180,6 +185,7 @@ public partial class FormPaintOverAndUnder : Form
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);
         }
+#pragma warning restore CA1031
     }
 
 
@@ -190,7 +196,7 @@ public partial class FormPaintOverAndUnder : Form
     }
 
 
-    private void bitmapDisplay_DisplayModeChanged(BitmapDisplayPanel sender)
+    private void bitmapDisplay_DisplayModeChanged(object sender, EventArgs e)
     {
         UpdateCommandEnablement();
         UpdateDisplayModeCheckboxes();

@@ -1,14 +1,36 @@
+using System;
 using System.Drawing;
 
 namespace CDS.ImageDisplay.RegionOfInterest;
 
 /// <summary>
-/// Event handler for when a ROI is committed
+/// Provides data for the <see cref="SingleROIManager.OnCommittedROIChanged"/> event.
 /// </summary>
-public delegate void OnCommittedROIChangedEvent(SingleROIManager sender, Rectangle roi);
+public sealed class CommittedROIChangedEventArgs : EventArgs
+{
+    /// <summary>Gets the new committed region of interest.</summary>
+    public Rectangle ROI { get; }
 
+    /// <summary>Initialises a new instance of <see cref="CommittedROIChangedEventArgs"/>.</summary>
+    /// <param name="roi">The new committed region of interest.</param>
+    public CommittedROIChangedEventArgs(Rectangle roi)
+    {
+        ROI = roi;
+    }
+}
 
 /// <summary>
-/// Event handler for when a ROI is being dragged
+/// Provides data for the <see cref="SingleROIManager.OnDraggingROIChanged"/> event.
 /// </summary>
-public delegate void OnDraggingROIChangedEvent(SingleROIManager sender, Rectangle roi);
+public sealed class DraggingROIChangedEventArgs : EventArgs
+{
+    /// <summary>Gets the current live-dragging region of interest.</summary>
+    public Rectangle ROI { get; }
+
+    /// <summary>Initialises a new instance of <see cref="DraggingROIChangedEventArgs"/>.</summary>
+    /// <param name="roi">The current live-dragging region of interest.</param>
+    public DraggingROIChangedEventArgs(Rectangle roi)
+    {
+        ROI = roi;
+    }
+}

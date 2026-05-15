@@ -6,12 +6,14 @@ using CDS.ImageDisplay.Utils;
 namespace CDS.ImageDisplay.Demo.DemoForms.OverlaysDemo;
 
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
-public class OverlayShapes
+internal sealed class OverlayShapes
 {
     private readonly Random random = new();
 
     [Browsable(false)]
+#pragma warning disable CA1819 // Properties should not return arrays — intentional for internal demo use
     public Bubble[] Bubbles { get; private set; } = [];
+#pragma warning restore CA1819
 
 
     public OverlayShapes()
