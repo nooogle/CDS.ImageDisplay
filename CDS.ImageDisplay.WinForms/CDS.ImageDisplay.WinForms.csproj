@@ -3,23 +3,32 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0-windows</TargetFramework>
 		<UseWindowsForms>true</UseWindowsForms>
-		<Company>CDS</Company>
+		<Company>Carpe Diem Systems</Company>
+		<Authors>Jon Shadforth</Authors>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<Platforms>AnyCPU</Platforms>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>CDS ImageDisplay</Title>
-		<Description>WinForms image display library — zoom, pan, annotate</Description>
-		<Copyright>Carpe Diem Systems (c) 2025</Copyright>
+		<Description>WinForms image display control — zoom, pan, annotate, and select regions of interest on bitmaps. Supports thread-safe image updates, overlay shapes, interactive ROI handles, and coordinate mapping between image and display space.</Description>
+		<Copyright>Copyright © Carpe Diem Systems 2025</Copyright>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageTags>winforms;image;bitmap;zoom;pan;roi;overlay;display;imaging;annotation</PackageTags>
+		<PackageProjectUrl>https://github.com/nooogle/CDS.ImageDisplay</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/nooogle/CDS.ImageDisplay.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<RootNamespace>CDS.ImageDisplay</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Include="..\README.md" Link="README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\LICENSE" Link="LICENSE">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
