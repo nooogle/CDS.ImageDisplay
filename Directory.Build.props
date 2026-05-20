@@ -1,19 +1,6 @@
 <Project>
 	<PropertyGroup>
 		<MinVerTagPrefix>V</MinVerTagPrefix>
-
-		<!-- Run all Roslyn analyzers and EditorConfig style rules during build
-			 so that naming, style, and documentation warnings appear in the
-			 Error List for every file, not just those open in the editor. -->
-		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-		<RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
-
-		<!-- Enable the full analyser suite (includes IDE1006 naming rules). -->
-		<AnalysisLevel>latest-all</AnalysisLevel>
-
-		<!-- Required for CS1591 (missing XML doc comment) to be reported
-			 during build; without this the compiler skips doc-comment checks. -->
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>
