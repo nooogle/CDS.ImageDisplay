@@ -84,6 +84,18 @@ internal sealed partial class FormTestLauncher : Form
             createForm: () => new DemoForms.FormROISelectionDetailed());
 
         other.AddItem(
+            name: "Line selection: simple",
+            tooltip: "Basic demo of line selection",
+            parent: this,
+            createForm: () => new DemoForms.FormLineSelectionSimple());
+
+        other.AddItem(
+            name: "Line selection: detailed",
+            tooltip: "Detailed demo of line selection",
+            parent: this,
+            createForm: () => new DemoForms.FormLineSelectionDetailed());
+
+        other.AddItem(
             name: "Multiple ROIs",
             tooltip: "",
             parent: this,
