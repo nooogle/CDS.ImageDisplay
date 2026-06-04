@@ -27,6 +27,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="DemoForms\FormTextPanelStandard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="DemoForms\FormTextPanelCustom.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="DemoForms\FormROISelectionSimple.cs">
       <SubType>Form</SubType>
     </Compile>

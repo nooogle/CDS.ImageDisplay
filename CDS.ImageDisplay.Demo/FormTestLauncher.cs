@@ -27,8 +27,26 @@ internal sealed partial class FormTestLauncher : Form
         AddBasicsDemoNodes();
         AddOtherDemoNodes();
         AddOpenCVSharpDemoNodes();
+        AddTextPanelDemoNodes();
 
         menuTree.ExpandAllGroups();
+    }
+
+    private void AddTextPanelDemoNodes()
+    {
+        MenuGroup textPanel = menuTree.AddGroup("Text panel");
+
+        textPanel.AddItem(
+            name: "Standard",
+            tooltip: "Demonstration of the text panel using built-in type and drawing specs",
+            parent: this,
+            createForm: () => new DemoForms.FormTextPanelStandard());
+
+        textPanel.AddItem(
+            name: "Custom",
+            tooltip: "Demonstration of the text panel using custom type and drawing specs",
+            parent: this,
+            createForm: () => new DemoForms.FormTextPanelCustom());
     }
 
     private void AddBasicsDemoNodes()
