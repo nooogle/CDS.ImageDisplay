@@ -68,13 +68,13 @@ bitmapDisplayPanel.SetImage(frame);
 
 ### Paint hooks
 
-Subscribe to `OnPaintOver` or `OnPaintUnder` for flicker-free custom drawing. Both events receive a `Graphics` object tied to the double-buffered paint cycle.
+Subscribe to `PaintOver` or `PaintUnder` for flicker-free custom drawing. Both events receive a `Graphics` object tied to the double-buffered paint cycle.
 
 ```csharp
-bitmapDisplayPanel.OnPaintOver += (sender, e) =>
+bitmapDisplayPanel.PaintOver += (sender, e) =>
 {
-    var panel = (BitmapDisplayPanel)sender!;
-    // draw over the image here
+    // draw over the image using e.Graphics
+    e.Graphics.DrawLine(Pens.Red, 0, 0, 100, 100);
 };
 ```
 
@@ -92,13 +92,39 @@ var box = new RectangleShape { ImageRect = new RectangleF(100, 50, 200, 150) };
 box.Drawing.Lines.Color = Color.Lime;
 box.Drawing.Lines.Width = 2;
 
-bitmapDisplayPanel.OnPaintOver += (sender, e) =>
+bitmapDisplayPanel.PaintOver += (sender, e) =>
     box.Draw((BitmapDisplayPanel)sender!, e.Graphics);
 ```
 
 Available shapes: `RectangleShape`, `CircleShape`, `EllipseShape`, `LineShape`, `PolygonShape`, `TextShape`, `CrosshairShape`.
 
 `DrawingToolsPool` caches `Pen`, `Brush`, and `Font` objects by spec equality, avoiding GDI+ allocations in paint loops.
+
+### Text panel
+
+`TextPanelStd` draws a rounded, semi-transparent information panel in the top-left corner of the control. Call it from a paint event:
+
+```csharp
+private readonly TextPanelStd _textPanel = new();
+
+bitmapDisplayPanel.PaintOver += (sender, e) =>
+{
+    _textPanel.Clear();
+    _textPanel.AddMessage(TextPanelStdMsgTypes.Title, "Inspection result");
+    _textPanel.AddMessage(TextPanelStdMsgTypes.Info, $"Position: {x}, {y}");
+    _textPanel.AddMessage(TextPanelStdMsgTypes.Error, "Out of tolerance");
+    _textPanel.Draw((BitmapDisplayPanel)sender!, e.Graphics);
+};
+```
+
+Message types — `Title`, `Info`, `Success`, `Warning`, `Error` — each render in a distinct colour and font size by default. Customise them via `DrawingSpecs`:
+
+```csharp
+_textPanel.DrawingSpecs.Title.Font.FontSize = 14;
+_textPanel.DrawingSpecs.Panel.Fill.Color = Color.FromArgb(160, Color.DarkSlateBlue);
+```
+
+For custom message types, use `TextPanel<TMessageType>` directly with your own enum and a delegate that maps each value to a `DrawingSpec`.
 
 ### Regions of interest
 
@@ -107,18 +133,51 @@ Available shapes: `RectangleShape`, `CircleShape`, `EllipseShape`, `LineShape`, 
 ```csharp
 singleROIManager.BitmapDisplayPanel = bitmapDisplayPanel;
 
-singleROIManager.OnCommittedROIChanged += (s, e) =>
+singleROIManager.CommittedROIChanged += (s, e) =>
 {
-    // e.CommittedROI is in image coordinates, independent of zoom/pan
-    Console.WriteLine(e.CommittedROI);
+    // e.ROI is in image coordinates, independent of zoom/pan
+    Console.WriteLine(e.ROI);
 };
 ```
 
-- `OnDraggingROIChanged` — fires continuously while the user drags
-- `OnCommittedROIChanged` — fires on mouse-up
+- `DraggingROIChanged` — fires continuously while the user drags
+- `CommittedROIChanged` — fires on mouse-up
 - `DragBorder` — pixel tolerance around edges and corners for hit-testing
 
 `MultipleROIManager` manages a list of `ISingleROIDescriptor` objects with one active at a time. Implement `ISingleROIDescriptor` to add custom ROI types.
+
+### Line selection
+
+`SingleLineSelectionManager` is a WinForms component that adds an interactive, repositionable line to a `BitmapDisplayPanel`. Drop it on a form alongside the panel, set `BitmapDisplayPanel`, and subscribe to events:
+
+```csharp
+singleLineSelectionManager.BitmapDisplayPanel = bitmapDisplayPanel;
+
+singleLineSelectionManager.CommittedLineChanged += (s, e) =>
+{
+    // e.Line is a (Point Start, Point End) tuple in image coordinates
+    Console.WriteLine($"Line: {e.Line.Start} → {e.Line.End}");
+};
+```
+
+Interactions:
+- **Draw a new line** — left-click and drag on an empty area of the image
+- **Move the line** — drag anywhere along the line body
+- **Reposition an endpoint** — drag the start or end handle
+- **Pan while a line is active** — hold **Spacebar** then drag normally
+
+Events:
+- `CommittedLineChanged` — fires on mouse-up; `e.Line` carries the new endpoints in image coordinates
+- `DraggingLineChanged` — fires continuously during drag
+
+Read or set the line programmatically:
+
+```csharp
+singleLineSelectionManager.CommittedLine = (new Point(10, 20), new Point(200, 150));
+singleLineSelectionManager.CommittedLine = null;   // clear
+```
+
+Style is controlled by `CommittedLineDrawingSpec` and `LiveDraggingLineDrawingSpec`. `DragBorder` (default 10 px) sets the hit-test tolerance around endpoints and the line body. `CanEditCommitted` and `CanCreateNew` let you lock down interactions independently.
 
 ### Coordinate mapping
 
