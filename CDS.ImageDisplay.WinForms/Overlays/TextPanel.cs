@@ -61,6 +61,15 @@ public class TextPanel<TMessageType> where TMessageType : Enum
 
 
     /// <summary>
+    /// Removes all messages.
+    /// </summary>
+    public void Clear()
+    {
+        _messageLines.Clear();
+    }
+
+
+    /// <summary>
     /// Draws a background box and then the messages on top.
     /// </summary>
     public void Draw(

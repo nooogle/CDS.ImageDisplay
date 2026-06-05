@@ -25,7 +25,7 @@ internal sealed partial class FormOpenCVSharp : Form
 
         var cvImageColor = Properties.Resources.Thailand.ToMat();
 
-        bitmapPanel2.CDSSetImage(cvImageColor);
+        bitmapPanel2.SetImage(cvImageColor);
 
         _cvImageGrey = new OpenCvSharp.Mat(
             rows: cvImageColor.Rows,
@@ -37,7 +37,7 @@ internal sealed partial class FormOpenCVSharp : Form
             dst: _cvImageGrey,
             code: OpenCvSharp.ColorConversionCodes.RGB2GRAY);
 
-        bitmapPanel3.CDSSetImage(_cvImageGrey);
+        bitmapPanel3.SetImage(_cvImageGrey);
 
         _cvImageBlurred = new OpenCvSharp.Mat(
             rows: cvImageColor.Rows,
@@ -65,7 +65,7 @@ internal sealed partial class FormOpenCVSharp : Form
         stopwatch.Stop();
         labelProcessTimeMS.Text = $"Processing time: {stopwatch.ElapsedMilliseconds:0.0} ms";
 
-        bitmapPanel4.CDSSetImage(_cvImageBlurred);
+        bitmapPanel4.SetImage(_cvImageBlurred);
     }
 
     private void trackBarGaussianSize_Scroll(object sender, EventArgs e) => ProcessBlurring();
@@ -80,7 +80,7 @@ internal sealed partial class FormOpenCVSharp : Form
     }
 
 
-    private void bitmapPanel_CDSPaintRectChanged(object sender, EventArgs e) => SyncPaintRects((BitmapDisplay.BitmapDisplayPanel)sender);
+    private void BitmapPanel_PaintRectChanged(object sender, BitmapDisplay.PaintRectChangedEventArgs e) => SyncPaintRects(e.Sender);
 
     private void SyncPaintRects(BitmapDisplay.BitmapDisplayPanel sender)
     {

@@ -126,7 +126,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms
             bitmapPanel4.Name = "bitmapPanel4";
             bitmapPanel4.Size = new System.Drawing.Size(706, 340);
             bitmapPanel4.TabIndex = 3;
-            bitmapPanel4.OnPaintRectChanged += bitmapPanel_CDSPaintRectChanged;
+            bitmapPanel4.PaintRectChanged += BitmapPanel_PaintRectChanged;
             // 
             // bitmapPanel3
             // 
@@ -139,7 +139,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms
             bitmapPanel3.Name = "bitmapPanel3";
             bitmapPanel3.Size = new System.Drawing.Size(705, 340);
             bitmapPanel3.TabIndex = 2;
-            bitmapPanel3.OnPaintRectChanged += bitmapPanel_CDSPaintRectChanged;
+            bitmapPanel3.PaintRectChanged += BitmapPanel_PaintRectChanged;
             // 
             // bitmapPanel2
             // 
@@ -152,7 +152,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms
             bitmapPanel2.Name = "bitmapPanel2";
             bitmapPanel2.Size = new System.Drawing.Size(706, 340);
             bitmapPanel2.TabIndex = 1;
-            bitmapPanel2.OnPaintRectChanged += bitmapPanel_CDSPaintRectChanged;
+            bitmapPanel2.PaintRectChanged += BitmapPanel_PaintRectChanged;
             // 
             // bitmapPanel1
             // 
@@ -165,7 +165,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms
             bitmapPanel1.Name = "bitmapPanel1";
             bitmapPanel1.Size = new System.Drawing.Size(705, 340);
             bitmapPanel1.TabIndex = 0;
-            bitmapPanel1.OnPaintRectChanged += bitmapPanel_CDSPaintRectChanged;
+            bitmapPanel1.PaintRectChanged += BitmapPanel_PaintRectChanged;
             // 
             // trackBarGaussianSize
             // 

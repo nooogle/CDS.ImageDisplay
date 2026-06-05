@@ -44,7 +44,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms
             bitmapDisplayPanel.Name = "bitmapDisplayPanel";
             bitmapDisplayPanel.Size = new System.Drawing.Size(800, 412);
             bitmapDisplayPanel.TabIndex = 0;
-            bitmapDisplayPanel.OnPaintOver += bitmapDisplayPanel_OnPaintOver;
+            bitmapDisplayPanel.PaintOver += bitmapDisplayPanel_OnPaintOver;
             // 
             // sysInfoPanel
             // 
@@ -93,8 +93,8 @@ namespace CDS.ImageDisplay.Demo.DemoForms
             singleLineSelectionManager.LiveDraggingLineShape.PixelAlign = BitmapDisplay.DisplayPixelAlign.Centre;
             singleLineSelectionManager.LiveDraggingLineShape.Start = new System.Drawing.Point(0, 0);
             singleLineSelectionManager.LiveDraggingLineShape.Visible = true;
-            singleLineSelectionManager.OnCommittedLineChanged += singleLineSelectionManager_OnCommittedLineChanged;
-            singleLineSelectionManager.OnDraggingLineChanged += singleLineSelectionManager_OnDraggingLineChanged;
+            singleLineSelectionManager.CommittedLineChanged += singleLineSelectionManager_OnCommittedLineChanged;
+            singleLineSelectionManager.DraggingLineChanged += singleLineSelectionManager_OnDraggingLineChanged;
             // 
             // FormLineSelectionSimple
             // 

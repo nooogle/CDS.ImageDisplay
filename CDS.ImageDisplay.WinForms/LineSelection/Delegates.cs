@@ -4,7 +4,7 @@ using System.Drawing;
 namespace CDS.ImageDisplay.LineSelection;
 
 /// <summary>
-/// Provides data for the <see cref="SingleLineSelectionManager.OnCommittedLineChanged"/> event.
+/// Provides data for the <see cref="SingleLineSelectionManager.CommittedLineChanged"/> event.
 /// </summary>
 public sealed class CommittedLineChangedEventArgs : EventArgs
 {
@@ -24,7 +24,7 @@ public sealed class CommittedLineChangedEventArgs : EventArgs
 }
 
 /// <summary>
-/// Provides data for the <see cref="SingleLineSelectionManager.OnDraggingLineChanged"/> event.
+/// Provides data for the <see cref="SingleLineSelectionManager.DraggingLineChanged"/> event.
 /// </summary>
 public sealed class DraggingLineChangedEventArgs : EventArgs
 {

@@ -54,14 +54,14 @@ public partial class SingleROIManager : Component
     /// <summary>
     /// Fired when the committed ROI changes.
     /// </summary>
-    public event EventHandler<CommittedROIChangedEventArgs>? OnCommittedROIChanged;
+    public event EventHandler<CommittedROIChangedEventArgs>? CommittedROIChanged;
 
 
     /// <summary>
     /// Fired when the ROI is being dragged. The reported rectangle may extend outside the image
     /// bounds — only <see cref="CommittedROI"/> is clamped (on mouse-up).
     /// </summary>
-    public event EventHandler<DraggingROIChangedEventArgs>? OnDraggingROIChanged;
+    public event EventHandler<DraggingROIChangedEventArgs>? DraggingROIChanged;
 
 
     /// <summary>
@@ -108,8 +108,8 @@ public partial class SingleROIManager : Component
                     field.MouseDown -= BitmapDisplayPanel_MouseDown;
                     field.MouseMove -= BitmapDisplayPanel_MouseMove;
                     field.MouseUp -= BitmapDisplayPanel_MouseUp;
-                    field.OnPaintOver -= BitmapDisplayPanel_OnPaintOver;
-                    field.OnImageSizeChanged -= BitmapDisplayPanel_OnImageSizeChanged;
+                    field.PaintOver -= BitmapDisplayPanel_OnPaintOver;
+                    field.ImageSizeChanged -= BitmapDisplayPanel_OnImageSizeChanged;
                     field.KeyDown -= BitmapDisplayPanel_KeyDown;
                 }
 
@@ -120,8 +120,8 @@ public partial class SingleROIManager : Component
                     field.MouseDown += BitmapDisplayPanel_MouseDown;
                     field.MouseMove += BitmapDisplayPanel_MouseMove;
                     field.MouseUp += BitmapDisplayPanel_MouseUp;
-                    field.OnPaintOver += BitmapDisplayPanel_OnPaintOver;
-                    field.OnImageSizeChanged += BitmapDisplayPanel_OnImageSizeChanged;
+                    field.PaintOver += BitmapDisplayPanel_OnPaintOver;
+                    field.ImageSizeChanged += BitmapDisplayPanel_OnImageSizeChanged;
                     field.KeyDown += BitmapDisplayPanel_KeyDown;
 
                     // Seed imageSize from the panel's current image so that ROIs can
@@ -180,7 +180,8 @@ public partial class SingleROIManager : Component
     /// <summary>
     /// Handle a change to the image size
     /// </summary>
-    private void BitmapDisplayPanel_OnImageSizeChanged(object? sender, BitmapDisplay.ImageSizeChangedEventArgs e) => imageSize = e.NewSize;
+    private void BitmapDisplayPanel_OnImageSizeChanged(object? sender, BitmapDisplay.ImageSizeChangedEventArgs e)
+        => imageSize = e.NewSize;
 
 
     /// <summary>
@@ -301,7 +302,7 @@ public partial class SingleROIManager : Component
                 if (newCommittedROI != committedROI)
                 {
                     committedROI = newCommittedROI;
-                    OnCommittedROIChanged?.Invoke(this, new CommittedROIChangedEventArgs(committedROI));
+                    CommittedROIChanged?.Invoke(this, new CommittedROIChangedEventArgs(committedROI));
                     BitmapDisplayPanel?.Invalidate();
                 }
             }
@@ -323,7 +324,7 @@ public partial class SingleROIManager : Component
             if (liveDraggingROI != value)
             {
                 liveDraggingROI = value;
-                OnDraggingROIChanged?.Invoke(this, new DraggingROIChangedEventArgs(liveDraggingROI));
+                DraggingROIChanged?.Invoke(this, new DraggingROIChangedEventArgs(liveDraggingROI));
                 BitmapDisplayPanel?.Invalidate();
             }
         }
@@ -722,10 +723,7 @@ public partial class SingleROIManager : Component
             return;
         }
 
-        if (sender is not BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel)
-        {
-            return;
-        }
+        var bitmapDisplayPanel = e.Sender;
 
         if (!committedROI.IsEmpty && (DrawCommittedROIWhenFullSize || (committedROI.Size != imageSize)))
         {

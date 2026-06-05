@@ -11,39 +11,86 @@ namespace CDS.ImageDisplay.BitmapDisplay;
 public delegate void OnPaintRectChangedCallback(VirtualDisplay sender, RectangleF paintRect);
 
 /// <summary>
-/// Provides data for the <see cref="BitmapDisplayPanel.OnPaintOver"/> event.
+/// Provides data for the <see cref="BitmapDisplayPanel.PaintOver"/> event.
 /// </summary>
 public sealed class PaintOverEventArgs : EventArgs
 {
+    /// <summary>Gets the <see cref="BitmapDisplayPanel"/> that raised the event.</summary>
+    public BitmapDisplayPanel Sender { get; }
+
     /// <summary>Gets the <see cref="System.Drawing.Graphics"/> object to draw with.</summary>
     public Graphics Graphics { get; }
 
     /// <summary>Initialises a new instance of <see cref="PaintOverEventArgs"/>.</summary>
+    /// <param name="sender">The <see cref="BitmapDisplayPanel"/> that raised the event.</param>
     /// <param name="graphics">The <see cref="System.Drawing.Graphics"/> object to draw with.</param>
-    public PaintOverEventArgs(Graphics graphics)
+    public PaintOverEventArgs(BitmapDisplayPanel sender, Graphics graphics)
     {
+        Sender = sender;
         Graphics = graphics;
     }
 }
 
 /// <summary>
-/// Provides data for the <see cref="BitmapDisplayPanel.OnPaintUnder"/> event.
+/// Provides data for the <see cref="BitmapDisplayPanel.PaintUnder"/> event.
 /// </summary>
 public sealed class PaintUnderEventArgs : EventArgs
 {
+    /// <summary>Gets the <see cref="BitmapDisplayPanel"/> that raised the event.</summary>
+    public BitmapDisplayPanel Sender { get; }
+
     /// <summary>Gets the <see cref="System.Drawing.Graphics"/> object to draw with.</summary>
     public Graphics Graphics { get; }
 
     /// <summary>Initialises a new instance of <see cref="PaintUnderEventArgs"/>.</summary>
+    /// <param name="sender">The <see cref="BitmapDisplayPanel"/> that raised the event.</param>
     /// <param name="graphics">The <see cref="System.Drawing.Graphics"/> object to draw with.</param>
-    public PaintUnderEventArgs(Graphics graphics)
+    public PaintUnderEventArgs(BitmapDisplayPanel sender, Graphics graphics)
     {
+        Sender = sender;
         Graphics = graphics;
     }
 }
 
 /// <summary>
-/// Provides data for the <see cref="BitmapDisplayPanel.OnImageSizeChanged"/> event.
+/// Provides data for the <see cref="BitmapDisplayPanel.PaintRectChanged"/> event.
+/// </summary>
+public sealed class PaintRectChangedEventArgs : EventArgs
+{
+    /// <summary>Gets the <see cref="BitmapDisplayPanel"/> that raised the event.</summary>
+    public BitmapDisplayPanel Sender { get; }
+
+    /// <summary>Gets the new paint rectangle.</summary>
+    public RectangleF PaintRect { get; }
+
+    /// <summary>Initialises a new instance of <see cref="PaintRectChangedEventArgs"/>.</summary>
+    /// <param name="sender">The <see cref="BitmapDisplayPanel"/> that raised the event.</param>
+    /// <param name="paintRect">The new paint rectangle.</param>
+    public PaintRectChangedEventArgs(BitmapDisplayPanel sender, RectangleF paintRect)
+    {
+        Sender = sender;
+        PaintRect = paintRect;
+    }
+}
+
+/// <summary>
+/// Provides data for the <see cref="BitmapDisplayPanel.DisplayModeChanged"/> event.
+/// </summary>
+public sealed class DisplayModeChangedEventArgs : EventArgs
+{
+    /// <summary>Gets the new display mode.</summary>
+    public BitmapDisplayMode NewMode { get; }
+
+    /// <summary>Initialises a new instance of <see cref="DisplayModeChangedEventArgs"/>.</summary>
+    /// <param name="newMode">The new display mode.</param>
+    public DisplayModeChangedEventArgs(BitmapDisplayMode newMode)
+    {
+        NewMode = newMode;
+    }
+}
+
+/// <summary>
+/// Provides data for the <see cref="BitmapDisplayPanel.ImageSizeChanged"/> event.
 /// </summary>
 public sealed class ImageSizeChangedEventArgs : EventArgs
 {
@@ -64,7 +111,7 @@ public sealed class ImageSizeChangedEventArgs : EventArgs
 }
 
 /// <summary>
-/// Provides data for the <see cref="BitmapDisplayPanel.OnZoomChanged"/> event.
+/// Provides data for the <see cref="BitmapDisplayPanel.ZoomChanged"/> event.
 /// </summary>
 public sealed class ZoomChangedEventArgs : EventArgs
 {

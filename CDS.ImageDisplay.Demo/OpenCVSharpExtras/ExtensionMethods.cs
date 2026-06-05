@@ -31,7 +31,7 @@ internal static class ExtensionMethods
     /// Thrown when <paramref name="mat"/> has an unsupported type. See <see cref="MatImageSource"/>
     /// for the list of supported types.
     /// </exception>
-    public static void CDSSetImage(this BitmapDisplayPanel bitmapDisplay, OpenCvSharp.Mat mat)
+    public static void SetImage(this BitmapDisplayPanel bitmapDisplay, OpenCvSharp.Mat mat)
     {
         ArgumentNullException.ThrowIfNull(bitmapDisplay);
 

@@ -132,7 +132,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms.MultipleROIs
             multipleROIManager.DraggingROIShape.ROI = new System.Drawing.Rectangle(0, 0, 0, 0);
             multipleROIManager.DraggingROIShape.Visible = true;
             multipleROIManager.Visible = true;
-            multipleROIManager.OnCommittedROIDescriptorChanged += multipleROIManager_OnCommittedROIChanged;
+            multipleROIManager.CommittedROIDescriptorChanged += multipleROIManager_OnCommittedROIChanged;
             // 
             // FormMultipleROIs
             // 

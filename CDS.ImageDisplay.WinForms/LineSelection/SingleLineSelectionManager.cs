@@ -54,12 +54,12 @@ public partial class SingleLineSelectionManager : Component
     /// <summary>
     /// Fired when the committed line changes.
     /// </summary>
-    public event EventHandler<CommittedLineChangedEventArgs>? OnCommittedLineChanged;
+    public event EventHandler<CommittedLineChangedEventArgs>? CommittedLineChanged;
 
     /// <summary>
     /// Fired when the line is being dragged.
     /// </summary>
-    public event EventHandler<DraggingLineChangedEventArgs>? OnDraggingLineChanged;
+    public event EventHandler<DraggingLineChangedEventArgs>? DraggingLineChanged;
 
     /// <summary>
     /// The shape for the committed line.
@@ -95,8 +95,8 @@ public partial class SingleLineSelectionManager : Component
                     field.MouseDown -= BitmapDisplayPanel_MouseDown;
                     field.MouseMove -= BitmapDisplayPanel_MouseMove;
                     field.MouseUp -= BitmapDisplayPanel_MouseUp;
-                    field.OnPaintOver -= BitmapDisplayPanel_OnPaintOver;
-                    field.OnImageSizeChanged -= BitmapDisplayPanel_OnImageSizeChanged;
+                    field.PaintOver -= BitmapDisplayPanel_OnPaintOver;
+                    field.ImageSizeChanged -= BitmapDisplayPanel_OnImageSizeChanged;
                 }
 
                 field = value;
@@ -106,8 +106,8 @@ public partial class SingleLineSelectionManager : Component
                     field.MouseDown += BitmapDisplayPanel_MouseDown;
                     field.MouseMove += BitmapDisplayPanel_MouseMove;
                     field.MouseUp += BitmapDisplayPanel_MouseUp;
-                    field.OnPaintOver += BitmapDisplayPanel_OnPaintOver;
-                    field.OnImageSizeChanged += BitmapDisplayPanel_OnImageSizeChanged;
+                    field.PaintOver += BitmapDisplayPanel_OnPaintOver;
+                    field.ImageSizeChanged += BitmapDisplayPanel_OnImageSizeChanged;
 
                     Size existingSize = field.ImageSize;
                     _imageSize = existingSize == Size.Empty ? null : existingSize;
@@ -210,7 +210,7 @@ public partial class SingleLineSelectionManager : Component
                 _committedLineStart = clampedStart;
                 _committedLineEnd = clampedEnd;
                 _hasCommittedLine = true;
-                OnCommittedLineChanged?.Invoke(this, new CommittedLineChangedEventArgs((_committedLineStart, _committedLineEnd)));
+                CommittedLineChanged?.Invoke(this, new CommittedLineChangedEventArgs((_committedLineStart, _committedLineEnd)));
                 BitmapDisplayPanel?.Invalidate();
             }
 
@@ -488,10 +488,7 @@ public partial class SingleLineSelectionManager : Component
             return;
         }
 
-        if (sender is not BitmapDisplayPanel bitmapDisplayPanel)
-        {
-            return;
-        }
+        var bitmapDisplayPanel = e.Sender;
 
         if (_hasCommittedLine)
         {
@@ -515,7 +512,7 @@ public partial class SingleLineSelectionManager : Component
             _liveDraggingLineStart = start;
             _liveDraggingLineEnd = end;
             _hasLiveDraggingLine = true;
-            OnDraggingLineChanged?.Invoke(this, new DraggingLineChangedEventArgs((start, end)));
+            DraggingLineChanged?.Invoke(this, new DraggingLineChangedEventArgs((start, end)));
             BitmapDisplayPanel?.Invalidate();
         }
     }

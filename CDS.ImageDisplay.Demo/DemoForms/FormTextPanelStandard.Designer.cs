@@ -42,7 +42,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms
             bitmapDisplayPanelStandard.Name = "bitmapDisplayPanelStandard";
             bitmapDisplayPanelStandard.Size = new System.Drawing.Size(613, 285);
             bitmapDisplayPanelStandard.TabIndex = 0;
-            bitmapDisplayPanelStandard.OnPaintOver += bitmapDisplayPanelStandard_OnPaintOver;
+            bitmapDisplayPanelStandard.PaintOver += bitmapDisplayPanelStandard_OnPaintOver;
             // 
             // tableLayoutPanel1
             // 

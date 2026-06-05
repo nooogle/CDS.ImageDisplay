@@ -49,7 +49,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms.OverlaysDemo
             bitmapDisplayPanel.Size = new System.Drawing.Size(352, 412);
             bitmapDisplayPanel.TabIndex = 0;
             bitmapDisplayPanel.Zoom = 1F;
-            bitmapDisplayPanel.OnPaintOver += bitmapDisplayPanel_OnPaintOver;
+            bitmapDisplayPanel.PaintOver += bitmapDisplayPanel_OnPaintOver;
             // 
             // panel1
             // 

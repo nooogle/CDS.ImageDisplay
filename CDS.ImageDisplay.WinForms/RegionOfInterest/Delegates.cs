@@ -4,7 +4,7 @@ using System.Drawing;
 namespace CDS.ImageDisplay.RegionOfInterest;
 
 /// <summary>
-/// Provides data for the <see cref="SingleROIManager.OnCommittedROIChanged"/> event.
+/// Provides data for the <see cref="SingleROIManager.CommittedROIChanged"/> event.
 /// </summary>
 public sealed class CommittedROIChangedEventArgs : EventArgs
 {
@@ -20,7 +20,7 @@ public sealed class CommittedROIChangedEventArgs : EventArgs
 }
 
 /// <summary>
-/// Provides data for the <see cref="SingleROIManager.OnDraggingROIChanged"/> event.
+/// Provides data for the <see cref="SingleROIManager.DraggingROIChanged"/> event.
 /// </summary>
 public sealed class DraggingROIChangedEventArgs : EventArgs
 {

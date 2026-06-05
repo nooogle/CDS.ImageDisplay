@@ -22,7 +22,7 @@ namespace CDS.ImageDisplay.Demo.OpenCVSharpExtras;
 /// </para>
 /// <para>
 /// For the most convenient way to display an OpenCV image, use the
-/// <see cref="ExtensionMethods.CDSSetImage"/> extension method on
+/// <see cref="ExtensionMethods.SetImage"/> extension method on
 /// <see cref="BitmapDisplayPanel"/>, which constructs a <see cref="MatImageSource"/> and calls
 /// <see cref="BitmapDisplayPanel.SetImage(IImageSource?)"/> in a single step.
 /// </para>

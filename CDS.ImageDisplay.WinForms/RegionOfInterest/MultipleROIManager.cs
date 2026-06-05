@@ -31,7 +31,7 @@ public partial class MultipleROIManager : Component
     /// <summary>
     /// Fired when the committed ROI changes.
     /// </summary>
-    public event EventHandler<CommittedROIDescriptorChangedEventArgs>? OnCommittedROIDescriptorChanged;
+    public event EventHandler<CommittedROIDescriptorChangedEventArgs>? CommittedROIDescriptorChanged;
 
 
 
@@ -98,8 +98,8 @@ public partial class MultipleROIManager : Component
                 if (field != null)
                 {
                     field.MouseClick -= BitmapDisplayPanel_MouseClick;
-                    field.OnPaintOver -= BitmapDisplayPanel_OnPaintOver;
-                    field.OnImageSizeChanged -= BitmapDisplayPanel_OnImageSizeChanged;
+                    field.PaintOver -= BitmapDisplayPanel_OnPaintOver;
+                    field.ImageSizeChanged -= BitmapDisplayPanel_OnImageSizeChanged;
                     field.KeyPress -= BitmapDisplayPanel_KeyPress;
                 }
 
@@ -108,8 +108,8 @@ public partial class MultipleROIManager : Component
                 if (field != null)
                 {
                     field.MouseClick += BitmapDisplayPanel_MouseClick;
-                    field.OnPaintOver += BitmapDisplayPanel_OnPaintOver;
-                    field.OnImageSizeChanged += BitmapDisplayPanel_OnImageSizeChanged;
+                    field.PaintOver += BitmapDisplayPanel_OnPaintOver;
+                    field.ImageSizeChanged += BitmapDisplayPanel_OnImageSizeChanged;
                     field.KeyPress += BitmapDisplayPanel_KeyPress;
 
                     // Seed imageSize from the panel's current image so that ROIs can
@@ -338,7 +338,7 @@ public partial class MultipleROIManager : Component
         roiSelectionOnBitmapDisplay.CommittedROI = newROI;
         _activeROIDescriptor.ROI = newROI;
 
-        OnCommittedROIDescriptorChanged?.Invoke(this, new CommittedROIDescriptorChangedEventArgs(_activeROIDescriptor));
+        CommittedROIDescriptorChanged?.Invoke(this, new CommittedROIDescriptorChangedEventArgs(_activeROIDescriptor));
 
         _timerDeselectAfterClick.Stop();
         StartTimer(_timerDeselectAfterMove, MoveDeselectDelay);

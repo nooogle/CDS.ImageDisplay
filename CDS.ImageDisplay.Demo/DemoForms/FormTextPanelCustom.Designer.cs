@@ -57,7 +57,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms
             bitmapDisplayPanelCustom.Name = "bitmapDisplayPanelCustom";
             bitmapDisplayPanelCustom.Size = new System.Drawing.Size(644, 589);
             bitmapDisplayPanelCustom.TabIndex = 2;
-            bitmapDisplayPanelCustom.OnPaintOver += bitmapDisplayPanelCustom_OnPaintOver;
+            bitmapDisplayPanelCustom.PaintOver += bitmapDisplayPanelCustom_OnPaintOver;
             // 
             // label2
             // 

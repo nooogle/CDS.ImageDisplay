@@ -38,7 +38,7 @@ internal sealed partial class FormPaintOverAndUnder : Form
 
     private void bitmapDisplay_PaintOver(object sender, PaintOverEventArgs e)
     {
-        var bitmapDisplay = (BitmapDisplayPanel)sender;
+        var bitmapDisplay = e.Sender;
         var graphics = e.Graphics;
         var info = new StringBuilder();
         info.Append(CultureInfo.CurrentCulture, $"Display mode      {bitmapDisplay.DisplayMode.Humanize()}\n");
@@ -139,7 +139,7 @@ internal sealed partial class FormPaintOverAndUnder : Form
 
     private void bitmapDisplay_PaintUnder(object sender, PaintUnderEventArgs e)
     {
-        var bitmapDisplay = (BitmapDisplayPanel)sender;
+        var bitmapDisplay = e.Sender;
         var graphics = e.Graphics;
         if (bitmapDisplay.PaintRect.IsEmpty)
         { return; }
@@ -196,7 +196,7 @@ internal sealed partial class FormPaintOverAndUnder : Form
     }
 
 
-    private void bitmapDisplay_DisplayModeChanged(object sender, EventArgs e)
+    private void bitmapDisplay_DisplayModeChanged(object sender, DisplayModeChangedEventArgs e)
     {
         UpdateCommandEnablement();
         UpdateDisplayModeCheckboxes();

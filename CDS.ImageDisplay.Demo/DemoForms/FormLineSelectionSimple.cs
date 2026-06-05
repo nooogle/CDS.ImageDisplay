@@ -88,14 +88,8 @@ internal sealed partial class FormLineSelectionSimple : Form
     private void bitmapDisplayPanel_OnPaintOver(object sender, CDS.ImageDisplay.BitmapDisplay.PaintOverEventArgs e)
     {
         ArgumentNullException.ThrowIfNull(e.Graphics);
-        ArgumentNullException.ThrowIfNull(sender);
 
-        if (sender is not CDS.ImageDisplay.BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel)
-        {
-            throw new ArgumentException("Sender must be a BitmapDisplayPanel.", nameof(sender));
-        }
-
-        _committedLineText.Draw(bitmapDisplayPanel, e.Graphics, _textDrawingSpec);
-        _draggingLineText.Draw(bitmapDisplayPanel, e.Graphics, _textDrawingSpec);
+        _committedLineText.Draw(e.Sender, e.Graphics, _textDrawingSpec);
+        _draggingLineText.Draw(e.Sender, e.Graphics, _textDrawingSpec);
     }
 }

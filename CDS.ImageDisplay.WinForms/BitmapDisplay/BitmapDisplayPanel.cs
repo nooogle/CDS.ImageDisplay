@@ -97,19 +97,19 @@ public partial class BitmapDisplayPanel : UserControl
     [Description(
         "Called when the image has been painted; gives a client an opportunity " +
         "to paint flicker-free graphics on top of the image.")]
-    public event EventHandler<PaintOverEventArgs>? OnPaintOver;
+    public event EventHandler<PaintOverEventArgs>? PaintOver;
 
 
     /// <summary>
     /// Called after the background has been painted and before the image has been painted;
-    /// gives a client an opportunity to paint graphics under the image. 
+    /// gives a client an opportunity to paint graphics under the image.
     /// This will be flicker-free as long as the control uses double buffering.
     /// </summary>
     [Category(s_categoryCDS)]
     [Description(
         "Called after the background has been painted and before the image has been painted; " +
         "to paint flicker-free graphics under the image.")]
-    public event EventHandler<PaintUnderEventArgs>? OnPaintUnder;
+    public event EventHandler<PaintUnderEventArgs>? PaintUnder;
 
 
     /// <summary>
@@ -117,7 +117,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     [Category(s_categoryCDS)]
     [Description("Called when the display mode is changed.")]
-    public event EventHandler? OnDisplayModeChanged;
+    public event EventHandler<DisplayModeChangedEventArgs>? DisplayModeChanged;
 
 
     /// <summary>
@@ -125,13 +125,13 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     [Category(s_categoryCDS)]
     [Description("Called when the paint rectangle is changed.")]
-    public event EventHandler? OnPaintRectChanged;
+    public event EventHandler<PaintRectChangedEventArgs>? PaintRectChanged;
 
 
     /// <summary>
     /// Fired when the image size changes
     /// </summary>
-    public event EventHandler<ImageSizeChangedEventArgs>? OnImageSizeChanged;
+    public event EventHandler<ImageSizeChangedEventArgs>? ImageSizeChanged;
 
 
     /// <summary>
@@ -139,7 +139,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     [Category(s_categoryCDS)]
     [Description("Called when the zoom level changes.")]
-    public event EventHandler<ZoomChangedEventArgs>? OnZoomChanged;
+    public event EventHandler<ZoomChangedEventArgs>? ZoomChanged;
 
 
     /// <summary>
@@ -260,7 +260,7 @@ public partial class BitmapDisplayPanel : UserControl
 
         if (originalImageSize != _virtualDisplay.ImageSize)
         {
-            OnImageSizeChanged?.Invoke(this, new ImageSizeChangedEventArgs(originalImageSize, _virtualDisplay.ImageSize));
+            ImageSizeChanged?.Invoke(this, new ImageSizeChangedEventArgs(originalImageSize, _virtualDisplay.ImageSize));
         }
 
         Invalidate();
@@ -309,7 +309,7 @@ public partial class BitmapDisplayPanel : UserControl
             if (_virtualDisplay.Mode != value)
             {
                 _virtualDisplay.Mode = value;
-                OnDisplayModeChanged?.Invoke(this, EventArgs.Empty);
+                DisplayModeChanged?.Invoke(this, new DisplayModeChangedEventArgs(value));
             }
         }
     }
@@ -459,7 +459,7 @@ public partial class BitmapDisplayPanel : UserControl
     private void VirtualImageOnDisplay_OnPaintRectChanged(VirtualDisplay sender, RectangleF paintRect)
     {
         Invalidate();
-        OnPaintRectChanged?.Invoke(this, EventArgs.Empty);
+        PaintRectChanged?.Invoke(this, new PaintRectChangedEventArgs(this, paintRect));
     }
 
 
@@ -467,7 +467,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// The virtual display zoom has changed
     /// </summary>
     private void VirtualDisplay_OnZoomChanged(float zoom) =>
-        OnZoomChanged?.Invoke(this, new ZoomChangedEventArgs(zoom));
+        ZoomChanged?.Invoke(this, new ZoomChangedEventArgs(zoom));
 
 
     /// <summary>
@@ -657,7 +657,7 @@ public partial class BitmapDisplayPanel : UserControl
 
         _stopwatch.Restart();
 
-        OnPaintUnder?.Invoke(this, new PaintUnderEventArgs(e.Graphics));
+        PaintUnder?.Invoke(this, new PaintUnderEventArgs(this, e.Graphics));
 
         if (AnythingToDisplay)
         {
@@ -668,7 +668,7 @@ public partial class BitmapDisplayPanel : UserControl
             PaintNoImageHatch(e);
         }
 
-        OnPaintOver?.Invoke(this, new PaintOverEventArgs(e.Graphics));
+        PaintOver?.Invoke(this, new PaintOverEventArgs(this, e.Graphics));
 
         _stopwatch.Stop();
         TimingMetrics.ForegroundPaint = _stopwatch.Elapsed;

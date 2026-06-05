@@ -63,8 +63,8 @@ namespace CDS.ImageDisplay.RegionOfInterest
             roiSelectionOnBitmapDisplay.LiveDraggingROIShape.ROI = new System.Drawing.Rectangle(0, 0, 0, 0);
             roiSelectionOnBitmapDisplay.LiveDraggingROIShape.Visible = true;
             roiSelectionOnBitmapDisplay.Visible = false;
-            roiSelectionOnBitmapDisplay.OnCommittedROIChanged += roiSelectionOnBitmapDisplay_OnCommittedROIChanged;
-            roiSelectionOnBitmapDisplay.OnDraggingROIChanged += roiSelectionOnBitmapDisplay_OnDraggingROIChanged;
+            roiSelectionOnBitmapDisplay.CommittedROIChanged += roiSelectionOnBitmapDisplay_OnCommittedROIChanged;
+            roiSelectionOnBitmapDisplay.DraggingROIChanged += roiSelectionOnBitmapDisplay_OnDraggingROIChanged;
         }
 
         #endregion

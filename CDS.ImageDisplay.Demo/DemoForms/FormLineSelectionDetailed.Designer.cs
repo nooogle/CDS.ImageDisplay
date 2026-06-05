@@ -229,8 +229,8 @@ namespace CDS.ImageDisplay.Demo.DemoForms
             singleLineSelectionManager.LiveDraggingLineShape.Start = new System.Drawing.Point(0, 0);
             singleLineSelectionManager.LiveDraggingLineShape.Visible = true;
             singleLineSelectionManager.Visible = true;
-            singleLineSelectionManager.OnCommittedLineChanged += singleLineSelectionManager_OnCommittedLineChanged;
-            singleLineSelectionManager.OnDraggingLineChanged += singleLineSelectionManager_OnDraggingLineChanged;
+            singleLineSelectionManager.CommittedLineChanged += singleLineSelectionManager_OnCommittedLineChanged;
+            singleLineSelectionManager.DraggingLineChanged += singleLineSelectionManager_OnDraggingLineChanged;
             // 
             // FormLineSelectionDetailed
             // 

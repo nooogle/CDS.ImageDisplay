@@ -91,14 +91,8 @@ internal sealed partial class FormROISelectionSimple : Form
     private void bitmapDisplayPanel_OnPaintOver(object sender, CDS.ImageDisplay.BitmapDisplay.PaintOverEventArgs e)
     {
         ArgumentNullException.ThrowIfNull(e.Graphics);
-        ArgumentNullException.ThrowIfNull(sender);
 
-        if (sender is not CDS.ImageDisplay.BitmapDisplay.BitmapDisplayPanel bitmapDisplayPanel)
-        {
-            throw new ArgumentException("Sender must be a BitmapDisplayPanel.", nameof(sender));
-        }
-
-        _committedROIText.Draw(bitmapDisplayPanel, e.Graphics, _textDrawingSpec);
-        _draggingROIText.Draw(bitmapDisplayPanel, e.Graphics, _textDrawingSpec);
+        _committedROIText.Draw(e.Sender, e.Graphics, _textDrawingSpec);
+        _draggingROIText.Draw(e.Sender, e.Graphics, _textDrawingSpec);
     }
 }

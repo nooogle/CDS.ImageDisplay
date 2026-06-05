@@ -44,7 +44,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms
             bitmapDisplayPanel.Name = "bitmapDisplayPanel";
             bitmapDisplayPanel.Size = new System.Drawing.Size(800, 412);
             bitmapDisplayPanel.TabIndex = 0;
-            bitmapDisplayPanel.OnPaintOver += bitmapDisplayPanel_OnPaintOver;
+            bitmapDisplayPanel.PaintOver += bitmapDisplayPanel_OnPaintOver;
             // 
             // sysInfoPanel
             // 
@@ -99,8 +99,8 @@ namespace CDS.ImageDisplay.Demo.DemoForms
             singleROIManager.LiveDraggingROIShape.PixelAlign = BitmapDisplay.DisplayPixelAlign.TopLeft;
             singleROIManager.LiveDraggingROIShape.ROI = new System.Drawing.Rectangle(0, 0, 0, 0);
             singleROIManager.LiveDraggingROIShape.Visible = true;
-            singleROIManager.OnCommittedROIChanged += singleROIManager_OnCommittedROIChanged;
-            singleROIManager.OnDraggingROIChanged += singleROIManager_OnDraggingROIChanged;
+            singleROIManager.CommittedROIChanged += singleROIManager_OnCommittedROIChanged;
+            singleROIManager.DraggingROIChanged += singleROIManager_OnDraggingROIChanged;
             // 
             // FormROISelectionSimple
             // 

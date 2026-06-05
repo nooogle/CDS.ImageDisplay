@@ -78,8 +78,7 @@ internal sealed partial class FormOverlays : Form
         if (bitmapDisplayPanel.DisplayImage == null)
         { return; }
 
-        var bitmapDisplay = (CDS.ImageDisplay.BitmapDisplay.BitmapDisplayPanel)sender;
-        PaintMetrics(bitmapDisplay, e.Graphics);
+        PaintMetrics(e.Sender, e.Graphics);
         OverlayPainter.Paint(bitmapDisplayPanel, e.Graphics, testSettings.Shapes, testSettings.Overlays);
     }
 

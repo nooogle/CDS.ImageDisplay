@@ -235,8 +235,8 @@ namespace CDS.ImageDisplay.Demo.DemoForms
             singleROIManager.LiveDraggingROIShape.ROI = new System.Drawing.Rectangle(0, 0, 0, 0);
             singleROIManager.LiveDraggingROIShape.Visible = true;
             singleROIManager.Visible = true;
-            singleROIManager.OnCommittedROIChanged += singleROIManager_OnCommittedROIChanged;
-            singleROIManager.OnDraggingROIChanged += singleROIManager_OnDraggingROIChanged;
+            singleROIManager.CommittedROIChanged += singleROIManager_OnCommittedROIChanged;
+            singleROIManager.DraggingROIChanged += singleROIManager_OnDraggingROIChanged;
             // 
             // FormROISelection
             // 

@@ -66,9 +66,9 @@ namespace CDS.ImageDisplay.Demo.DemoForms
             this.bitmapDisplay.Size = new System.Drawing.Size(722, 459);
             this.bitmapDisplay.TabIndex = 0;
             this.bitmapDisplay.Zoom = 1F;
-            this.bitmapDisplay.OnPaintOver += this.bitmapDisplay_PaintOver;
-            this.bitmapDisplay.OnPaintUnder += this.bitmapDisplay_PaintUnder;
-            this.bitmapDisplay.OnDisplayModeChanged += this.bitmapDisplay_DisplayModeChanged;
+            this.bitmapDisplay.PaintOver += this.bitmapDisplay_PaintOver;
+            this.bitmapDisplay.PaintUnder += this.bitmapDisplay_PaintUnder;
+            this.bitmapDisplay.DisplayModeChanged += this.bitmapDisplay_DisplayModeChanged;
             // 
             // menu
             // 

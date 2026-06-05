@@ -61,10 +61,8 @@ internal sealed partial class FormTextPanelCustom : Form
 
     private void bitmapDisplayPanelCustom_OnPaintOver(object sender, CDS.ImageDisplay.BitmapDisplay.PaintOverEventArgs e)
     {
-        var bitmapDisplayPanel = sender as BitmapDisplay.BitmapDisplayPanel;
-
         _customLogLevelTextPanel.Draw(
-            bitmapDisplayPanel!,
+            e.Sender,
             e.Graphics,
             _customDrawingSpecPanel,
             getDrawingSpecForMessageType: logLevel => _customDrawingSpecsMessages[logLevel]);

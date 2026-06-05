@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace CDS.ImageDisplay.Demo.DemoForms;
@@ -11,8 +8,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms;
 /// </summary>
 internal sealed partial class FormTextPanelStandard : Form
 {
-    private Overlays.TextPanel<Overlays.TextPanelStdMsgTypes> _textPanel;
-    private Overlays.TextPanelStdMsgDrawingSpecs _standardDrawingSpecs = new Overlays.TextPanelStdMsgDrawingSpecs();
+    private Overlays.TextPanelStd _textPanel = new();
 
 
     /// <summary>
@@ -22,8 +18,6 @@ internal sealed partial class FormTextPanelStandard : Form
     {
         InitializeComponent();
 
-        _textPanel = new Overlays.TextPanel<Overlays.TextPanelStdMsgTypes>();
-
         _textPanel.AddMessage(Overlays.TextPanelStdMsgTypes.Info, "This is an informational message.");
         _textPanel.AddMessage(Overlays.TextPanelStdMsgTypes.Warning, "This is a warning message.");
         _textPanel.AddMessage(Overlays.TextPanelStdMsgTypes.Error, "This is an error message.");
@@ -31,12 +25,6 @@ internal sealed partial class FormTextPanelStandard : Form
 
     private void bitmapDisplayPanelStandard_OnPaintOver(object sender, CDS.ImageDisplay.BitmapDisplay.PaintOverEventArgs e)
     {
-        var bitmapDisplayPanel = sender as BitmapDisplay.BitmapDisplayPanel;
-
-        _textPanel.Draw(
-            bitmapDisplayPanel!,
-            e.Graphics,
-            _standardDrawingSpecs.Panel,
-            getDrawingSpecForMessageType: _standardDrawingSpecs.GetDrawingSpecForMessageType);
+        _textPanel.Draw(e.Sender, e.Graphics);
     }
 }
