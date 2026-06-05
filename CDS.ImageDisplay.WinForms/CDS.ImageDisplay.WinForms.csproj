@@ -12,7 +12,9 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>CDS ImageDisplay</Title>
 		<Description>WinForms image display control — zoom, pan, annotate, and select regions of interest on bitmaps. Supports thread-safe image updates, overlay shapes, interactive ROI handles, and coordinate mapping between image and display space.</Description>
-		<Copyright>Copyright © Carpe Diem Systems 2025</Copyright>
+		<Copyright>Copyright © Carpe Diem Systems 2025-2026</Copyright>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>winforms;image;bitmap;zoom;pan;roi;overlay;display;imaging;annotation</PackageTags>
 		<PackageProjectUrl>https://github.com/nooogle/CDS.ImageDisplay</PackageProjectUrl>
