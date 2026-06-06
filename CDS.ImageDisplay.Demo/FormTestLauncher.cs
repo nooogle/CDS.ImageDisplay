@@ -28,6 +28,7 @@ internal sealed partial class FormTestLauncher : Form
         AddOtherDemoNodes();
         AddOpenCVSharpDemoNodes();
         AddTextPanelDemoNodes();
+        AddAnnotationsDemoNodes();
 
         menuTree.ExpandAllGroups();
     }
@@ -124,6 +125,23 @@ internal sealed partial class FormTestLauncher : Form
             tooltip: "Demonstrates how to use the overlays tools for drawing on top of an image using image-coordinates regardless of the current pan and zoom",
             parent: this,
             createForm: () => new DemoForms.OverlaysDemo.FormOverlays(_settingsManager.Settings.DemoForms.OverlaysDemo));
+    }
+
+    private void AddAnnotationsDemoNodes()
+    {
+        MenuGroup annotations = menuTree.AddGroup("Annotations");
+
+        annotations.AddItem(
+            name: "Annotations: simple",
+            tooltip: "Basic demo of the annotation manager — draw shapes on an image by clicking or dragging",
+            parent: this,
+            createForm: () => new DemoForms.AnnotationsDemo.FormAnnotationsSimple());
+
+        annotations.AddItem(
+            name: "Annotations: detailed",
+            tooltip: "Full labelling-app demo with annotation list, title/notes editing, and JSON save/load",
+            parent: this,
+            createForm: () => new DemoForms.AnnotationsDemo.FormAnnotationsDetailed());
     }
 
     private void AddOpenCVSharpDemoNodes()

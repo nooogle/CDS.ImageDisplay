@@ -51,6 +51,12 @@
     <Compile Update="DemoForms\FormLineSelectionDetailed.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="DemoForms\AnnotationsDemo\FormAnnotationsSimple.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="DemoForms\AnnotationsDemo\FormAnnotationsDetailed.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
