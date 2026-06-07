@@ -20,10 +20,10 @@ public static class AnnotationSerializer
     public static JsonSerializerOptions CreateOptions()
     {
         var options = new JsonSerializerOptions { WriteIndented = true };
-        options.Converters.Add(new PointConverter());
-        options.Converters.Add(new PointFConverter());
-        options.Converters.Add(new RectangleConverter());
-        options.Converters.Add(new RectangleFConverter());
+        options.Converters.Add(new Json.PointConverter());
+        options.Converters.Add(new Json.PointFConverter());
+        options.Converters.Add(new Json.RectangleConverter());
+        options.Converters.Add(new Json.RectangleFConverter());
         return options;
     }
 

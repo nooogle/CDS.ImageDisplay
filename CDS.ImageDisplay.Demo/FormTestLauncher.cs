@@ -29,6 +29,7 @@ internal sealed partial class FormTestLauncher : Form
         AddOpenCVSharpDemoNodes();
         AddTextPanelDemoNodes();
         AddAnnotationsDemoNodes();
+        AddImageBrowsingDemoNodes();
 
         menuTree.ExpandAllGroups();
     }
@@ -153,6 +154,17 @@ internal sealed partial class FormTestLauncher : Form
             tooltip: "",
             parent: this,
             createForm: () => new DemoForms.FormOpenCVSharp());
+    }
+
+    private void AddImageBrowsingDemoNodes()
+    {
+        MenuGroup browsing = menuTree.AddGroup("Image browsing");
+
+        browsing.AddItem(
+            name: "Image list",
+            tooltip: "Browse a folder of images with thumbnail previews; use ◀ ▶ or click to step through them",
+            parent: this,
+            createForm: () => new DemoForms.ImageBrowsingDemo.FormImageBrowsing());
     }
 }
 

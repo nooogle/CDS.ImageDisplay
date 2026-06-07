@@ -19,6 +19,7 @@ namespace CDS.ImageDisplay.Annotations;
 [JsonDerivedType(typeof(LineAnnotationGeometry), "line")]
 [JsonDerivedType(typeof(PolygonAnnotationGeometry), "polygon")]
 [JsonDerivedType(typeof(CrosshairAnnotationGeometry), "crosshair")]
+[JsonDerivedType(typeof(RotatedRectAnnotationGeometry), "rotated-rect")]
 public abstract class AnnotationGeometry
 {
     /// <summary>

@@ -57,19 +57,45 @@ public sealed class AnnotationSerializerTests
     // ── Ellipse ─────────────────────────────────────────────────────────────
 
     /// <summary>
-    /// Verifies that an ellipse annotation serializes and deserializes back to an equal geometry.
+    /// Verifies that a rotated ellipse annotation serializes and deserializes back to an equal geometry.
     /// </summary>
     [TestMethod]
     public void Serialize_EllipseAnnotation_RoundTripsGeometry()
     {
-        var original = new Annotation(new EllipseAnnotationGeometry(new Rectangle(5, 10, 80, 40)));
+        var original = new Annotation(new EllipseAnnotationGeometry(new PointF(45f, 30f), 40f, 20f, 30f));
 
         string json = AnnotationSerializer.Serialize(original);
         Annotation? restored = AnnotationSerializer.Deserialize(json);
 
         restored.Should().NotBeNull();
         restored!.Geometry.Should().BeOfType<EllipseAnnotationGeometry>();
-        ((EllipseAnnotationGeometry)restored.Geometry).Bounds.Should().Be(new Rectangle(5, 10, 80, 40));
+        var ellipse = (EllipseAnnotationGeometry)restored.Geometry;
+        ellipse.Center.Should().Be(new PointF(45f, 30f));
+        ellipse.SemiMajor.Should().BeApproximately(40f, 0.001f);
+        ellipse.SemiMinor.Should().BeApproximately(20f, 0.001f);
+        ellipse.AngleDegrees.Should().BeApproximately(30f, 0.001f);
+    }
+
+    // ── Rotated Rectangle ───────────────────────────────────────────────────
+
+    /// <summary>
+    /// Verifies that a rotated rectangle annotation serializes and deserializes back to an equal geometry.
+    /// </summary>
+    [TestMethod]
+    public void Serialize_RotatedRectAnnotation_RoundTripsGeometry()
+    {
+        var original = new Annotation(new RotatedRectAnnotationGeometry(new PointF(100f, 150f), 80f, 40f, 45f));
+
+        string json = AnnotationSerializer.Serialize(original);
+        Annotation? restored = AnnotationSerializer.Deserialize(json);
+
+        restored.Should().NotBeNull();
+        restored!.Geometry.Should().BeOfType<RotatedRectAnnotationGeometry>();
+        var rr = (RotatedRectAnnotationGeometry)restored.Geometry;
+        rr.Center.Should().Be(new PointF(100f, 150f));
+        rr.Width.Should().BeApproximately(80f, 0.001f);
+        rr.Height.Should().BeApproximately(40f, 0.001f);
+        rr.AngleDegrees.Should().BeApproximately(45f, 0.001f);
     }
 
     // ── Line ─────────────────────────────────────────────────────────────────
@@ -140,7 +166,7 @@ public sealed class AnnotationSerializerTests
     // ── Metadata ──────────────────────────────────────────────────────────────
 
     /// <summary>
-    /// Verifies that Id, Title, and Notes round-trip correctly.
+    /// Verifies that Id, Title, Notes, and Label round-trip correctly.
     /// </summary>
     [TestMethod]
     public void Serialize_AnnotationMetadata_RoundTripsCorrectly()
@@ -149,6 +175,7 @@ public sealed class AnnotationSerializerTests
         {
             Title = "Cat",
             Notes = "High confidence",
+            Label = "cat",
         };
 
         string json = AnnotationSerializer.Serialize(original);
@@ -158,6 +185,7 @@ public sealed class AnnotationSerializerTests
         restored!.Id.Should().Be(original.Id);
         restored.Title.Should().Be("Cat");
         restored.Notes.Should().Be("High confidence");
+        restored.Label.Should().Be("cat");
     }
 
     // ── DrawingSpec ────────────────────────────────────────────────────────────

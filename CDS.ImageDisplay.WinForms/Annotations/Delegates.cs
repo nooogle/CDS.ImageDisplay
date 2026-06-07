@@ -29,3 +29,28 @@ public sealed class AnnotationSelectedEventArgs(Annotation annotation) : EventAr
     /// <summary>The annotation that was selected.</summary>
     public Annotation Annotation { get; } = annotation;
 }
+
+/// <summary>
+/// Event args for <see cref="AnnotationManager.DragStarting"/>.
+/// Carries a deep copy of the annotation geometry at the moment dragging begins,
+/// suitable for use as an undo snapshot.
+/// </summary>
+public sealed class AnnotationDragStartingEventArgs : EventArgs
+{
+    /// <summary>The annotation whose geometry is about to be dragged.</summary>
+    public Annotation Annotation { get; }
+
+    /// <summary>
+    /// A clone of the annotation's geometry captured immediately before the drag begins.
+    /// </summary>
+    public AnnotationGeometry GeometrySnapshot { get; }
+
+    /// <summary>Initializes a new instance of <see cref="AnnotationDragStartingEventArgs"/>.</summary>
+    public AnnotationDragStartingEventArgs(Annotation annotation, AnnotationGeometry geometrySnapshot)
+    {
+        ArgumentNullException.ThrowIfNull(annotation, nameof(annotation));
+        ArgumentNullException.ThrowIfNull(geometrySnapshot, nameof(geometrySnapshot));
+        Annotation = annotation;
+        GeometrySnapshot = geometrySnapshot;
+    }
+}

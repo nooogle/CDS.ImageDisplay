@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Text.Json.Serialization;
 using CDS.ImageDisplay.Annotations.Internal;
 using CDS.ImageDisplay.BitmapDisplay;
@@ -9,45 +10,59 @@ using CDS.ImageDisplay.Utils;
 namespace CDS.ImageDisplay.Annotations.Shapes;
 
 /// <summary>
-/// Annotation geometry that represents an axis-aligned ellipse defined by a bounding rectangle.
+/// Annotation geometry that represents a rotated ellipse defined by its centre, semi-axes,
+/// and rotation angle.
 /// </summary>
 public sealed class EllipseAnnotationGeometry : AnnotationGeometry
 {
-    // Handle indices — same layout as RectAnnotationGeometry.
-    /// <summary>Handle index for the top-left corner.</summary>
-    public const int HandleTopLeft = 0;
-    /// <summary>Handle index for the top-right corner.</summary>
-    public const int HandleTopRight = 1;
-    /// <summary>Handle index for the bottom-right corner.</summary>
-    public const int HandleBottomRight = 2;
-    /// <summary>Handle index for the bottom-left corner.</summary>
-    public const int HandleBottomLeft = 3;
-    /// <summary>Handle index for the top edge midpoint.</summary>
-    public const int HandleTopMid = 4;
-    /// <summary>Handle index for the right edge midpoint.</summary>
-    public const int HandleRightMid = 5;
-    /// <summary>Handle index for the bottom edge midpoint.</summary>
-    public const int HandleBottomMid = 6;
-    /// <summary>Handle index for the left edge midpoint.</summary>
-    public const int HandleLeftMid = 7;
+    /// <summary>Handle index for the positive-major-axis endpoint.</summary>
+    public const int HandleMajorPos = 0;
+    /// <summary>Handle index for the negative-major-axis endpoint.</summary>
+    public const int HandleMajorNeg = 1;
+    /// <summary>Handle index for the positive-minor-axis endpoint.</summary>
+    public const int HandleMinorPos = 2;
+    /// <summary>Handle index for the negative-minor-axis endpoint.</summary>
+    public const int HandleMinorNeg = 3;
+    /// <summary>Handle index for the rotation handle (beyond the positive-major-axis tip).</summary>
+    public const int HandleRotation = 4;
+
+    private const float RotationHandleOffset = 15f;
+
+    /// <summary>Centre of the ellipse in image pixel coordinates.</summary>
+    public PointF Center { get; set; }
+
+    /// <summary>Semi-major axis length in image pixels.</summary>
+    public float SemiMajor { get; set; }
+
+    /// <summary>Semi-minor axis length in image pixels.</summary>
+    public float SemiMinor { get; set; }
+
+    /// <summary>Clockwise rotation of the major axis in degrees.</summary>
+    public float AngleDegrees { get; set; }
 
     /// <summary>
-    /// The bounding rectangle of the ellipse in image pixel coordinates.
-    /// </summary>
-    public Rectangle Bounds { get; set; }
-
-    /// <summary>
-    /// Initializes a new <see cref="EllipseAnnotationGeometry"/> with the given bounding rectangle.
+    /// Initializes a new <see cref="EllipseAnnotationGeometry"/>.
     /// </summary>
     [JsonConstructor]
-    public EllipseAnnotationGeometry(Rectangle bounds)
+    public EllipseAnnotationGeometry(PointF center, float semiMajor, float semiMinor, float angleDegrees)
     {
-        Bounds = bounds;
+        Center = center;
+        SemiMajor = MathF.Max(1f, semiMajor);
+        SemiMinor = MathF.Max(1f, semiMinor);
+        AngleDegrees = angleDegrees;
     }
 
     /// <inheritdoc/>
-    public override RectangleF GetBoundingBox() =>
-        new(Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height);
+    public override RectangleF GetBoundingBox()
+    {
+        // AABB of a rotated ellipse with semi-axes a, b and rotation θ.
+        float rad = AngleDegrees * MathF.PI / 180f;
+        float cosA = MathF.Cos(rad);
+        float sinA = MathF.Sin(rad);
+        float hw = MathF.Sqrt(SemiMajor * SemiMajor * cosA * cosA + SemiMinor * SemiMinor * sinA * sinA);
+        float hh = MathF.Sqrt(SemiMajor * SemiMajor * sinA * sinA + SemiMinor * SemiMinor * cosA * cosA);
+        return new RectangleF(Center.X - hw, Center.Y - hh, 2f * hw, 2f * hh);
+    }
 
     /// <inheritdoc/>
     public override void Draw(BitmapDisplayPanel panel, Graphics graphics, bool isSelected)
@@ -55,18 +70,32 @@ public sealed class EllipseAnnotationGeometry : AnnotationGeometry
         ArgumentNullException.ThrowIfNull(panel, nameof(panel));
         ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
 
-        if (!Drawing.Visible || Bounds.IsEmpty) { return; }
+        if (!Drawing.Visible) { return; }
 
-        Rectangle displayRect = panel.MapImageToDisplay((RectangleF)Bounds, DisplayPixelAlign.TopLeft);
         Pen pen = DrawingToolsPool.GetPen(Drawing.Lines);
         Brush brush = DrawingToolsPool.GetBrush(Drawing.Fill);
 
-        graphics.FillEllipse(brush, displayRect);
-        graphics.DrawEllipse(pen, displayRect);
+        PointF centreDisplay = panel.MapImageToDisplay(Center, DisplayPixelAlign.Centre);
+        float semiMajorDisplay = panel.MapImageToDisplay(SemiMajor);
+        float semiMinorDisplay = panel.MapImageToDisplay(SemiMinor);
+
+        GraphicsState state = graphics.Save();
+        try
+        {
+            graphics.TranslateTransform(centreDisplay.X, centreDisplay.Y);
+            graphics.RotateTransform(AngleDegrees);
+            graphics.FillEllipse(brush, -semiMajorDisplay, -semiMinorDisplay, 2f * semiMajorDisplay, 2f * semiMinorDisplay);
+            graphics.DrawEllipse(pen, -semiMajorDisplay, -semiMinorDisplay, 2f * semiMajorDisplay, 2f * semiMinorDisplay);
+        }
+        finally
+        {
+            graphics.Restore(state);
+        }
 
         if (isSelected)
         {
-            foreach (PointF h in GetHandleDisplayPoints(displayRect))
+            PointF[] handles = GetDisplayHandles(panel);
+            foreach (PointF h in handles)
             {
                 AnnotationHandleHelper.DrawHandle(graphics, pen, brush, h);
             }
@@ -78,8 +107,7 @@ public sealed class EllipseAnnotationGeometry : AnnotationGeometry
     {
         ArgumentNullException.ThrowIfNull(panel, nameof(panel));
 
-        Rectangle displayRect = panel.MapImageToDisplay((RectangleF)Bounds, DisplayPixelAlign.TopLeft);
-        PointF[] handles = GetHandleDisplayPoints(displayRect);
+        PointF[] handles = GetDisplayHandles(panel);
 
         for (int i = 0; i < handles.Length; i++)
         {
@@ -89,10 +117,20 @@ public sealed class EllipseAnnotationGeometry : AnnotationGeometry
             }
         }
 
-        Rectangle inflated = displayRect;
-        inflated.Inflate(hitBorder, hitBorder);
+        // Body hit: transform display point into ellipse local coordinates and test unit ellipse.
+        PointF centreDisplay = panel.MapImageToDisplay(Center, DisplayPixelAlign.Centre);
+        float semiMajorDisplay = panel.MapImageToDisplay(SemiMajor);
+        float semiMinorDisplay = panel.MapImageToDisplay(SemiMinor);
 
-        return inflated.Contains(displayPoint) ? AnnotationHitInfo.Move : AnnotationHitInfo.Miss;
+        float dx = displayPoint.X - centreDisplay.X;
+        float dy = displayPoint.Y - centreDisplay.Y;
+        PointF local = InverseRotate(dx, dy, AngleDegrees);
+
+        float aMod = semiMajorDisplay + hitBorder;
+        float bMod = semiMinorDisplay + hitBorder;
+        float norm = (local.X / aMod) * (local.X / aMod) + (local.Y / bMod) * (local.Y / bMod);
+
+        return norm <= 1f ? AnnotationHitInfo.Move : AnnotationHitInfo.Miss;
     }
 
     /// <inheritdoc/>
@@ -102,76 +140,107 @@ public sealed class EllipseAnnotationGeometry : AnnotationGeometry
 
         if (hit.Kind == AnnotationHitKind.MoveBody)
         {
-            Bounds = new Rectangle(
-                Bounds.X + imageDelta.Width,
-                Bounds.Y + imageDelta.Height,
-                Bounds.Width,
-                Bounds.Height);
+            Center = new PointF(Center.X + imageDelta.Width, Center.Y + imageDelta.Height);
             return;
         }
 
         if (hit.Kind != AnnotationHitKind.Handle) { return; }
 
-        int left = Bounds.Left;
-        int top = Bounds.Top;
-        int right = Bounds.Right;
-        int bottom = Bounds.Bottom;
+        float rad = AngleDegrees * MathF.PI / 180f;
+        float cosA = MathF.Cos(rad);
+        float sinA = MathF.Sin(rad);
 
         switch (hit.HandleIndex)
         {
-            case HandleTopLeft:
-                left += imageDelta.Width;
-                top += imageDelta.Height;
+            case HandleMajorPos:
+            {
+                float proj = imageDelta.Width * cosA + imageDelta.Height * sinA;
+                SemiMajor = MathF.Max(1f, SemiMajor + proj);
                 break;
-            case HandleTopRight:
-                right += imageDelta.Width;
-                top += imageDelta.Height;
+            }
+            case HandleMajorNeg:
+            {
+                float proj = -(imageDelta.Width * cosA + imageDelta.Height * sinA);
+                SemiMajor = MathF.Max(1f, SemiMajor + proj);
                 break;
-            case HandleBottomRight:
-                right += imageDelta.Width;
-                bottom += imageDelta.Height;
+            }
+            case HandleMinorPos:
+            {
+                // Minor axis perpendicular: (-sin, cos)
+                float proj = imageDelta.Width * (-sinA) + imageDelta.Height * cosA;
+                SemiMinor = MathF.Max(1f, SemiMinor + proj);
                 break;
-            case HandleBottomLeft:
-                left += imageDelta.Width;
-                bottom += imageDelta.Height;
+            }
+            case HandleMinorNeg:
+            {
+                float proj = -(imageDelta.Width * (-sinA) + imageDelta.Height * cosA);
+                SemiMinor = MathF.Max(1f, SemiMinor + proj);
                 break;
-            case HandleTopMid:
-                top += imageDelta.Height;
-                break;
-            case HandleRightMid:
-                right += imageDelta.Width;
-                break;
-            case HandleBottomMid:
-                bottom += imageDelta.Height;
-                break;
-            case HandleLeftMid:
-                left += imageDelta.Width;
+            }
+            case HandleRotation:
+                ApplyRotationDelta(imageDelta);
                 break;
         }
-
-        if (right <= left) { right = left + 1; }
-        if (bottom <= top) { bottom = top + 1; }
-
-        Bounds = Rectangle.FromLTRB(left, top, right, bottom);
     }
 
     /// <inheritdoc/>
     public override AnnotationGeometry Clone()
     {
-        var clone = new EllipseAnnotationGeometry(Bounds);
+        var clone = new EllipseAnnotationGeometry(Center, SemiMajor, SemiMinor, AngleDegrees);
         CopyDrawingTo(clone);
         return clone;
     }
 
-    private static PointF[] GetHandleDisplayPoints(Rectangle displayRect) =>
-    [
-        new(displayRect.Left, displayRect.Top),
-        new(displayRect.Right, displayRect.Top),
-        new(displayRect.Right, displayRect.Bottom),
-        new(displayRect.Left, displayRect.Bottom),
-        new(displayRect.Left + displayRect.Width / 2f, displayRect.Top),
-        new(displayRect.Right, displayRect.Top + displayRect.Height / 2f),
-        new(displayRect.Left + displayRect.Width / 2f, displayRect.Bottom),
-        new(displayRect.Left, displayRect.Top + displayRect.Height / 2f),
-    ];
+    // -----------------------------------------------------------------------
+    // Helpers
+    // -----------------------------------------------------------------------
+
+    private void ApplyRotationDelta(Size imageDelta)
+    {
+        // Rotation handle is at Center + (SemiMajor + offset) along the major axis.
+        float rad = AngleDegrees * MathF.PI / 180f;
+        float cosA = MathF.Cos(rad);
+        float sinA = MathF.Sin(rad);
+        float handleDist = SemiMajor + RotationHandleOffset;
+
+        float handleX = Center.X + handleDist * cosA;
+        float handleY = Center.Y + handleDist * sinA;
+
+        float newX = handleX + imageDelta.Width;
+        float newY = handleY + imageDelta.Height;
+
+        AngleDegrees = MathF.Atan2(newY - Center.Y, newX - Center.X) * 180f / MathF.PI;
+    }
+
+    private PointF[] GetDisplayHandles(BitmapDisplayPanel panel)
+    {
+        float rad = AngleDegrees * MathF.PI / 180f;
+        float cosA = MathF.Cos(rad);
+        float sinA = MathF.Sin(rad);
+
+        // Major axis unit vector: (cos, sin); minor axis: (-sin, cos)
+        PointF majorPos = new(Center.X + SemiMajor * cosA, Center.Y + SemiMajor * sinA);
+        PointF majorNeg = new(Center.X - SemiMajor * cosA, Center.Y - SemiMajor * sinA);
+        PointF minorPos = new(Center.X - SemiMinor * sinA, Center.Y + SemiMinor * cosA);
+        PointF minorNeg = new(Center.X + SemiMinor * sinA, Center.Y - SemiMinor * cosA);
+        float rotDist = SemiMajor + RotationHandleOffset;
+        PointF rotHandle = new(Center.X + rotDist * cosA, Center.Y + rotDist * sinA);
+
+        return
+        [
+            panel.MapImageToDisplay(majorPos, DisplayPixelAlign.Centre),
+            panel.MapImageToDisplay(majorNeg, DisplayPixelAlign.Centre),
+            panel.MapImageToDisplay(minorPos, DisplayPixelAlign.Centre),
+            panel.MapImageToDisplay(minorNeg, DisplayPixelAlign.Centre),
+            panel.MapImageToDisplay(rotHandle, DisplayPixelAlign.Centre),
+        ];
+    }
+
+    private static PointF InverseRotate(float x, float y, float angleDegrees)
+    {
+        float rad = angleDegrees * MathF.PI / 180f;
+        float cosA = MathF.Cos(rad);
+        float sinA = MathF.Sin(rad);
+        return new PointF(x * cosA + y * sinA, -x * sinA + y * cosA);
+    }
 }

@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using CDS.ImageDisplay.Annotations.Internal;
 using CDS.ImageDisplay.Annotations.Shapes;
 using CDS.ImageDisplay.BitmapDisplay;
+using CDS.ImageDisplay.Overlays;
 using CDS.ImageDisplay.Utils;
 
 namespace CDS.ImageDisplay.Annotations;
@@ -82,6 +83,15 @@ public partial class AnnotationManager : Component
     [DefaultValue(true)]
     public bool CanEdit { get; set; } = true;
 
+    /// <summary>
+    /// When <see langword="true"/>, each annotation's <see cref="Annotation.Label"/> (or
+    /// <see cref="Annotation.Title"/> when label is empty) is drawn as a small tag near the
+    /// top-left of the shape's bounding box. Default <see langword="true"/>.
+    /// </summary>
+    [Category(s_categoryCDS)]
+    [DefaultValue(true)]
+    public bool ShowLabels { get; set; } = true;
+
     /// <summary>Hit-test tolerance in display pixels. Default 8.</summary>
     [Category(s_categoryCDS)]
     [DefaultValue(8)]
@@ -131,6 +141,12 @@ public partial class AnnotationManager : Component
 
     /// <summary>Fired when the selected annotation is deselected.</summary>
     public event EventHandler? AnnotationDeselected;
+
+    /// <summary>
+    /// Fired when a drag operation is about to begin on a selected annotation.
+    /// The event args carry a geometry snapshot that can be used as an undo checkpoint.
+    /// </summary>
+    public event EventHandler<AnnotationDragStartingEventArgs>? DragStarting;
 
     // -----------------------------------------------------------------------
     // Constructors
@@ -235,6 +251,7 @@ public partial class AnnotationManager : Component
         {
             _activeHit = hit;
             _preDragSnapshot = _selectedAnnotation.Geometry.Clone();
+            DragStarting?.Invoke(this, new AnnotationDragStartingEventArgs(_selectedAnnotation, _preDragSnapshot));
             _lastDragDisplay = e.Location;
             _state = AnnotationInteractionState.Dragging;
             panel.SuppressDragging();
@@ -359,12 +376,39 @@ public partial class AnnotationManager : Component
             bool isSelected = annotation == _selectedAnnotation
                 && _state is AnnotationInteractionState.Selected or AnnotationInteractionState.Dragging;
             annotation.Geometry.Draw(panel, e.Graphics, isSelected);
+            if (ShowLabels) { DrawAnnotationLabel(annotation, panel, e.Graphics); }
         }
 
         if (_state == AnnotationInteractionState.Drawing)
         {
             _pathOverlay.Draw(e.Graphics, panel);
         }
+    }
+
+    private static readonly FontSpec s_labelFontSpec = new() { FontName = "Segoe UI", FontSize = 8 };
+    private static readonly BrushSpec s_labelBackingSpec = new() { Color = Color.FromArgb(160, Color.Black) };
+    private static readonly BrushSpec s_labelTextSpec = new() { Color = Color.White };
+
+    private static void DrawAnnotationLabel(Annotation annotation, BitmapDisplayPanel panel, Graphics graphics)
+    {
+        string text = string.IsNullOrEmpty(annotation.Label) ? annotation.Title : annotation.Label;
+        if (string.IsNullOrEmpty(text)) { return; }
+
+        RectangleF bbox = annotation.Geometry.GetBoundingBox();
+        if (bbox.IsEmpty) { return; }
+
+        PointF displayTL = panel.MapImageToDisplay(new PointF(bbox.Left, bbox.Top), DisplayPixelAlign.TopLeft);
+
+        Font font = DrawingToolsPool.GetFont(s_labelFontSpec);
+        SizeF textSize = graphics.MeasureString(text, font);
+
+        var backing = new RectangleF(displayTL.X, displayTL.Y - textSize.Height - 2f, textSize.Width + 4f, textSize.Height + 2f);
+
+        Brush backBrush = DrawingToolsPool.GetBrush(s_labelBackingSpec);
+        Brush textBrush = DrawingToolsPool.GetBrush(s_labelTextSpec);
+
+        graphics.FillRectangle(backBrush, backing);
+        graphics.DrawString(text, font, textBrush, backing.Left + 2f, backing.Top + 1f);
     }
 
     // -----------------------------------------------------------------------
@@ -459,6 +503,7 @@ public partial class AnnotationManager : Component
     {
         if (_selectedAnnotation == null) { return; }
         _selectedAnnotation = null;
+        _state = AnnotationInteractionState.Idle;
         AnnotationDeselected?.Invoke(this, EventArgs.Empty);
         BitmapDisplayPanel?.Invalidate();
     }
@@ -551,6 +596,7 @@ public partial class AnnotationManager : Component
     private void RegisterBuiltInDescriptors()
     {
         _recognitionDescriptors.Add(new RectAnnotationDescriptor());
+        _recognitionDescriptors.Add(new RotatedRectAnnotationDescriptor());
         _recognitionDescriptors.Add(new CircleAnnotationDescriptor());
         _recognitionDescriptors.Add(new EllipseAnnotationDescriptor());
         _recognitionDescriptors.Add(new LineAnnotationDescriptor());

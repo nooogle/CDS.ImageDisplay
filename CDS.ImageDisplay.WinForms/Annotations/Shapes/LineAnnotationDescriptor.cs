@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using CDS.ImageDisplay.Annotations.Internal;
 
 namespace CDS.ImageDisplay.Annotations.Shapes;
@@ -68,6 +69,7 @@ public sealed class LineAnnotationDescriptor : IAnnotationShapeDescriptor
         var geometry = new LineAnnotationGeometry(start, end);
         geometry.Drawing.Lines.Color = Color.Gold;
         geometry.Drawing.Lines.Width = 2f;
+        geometry.Drawing.Lines.EndCap = LineCap.ArrowAnchor;
         geometry.Drawing.Fill.Color = Color.Transparent;
         return geometry;
     }

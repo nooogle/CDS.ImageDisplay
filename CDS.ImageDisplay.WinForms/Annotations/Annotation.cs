@@ -28,6 +28,14 @@ public class Annotation
     public string Notes { get; set; } = string.Empty;
 
     /// <summary>
+    /// Machine-readable class label for this annotation (e.g. <c>"car"</c>, <c>"pedestrian"</c>).
+    /// Used by consuming apps when exporting to YOLO, COCO, Pascal VOC, or any other format
+    /// that requires a category name. Distinct from <see cref="Title"/>, which is free-form
+    /// display text.
+    /// </summary>
+    public string Label { get; set; } = string.Empty;
+
+    /// <summary>
     /// The geometry of this annotation.
     /// </summary>
     public AnnotationGeometry Geometry
@@ -62,6 +70,7 @@ public class Annotation
             Id = Id,
             Title = Title,
             Notes = Notes,
+            Label = Label,
         };
     }
 }

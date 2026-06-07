@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
 using CDS.ImageDisplay.Utils;
+using System.ComponentModel;
 
 namespace CDS.ImageDisplay.RegionOfInterest;
 
@@ -24,8 +20,8 @@ public partial class MultipleROIManager : Component
     private ISingleROIDescriptor? _activeROIDescriptor;
     private Size? _imageSize;
     private bool _refreshSelectionSentry;
-    private Timer _timerDeselectAfterClick = null!;
-    private Timer _timerDeselectAfterMove = null!;
+    private System.Windows.Forms.Timer _timerDeselectAfterClick = null!;
+    private System.Windows.Forms.Timer _timerDeselectAfterMove = null!;
 
 
     /// <summary>
@@ -190,10 +186,10 @@ public partial class MultipleROIManager : Component
     /// </summary>
     private void CommonInitialise()
     {
-        _timerDeselectAfterClick = new Timer(components);
+        _timerDeselectAfterClick = new System.Windows.Forms.Timer(components);
         _timerDeselectAfterClick.Tick += (_, _) => { _timerDeselectAfterClick.Stop(); DeselectActiveROI(); };
 
-        _timerDeselectAfterMove = new Timer(components);
+        _timerDeselectAfterMove = new System.Windows.Forms.Timer(components);
         _timerDeselectAfterMove.Tick += (_, _) => { _timerDeselectAfterMove.Stop(); DeselectActiveROI(); };
     }
 
@@ -202,7 +198,7 @@ public partial class MultipleROIManager : Component
     /// Starts <paramref name="timer"/> after configuring its interval from <paramref name="delay"/>.
     /// Does nothing if <paramref name="delay"/> is <see langword="null"/>.
     /// </summary>
-    private static void StartTimer(Timer timer, TimeSpan? delay)
+    private static void StartTimer(System.Windows.Forms.Timer timer, TimeSpan? delay)
     {
         timer.Stop();
         if (delay is null)

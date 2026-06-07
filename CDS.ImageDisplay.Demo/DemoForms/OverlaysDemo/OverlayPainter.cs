@@ -23,7 +23,7 @@ internal static class OverlayPainter
     private static void PaintShapes(BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics, OverlayShapes shapes, OverlayDrawingSpecs overlaySettings)
     {
         shapes.Rectangle1.Draw(bitmapDisplayPanel, graphics, overlaySettings.Rectangles);
-        shapes.Rectangle2.Draw(bitmapDisplayPanel, graphics, overlaySettings.Rectangles);
+        shapes.RotatedRectangle1.Draw(bitmapDisplayPanel, graphics, overlaySettings.Rectangles);
 
         shapes.CrossHairShape.Draw(bitmapDisplayPanel, graphics, overlaySettings.CrossHair);
 

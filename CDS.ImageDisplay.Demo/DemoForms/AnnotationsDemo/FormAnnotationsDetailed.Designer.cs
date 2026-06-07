@@ -48,31 +48,27 @@ namespace CDS.ImageDisplay.Demo.DemoForms.AnnotationsDemo
             leftPanel.SuspendLayout();
             statusStrip.SuspendLayout();
             SuspendLayout();
-            //
+            // 
+            // bitmapDisplayPanel
+            // 
+            bitmapDisplayPanel.BackgroundImage = Properties.Resources.double_bubble;
+            bitmapDisplayPanel.DisplayMode = BitmapDisplay.BitmapDisplayMode.Free;
+            bitmapDisplayPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            bitmapDisplayPanel.Location = new System.Drawing.Point(280, 38);
+            bitmapDisplayPanel.Name = "bitmapDisplayPanel";
+            bitmapDisplayPanel.Size = new System.Drawing.Size(744, 540);
+            bitmapDisplayPanel.TabIndex = 3;
+            // 
             // sysInfoPanel
-            //
+            // 
             sysInfoPanel.Dock = System.Windows.Forms.DockStyle.Top;
             sysInfoPanel.Location = new System.Drawing.Point(0, 0);
             sysInfoPanel.Name = "sysInfoPanel";
             sysInfoPanel.Size = new System.Drawing.Size(1024, 38);
             sysInfoPanel.TabIndex = 0;
-            //
-            // statusStrip
-            //
-            statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { statusLabel });
-            statusStrip.Location = new System.Drawing.Point(0, 578);
-            statusStrip.Name = "statusStrip";
-            statusStrip.Size = new System.Drawing.Size(1024, 22);
-            statusStrip.TabIndex = 1;
-            //
-            // statusLabel
-            //
-            statusLabel.Name = "statusLabel";
-            statusLabel.Size = new System.Drawing.Size(40, 17);
-            statusLabel.Text = "Ready";
-            //
+            // 
             // leftPanel
-            //
+            // 
             leftPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             leftPanel.Controls.Add(listView);
             leftPanel.Controls.Add(labelTitle);
@@ -87,16 +83,12 @@ namespace CDS.ImageDisplay.Demo.DemoForms.AnnotationsDemo
             leftPanel.Name = "leftPanel";
             leftPanel.Size = new System.Drawing.Size(280, 540);
             leftPanel.TabIndex = 2;
-            //
+            // 
             // listView
-            //
-            listView.Anchor = System.Windows.Forms.AnchorStyles.Top
-                | System.Windows.Forms.AnchorStyles.Left
-                | System.Windows.Forms.AnchorStyles.Right
-                | System.Windows.Forms.AnchorStyles.Bottom;
+            // 
+            listView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             listView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { colType, colTitle });
             listView.FullRowSelect = true;
-            listView.HideSelection = false;
             listView.Location = new System.Drawing.Point(4, 4);
             listView.MultiSelect = false;
             listView.Name = "listView";
@@ -104,54 +96,50 @@ namespace CDS.ImageDisplay.Demo.DemoForms.AnnotationsDemo
             listView.TabIndex = 0;
             listView.UseCompatibleStateImageBehavior = false;
             listView.View = System.Windows.Forms.View.Details;
-            //
+            // 
             // colType
-            //
+            // 
             colType.Text = "Type";
             colType.Width = 90;
-            //
+            // 
             // colTitle
-            //
+            // 
             colTitle.Text = "Title";
             colTitle.Width = 174;
-            //
+            // 
             // labelTitle
-            //
+            // 
             labelTitle.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             labelTitle.AutoSize = true;
             labelTitle.Location = new System.Drawing.Point(4, 377);
             labelTitle.Name = "labelTitle";
-            labelTitle.Size = new System.Drawing.Size(30, 15);
+            labelTitle.Size = new System.Drawing.Size(33, 15);
             labelTitle.TabIndex = 1;
             labelTitle.Text = "Title:";
-            //
+            // 
             // txtTitle
-            //
-            txtTitle.Anchor = System.Windows.Forms.AnchorStyles.Bottom
-                | System.Windows.Forms.AnchorStyles.Left
-                | System.Windows.Forms.AnchorStyles.Right;
+            // 
+            txtTitle.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             txtTitle.Enabled = false;
             txtTitle.Location = new System.Drawing.Point(4, 394);
             txtTitle.Name = "txtTitle";
             txtTitle.Size = new System.Drawing.Size(270, 23);
             txtTitle.TabIndex = 2;
             txtTitle.TextChanged += txtTitle_TextChanged;
-            //
+            // 
             // labelNotes
-            //
+            // 
             labelNotes.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             labelNotes.AutoSize = true;
             labelNotes.Location = new System.Drawing.Point(4, 423);
             labelNotes.Name = "labelNotes";
-            labelNotes.Size = new System.Drawing.Size(38, 15);
+            labelNotes.Size = new System.Drawing.Size(41, 15);
             labelNotes.TabIndex = 3;
             labelNotes.Text = "Notes:";
-            //
+            // 
             // txtNotes
-            //
-            txtNotes.Anchor = System.Windows.Forms.AnchorStyles.Bottom
-                | System.Windows.Forms.AnchorStyles.Left
-                | System.Windows.Forms.AnchorStyles.Right;
+            // 
+            txtNotes.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             txtNotes.Enabled = false;
             txtNotes.Location = new System.Drawing.Point(4, 440);
             txtNotes.Multiline = true;
@@ -159,9 +147,9 @@ namespace CDS.ImageDisplay.Demo.DemoForms.AnnotationsDemo
             txtNotes.Size = new System.Drawing.Size(270, 64);
             txtNotes.TabIndex = 4;
             txtNotes.TextChanged += txtNotes_TextChanged;
-            //
+            // 
             // btnClearAll
-            //
+            // 
             btnClearAll.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             btnClearAll.Location = new System.Drawing.Point(4, 510);
             btnClearAll.Name = "btnClearAll";
@@ -170,9 +158,9 @@ namespace CDS.ImageDisplay.Demo.DemoForms.AnnotationsDemo
             btnClearAll.Text = "Clear all";
             btnClearAll.UseVisualStyleBackColor = true;
             btnClearAll.Click += btnClearAll_Click;
-            //
+            // 
             // btnSaveJson
-            //
+            // 
             btnSaveJson.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             btnSaveJson.Location = new System.Drawing.Point(90, 510);
             btnSaveJson.Name = "btnSaveJson";
@@ -181,9 +169,9 @@ namespace CDS.ImageDisplay.Demo.DemoForms.AnnotationsDemo
             btnSaveJson.Text = "Save JSON";
             btnSaveJson.UseVisualStyleBackColor = true;
             btnSaveJson.Click += btnSaveJson_Click;
-            //
+            // 
             // btnLoadJson
-            //
+            // 
             btnLoadJson.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             btnLoadJson.Location = new System.Drawing.Point(176, 510);
             btnLoadJson.Name = "btnLoadJson";
@@ -192,28 +180,32 @@ namespace CDS.ImageDisplay.Demo.DemoForms.AnnotationsDemo
             btnLoadJson.Text = "Load JSON";
             btnLoadJson.UseVisualStyleBackColor = true;
             btnLoadJson.Click += btnLoadJson_Click;
-            //
-            // bitmapDisplayPanel
-            //
-            bitmapDisplayPanel.BackgroundImage = Properties.Resources.double_bubble;
-            bitmapDisplayPanel.DisplayMode = BitmapDisplay.BitmapDisplayMode.FitToWindowCentred;
-            bitmapDisplayPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            bitmapDisplayPanel.Location = new System.Drawing.Point(280, 38);
-            bitmapDisplayPanel.Name = "bitmapDisplayPanel";
-            bitmapDisplayPanel.Size = new System.Drawing.Size(744, 540);
-            bitmapDisplayPanel.TabIndex = 3;
-            //
+            // 
+            // statusStrip
+            // 
+            statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { statusLabel });
+            statusStrip.Location = new System.Drawing.Point(0, 578);
+            statusStrip.Name = "statusStrip";
+            statusStrip.Size = new System.Drawing.Size(1024, 22);
+            statusStrip.TabIndex = 1;
+            // 
+            // statusLabel
+            // 
+            statusLabel.Name = "statusLabel";
+            statusLabel.Size = new System.Drawing.Size(39, 17);
+            statusLabel.Text = "Ready";
+            // 
             // annotationManager
-            //
+            // 
             annotationManager.BitmapDisplayPanel = bitmapDisplayPanel;
             annotationManager.AnnotationCreated += annotationManager_AnnotationCreated;
             annotationManager.AnnotationModified += annotationManager_AnnotationModified;
             annotationManager.AnnotationDeleted += annotationManager_AnnotationDeleted;
             annotationManager.AnnotationSelected += annotationManager_AnnotationSelected;
             annotationManager.AnnotationDeselected += annotationManager_AnnotationDeselected;
-            //
+            // 
             // FormAnnotationsDetailed
-            //
+            // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(1024, 600);

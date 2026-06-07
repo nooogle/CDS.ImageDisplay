@@ -62,6 +62,8 @@ internal sealed class OverlayShapes
         {
             bubble.Move();
         }
+
+        RotatedRectangle1.Angle = (RotatedRectangle1.Angle + 1f) % 360f;
     }
 
 
@@ -70,10 +72,12 @@ internal sealed class OverlayShapes
         Rect = new RectangleF(100, 100, 101, 101),
     };
 
-    public Overlays.RectangleShape Rectangle2 { get; set; } = new Overlays.RectangleShape()
+    public Overlays.RotatedRectangleShape RotatedRectangle1 { get; set; } = new Overlays.RotatedRectangleShape()
     {
-        Rect = new RectangleF(300, 200, 100, 100),
-        PixelAlign = BitmapDisplay.DisplayPixelAlign.Centre,
+        Centre = new PointF(350, 250),
+        Width = 120,
+        Height = 60,
+        Angle = 0,
     };
 
     public Overlays.CrosshairShape CrossHairShape { get; set; } = new Overlays.CrosshairShape()

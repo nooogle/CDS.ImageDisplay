@@ -26,10 +26,10 @@ public sealed class AnnotationTests
     }
 
     /// <summary>
-    /// Verifies that Title and Notes are empty strings by default.
+    /// Verifies that Title, Notes, and Label are empty strings by default.
     /// </summary>
     [TestMethod]
-    public void Constructor_DefaultsEmptyTitleAndNotes()
+    public void Constructor_DefaultsEmptyTitleNotesAndLabel()
     {
         // Arrange / Act
         var annotation = new Annotation(new StubGeometry());
@@ -37,6 +37,7 @@ public sealed class AnnotationTests
         // Assert
         annotation.Title.Should().BeEmpty();
         annotation.Notes.Should().BeEmpty();
+        annotation.Label.Should().BeEmpty();
     }
 
     /// <summary>
@@ -54,16 +55,17 @@ public sealed class AnnotationTests
     }
 
     /// <summary>
-    /// Verifies that Clone returns a different instance but with the same Id, Title, and Notes.
+    /// Verifies that Clone returns a different instance but with the same Id, Title, Notes, and Label.
     /// </summary>
     [TestMethod]
-    public void Clone_ReturnsDifferentInstance_WithSameIdTitleNotes()
+    public void Clone_ReturnsDifferentInstance_WithSameIdTitleNotesAndLabel()
     {
         // Arrange
         var original = new Annotation(new StubGeometry())
         {
             Title = "Feature A",
             Notes = "Some notes",
+            Label = "car",
         };
 
         // Act
@@ -74,6 +76,7 @@ public sealed class AnnotationTests
         clone.Id.Should().Be(original.Id);
         clone.Title.Should().Be(original.Title);
         clone.Notes.Should().Be(original.Notes);
+        clone.Label.Should().Be(original.Label);
     }
 
     /// <summary>
