@@ -22,6 +22,9 @@ namespace CDS.ImageDisplay.ImageBrowsing;
 /// </remarks>
 public partial class ImageListPanel : UserControl
 {
+    /// <summary>Default file provider that enumerates and filters files in the current folder.</summary>
+    private static readonly Func<string, Regex, IEnumerable<string>> s_defaultFileProvider = GetDefaultFiles;
+
     /// <summary>Default thumbnail edge length in pixels.</summary>
     private const int DefaultThumbnailHeight = 48;
 
@@ -42,6 +45,7 @@ public partial class ImageListPanel : UserControl
     // -----------------------------------------------------------------------
 
     private readonly List<string> _files = [];
+    private Func<string, Regex, IEnumerable<string>> _fileProvider = s_defaultFileProvider;
     private string _folder = string.Empty;
     private string _regexFilter = DefaultRegexPattern;
 
@@ -96,6 +100,28 @@ public partial class ImageListPanel : UserControl
             if (_regexFilter == value) { return; }
 
             _regexFilter = value;
+            RefreshList();
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the delegate used to supply file paths for the current folder.
+    /// The delegate receives the current folder and compiled regex filter.
+    /// By default, files are enumerated from the current folder only and sorted by path.
+    /// Changing this property re-populates the list.
+    /// </summary>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public Func<string, Regex, IEnumerable<string>> FileProvider
+    {
+        get => _fileProvider;
+        set
+        {
+            ArgumentNullException.ThrowIfNull(value);
+
+            if (ReferenceEquals(_fileProvider, value)) { return; }
+
+            _fileProvider = value;
             RefreshList();
         }
     }
@@ -241,10 +267,7 @@ public partial class ImageListPanel : UserControl
         try
         {
             var regex = new Regex(_regexFilter);
-            _files.AddRange(
-                Directory.EnumerateFiles(_folder)
-                         .Where(f => regex.IsMatch(f))
-                         .OrderBy(f => f, StringComparer.OrdinalIgnoreCase));
+            _files.AddRange(_fileProvider(_folder, regex) ?? []);
         }
         catch (Exception)
         {
@@ -449,6 +472,19 @@ public partial class ImageListPanel : UserControl
         using var g = Graphics.FromImage(bmp);
         g.Clear(Color.LightGray);
         return bmp;
+    }
+
+    /// <summary>
+    /// Returns the default file sequence for the control by enumerating the current folder only.
+    /// </summary>
+    /// <param name="folder">The folder to search.</param>
+    /// <param name="regex">The compiled file-name filter.</param>
+    /// <returns>The matching file paths in ascending ordinal-ignore-case order.</returns>
+    private static IEnumerable<string> GetDefaultFiles(string folder, Regex regex)
+    {
+        return Directory.EnumerateFiles(folder)
+            .Where(filePath => regex.IsMatch(filePath))
+            .OrderBy(filePath => filePath, StringComparer.OrdinalIgnoreCase);
     }
 
     // -----------------------------------------------------------------------

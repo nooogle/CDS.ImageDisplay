@@ -32,6 +32,8 @@ namespace CDS.ImageDisplay.Demo.DemoForms.AnnotationsDemo
             bitmapDisplayPanel = new CDS.ImageDisplay.BitmapDisplay.BitmapDisplayPanel();
             sysInfoPanel = new CDS.ImageDisplay.Utils.SystemInfoPanel();
             leftPanel = new System.Windows.Forms.Panel();
+            checkCanCreateAnnotations = new System.Windows.Forms.CheckBox();
+            checkCanEditAnnotations = new System.Windows.Forms.CheckBox();
             listView = new System.Windows.Forms.ListView();
             colType = new System.Windows.Forms.ColumnHeader();
             colTitle = new System.Windows.Forms.ColumnHeader();
@@ -45,6 +47,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms.AnnotationsDemo
             statusStrip = new System.Windows.Forms.StatusStrip();
             statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             annotationManager = new CDS.ImageDisplay.Annotations.AnnotationManager(components);
+            btnClearAnnotations = new System.Windows.Forms.Button();
             leftPanel.SuspendLayout();
             statusStrip.SuspendLayout();
             SuspendLayout();
@@ -70,6 +73,9 @@ namespace CDS.ImageDisplay.Demo.DemoForms.AnnotationsDemo
             // leftPanel
             // 
             leftPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            leftPanel.Controls.Add(btnClearAnnotations);
+            leftPanel.Controls.Add(checkCanCreateAnnotations);
+            leftPanel.Controls.Add(checkCanEditAnnotations);
             leftPanel.Controls.Add(listView);
             leftPanel.Controls.Add(labelTitle);
             leftPanel.Controls.Add(txtTitle);
@@ -84,15 +90,41 @@ namespace CDS.ImageDisplay.Demo.DemoForms.AnnotationsDemo
             leftPanel.Size = new System.Drawing.Size(280, 540);
             leftPanel.TabIndex = 2;
             // 
+            // checkCanCreateAnnotations
+            // 
+            checkCanCreateAnnotations.AutoSize = true;
+            checkCanCreateAnnotations.Checked = true;
+            checkCanCreateAnnotations.CheckState = System.Windows.Forms.CheckState.Checked;
+            checkCanCreateAnnotations.Location = new System.Drawing.Point(87, 5);
+            checkCanCreateAnnotations.Name = "checkCanCreateAnnotations";
+            checkCanCreateAnnotations.Size = new System.Drawing.Size(82, 19);
+            checkCanCreateAnnotations.TabIndex = 9;
+            checkCanCreateAnnotations.Text = "Can create";
+            checkCanCreateAnnotations.UseVisualStyleBackColor = true;
+            checkCanCreateAnnotations.CheckedChanged += checkCanCreateAnnotations_CheckedChanged;
+            // 
+            // checkCanEditAnnotations
+            // 
+            checkCanEditAnnotations.AutoSize = true;
+            checkCanEditAnnotations.Checked = true;
+            checkCanEditAnnotations.CheckState = System.Windows.Forms.CheckState.Checked;
+            checkCanEditAnnotations.Location = new System.Drawing.Point(11, 5);
+            checkCanEditAnnotations.Name = "checkCanEditAnnotations";
+            checkCanEditAnnotations.Size = new System.Drawing.Size(70, 19);
+            checkCanEditAnnotations.TabIndex = 8;
+            checkCanEditAnnotations.Text = "Can edit";
+            checkCanEditAnnotations.UseVisualStyleBackColor = true;
+            checkCanEditAnnotations.CheckedChanged += checkCanEditAnnotations_CheckedChanged;
+            // 
             // listView
             // 
             listView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             listView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { colType, colTitle });
             listView.FullRowSelect = true;
-            listView.Location = new System.Drawing.Point(4, 4);
+            listView.Location = new System.Drawing.Point(4, 30);
             listView.MultiSelect = false;
             listView.Name = "listView";
-            listView.Size = new System.Drawing.Size(270, 369);
+            listView.Size = new System.Drawing.Size(270, 343);
             listView.TabIndex = 0;
             listView.UseCompatibleStateImageBehavior = false;
             listView.View = System.Windows.Forms.View.Details;
@@ -204,6 +236,16 @@ namespace CDS.ImageDisplay.Demo.DemoForms.AnnotationsDemo
             annotationManager.AnnotationSelected += annotationManager_AnnotationSelected;
             annotationManager.AnnotationDeselected += annotationManager_AnnotationDeselected;
             // 
+            // btnClearAnnotations
+            // 
+            btnClearAnnotations.Location = new System.Drawing.Point(175, 2);
+            btnClearAnnotations.Name = "btnClearAnnotations";
+            btnClearAnnotations.Size = new System.Drawing.Size(75, 23);
+            btnClearAnnotations.TabIndex = 10;
+            btnClearAnnotations.Text = "Clear";
+            btnClearAnnotations.UseVisualStyleBackColor = true;
+            btnClearAnnotations.Click += btnClearAnnotations_Click;
+            // 
             // FormAnnotationsDetailed
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -241,5 +283,8 @@ namespace CDS.ImageDisplay.Demo.DemoForms.AnnotationsDemo
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
         private CDS.ImageDisplay.Annotations.AnnotationManager annotationManager;
+        private System.Windows.Forms.CheckBox checkCanEditAnnotations;
+        private System.Windows.Forms.CheckBox checkCanCreateAnnotations;
+        private System.Windows.Forms.Button btnClearAnnotations;
     }
 }

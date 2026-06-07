@@ -215,4 +215,23 @@ internal sealed partial class FormAnnotationsDetailed : Form
         const string suffix = "AnnotationGeometry";
         return name.EndsWith(suffix, StringComparison.Ordinal) ? name[..^suffix.Length] : name;
     }
+
+    private void checkCanEditAnnotations_CheckedChanged(object sender, EventArgs e)
+    {
+        this.annotationManager.CanEdit = checkCanEditAnnotations.Checked;
+        SetStatus(checkCanEditAnnotations.Checked ? "Annotation editing enabled" : "Annotation editing disabled");
+    }
+
+    private void checkCanCreateAnnotations_CheckedChanged(object sender, EventArgs e)
+    {
+        annotationManager.CanCreate = checkCanCreateAnnotations.Checked;
+        SetStatus(checkCanCreateAnnotations.Checked ? "Annotation creation enabled" : "Annotation creation disabled");
+    }
+
+    private void btnClearAnnotations_Click(object sender, EventArgs e)
+    {
+        annotationManager.ClearAnnotations();
+        listView.Items.Clear();
+        SetStatus("Cleared all annotations");
+    }
 }

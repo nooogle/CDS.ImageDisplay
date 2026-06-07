@@ -38,40 +38,39 @@ namespace CDS.ImageDisplay.ImageBrowsing
             _imageList = new ImageList(components);
             _debounceTimer = new System.Windows.Forms.Timer(components);
             SuspendLayout();
-            //
+            // 
             // _listView
-            //
+            // 
             _listView.Dock = DockStyle.Fill;
             _listView.FullRowSelect = true;
-            _listView.SmallImageList = _imageList;
-            _listView.Columns.Add("Filename");
+            _listView.HeaderStyle = ColumnHeaderStyle.None;
             _listView.Location = new Point(0, 0);
             _listView.MultiSelect = false;
             _listView.Name = "_listView";
             _listView.Size = new Size(300, 400);
+            _listView.SmallImageList = _imageList;
             _listView.TabIndex = 0;
             _listView.UseCompatibleStateImageBehavior = false;
             _listView.View = View.Details;
             _listView.VirtualMode = true;
-            _listView.RetrieveVirtualItem += OnListViewRetrieveVirtualItem;
             _listView.CacheVirtualItems += OnListViewCacheVirtualItems;
-            _listView.SelectedIndexChanged += OnListViewSelectedIndexChanged;
             _listView.ItemActivate += OnListViewItemActivate;
+            _listView.RetrieveVirtualItem += OnListViewRetrieveVirtualItem;
+            _listView.SelectedIndexChanged += OnListViewSelectedIndexChanged;
             _listView.SizeChanged += OnListViewSizeChanged;
-            //
+            // 
             // _imageList
-            //
+            // 
             _imageList.ColorDepth = ColorDepth.Depth32Bit;
-            _imageList.ImageSize = new Size(_thumbnailHeight, _thumbnailHeight);
+            _imageList.ImageSize = new Size(16, 16);
             _imageList.TransparentColor = Color.Transparent;
-            //
+            // 
             // _debounceTimer
-            //
-            _debounceTimer.Interval = DebounceDelayMs;
+            // 
             _debounceTimer.Tick += OnDebounceTimerTick;
-            //
+            // 
             // ImageListPanel
-            //
+            // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(_listView);

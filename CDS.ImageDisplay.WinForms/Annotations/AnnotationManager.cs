@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using CDS.ImageDisplay.Annotations.Internal;
 using CDS.ImageDisplay.Annotations.Shapes;
@@ -370,18 +371,30 @@ public partial class AnnotationManager : Component
     private void BitmapDisplayPanel_OnPaintOver(object? sender, PaintOverEventArgs e)
     {
         BitmapDisplayPanel panel = e.Sender;
+        Graphics graphics = e.Graphics;
+        GraphicsState graphicsState = graphics.Save();
 
-        foreach (Annotation annotation in _annotations)
+        graphics.SmoothingMode = SmoothingMode.AntiAlias;
+        graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+        try
         {
-            bool isSelected = annotation == _selectedAnnotation
-                && _state is AnnotationInteractionState.Selected or AnnotationInteractionState.Dragging;
-            annotation.Geometry.Draw(panel, e.Graphics, isSelected);
-            if (ShowLabels) { DrawAnnotationLabel(annotation, panel, e.Graphics); }
+            foreach (Annotation annotation in _annotations)
+            {
+                bool isSelected = annotation == _selectedAnnotation
+                    && _state is AnnotationInteractionState.Selected or AnnotationInteractionState.Dragging;
+                annotation.Geometry.Draw(panel, graphics, isSelected);
+                if (ShowLabels) { DrawAnnotationLabel(annotation, panel, graphics); }
+            }
+
+            if (_state == AnnotationInteractionState.Drawing)
+            {
+                _pathOverlay.Draw(graphics, panel);
+            }
         }
-
-        if (_state == AnnotationInteractionState.Drawing)
+        finally
         {
-            _pathOverlay.Draw(e.Graphics, panel);
+            graphics.Restore(graphicsState);
         }
     }
 
