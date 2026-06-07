@@ -138,4 +138,13 @@ internal sealed partial class FormImageBrowsing : Form
 
         return bmp;
     }
+
+
+    /// <summary>
+    /// Update the time display every 100ms to show that the UI remains responsive while loading images.
+    /// </summary>
+    private void timerTime_Tick(object sender, EventArgs e)
+    {
+        labelTime.Text = DateTime.Now.ToString("HH:mm:ss.fff");
+    }
 }

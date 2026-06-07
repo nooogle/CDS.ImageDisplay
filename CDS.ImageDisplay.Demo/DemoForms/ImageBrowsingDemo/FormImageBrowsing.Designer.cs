@@ -28,6 +28,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms.ImageBrowsingDemo
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             splitContainer = new System.Windows.Forms.SplitContainer();
             imageListPanel = new CDS.ImageDisplay.ImageBrowsing.ImageListPanel();
             bitmapDisplayPanel = new CDS.ImageDisplay.BitmapDisplay.BitmapDisplayPanel();
@@ -40,12 +41,14 @@ namespace CDS.ImageDisplay.Demo.DemoForms.ImageBrowsingDemo
             txtFolder = new System.Windows.Forms.TextBox();
             lblFolder = new System.Windows.Forms.Label();
             labelStatus = new System.Windows.Forms.Label();
+            labelTime = new System.Windows.Forms.Label();
+            timerTime = new System.Windows.Forms.Timer(components);
             ((System.ComponentModel.ISupportInitialize)splitContainer).BeginInit();
             splitContainer.Panel1.SuspendLayout();
             splitContainer.Panel2.SuspendLayout();
             splitContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)nudThumbnailSize).BeginInit();
             panelToolbar.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)nudThumbnailSize).BeginInit();
             SuspendLayout();
             // 
             // splitContainer
@@ -86,6 +89,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms.ImageBrowsingDemo
             // 
             // panelToolbar
             // 
+            panelToolbar.Controls.Add(labelTime);
             panelToolbar.Controls.Add(btnNext);
             panelToolbar.Controls.Add(btnPrevious);
             panelToolbar.Controls.Add(nudThumbnailSize);
@@ -98,9 +102,9 @@ namespace CDS.ImageDisplay.Demo.DemoForms.ImageBrowsingDemo
             panelToolbar.Name = "panelToolbar";
             panelToolbar.Size = new System.Drawing.Size(984, 35);
             panelToolbar.TabIndex = 1;
-            //
+            // 
             // btnNext
-            //
+            // 
             btnNext.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             btnNext.Location = new System.Drawing.Point(949, 6);
             btnNext.Name = "btnNext";
@@ -108,9 +112,9 @@ namespace CDS.ImageDisplay.Demo.DemoForms.ImageBrowsingDemo
             btnNext.TabIndex = 6;
             btnNext.Text = "▶";
             btnNext.Click += btnNext_Click;
-            //
+            // 
             // btnPrevious
-            //
+            // 
             btnPrevious.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             btnPrevious.Location = new System.Drawing.Point(908, 6);
             btnPrevious.Name = "btnPrevious";
@@ -118,32 +122,32 @@ namespace CDS.ImageDisplay.Demo.DemoForms.ImageBrowsingDemo
             btnPrevious.TabIndex = 5;
             btnPrevious.Text = "◀";
             btnPrevious.Click += btnPrevious_Click;
-            //
+            // 
             // nudThumbnailSize
-            //
+            // 
             nudThumbnailSize.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            nudThumbnailSize.Increment = new decimal(new int[] { 16, 0, 0, 0 });
             nudThumbnailSize.Location = new System.Drawing.Point(843, 6);
-            nudThumbnailSize.Minimum = 16;
-            nudThumbnailSize.Maximum = 256;
-            nudThumbnailSize.Increment = 16;
+            nudThumbnailSize.Maximum = new decimal(new int[] { 256, 0, 0, 0 });
+            nudThumbnailSize.Minimum = new decimal(new int[] { 16, 0, 0, 0 });
             nudThumbnailSize.Name = "nudThumbnailSize";
             nudThumbnailSize.Size = new System.Drawing.Size(59, 23);
             nudThumbnailSize.TabIndex = 4;
-            nudThumbnailSize.Value = 128;
+            nudThumbnailSize.Value = new decimal(new int[] { 128, 0, 0, 0 });
             nudThumbnailSize.ValueChanged += nudThumbnailSize_ValueChanged;
-            //
+            // 
             // lblThumbnailSize
-            //
+            // 
             lblThumbnailSize.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             lblThumbnailSize.AutoSize = true;
             lblThumbnailSize.Location = new System.Drawing.Point(806, 10);
             lblThumbnailSize.Name = "lblThumbnailSize";
-            lblThumbnailSize.Size = new System.Drawing.Size(32, 15);
+            lblThumbnailSize.Size = new System.Drawing.Size(30, 15);
             lblThumbnailSize.TabIndex = 3;
             lblThumbnailSize.Text = "Size:";
-            //
+            // 
             // btnBrowse
-            //
+            // 
             btnBrowse.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             btnBrowse.Location = new System.Drawing.Point(725, 6);
             btnBrowse.Name = "btnBrowse";
@@ -151,20 +155,20 @@ namespace CDS.ImageDisplay.Demo.DemoForms.ImageBrowsingDemo
             btnBrowse.TabIndex = 2;
             btnBrowse.Text = "Browse...";
             btnBrowse.Click += btnBrowse_Click;
-            //
+            // 
             // txtFolder
-            //
+            // 
             txtFolder.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-            txtFolder.Location = new System.Drawing.Point(57, 7);
+            txtFolder.Location = new System.Drawing.Point(162, 7);
             txtFolder.Name = "txtFolder";
             txtFolder.ReadOnly = true;
-            txtFolder.Size = new System.Drawing.Size(662, 23);
+            txtFolder.Size = new System.Drawing.Size(557, 23);
             txtFolder.TabIndex = 1;
             // 
             // lblFolder
             // 
             lblFolder.AutoSize = true;
-            lblFolder.Location = new System.Drawing.Point(6, 10);
+            lblFolder.Location = new System.Drawing.Point(113, 10);
             lblFolder.Name = "lblFolder";
             lblFolder.Size = new System.Drawing.Size(43, 15);
             lblFolder.TabIndex = 0;
@@ -180,6 +184,20 @@ namespace CDS.ImageDisplay.Demo.DemoForms.ImageBrowsingDemo
             labelStatus.TabIndex = 2;
             labelStatus.Text = "Select an image from the list";
             // 
+            // labelTime
+            // 
+            labelTime.AutoSize = true;
+            labelTime.Location = new System.Drawing.Point(12, 10);
+            labelTime.Name = "labelTime";
+            labelTime.Size = new System.Drawing.Size(78, 15);
+            labelTime.TabIndex = 7;
+            labelTime.Text = "HH:mm:ss.fff";
+            // 
+            // timerTime
+            // 
+            timerTime.Enabled = true;
+            timerTime.Tick += timerTime_Tick;
+            // 
             // FormImageBrowsing
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -194,9 +212,9 @@ namespace CDS.ImageDisplay.Demo.DemoForms.ImageBrowsingDemo
             splitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer).EndInit();
             splitContainer.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)nudThumbnailSize).EndInit();
             panelToolbar.ResumeLayout(false);
             panelToolbar.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)nudThumbnailSize).EndInit();
             ResumeLayout(false);
         }
 
@@ -214,5 +232,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms.ImageBrowsingDemo
         private System.Windows.Forms.NumericUpDown nudThumbnailSize;
         private System.Windows.Forms.Label lblThumbnailSize;
         private System.Windows.Forms.Label labelStatus;
+        private System.Windows.Forms.Label labelTime;
+        private System.Windows.Forms.Timer timerTime;
     }
 }
