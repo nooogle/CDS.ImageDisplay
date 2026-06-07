@@ -34,6 +34,9 @@ public partial class ImageListPanel : UserControl
     /// <summary>Scroll-idle time in milliseconds before thumbnail loading begins.</summary>
     public const int DebounceDelayMs = 150;
 
+    /// <summary>Number of items loaded beyond each edge of the visible range to pre-populate the cache for keyboard navigation.</summary>
+    public const int PreloadOverrun = 5;
+
     // -----------------------------------------------------------------------
     // File list
     // -----------------------------------------------------------------------
@@ -235,6 +238,20 @@ public partial class ImageListPanel : UserControl
         }
 
         _listView.VirtualListSize = _files.Count;
+        ScheduleVisibleLoad();
+    }
+
+    private void ScheduleVisibleLoad()
+    {
+        if (_files.Count == 0) { return; }
+
+        int topIndex = _listView.TopItem?.Index ?? 0;
+        int rowHeight = Math.Max(1, _thumbnailHeight + 6);
+        int visibleCount = _listView.ClientSize.Height / rowHeight + 2;
+
+        _pendingStart = topIndex;
+        _pendingEnd = Math.Min(_files.Count - 1, topIndex + visibleCount - 1);
+        _debounceTimer.Start();
     }
 
     private void ResetCacheState()
@@ -418,7 +435,9 @@ public partial class ImageListPanel : UserControl
     private void OnDebounceTimerTick(object? sender, EventArgs e)
     {
         _debounceTimer.Stop();
-        ScheduleLoad(_pendingStart, _pendingEnd);
+        int start = Math.Max(0, _pendingStart - PreloadOverrun);
+        int end = Math.Min(_files.Count - 1, _pendingEnd + PreloadOverrun);
+        ScheduleLoad(start, end);
     }
 
     private void OnListViewSelectedIndexChanged(object? sender, EventArgs e)

@@ -25,6 +25,7 @@ internal sealed partial class FormImageBrowsing : Form
     protected override void OnLoad(EventArgs e)
     {
         base.OnLoad(e);
+        nudThumbnailSize.Value = imageListPanel.ThumbnailHeight;
         _sampleFolder = CreateSampleImages();
         txtFolder.Text = _sampleFolder;
         imageListPanel.SetFolder(_sampleFolder);
@@ -57,6 +58,9 @@ internal sealed partial class FormImageBrowsing : Form
     private void btnPrevious_Click(object sender, EventArgs e) => imageListPanel.MoveToPrevious();
 
     private void btnNext_Click(object sender, EventArgs e) => imageListPanel.MoveToNext();
+
+    private void nudThumbnailSize_ValueChanged(object sender, EventArgs e) =>
+        imageListPanel.ThumbnailHeight = (int)nudThumbnailSize.Value;
 
     private void imageListPanel_SelectionChanged(object sender, ImageFileEventArgs e) => LoadImage(e.FilePath);
 

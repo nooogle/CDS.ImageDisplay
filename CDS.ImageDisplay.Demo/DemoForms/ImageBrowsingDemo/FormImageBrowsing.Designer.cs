@@ -34,6 +34,8 @@ namespace CDS.ImageDisplay.Demo.DemoForms.ImageBrowsingDemo
             panelToolbar = new System.Windows.Forms.Panel();
             btnNext = new System.Windows.Forms.Button();
             btnPrevious = new System.Windows.Forms.Button();
+            nudThumbnailSize = new System.Windows.Forms.NumericUpDown();
+            lblThumbnailSize = new System.Windows.Forms.Label();
             btnBrowse = new System.Windows.Forms.Button();
             txtFolder = new System.Windows.Forms.TextBox();
             lblFolder = new System.Windows.Forms.Label();
@@ -42,6 +44,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms.ImageBrowsingDemo
             splitContainer.Panel1.SuspendLayout();
             splitContainer.Panel2.SuspendLayout();
             splitContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)nudThumbnailSize).BeginInit();
             panelToolbar.SuspendLayout();
             SuspendLayout();
             // 
@@ -85,6 +88,8 @@ namespace CDS.ImageDisplay.Demo.DemoForms.ImageBrowsingDemo
             // 
             panelToolbar.Controls.Add(btnNext);
             panelToolbar.Controls.Add(btnPrevious);
+            panelToolbar.Controls.Add(nudThumbnailSize);
+            panelToolbar.Controls.Add(lblThumbnailSize);
             panelToolbar.Controls.Add(btnBrowse);
             panelToolbar.Controls.Add(txtFolder);
             panelToolbar.Controls.Add(lblFolder);
@@ -93,44 +98,67 @@ namespace CDS.ImageDisplay.Demo.DemoForms.ImageBrowsingDemo
             panelToolbar.Name = "panelToolbar";
             panelToolbar.Size = new System.Drawing.Size(984, 35);
             panelToolbar.TabIndex = 1;
-            // 
+            //
             // btnNext
-            // 
+            //
             btnNext.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            btnNext.Location = new System.Drawing.Point(943, 6);
+            btnNext.Location = new System.Drawing.Point(949, 6);
             btnNext.Name = "btnNext";
             btnNext.Size = new System.Drawing.Size(35, 23);
-            btnNext.TabIndex = 4;
+            btnNext.TabIndex = 6;
             btnNext.Text = "▶";
             btnNext.Click += btnNext_Click;
-            // 
+            //
             // btnPrevious
-            // 
+            //
             btnPrevious.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            btnPrevious.Location = new System.Drawing.Point(902, 6);
+            btnPrevious.Location = new System.Drawing.Point(908, 6);
             btnPrevious.Name = "btnPrevious";
             btnPrevious.Size = new System.Drawing.Size(35, 23);
-            btnPrevious.TabIndex = 3;
+            btnPrevious.TabIndex = 5;
             btnPrevious.Text = "◀";
             btnPrevious.Click += btnPrevious_Click;
-            // 
+            //
+            // nudThumbnailSize
+            //
+            nudThumbnailSize.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            nudThumbnailSize.Location = new System.Drawing.Point(843, 6);
+            nudThumbnailSize.Minimum = 16;
+            nudThumbnailSize.Maximum = 256;
+            nudThumbnailSize.Increment = 16;
+            nudThumbnailSize.Name = "nudThumbnailSize";
+            nudThumbnailSize.Size = new System.Drawing.Size(59, 23);
+            nudThumbnailSize.TabIndex = 4;
+            nudThumbnailSize.Value = 128;
+            nudThumbnailSize.ValueChanged += nudThumbnailSize_ValueChanged;
+            //
+            // lblThumbnailSize
+            //
+            lblThumbnailSize.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            lblThumbnailSize.AutoSize = true;
+            lblThumbnailSize.Location = new System.Drawing.Point(806, 10);
+            lblThumbnailSize.Name = "lblThumbnailSize";
+            lblThumbnailSize.Size = new System.Drawing.Size(32, 15);
+            lblThumbnailSize.TabIndex = 3;
+            lblThumbnailSize.Text = "Size:";
+            //
             // btnBrowse
-            // 
+            //
             btnBrowse.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            btnBrowse.Location = new System.Drawing.Point(821, 6);
+            btnBrowse.Location = new System.Drawing.Point(725, 6);
             btnBrowse.Name = "btnBrowse";
             btnBrowse.Size = new System.Drawing.Size(75, 23);
             btnBrowse.TabIndex = 2;
             btnBrowse.Text = "Browse...";
             btnBrowse.Click += btnBrowse_Click;
-            // 
+            //
             // txtFolder
-            // 
+            //
             txtFolder.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             txtFolder.Location = new System.Drawing.Point(57, 7);
             txtFolder.Name = "txtFolder";
             txtFolder.ReadOnly = true;
-            txtFolder.Size = new System.Drawing.Size(758, 23);
+            txtFolder.Size = new System.Drawing.Size(662, 23);
             txtFolder.TabIndex = 1;
             // 
             // lblFolder
@@ -166,6 +194,7 @@ namespace CDS.ImageDisplay.Demo.DemoForms.ImageBrowsingDemo
             splitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer).EndInit();
             splitContainer.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)nudThumbnailSize).EndInit();
             panelToolbar.ResumeLayout(false);
             panelToolbar.PerformLayout();
             ResumeLayout(false);
@@ -182,6 +211,8 @@ namespace CDS.ImageDisplay.Demo.DemoForms.ImageBrowsingDemo
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.Button btnPrevious;
         private System.Windows.Forms.Button btnNext;
+        private System.Windows.Forms.NumericUpDown nudThumbnailSize;
+        private System.Windows.Forms.Label lblThumbnailSize;
         private System.Windows.Forms.Label labelStatus;
     }
 }
