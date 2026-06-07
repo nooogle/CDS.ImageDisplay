@@ -65,6 +65,7 @@ public partial class ImageListPanel : UserControl
     private CancellationTokenSource? _cts;
     private int _pendingStart;
     private int _pendingEnd;
+    private bool _pendingInitialRefresh;
     private int _thumbnailHeight = DefaultThumbnailHeight;
 
     // -----------------------------------------------------------------------
@@ -142,6 +143,20 @@ public partial class ImageListPanel : UserControl
     public ImageListPanel()
     {
         InitializeComponent();
+    }
+
+    /// <summary>
+    /// Applies any deferred virtual-list refresh once the control handle exists.
+    /// </summary>
+    /// <param name="e">The event data.</param>
+    protected override void OnHandleCreated(EventArgs e)
+    {
+        base.OnHandleCreated(e);
+
+        if (_pendingInitialRefresh)
+        {
+            QueueInitialRefresh();
+        }
     }
 
     // -----------------------------------------------------------------------
@@ -238,6 +253,42 @@ public partial class ImageListPanel : UserControl
         }
 
         _listView.VirtualListSize = _files.Count;
+        QueueInitialRefresh();
+    }
+
+    /// <summary>
+    /// Queues a deferred refresh so the virtual list repaints after layout and handle creation complete.
+    /// </summary>
+    private void QueueInitialRefresh()
+    {
+        if (_files.Count == 0)
+        {
+            _pendingInitialRefresh = false;
+            return;
+        }
+
+        if (!IsHandleCreated || !_listView.IsHandleCreated)
+        {
+            _pendingInitialRefresh = true;
+            return;
+        }
+
+        _pendingInitialRefresh = false;
+        BeginInvoke(RefreshInitialViewport);
+    }
+
+    /// <summary>
+    /// Forces the first viewport of the virtual list to be realized and schedules thumbnail loading for it.
+    /// </summary>
+    private void RefreshInitialViewport()
+    {
+        if (IsDisposed || !IsHandleCreated || !_listView.IsHandleCreated || _files.Count == 0)
+        {
+            return;
+        }
+
+        _listView.EnsureVisible(0);
+        _listView.Invalidate();
         ScheduleVisibleLoad();
     }
 
