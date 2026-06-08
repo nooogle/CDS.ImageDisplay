@@ -20,13 +20,15 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Restore
-        run: dotnet restore --configuration Release
+        run: |
+          dotnet restore CDS.ImageDisplay.WinForms
+          dotnet restore UnitTests
 
       - name: Build
-        run: dotnet build --no-restore --configuration Release
+        run: dotnet build CDS.ImageDisplay.WinForms --no-restore --configuration Release
 
       - name: Test
-        run: dotnet test --no-build --configuration Release --verbosity normal
+        run: dotnet test UnitTests --verbosity normal
 
       - name: Pack
         run: dotnet pack CDS.ImageDisplay.WinForms --no-build --configuration Release --output ./nupkg
