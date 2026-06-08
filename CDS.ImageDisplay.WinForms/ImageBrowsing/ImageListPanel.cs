@@ -169,6 +169,9 @@ public partial class ImageListPanel : UserControl
     public ImageListPanel()
     {
         InitializeComponent();
+        _imageList.ImageSize = new Size(_thumbnailHeight, _thumbnailHeight);
+        _debounceTimer.Interval = DebounceDelayMs;
+        _listView.Columns.Add("Filename");
     }
 
     /// <summary>
