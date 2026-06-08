@@ -314,7 +314,7 @@ public partial class ImageListPanel : UserControl
         }
 
         _listView.EnsureVisible(0);
-        _listView.Invalidate();
+        _listView.Refresh();
         ScheduleVisibleLoad();
     }
 
