@@ -26,7 +26,6 @@ internal sealed partial class FormTestLauncher : Form
     {
         AddBasicsDemoNodes();
         AddOtherDemoNodes();
-        AddOpenCVSharpDemoNodes();
         AddTextPanelDemoNodes();
         AddAnnotationsDemoNodes();
         AddImageBrowsingDemoNodes();
@@ -143,17 +142,6 @@ internal sealed partial class FormTestLauncher : Form
             tooltip: "Full labelling-app demo with annotation list, title/notes editing, and JSON save/load",
             parent: this,
             createForm: () => new DemoForms.AnnotationsDemo.FormAnnotationsDetailed());
-    }
-
-    private void AddOpenCVSharpDemoNodes()
-    {
-        MenuGroup openCv = menuTree.AddGroup("OpenCV Sharp");
-
-        openCv.AddItem(
-            name: "Blurring",
-            tooltip: "",
-            parent: this,
-            createForm: () => new DemoForms.FormOpenCVSharp());
     }
 
     private void AddImageBrowsingDemoNodes()
