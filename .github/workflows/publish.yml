@@ -5,37 +5,70 @@ on:
     tags:
       - 'V*'
 
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  LIBRARY_PROJECT: CDS.ImageDisplay.WinForms/CDS.ImageDisplay.WinForms.csproj
+  TEST_PROJECT: UnitTests/UnitTests.csproj
+  PACKAGE_ID: CDS.ImageDisplay.WinForms
+
 jobs:
   publish:
+    name: Build & Release
     runs-on: windows-latest
+    permissions:
+      contents: write
+      packages: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0   # MinVer needs full history to compute version from tags
 
-      - name: Set up .NET
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
 
-      - name: Restore
+      - name: Restore dependencies
         run: |
-          dotnet restore CDS.ImageDisplay.WinForms
-          dotnet restore UnitTests
+          dotnet restore ${{ env.LIBRARY_PROJECT }}
+          dotnet restore ${{ env.TEST_PROJECT }}
 
       - name: Build
-        run: dotnet build CDS.ImageDisplay.WinForms --no-restore --configuration Release
+        run: dotnet build ${{ env.LIBRARY_PROJECT }} --configuration Release --no-restore
 
       - name: Test
-        run: dotnet test UnitTests --verbosity normal
+        run: dotnet test --project ${{ env.TEST_PROJECT }} --configuration Release --verbosity normal -- --report-trx
 
       - name: Pack
-        run: dotnet pack CDS.ImageDisplay.WinForms --no-restore --configuration Release --output ./nupkg
+        run: dotnet pack ${{ env.LIBRARY_PROJECT }} --configuration Release --no-build --output ./artifacts
 
-      - name: Push to NuGet
-        run: dotnet nuget push "./nupkg/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: ./artifacts/*.nupkg
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push symbols to NuGet
-        run: dotnet nuget push "./nupkg/*.snupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
-        continue-on-error: true
+      - name: Push to NuGet.org
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          $pkg = (Get-ChildItem -Path ./artifacts -Filter "${{ env.PACKAGE_ID }}.*.nupkg").FullName
+          dotnet nuget push $pkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+      - name: Push symbols to NuGet.org
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          $pkg = (Get-ChildItem -Path ./artifacts -Filter "${{ env.PACKAGE_ID }}.*.snupkg").FullName
+          if ($pkg) {
+            dotnet nuget push $pkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+          }
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
