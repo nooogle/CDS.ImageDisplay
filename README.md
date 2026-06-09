@@ -39,7 +39,7 @@ bitmapDisplayPanel.SetImage(bitmap);   // safe to call from any thread
 | `CDS.ImageDisplay.WinForms` | Library — the NuGet deliverable |
 | `UnitTests` | MSTest + AwesomeAssertions unit tests |
 | `BenchmarkTests` | BenchmarkDotNet benchmarks (Release config) |
-| `CDS.ImageDisplay.Demo` | WinForms demo app (uses OpenCvSharp4) |
+| `CDS.ImageDisplay.Demo` | WinForms demo app |
 
 ## Building
 
