@@ -173,7 +173,7 @@ public partial class MultipleROIManager : Component
     /// </summary>
     public MultipleROIManager(IContainer container)
     {
-        ArgumentNullException.ThrowIfNull(container, nameof(container));
+        Guard.ThrowIfNull(container, nameof(container));
 
         container.Add(this);
         InitializeComponent();

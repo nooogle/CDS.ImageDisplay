@@ -38,9 +38,9 @@ public class RectangleShape
     /// </summary>
     public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawing)
     {
-        ArgumentNullException.ThrowIfNull(sender, nameof(sender));
-        ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
-        ArgumentNullException.ThrowIfNull(drawing, nameof(drawing));
+        Guard.ThrowIfNull(sender, nameof(sender));
+        Guard.ThrowIfNull(graphics, nameof(graphics));
+        Guard.ThrowIfNull(drawing, nameof(drawing));
         if (!drawing.Visible)
         { return; }
 
@@ -53,6 +53,6 @@ public class RectangleShape
             Rect;
 
         graphics.FillRectangle(brush, rectangleOnDisplay);
-        graphics.DrawRectangle(pen, rectangleOnDisplay);
+        graphics.DrawRectangle(pen, rectangleOnDisplay.X, rectangleOnDisplay.Y, rectangleOnDisplay.Width, rectangleOnDisplay.Height);
     }
 }

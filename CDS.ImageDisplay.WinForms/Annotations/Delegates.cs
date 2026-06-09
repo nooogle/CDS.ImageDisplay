@@ -48,8 +48,8 @@ public sealed class AnnotationDragStartingEventArgs : EventArgs
     /// <summary>Initializes a new instance of <see cref="AnnotationDragStartingEventArgs"/>.</summary>
     public AnnotationDragStartingEventArgs(Annotation annotation, AnnotationGeometry geometrySnapshot)
     {
-        ArgumentNullException.ThrowIfNull(annotation, nameof(annotation));
-        ArgumentNullException.ThrowIfNull(geometrySnapshot, nameof(geometrySnapshot));
+        Guard.ThrowIfNull(annotation, nameof(annotation));
+        Guard.ThrowIfNull(geometrySnapshot, nameof(geometrySnapshot));
         Annotation = annotation;
         GeometrySnapshot = geometrySnapshot;
     }

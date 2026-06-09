@@ -45,9 +45,9 @@ public class LineShape
     /// </summary>
     public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawingSpec)
     {
-        ArgumentNullException.ThrowIfNull(sender, nameof(sender));
-        ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
-        ArgumentNullException.ThrowIfNull(drawingSpec, nameof(drawingSpec));
+        Guard.ThrowIfNull(sender, nameof(sender));
+        Guard.ThrowIfNull(graphics, nameof(graphics));
+        Guard.ThrowIfNull(drawingSpec, nameof(drawingSpec));
         if (!drawingSpec.Visible)
         { return; }
 

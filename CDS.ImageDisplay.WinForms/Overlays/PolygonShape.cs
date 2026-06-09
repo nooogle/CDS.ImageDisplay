@@ -39,7 +39,7 @@ public class PolygonShape
     /// </summary>
     public void SetPoints(PointF[] points)
     {
-        ArgumentNullException.ThrowIfNull(points, nameof(points));
+        Guard.ThrowIfNull(points, nameof(points));
         _points = [.. points];
     }
 
@@ -49,9 +49,9 @@ public class PolygonShape
     /// </summary>
     public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawing)
     {
-        ArgumentNullException.ThrowIfNull(sender, nameof(sender));
-        ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
-        ArgumentNullException.ThrowIfNull(drawing, nameof(drawing));
+        Guard.ThrowIfNull(sender, nameof(sender));
+        Guard.ThrowIfNull(graphics, nameof(graphics));
+        Guard.ThrowIfNull(drawing, nameof(drawing));
         if ((_points.Length < 3) || !drawing.Visible)
         {
             return;

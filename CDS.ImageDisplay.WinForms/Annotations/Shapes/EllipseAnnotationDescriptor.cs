@@ -20,7 +20,7 @@ public sealed class EllipseAnnotationDescriptor : IAnnotationShapeDescriptor
     /// <inheritdoc/>
     public float FitScore(FreehandPath path)
     {
-        ArgumentNullException.ThrowIfNull(path, nameof(path));
+        Guard.ThrowIfNull(path, nameof(path));
 
         IReadOnlyList<PointF> points = path.Points;
         if (points.Count < 3) { return 0f; }
@@ -46,7 +46,7 @@ public sealed class EllipseAnnotationDescriptor : IAnnotationShapeDescriptor
     /// <inheritdoc/>
     public AnnotationGeometry CreateGeometry(FreehandPath path)
     {
-        ArgumentNullException.ThrowIfNull(path, nameof(path));
+        Guard.ThrowIfNull(path, nameof(path));
 
         IReadOnlyList<PointF> points = path.Points;
         PointF center;

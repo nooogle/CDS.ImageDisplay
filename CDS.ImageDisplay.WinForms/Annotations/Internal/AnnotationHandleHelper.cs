@@ -38,7 +38,7 @@ internal static class AnnotationHandleHelper
     /// </summary>
     internal static Size DisplayDeltaToImageDelta(BitmapDisplayPanel panel, Point displayDelta)
     {
-        ArgumentNullException.ThrowIfNull(panel, nameof(panel));
+        Guard.ThrowIfNull(panel, nameof(panel));
 
         PointF zero = panel.MapDisplayToImage(PointF.Empty);
         PointF moved = panel.MapDisplayToImage(new PointF(displayDelta.X, displayDelta.Y));
@@ -64,9 +64,9 @@ internal static class AnnotationHandleHelper
             return MathF.Sqrt((dx * dx) + (dy * dy));
         }
 
-        float t = Math.Clamp(
+        float t = Math.Min(Math.Max(
             ((point.X - segmentStart.X) * segDx + (point.Y - segmentStart.Y) * segDy) / lengthSquared,
-            0f, 1f);
+            0f), 1f);
 
         float nearX = segmentStart.X + t * segDx;
         float nearY = segmentStart.Y + t * segDy;

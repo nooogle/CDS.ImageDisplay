@@ -37,8 +37,8 @@ public sealed class ColorJsonConverter : JsonConverter<Color>
     /// <param name="options">The serializer options.</param>
     public override void Write(Utf8JsonWriter writer, Color value, JsonSerializerOptions options)
     {
-        ArgumentNullException.ThrowIfNull(writer, nameof(writer));
-        ArgumentNullException.ThrowIfNull(options, nameof(options));
+        Guard.ThrowIfNull(writer, nameof(writer));
+        Guard.ThrowIfNull(options, nameof(options));
 
         if (value.IsNamedColor || value.IsKnownColor || value.IsSystemColor)
         {
@@ -55,7 +55,7 @@ public sealed class ColorJsonConverter : JsonConverter<Color>
             ? throw new JsonException("Color string value cannot be null or empty.")
             : string.Equals(value, nameof(Color.Empty), StringComparison.OrdinalIgnoreCase)
             ? Color.Empty
-            : value.StartsWith('#')
+            : value!.StartsWith("#")
             ? ReadFromHex(value)
             : Enum.TryParse<KnownColor>(value, ignoreCase: true, out KnownColor knownColor)
             ? Color.FromKnownColor(knownColor)
@@ -64,25 +64,25 @@ public sealed class ColorJsonConverter : JsonConverter<Color>
 
     private static Color ReadFromHex(string value)
     {
-        string hexValue = value[1..];
+        string hexValue = value.Substring(1);
 
         return hexValue.Length switch
         {
             6 => Color.FromArgb(
                 255,
-                ParseHexByte(hexValue.AsSpan(0, 2)),
-                ParseHexByte(hexValue.AsSpan(2, 2)),
-                ParseHexByte(hexValue.AsSpan(4, 2))),
+                ParseHexByte(hexValue.Substring(0, 2)),
+                ParseHexByte(hexValue.Substring(2, 2)),
+                ParseHexByte(hexValue.Substring(4, 2))),
             8 => Color.FromArgb(
-                ParseHexByte(hexValue.AsSpan(0, 2)),
-                ParseHexByte(hexValue.AsSpan(2, 2)),
-                ParseHexByte(hexValue.AsSpan(4, 2)),
-                ParseHexByte(hexValue.AsSpan(6, 2))),
+                ParseHexByte(hexValue.Substring(0, 2)),
+                ParseHexByte(hexValue.Substring(2, 2)),
+                ParseHexByte(hexValue.Substring(4, 2)),
+                ParseHexByte(hexValue.Substring(6, 2))),
             _ => throw new JsonException($"'{value}' is not a valid Color hex value."),
         };
     }
 
-    private static int ParseHexByte(ReadOnlySpan<char> value)
+    private static int ParseHexByte(string value)
     {
         return !int.TryParse(value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int result)
             ? throw new JsonException($"'{value}' is not a valid hexadecimal byte value.")

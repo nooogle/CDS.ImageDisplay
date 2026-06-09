@@ -54,7 +54,7 @@ public sealed class DrawingToolsPool : IDisposable
     /// </summary>
     public static Pen GetPen(PenSpec description)
     {
-        ArgumentNullException.ThrowIfNull(description);
+        Guard.ThrowIfNull(description);
 
         EnsureOnUIThread();
 
@@ -75,7 +75,7 @@ public sealed class DrawingToolsPool : IDisposable
     /// </summary>
     public static Brush GetBrush(BrushSpec description)
     {
-        ArgumentNullException.ThrowIfNull(description);
+        Guard.ThrowIfNull(description);
 
         EnsureOnUIThread();
 
@@ -96,7 +96,7 @@ public sealed class DrawingToolsPool : IDisposable
     /// </summary>
     public static Font GetFont(FontSpec description)
     {
-        ArgumentNullException.ThrowIfNull(description);
+        Guard.ThrowIfNull(description);
 
         EnsureOnUIThread();
 

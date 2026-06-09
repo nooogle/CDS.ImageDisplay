@@ -36,7 +36,7 @@ public sealed class PolygonAnnotationGeometry : AnnotationGeometry
     /// </summary>
     public PolygonAnnotationGeometry(IEnumerable<Point> vertices)
     {
-        ArgumentNullException.ThrowIfNull(vertices, nameof(vertices));
+        Guard.ThrowIfNull(vertices, nameof(vertices));
         _vertices = new List<Point>(vertices);
     }
 
@@ -63,8 +63,8 @@ public sealed class PolygonAnnotationGeometry : AnnotationGeometry
     /// <inheritdoc/>
     public override void Draw(BitmapDisplayPanel panel, Graphics graphics, bool isSelected)
     {
-        ArgumentNullException.ThrowIfNull(panel, nameof(panel));
-        ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
+        Guard.ThrowIfNull(panel, nameof(panel));
+        Guard.ThrowIfNull(graphics, nameof(graphics));
 
         if (!Drawing.Visible || _vertices.Count < 3) { return; }
 
@@ -87,7 +87,7 @@ public sealed class PolygonAnnotationGeometry : AnnotationGeometry
     /// <inheritdoc/>
     public override AnnotationHitInfo HitTest(BitmapDisplayPanel panel, Point displayPoint, int hitBorder)
     {
-        ArgumentNullException.ThrowIfNull(panel, nameof(panel));
+        Guard.ThrowIfNull(panel, nameof(panel));
 
         if (_vertices.Count == 0) { return AnnotationHitInfo.Miss; }
 
@@ -113,7 +113,7 @@ public sealed class PolygonAnnotationGeometry : AnnotationGeometry
     /// <inheritdoc/>
     public override void ApplyImageDelta(AnnotationHitInfo hit, Size imageDelta)
     {
-        ArgumentNullException.ThrowIfNull(hit, nameof(hit));
+        Guard.ThrowIfNull(hit, nameof(hit));
 
         if (hit.Kind == AnnotationHitKind.MoveBody)
         {

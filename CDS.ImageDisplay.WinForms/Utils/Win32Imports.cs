@@ -10,9 +10,14 @@ public static partial class Win32Imports
     /// <summary>
     /// Get the state of a key
     /// </summary>
+#if NET48
+    [DllImport("user32.dll")]
+    internal static extern short GetKeyState(int nVirtKey);
+#else
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     [LibraryImport("user32.dll")]
     internal static partial short GetKeyState(int nVirtKey);
+#endif
 
 
     /// <summary>

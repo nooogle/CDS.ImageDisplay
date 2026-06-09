@@ -26,8 +26,8 @@ public static class AnnotationShapeRecognizer
         FreehandPath path,
         IEnumerable<IAnnotationShapeDescriptor> descriptors)
     {
-        ArgumentNullException.ThrowIfNull(path, nameof(path));
-        ArgumentNullException.ThrowIfNull(descriptors, nameof(descriptors));
+        Guard.ThrowIfNull(path, nameof(path));
+        Guard.ThrowIfNull(descriptors, nameof(descriptors));
 
         return descriptors
             .Select(d => (Descriptor: d, Confidence: d.FitScore(path)))

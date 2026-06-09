@@ -436,7 +436,7 @@ public class VirtualDisplay
             ? (float)displaySize.Height / imageSize.Height
             : (float)displaySize.Width / imageSize.Width;
 
-        zoom = Math.Clamp(rawZoom, Consts.MinZoom, Consts.MaxZoom);
+        zoom = Math.Min(Math.Max(rawZoom, Consts.MinZoom), Consts.MaxZoom);
 
         ForceCentre();
         if (zoom != previousZoom)

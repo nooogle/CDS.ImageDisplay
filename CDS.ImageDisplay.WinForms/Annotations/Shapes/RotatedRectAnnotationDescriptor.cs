@@ -20,7 +20,7 @@ public sealed class RotatedRectAnnotationDescriptor : IAnnotationShapeDescriptor
     /// <inheritdoc/>
     public float FitScore(FreehandPath path)
     {
-        ArgumentNullException.ThrowIfNull(path, nameof(path));
+        Guard.ThrowIfNull(path, nameof(path));
 
         // Delegate to RectAnnotationDescriptor's score with a slight discount so the
         // axis-aligned rect wins when the gesture itself is axis-aligned.
@@ -30,7 +30,7 @@ public sealed class RotatedRectAnnotationDescriptor : IAnnotationShapeDescriptor
     /// <inheritdoc/>
     public AnnotationGeometry CreateGeometry(FreehandPath path)
     {
-        ArgumentNullException.ThrowIfNull(path, nameof(path));
+        Guard.ThrowIfNull(path, nameof(path));
 
         IReadOnlyList<PointF> points = path.Points;
         PointF center;

@@ -52,8 +52,8 @@ public sealed class RectAnnotationGeometry : AnnotationGeometry
     /// <inheritdoc/>
     public override void Draw(BitmapDisplayPanel panel, Graphics graphics, bool isSelected)
     {
-        ArgumentNullException.ThrowIfNull(panel, nameof(panel));
-        ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
+        Guard.ThrowIfNull(panel, nameof(panel));
+        Guard.ThrowIfNull(graphics, nameof(graphics));
 
         if (!Drawing.Visible || Bounds.IsEmpty) { return; }
 
@@ -76,7 +76,7 @@ public sealed class RectAnnotationGeometry : AnnotationGeometry
     /// <inheritdoc/>
     public override AnnotationHitInfo HitTest(BitmapDisplayPanel panel, Point displayPoint, int hitBorder)
     {
-        ArgumentNullException.ThrowIfNull(panel, nameof(panel));
+        Guard.ThrowIfNull(panel, nameof(panel));
 
         Rectangle displayRect = panel.MapImageToDisplay((RectangleF)Bounds, DisplayPixelAlign.TopLeft);
         PointF[] handles = GetHandleDisplayPoints(displayRect);
@@ -98,7 +98,7 @@ public sealed class RectAnnotationGeometry : AnnotationGeometry
     /// <inheritdoc/>
     public override void ApplyImageDelta(AnnotationHitInfo hit, Size imageDelta)
     {
-        ArgumentNullException.ThrowIfNull(hit, nameof(hit));
+        Guard.ThrowIfNull(hit, nameof(hit));
 
         if (hit.Kind == AnnotationHitKind.MoveBody)
         {

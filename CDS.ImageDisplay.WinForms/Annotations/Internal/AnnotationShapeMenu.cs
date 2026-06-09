@@ -83,7 +83,7 @@ internal static class AnnotationShapeMenu
         var polygon = ranked.FirstOrDefault(r => r.Descriptor is PolygonAnnotationDescriptor);
         if (polygon.Descriptor != null) { return polygon.Descriptor; }
 
-        return ranked.Count > 0 ? ranked[^1].Descriptor : ranked[0].Descriptor;
+        return ranked.Count > 0 ? ranked[ranked.Count - 1].Descriptor : ranked[0].Descriptor;
     }
 
     private static void AddItem(

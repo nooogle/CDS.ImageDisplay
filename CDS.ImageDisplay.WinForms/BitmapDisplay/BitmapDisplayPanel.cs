@@ -17,7 +17,7 @@ public partial class BitmapDisplayPanel : UserControl
 
     private readonly ImageWrapper _displayImage = new();
     private readonly ImageWrapper _pendingDisplayImage = new();
-    private readonly Lock _imageLock = new();
+    private readonly object _imageLock = new();
     private readonly VirtualDisplay _virtualDisplay;
     private readonly Stopwatch _stopwatch = new();
     private readonly DragManager _dragManager;
@@ -395,7 +395,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnKeyDown(KeyEventArgs e)
     {
-        ArgumentNullException.ThrowIfNull(e);
+        Guard.ThrowIfNull(e);
 
         base.OnKeyDown(e);
 
@@ -653,7 +653,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnPaint(PaintEventArgs e)
     {
-        ArgumentNullException.ThrowIfNull(e);
+        Guard.ThrowIfNull(e);
 
         _stopwatch.Restart();
 
@@ -715,7 +715,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnMouseWheel(MouseEventArgs e)
     {
-        ArgumentNullException.ThrowIfNull(e);
+        Guard.ThrowIfNull(e);
 
         base.OnMouseWheel(e);
 
@@ -749,7 +749,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnMouseMove(MouseEventArgs e)
     {
-        ArgumentNullException.ThrowIfNull(e);
+        Guard.ThrowIfNull(e);
 
         base.OnMouseMove(e);
 
@@ -765,7 +765,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnMouseDown(MouseEventArgs e)
     {
-        ArgumentNullException.ThrowIfNull(e);
+        Guard.ThrowIfNull(e);
 
         base.OnMouseDown(e);
 
@@ -784,7 +784,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnMouseUp(MouseEventArgs e)
     {
-        ArgumentNullException.ThrowIfNull(e);
+        Guard.ThrowIfNull(e);
 
         base.OnMouseUp(e);
 
@@ -819,7 +819,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     public void SyncPaintRectFromOther(BitmapDisplayPanel sender)
     {
-        ArgumentNullException.ThrowIfNull(sender, nameof(sender));
+        Guard.ThrowIfNull(sender, nameof(sender));
 
         Zoom = sender.Zoom;
         TargetDisplayCentre = sender.TargetDisplayCentre;

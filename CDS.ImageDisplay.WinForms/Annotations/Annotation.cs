@@ -43,7 +43,7 @@ public class Annotation
         get;
         set
         {
-            ArgumentNullException.ThrowIfNull(value, nameof(value));
+            Guard.ThrowIfNull(value, nameof(value));
             field = value;
         }
     }
@@ -55,7 +55,7 @@ public class Annotation
     [JsonConstructor]
     public Annotation(AnnotationGeometry geometry)
     {
-        ArgumentNullException.ThrowIfNull(geometry, nameof(geometry));
+        Guard.ThrowIfNull(geometry, nameof(geometry));
         Geometry = geometry;
     }
 

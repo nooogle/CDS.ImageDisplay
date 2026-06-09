@@ -163,7 +163,7 @@ public partial class AnnotationManager : Component
     /// <summary>Initializes a new instance of <see cref="AnnotationManager"/> and adds it to <paramref name="container"/>.</summary>
     public AnnotationManager(IContainer container)
     {
-        ArgumentNullException.ThrowIfNull(container, nameof(container));
+        Guard.ThrowIfNull(container, nameof(container));
         container.Add(this);
         InitializeComponent();
         RegisterBuiltInDescriptors();
@@ -176,7 +176,7 @@ public partial class AnnotationManager : Component
     /// <summary>Adds an annotation to the manager's list and repaints.</summary>
     public void AddAnnotation(Annotation annotation)
     {
-        ArgumentNullException.ThrowIfNull(annotation, nameof(annotation));
+        Guard.ThrowIfNull(annotation, nameof(annotation));
         _annotations.Add(annotation);
         BitmapDisplayPanel?.Invalidate();
     }
@@ -184,7 +184,7 @@ public partial class AnnotationManager : Component
     /// <summary>Removes an annotation and fires <see cref="AnnotationDeleted"/>.</summary>
     public void RemoveAnnotation(Annotation annotation)
     {
-        ArgumentNullException.ThrowIfNull(annotation, nameof(annotation));
+        Guard.ThrowIfNull(annotation, nameof(annotation));
         if (!_annotations.Remove(annotation)) { return; }
 
         if (_selectedAnnotation == annotation) { ClearSelection(); }
@@ -205,7 +205,7 @@ public partial class AnnotationManager : Component
     /// <summary>Adds a shape descriptor to the auto-recognition pool.</summary>
     public void RegisterShapeDescriptor(IAnnotationShapeDescriptor descriptor)
     {
-        ArgumentNullException.ThrowIfNull(descriptor, nameof(descriptor));
+        Guard.ThrowIfNull(descriptor, nameof(descriptor));
         _recognitionDescriptors.Add(descriptor);
     }
 

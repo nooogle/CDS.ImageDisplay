@@ -19,7 +19,7 @@ public sealed class LineAnnotationDescriptor : IAnnotationShapeDescriptor
     /// <inheritdoc/>
     public float FitScore(FreehandPath path)
     {
-        ArgumentNullException.ThrowIfNull(path, nameof(path));
+        Guard.ThrowIfNull(path, nameof(path));
 
         if (path.Points.Count < 2) { return 0f; }
 
@@ -37,7 +37,7 @@ public sealed class LineAnnotationDescriptor : IAnnotationShapeDescriptor
         float elongationScore = FreehandPathAnalyser.Clamp01((elongation - 2f) / 3f);
 
         // Points should lie close to the straight line through the endpoints.
-        float meanDev = FreehandPathAnalyser.MeanPerpDeviation(path.Points, path.Points[0], path.Points[^1]);
+        float meanDev = FreehandPathAnalyser.MeanPerpDeviation(path.Points, path.Points[0], path.Points[path.Points.Count - 1]);
         float deviationScore = FreehandPathAnalyser.Clamp01(1f - meanDev / (longer * 0.2f));
 
         return elongationScore * deviationScore;
@@ -46,7 +46,7 @@ public sealed class LineAnnotationDescriptor : IAnnotationShapeDescriptor
     /// <inheritdoc/>
     public AnnotationGeometry CreateGeometry(FreehandPath path)
     {
-        ArgumentNullException.ThrowIfNull(path, nameof(path));
+        Guard.ThrowIfNull(path, nameof(path));
 
         Point start, end;
 
@@ -63,7 +63,7 @@ public sealed class LineAnnotationDescriptor : IAnnotationShapeDescriptor
         else
         {
             start = Point.Round(path.Points[0]);
-            end = Point.Round(path.Points[^1]);
+            end = Point.Round(path.Points[path.Points.Count - 1]);
         }
 
         var geometry = new LineAnnotationGeometry(start, end);

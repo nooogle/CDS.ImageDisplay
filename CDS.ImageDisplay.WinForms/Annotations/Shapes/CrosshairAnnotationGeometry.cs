@@ -46,8 +46,8 @@ public sealed class CrosshairAnnotationGeometry : AnnotationGeometry
     /// <inheritdoc/>
     public override void Draw(BitmapDisplayPanel panel, Graphics graphics, bool isSelected)
     {
-        ArgumentNullException.ThrowIfNull(panel, nameof(panel));
-        ArgumentNullException.ThrowIfNull(graphics, nameof(graphics));
+        Guard.ThrowIfNull(panel, nameof(panel));
+        Guard.ThrowIfNull(graphics, nameof(graphics));
 
         if (!Drawing.Visible) { return; }
 
@@ -69,7 +69,7 @@ public sealed class CrosshairAnnotationGeometry : AnnotationGeometry
     /// <inheritdoc/>
     public override AnnotationHitInfo HitTest(BitmapDisplayPanel panel, Point displayPoint, int hitBorder)
     {
-        ArgumentNullException.ThrowIfNull(panel, nameof(panel));
+        Guard.ThrowIfNull(panel, nameof(panel));
 
         PointF centreDisplay = panel.MapImageToDisplay(new PointF(Centre.X, Centre.Y), DisplayPixelAlign.Centre);
         return AnnotationHandleHelper.IsNearPoint(displayPoint, centreDisplay, hitBorder)
@@ -80,7 +80,7 @@ public sealed class CrosshairAnnotationGeometry : AnnotationGeometry
     /// <inheritdoc/>
     public override void ApplyImageDelta(AnnotationHitInfo hit, Size imageDelta)
     {
-        ArgumentNullException.ThrowIfNull(hit, nameof(hit));
+        Guard.ThrowIfNull(hit, nameof(hit));
 
         if (hit.Kind == AnnotationHitKind.MoveBody)
         {

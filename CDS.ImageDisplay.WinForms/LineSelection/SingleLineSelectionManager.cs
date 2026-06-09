@@ -240,7 +240,7 @@ public partial class SingleLineSelectionManager : Component
     /// <param name="container">The component container.</param>
     public SingleLineSelectionManager(IContainer container)
     {
-        ArgumentNullException.ThrowIfNull(container, nameof(container));
+        Guard.ThrowIfNull(container, nameof(container));
 
         container.Add(this);
         InitializeComponent();
@@ -543,8 +543,8 @@ public partial class SingleLineSelectionManager : Component
         }
 
         return new Point(
-            x: Math.Clamp(point.X, 0, _imageSize.Value.Width - 1),
-            y: Math.Clamp(point.Y, 0, _imageSize.Value.Height - 1));
+            x: Math.Min(Math.Max(point.X, 0), _imageSize.Value.Width - 1),
+            y: Math.Min(Math.Max(point.Y, 0), _imageSize.Value.Height - 1));
     }
 
     private static float DistanceFromPointToSegment(Point point, Point segmentStart, Point segmentEnd)
@@ -562,7 +562,7 @@ public partial class SingleLineSelectionManager : Component
         float pointDeltaY = point.Y - segmentStart.Y;
         float segmentLengthSquared = (segmentDeltaX * segmentDeltaX) + (segmentDeltaY * segmentDeltaY);
         float projection = ((pointDeltaX * segmentDeltaX) + (pointDeltaY * segmentDeltaY)) / segmentLengthSquared;
-        float clampedProjection = Math.Clamp(projection, 0f, 1f);
+        float clampedProjection = Math.Min(Math.Max(projection, 0f), 1f);
         float nearestX = segmentStart.X + (clampedProjection * segmentDeltaX);
         float nearestY = segmentStart.Y + (clampedProjection * segmentDeltaY);
         float distanceX = point.X - nearestX;
