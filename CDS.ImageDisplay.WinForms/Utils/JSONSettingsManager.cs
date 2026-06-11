@@ -1,80 +1,103 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using CDS.ImageDisplay.WinForms.Utils;
 
 namespace CDS.ImageDisplay.WinForms;
 
+/// <summary>
+/// Manages loading and saving strongly-typed settings serialised as JSON.
+/// </summary>
+/// <remarks>
+/// The default constructor resolves the settings file to
+/// <c>%AppData%\{Application.ProductName}\AppSettings_V2.json</c>.
+/// Inject an explicit path and an <see cref="IFileSystem"/> via the secondary constructor
+/// for deterministic unit testing.
+/// </remarks>
 public sealed class JSONSettingsManager<T> where T : new()
 {
     private static readonly JsonSerializerOptions s_jsonSerializerOptions = CreateJsonSerializerOptions();
 
     private readonly string _filePath;
+    private readonly IFileSystem _fileSystem;
 
+    /// <summary>Gets the current settings.</summary>
     public T Settings { get; private set; }
 
-
     /// <summary>
-    /// Initialises a new instance of the <see cref="JSONSettingsManager{T}"/> class.
+    /// Initialises the manager, resolving the settings file from
+    /// <see cref="Environment.SpecialFolder.ApplicationData"/> / <see cref="Application.ProductName"/>.
     /// </summary>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when <see cref="Application.ProductName"/> is null or empty.
+    /// </exception>
     public JSONSettingsManager()
+        : this(ResolvePath(), new RealFileSystem())
     {
-        // Obtain the path for the per-user Application Data folder.
-        string userAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-
-        string? applicationName = Application.ProductName;
-        if (string.IsNullOrEmpty(applicationName))
-        {
-            throw new InvalidOperationException("Application.ProductName is null or empty.");
-        }
-
-        // Create a folder for the application within the Application Data folder.
-        string appFolderPath = Path.Combine(userAppData, applicationName);
-        if (!Directory.Exists(appFolderPath))
-        {
-            Directory.CreateDirectory(appFolderPath);
-        }
-
-        _filePath = Path.Combine(appFolderPath, "AppSettings_V2.json");
-        Settings = Load(_filePath);
     }
 
     /// <summary>
-    /// Saves the settings by serialising them to JSON and writing to a file.
+    /// Initialises the manager with an explicit file path and file-system abstraction.
+    /// The directory portion of <paramref name="filePath"/> is created if it does not exist.
     /// </summary>
+    public JSONSettingsManager(string filePath, IFileSystem fileSystem)
+    {
+        if (string.IsNullOrEmpty(filePath)) { throw new ArgumentException("Value cannot be null or empty.", nameof(filePath)); }
+        if (fileSystem is null) { throw new ArgumentNullException(nameof(fileSystem)); }
+
+        _filePath = filePath;
+        _fileSystem = fileSystem;
+
+        string? directory = Path.GetDirectoryName(filePath);
+        if (!string.IsNullOrEmpty(directory) && !_fileSystem.DirectoryExists(directory))
+        {
+            _fileSystem.CreateDirectory(directory);
+        }
+
+        Settings = Load();
+    }
+
+    /// <summary>Serialises <see cref="Settings"/> to the JSON file.</summary>
     public void Save()
     {
         string json = JsonSerializer.Serialize(Settings, s_jsonSerializerOptions);
-        File.WriteAllText(_filePath, json);
+        _fileSystem.WriteAllText(_filePath, json);
     }
 
-    /// <summary>
-    /// Loads the settings by reading from the JSON file and deserialising them.
-    /// If the file does not exist, a new instance of T is returned.
-    /// </summary>
-    /// <returns>The deserialised settings object.</returns>
-    private static T Load(string filePath)
+    private T Load()
     {
-        if (!File.Exists(filePath))
+        if (!_fileSystem.FileExists(_filePath))
         {
             return new T();
         }
 
-        string json = File.ReadAllText(filePath) ?? string.Empty;
-        T settings = JsonSerializer.Deserialize<T>(json, s_jsonSerializerOptions) ?? new T();
-        return settings;
+        string json = _fileSystem.ReadAllText(_filePath);
+        return JsonSerializer.Deserialize<T>(json, s_jsonSerializerOptions) ?? new T();
+    }
+
+    private static string ResolvePath()
+    {
+        string? appName = Application.ProductName;
+        if (string.IsNullOrEmpty(appName))
+        {
+            throw new InvalidOperationException("Application.ProductName is null or empty.");
+        }
+
+        string userAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        return Path.Combine(userAppData, appName, "AppSettings_V2.json");
     }
 
     private static JsonSerializerOptions CreateJsonSerializerOptions()
     {
-        var jsonSerializerOptions = new JsonSerializerOptions
+        var options = new JsonSerializerOptions
         {
             WriteIndented = true,
             ReadCommentHandling = JsonCommentHandling.Skip,
             AllowTrailingCommas = true,
         };
 
-        jsonSerializerOptions.Converters.Add(new Utils.ColorJsonConverter());
-        jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.Converters.Add(new ColorJsonConverter());
+        options.Converters.Add(new JsonStringEnumConverter());
 
-        return jsonSerializerOptions;
+        return options;
     }
 }
