@@ -78,10 +78,10 @@ public class TextPanel<TMessageType> where TMessageType : Enum
         DrawingSpec panelDrawingSpec,
         Func<TMessageType?, DrawingSpec> getDrawingSpecForMessageType)
     {
-        Guard.ThrowIfNull(bitmapDisplay);
-        Guard.ThrowIfNull(graphics);
-        Guard.ThrowIfNull(panelDrawingSpec);
-        Guard.ThrowIfNull(getDrawingSpecForMessageType);
+        ArgumentNullException.ThrowIfNull(bitmapDisplay);
+        ArgumentNullException.ThrowIfNull(graphics);
+        ArgumentNullException.ThrowIfNull(panelDrawingSpec);
+        ArgumentNullException.ThrowIfNull(getDrawingSpecForMessageType);
 
         if (_messageLines.Count == 0)
         {

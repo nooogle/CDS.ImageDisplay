@@ -18,7 +18,7 @@ public sealed class RectAnnotationDescriptor : IAnnotationShapeDescriptor
     /// <inheritdoc/>
     public float FitScore(FreehandPath path)
     {
-        Guard.ThrowIfNull(path, nameof(path));
+        ArgumentNullException.ThrowIfNull(path);
 
         RectangleF bbox = path.BoundingBox;
         float w = bbox.Width;
@@ -46,7 +46,7 @@ public sealed class RectAnnotationDescriptor : IAnnotationShapeDescriptor
     /// <inheritdoc/>
     public AnnotationGeometry CreateGeometry(FreehandPath path)
     {
-        Guard.ThrowIfNull(path, nameof(path));
+        ArgumentNullException.ThrowIfNull(path);
 
         RectangleF bbox = path.BoundingBox;
         var bounds = Rectangle.FromLTRB(

@@ -112,7 +112,7 @@ public sealed class FormStatePersister : Component
     /// <param name="container">The designer container to add this component to.</param>
     public FormStatePersister(IContainer container) : this()
     {
-        Guard.ThrowIfNull(container);
+        ArgumentNullException.ThrowIfNull(container);
         container.Add(this);
     }
 
@@ -127,7 +127,7 @@ public sealed class FormStatePersister : Component
     /// </param>
     public FormStatePersister(Form form, string? contextId = null) : this()
     {
-        Guard.ThrowIfNull(form);
+        ArgumentNullException.ThrowIfNull(form);
         _contextId = string.IsNullOrEmpty(contextId) ? null : contextId;
         Form = form;
     }

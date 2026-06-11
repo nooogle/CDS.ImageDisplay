@@ -38,7 +38,7 @@ internal static class AnnotationHandleHelper
     /// </summary>
     internal static Size DisplayDeltaToImageDelta(BitmapDisplayPanel panel, Point displayDelta)
     {
-        Guard.ThrowIfNull(panel, nameof(panel));
+        ArgumentNullException.ThrowIfNull(panel);
 
         PointF zero = panel.MapDisplayToImage(PointF.Empty);
         PointF moved = panel.MapDisplayToImage(new PointF(displayDelta.X, displayDelta.Y));

@@ -117,7 +117,7 @@ public partial class ImageListPanel : UserControl
         get => _fileProvider;
         set
         {
-            Guard.ThrowIfNull(value);
+            ArgumentNullException.ThrowIfNull(value);
 
             if (ReferenceEquals(_fileProvider, value)) { return; }
 
@@ -198,7 +198,7 @@ public partial class ImageListPanel : UserControl
     /// <param name="folder">Full path to the folder to display.</param>
     public void SetFolder(string folder)
     {
-        Guard.ThrowIfNull(folder);
+        ArgumentNullException.ThrowIfNull(folder);
         _folder = folder;
         RefreshList();
     }

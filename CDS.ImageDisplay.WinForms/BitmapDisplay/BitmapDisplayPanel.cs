@@ -395,7 +395,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnKeyDown(KeyEventArgs e)
     {
-        Guard.ThrowIfNull(e);
+        ArgumentNullException.ThrowIfNull(e);
 
         base.OnKeyDown(e);
 
@@ -653,7 +653,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnPaint(PaintEventArgs e)
     {
-        Guard.ThrowIfNull(e);
+        ArgumentNullException.ThrowIfNull(e);
 
         _stopwatch.Restart();
 
@@ -715,7 +715,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnMouseWheel(MouseEventArgs e)
     {
-        Guard.ThrowIfNull(e);
+        ArgumentNullException.ThrowIfNull(e);
 
         base.OnMouseWheel(e);
 
@@ -749,7 +749,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnMouseMove(MouseEventArgs e)
     {
-        Guard.ThrowIfNull(e);
+        ArgumentNullException.ThrowIfNull(e);
 
         base.OnMouseMove(e);
 
@@ -765,7 +765,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnMouseDown(MouseEventArgs e)
     {
-        Guard.ThrowIfNull(e);
+        ArgumentNullException.ThrowIfNull(e);
 
         base.OnMouseDown(e);
 
@@ -784,7 +784,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnMouseUp(MouseEventArgs e)
     {
-        Guard.ThrowIfNull(e);
+        ArgumentNullException.ThrowIfNull(e);
 
         base.OnMouseUp(e);
 
@@ -819,7 +819,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     public void SyncPaintRectFromOther(BitmapDisplayPanel sender)
     {
-        Guard.ThrowIfNull(sender, nameof(sender));
+        ArgumentNullException.ThrowIfNull(sender);
 
         Zoom = sender.Zoom;
         TargetDisplayCentre = sender.TargetDisplayCentre;

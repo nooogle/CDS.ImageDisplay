@@ -33,7 +33,7 @@ public static class AnnotationSerializer
     /// <param name="annotation">The annotation to serialize.</param>
     public static string Serialize(Annotation annotation)
     {
-        Guard.ThrowIfNull(annotation, nameof(annotation));
+        ArgumentNullException.ThrowIfNull(annotation);
         return JsonSerializer.Serialize(annotation, CreateOptions());
     }
 
@@ -43,7 +43,7 @@ public static class AnnotationSerializer
     /// <param name="annotations">The annotations to serialize.</param>
     public static string Serialize(IEnumerable<Annotation> annotations)
     {
-        Guard.ThrowIfNull(annotations, nameof(annotations));
+        ArgumentNullException.ThrowIfNull(annotations);
         return JsonSerializer.Serialize(annotations, CreateOptions());
     }
 

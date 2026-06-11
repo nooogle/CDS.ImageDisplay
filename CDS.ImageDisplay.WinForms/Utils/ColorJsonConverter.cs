@@ -37,8 +37,8 @@ public sealed class ColorJsonConverter : JsonConverter<Color>
     /// <param name="options">The serializer options.</param>
     public override void Write(Utf8JsonWriter writer, Color value, JsonSerializerOptions options)
     {
-        Guard.ThrowIfNull(writer, nameof(writer));
-        Guard.ThrowIfNull(options, nameof(options));
+        ArgumentNullException.ThrowIfNull(writer);
+        ArgumentNullException.ThrowIfNull(options);
 
         if (value.IsNamedColor || value.IsKnownColor || value.IsSystemColor)
         {
