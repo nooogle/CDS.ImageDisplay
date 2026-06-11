@@ -18,4 +18,8 @@
     <ProjectReference Include="..\CDS.ImageDisplay.WinForms\CDS.ImageDisplay.WinForms.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.300" />
+  </ItemGroup>
+
 </Project>
