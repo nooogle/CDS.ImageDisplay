@@ -9,13 +9,6 @@ internal static class Guard
         [NotNull] object? argument,
         [CallerArgumentExpression(nameof(argument))] string? paramName = null)
     {
-#if NET48
-        if (argument is null)
-        {
-            throw new ArgumentNullException(paramName);
-        }
-#else
         ArgumentNullException.ThrowIfNull(argument, paramName);
-#endif
     }
 }
