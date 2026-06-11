@@ -13,7 +13,7 @@ internal sealed class PenBenchmark : IDisposable
         _pen.Dispose();
     }
 
-    private static readonly CDS.ImageDisplay.Overlays.PenSpec s_lineSpec1 = new()
+    private static readonly CDS.ImageDisplay.WinForms   .Overlays.PenSpec s_lineSpec1 = new()
     {
         Color = Color.RebeccaPurple,
         StartCap = System.Drawing.Drawing2D.LineCap.Round,
@@ -22,7 +22,7 @@ internal sealed class PenBenchmark : IDisposable
         Width = 2,
     };
 
-    private static readonly CDS.ImageDisplay.Overlays.PenSpec s_lineSpec2 = new()
+    private static readonly CDS.ImageDisplay.WinForms.Overlays.PenSpec s_lineSpec2 = new()
     {
         Color = Color.Wheat,
         StartCap = System.Drawing.Drawing2D.LineCap.DiamondAnchor,
@@ -57,8 +57,8 @@ internal sealed class PenBenchmark : IDisposable
     [Benchmark]
     public static void AccessPenFromResourcePool()
     {
-        var pen = CDS.ImageDisplay.Overlays.DrawingToolsPool.GetPen(s_lineSpec1);
-        pen = CDS.ImageDisplay.Overlays.DrawingToolsPool.GetPen(s_lineSpec1);
+        var pen = CDS.ImageDisplay.WinForms.Overlays.DrawingToolsPool.GetPen(s_lineSpec1);
+        pen = CDS.ImageDisplay.WinForms.Overlays.DrawingToolsPool.GetPen(s_lineSpec1);
     }
 
     [Benchmark]

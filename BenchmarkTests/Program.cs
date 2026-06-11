@@ -1,5 +1,5 @@
 using BenchmarkDotNet.Running;
-using CDS.ImageDisplay.Utils;
+using CDS.ImageDisplay.WinForms.Utils;
 
 namespace BenchmarkTests;
 

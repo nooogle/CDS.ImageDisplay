@@ -1,6 +1,6 @@
 using System.Drawing;
 using BenchmarkDotNet.Attributes;
-using CDS.ImageDisplay.Overlays;
+using CDS.ImageDisplay.WinForms.Overlays;
 
 namespace BenchmarkTests.DrawBenchmarks.ResourcePoolBenchmarks;
 
