@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace CDS.ImageDisplay.BitmapDisplay;
+namespace CDS.ImageDisplay.WinForms.BitmapDisplay;
 
 /// <summary>
 /// Provides access to an image's properties and pixel data

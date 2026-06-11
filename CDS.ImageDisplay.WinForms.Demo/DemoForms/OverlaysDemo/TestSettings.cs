@@ -1,0 +1,12 @@
+using System.ComponentModel;
+using CDS.ImageDisplay.WinForms.Utils;
+
+namespace CDS.ImageDisplay.WinForms.Demo.DemoForms.OverlaysDemo;
+
+[TypeConverter(typeof(SerializableExpandableObjectConverter))]
+internal sealed class TestSettings
+{
+    public OverlayDrawingSpecs Overlays { get; set; } = new OverlayDrawingSpecs();
+
+    public OverlayShapes Shapes { get; set; } = new OverlayShapes();
+}

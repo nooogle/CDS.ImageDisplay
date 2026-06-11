@@ -3,11 +3,11 @@ using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using CDS.ImageDisplay.BitmapDisplay;
-using CDS.ImageDisplay.Overlays;
-using CDS.ImageDisplay.Utils;
+using CDS.ImageDisplay.WinForms.BitmapDisplay;
+using CDS.ImageDisplay.WinForms.Overlays;
+using CDS.ImageDisplay.WinForms.Utils;
 
-namespace CDS.ImageDisplay.LineSelection;
+namespace CDS.ImageDisplay.WinForms.LineSelection;
 
 /// <summary>
 /// Manages a single interactive line selection on a <see cref="BitmapDisplayPanel"/>.

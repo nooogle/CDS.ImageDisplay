@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 
-namespace CDS.ImageDisplay.LineSelection;
+namespace CDS.ImageDisplay.WinForms.LineSelection;
 
 /// <summary>
 /// Provides data for the <see cref="SingleLineSelectionManager.CommittedLineChanged"/> event.

@@ -1,4 +1,4 @@
-namespace CDS.ImageDisplay.LineSelection
+namespace CDS.ImageDisplay.WinForms.LineSelection
 {
     partial class SingleLineSelectionManager
     {

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
-using CDS.ImageDisplay.Annotations.Json;
+using CDS.ImageDisplay.WinForms.Annotations.Json;
 
-namespace CDS.ImageDisplay.Annotations;
+namespace CDS.ImageDisplay.WinForms.Annotations;
 
 /// <summary>
 /// Provides JSON serialization and deserialization for <see cref="Annotation"/> objects.

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using CDS.ImageDisplay.Annotations.Internal;
+using CDS.ImageDisplay.WinForms.Annotations.Internal;
 
-namespace CDS.ImageDisplay.Annotations.Shapes;
+namespace CDS.ImageDisplay.WinForms.Annotations.Shapes;
 
 /// <summary>
 /// Descriptor for rotated rectangle annotations. Fits a minimum-area bounding rectangle

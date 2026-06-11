@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using CDS.ImageDisplay.Annotations.Shapes;
+using CDS.ImageDisplay.WinForms.Annotations.Shapes;
 
-namespace CDS.ImageDisplay.Annotations.Internal;
+namespace CDS.ImageDisplay.WinForms.Annotations.Internal;
 
 /// <summary>
 /// Creates and shows the shape-selection <see cref="ContextMenuStrip"/> after a drag gesture.

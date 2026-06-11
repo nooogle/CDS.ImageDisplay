@@ -1,11 +1,11 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using CDS.ImageDisplay.BitmapDisplay;
-using CDS.ImageDisplay.Overlays;
-using CDS.ImageDisplay.Utils;
+using CDS.ImageDisplay.WinForms.BitmapDisplay;
+using CDS.ImageDisplay.WinForms.Overlays;
+using CDS.ImageDisplay.WinForms.Utils;
 
-namespace CDS.ImageDisplay.LineSelection;
+namespace CDS.ImageDisplay.WinForms.LineSelection;
 
 /// <summary>
 /// Paints a line on a graphics object. Supports endpoint handles.

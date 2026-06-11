@@ -1,7 +1,7 @@
 using System.Drawing;
-using CDS.ImageDisplay.BitmapDisplay;
+using CDS.ImageDisplay.WinForms.BitmapDisplay;
 
-namespace CDS.ImageDisplay.RegionOfInterest;
+namespace CDS.ImageDisplay.WinForms.RegionOfInterest;
 
 /// <summary>
 /// Interface for a descriptor for a single ROI, The <see cref="MultipleROIManager"/> uses these

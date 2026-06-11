@@ -1,4 +1,4 @@
-namespace CDS.ImageDisplay.ImageBrowsing
+namespace CDS.ImageDisplay.WinForms.ImageBrowsing
 {
     partial class ImageListPanel
     {

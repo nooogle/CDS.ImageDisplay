@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 
-namespace CDS.ImageDisplay.ImageBrowsing;
+namespace CDS.ImageDisplay.WinForms.ImageBrowsing;
 
 /// <summary>
 /// A panel that displays a folder's image files as a thumbnail list.

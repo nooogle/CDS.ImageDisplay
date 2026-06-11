@@ -1,4 +1,4 @@
-namespace CDS.ImageDisplay.Annotations;
+namespace CDS.ImageDisplay.WinForms.Annotations;
 
 /// <summary>
 /// Tracks the current mouse-interaction state of <see cref="AnnotationManager"/>.

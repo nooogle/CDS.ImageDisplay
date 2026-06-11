@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 
-namespace CDS.ImageDisplay.RegionOfInterest;
+namespace CDS.ImageDisplay.WinForms.RegionOfInterest;
 
 /// <summary>
 /// Provides data for the <see cref="SingleROIManager.CommittedROIChanged"/> event.

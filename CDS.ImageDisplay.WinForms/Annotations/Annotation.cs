@@ -1,7 +1,7 @@
 using System;
 using System.Text.Json.Serialization;
 
-namespace CDS.ImageDisplay.Annotations;
+namespace CDS.ImageDisplay.WinForms.Annotations;
 
 /// <summary>
 /// An annotation on an image, combining a geometric shape with descriptive metadata.

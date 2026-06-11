@@ -6,7 +6,7 @@
   <Project Path="BenchmarkTests/BenchmarkTests.csproj">
     <Build Solution="Debug|*" Project="false" />
   </Project>
-  <Project Path="CDS.ImageDisplay.Demo/CDS.ImageDisplay.Demo.csproj" />
+  <Project Path="CDS.ImageDisplay.WinForms.Demo/CDS.ImageDisplay.WinForms.Demo.csproj" />
   <Project Path="CDS.ImageDisplay.WinForms/CDS.ImageDisplay.WinForms.csproj" />
   <Project Path="UnitTests/UnitTests.csproj">
     <Build Solution="Release|*" Project="false" />

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace CDS.ImageDisplay.Annotations.Internal;
+namespace CDS.ImageDisplay.WinForms.Annotations.Internal;
 
 /// <summary>
 /// Geometric analysis helpers used by shape descriptors to score freehand gesture paths.

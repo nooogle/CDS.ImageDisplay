@@ -1,4 +1,4 @@
-namespace CDS.ImageDisplay.Annotations;
+namespace CDS.ImageDisplay.WinForms.Annotations;
 
 /// <summary>
 /// Describes a shape type that can be created from a freehand drawing gesture.

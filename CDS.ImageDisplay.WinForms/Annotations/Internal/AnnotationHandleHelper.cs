@@ -1,8 +1,8 @@
 using System;
 using System.Drawing;
-using CDS.ImageDisplay.BitmapDisplay;
+using CDS.ImageDisplay.WinForms.BitmapDisplay;
 
-namespace CDS.ImageDisplay.Annotations.Internal;
+namespace CDS.ImageDisplay.WinForms.Annotations.Internal;
 
 /// <summary>
 /// Shared drawing and hit-testing helpers used by annotation geometry classes.

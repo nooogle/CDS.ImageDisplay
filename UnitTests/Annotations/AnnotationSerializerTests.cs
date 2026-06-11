@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using AwesomeAssertions;
-using CDS.ImageDisplay.Annotations;
-using CDS.ImageDisplay.Annotations.Shapes;
-using CDS.ImageDisplay.Overlays;
+using CDS.ImageDisplay.WinForms.Annotations;
+using CDS.ImageDisplay.WinForms.Annotations.Shapes;
+using CDS.ImageDisplay.WinForms.Overlays;
 
 namespace UnitTests.Annotations;
 

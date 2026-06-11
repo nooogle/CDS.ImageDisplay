@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using CDS.ImageDisplay.BitmapDisplay;
-using CDS.ImageDisplay.Overlays;
-using CDS.ImageDisplay.Utils;
+using CDS.ImageDisplay.WinForms.BitmapDisplay;
+using CDS.ImageDisplay.WinForms.Overlays;
+using CDS.ImageDisplay.WinForms.Utils;
 
-namespace CDS.ImageDisplay.Annotations.Internal;
+namespace CDS.ImageDisplay.WinForms.Annotations.Internal;
 
 /// <summary>
 /// Draws the in-progress freehand gesture as a thin translucent polyline during the Drawing state.

@@ -1,10 +1,10 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using CDS.ImageDisplay.Utils;
+using CDS.ImageDisplay.WinForms.Utils;
 
 
-namespace CDS.ImageDisplay.Overlays;
+namespace CDS.ImageDisplay.WinForms.Overlays;
 
 /// <summary>
 /// Represents a font specification.

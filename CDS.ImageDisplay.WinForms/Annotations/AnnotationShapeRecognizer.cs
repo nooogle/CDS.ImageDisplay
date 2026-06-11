@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CDS.ImageDisplay.Annotations;
+namespace CDS.ImageDisplay.WinForms.Annotations;
 
 /// <summary>
 /// Ranks <see cref="IAnnotationShapeDescriptor"/> instances against a freehand gesture path

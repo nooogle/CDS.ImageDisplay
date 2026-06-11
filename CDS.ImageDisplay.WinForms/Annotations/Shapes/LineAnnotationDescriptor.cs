@@ -1,9 +1,9 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using CDS.ImageDisplay.Annotations.Internal;
+using CDS.ImageDisplay.WinForms.Annotations.Internal;
 
-namespace CDS.ImageDisplay.Annotations.Shapes;
+namespace CDS.ImageDisplay.WinForms.Annotations.Shapes;
 
 /// <summary>
 /// Descriptor for line annotations.

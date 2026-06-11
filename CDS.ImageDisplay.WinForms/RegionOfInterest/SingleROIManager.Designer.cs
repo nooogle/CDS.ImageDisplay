@@ -1,4 +1,4 @@
-namespace CDS.ImageDisplay.RegionOfInterest
+namespace CDS.ImageDisplay.WinForms.RegionOfInterest
 {
     partial class SingleROIManager
     {

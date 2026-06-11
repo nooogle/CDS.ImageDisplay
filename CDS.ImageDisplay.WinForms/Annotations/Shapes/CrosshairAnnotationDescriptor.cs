@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 
-namespace CDS.ImageDisplay.Annotations.Shapes;
+namespace CDS.ImageDisplay.WinForms.Annotations.Shapes;
 
 /// <summary>
 /// Descriptor for crosshair annotations. Used for the click (point) creation path;

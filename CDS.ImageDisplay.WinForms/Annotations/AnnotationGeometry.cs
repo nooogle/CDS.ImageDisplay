@@ -1,12 +1,12 @@
 using System;
 using System.Drawing;
 using System.Text.Json.Serialization;
-using CDS.ImageDisplay.Annotations.Internal;
-using CDS.ImageDisplay.Annotations.Shapes;
-using CDS.ImageDisplay.BitmapDisplay;
-using CDS.ImageDisplay.Overlays;
+using CDS.ImageDisplay.WinForms.Annotations.Internal;
+using CDS.ImageDisplay.WinForms.Annotations.Shapes;
+using CDS.ImageDisplay.WinForms.BitmapDisplay;
+using CDS.ImageDisplay.WinForms.Overlays;
 
-namespace CDS.ImageDisplay.Annotations;
+namespace CDS.ImageDisplay.WinForms.Annotations;
 
 /// <summary>
 /// Base class for the geometry of an annotation. Owns the shape coordinates and visual style,

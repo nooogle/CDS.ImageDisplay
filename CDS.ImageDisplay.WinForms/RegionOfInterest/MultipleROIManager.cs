@@ -1,7 +1,7 @@
-using CDS.ImageDisplay.Utils;
+using CDS.ImageDisplay.WinForms.Utils;
 using System.ComponentModel;
 
-namespace CDS.ImageDisplay.RegionOfInterest;
+namespace CDS.ImageDisplay.WinForms.RegionOfInterest;
 
 /// <summary>
 /// Manages multiple ROIs on a bitmap display.
@@ -218,7 +218,7 @@ public partial class MultipleROIManager : Component
     /// <summary>
     /// Draws the current ROI.
     /// </summary>
-    private void BitmapDisplayPanel_OnPaintOver(object? sender, CDS.ImageDisplay.BitmapDisplay.PaintOverEventArgs e)
+    private void BitmapDisplayPanel_OnPaintOver(object? sender, BitmapDisplay.PaintOverEventArgs e)
     {
         if (!DoesHaveImageToWorkWith)
         { return; }

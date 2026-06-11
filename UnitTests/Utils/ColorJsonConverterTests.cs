@@ -1,8 +1,8 @@
 using System.Drawing;
 using System.Text.Json;
 using AwesomeAssertions;
-using CDS.ImageDisplay.Overlays;
-using CDS.ImageDisplay.Utils;
+using CDS.ImageDisplay.WinForms.Overlays;
+using CDS.ImageDisplay.WinForms.Utils;
 
 namespace UnitTests.Utils;
 

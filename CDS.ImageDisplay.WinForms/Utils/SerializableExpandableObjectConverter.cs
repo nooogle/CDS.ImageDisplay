@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 
-namespace CDS.ImageDisplay.Utils;
+namespace CDS.ImageDisplay.WinForms.Utils;
 
 
 /// <summary>

@@ -1,4 +1,4 @@
-﻿namespace CDS.ImageDisplay.Overlays;
+﻿namespace CDS.ImageDisplay.WinForms.Overlays;
 
 /// <summary>
 /// The standard message types for a text panel.

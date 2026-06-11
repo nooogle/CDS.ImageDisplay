@@ -1,6 +1,6 @@
 using System.Drawing;
 using AwesomeAssertions;
-using CDS.ImageDisplay.Annotations;
+using CDS.ImageDisplay.WinForms.Annotations;
 
 namespace UnitTests.Annotations;
 

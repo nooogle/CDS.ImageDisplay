@@ -1,7 +1,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using AwesomeAssertions;
-using CDS.ImageDisplay.Overlays;
+using CDS.ImageDisplay.WinForms.Overlays;
 
 namespace UnitTests.Overlays;
 /// <summary>

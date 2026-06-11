@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace CDS.ImageDisplay.Overlays;
+namespace CDS.ImageDisplay.WinForms.Overlays;
 
 /// <summary>
 /// Utility to help draw rounded borders around a rectangle.

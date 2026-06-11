@@ -4,13 +4,13 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using CDS.ImageDisplay.Annotations.Internal;
-using CDS.ImageDisplay.Annotations.Shapes;
-using CDS.ImageDisplay.BitmapDisplay;
-using CDS.ImageDisplay.Overlays;
-using CDS.ImageDisplay.Utils;
+using CDS.ImageDisplay.WinForms.Annotations.Internal;
+using CDS.ImageDisplay.WinForms.Annotations.Shapes;
+using CDS.ImageDisplay.WinForms.BitmapDisplay;
+using CDS.ImageDisplay.WinForms.Overlays;
+using CDS.ImageDisplay.WinForms.Utils;
 
-namespace CDS.ImageDisplay.Annotations;
+namespace CDS.ImageDisplay.WinForms.Annotations;
 
 /// <summary>
 /// Component that manages interactive creation, selection, and editing of annotations

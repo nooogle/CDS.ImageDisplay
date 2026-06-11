@@ -1,6 +1,6 @@
 using System;
 
-namespace CDS.ImageDisplay.Annotations;
+namespace CDS.ImageDisplay.WinForms.Annotations;
 
 /// <summary>Event args for <see cref="AnnotationManager.AnnotationCreated"/>.</summary>
 public sealed class AnnotationCreatedEventArgs(Annotation annotation) : EventArgs

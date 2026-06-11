@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace CDS.ImageDisplay.Utils;
+namespace CDS.ImageDisplay.WinForms.Utils;
 
 /// <summary>
 /// Converts <see cref="Color"/> values to and from JSON-friendly string values.

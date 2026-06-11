@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace CDS.ImageDisplay.Overlays;
+namespace CDS.ImageDisplay.WinForms.Overlays;
 
 /// <summary>
 /// A ready-to-use text panel that uses <see cref="TextPanelStdMsgTypes"/> and

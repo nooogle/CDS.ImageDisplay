@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace CDS.ImageDisplay.Overlays;
+namespace CDS.ImageDisplay.WinForms.Overlays;
 
 /// <summary>
 /// Represents the drawing specifications for standard message types in a text panel.

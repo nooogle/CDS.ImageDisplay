@@ -1,4 +1,4 @@
-namespace CDS.ImageDisplay.Annotations;
+namespace CDS.ImageDisplay.WinForms.Annotations;
 
 /// <summary>
 /// Identifies what was hit during a hit-test on a selected annotation.

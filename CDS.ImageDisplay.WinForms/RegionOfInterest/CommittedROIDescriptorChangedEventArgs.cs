@@ -1,6 +1,6 @@
 using System;
 
-namespace CDS.ImageDisplay.RegionOfInterest;
+namespace CDS.ImageDisplay.WinForms.RegionOfInterest;
 
 /// <summary>
 /// Event arguments for when a ROI has been committed.

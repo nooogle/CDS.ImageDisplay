@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace CDS.ImageDisplay.BitmapDisplay;
+namespace CDS.ImageDisplay.WinForms.BitmapDisplay;
 
 /// <summary>
 /// Handles mouse-wheel zoom gestures for a <see cref="BitmapDisplayPanel"/>.

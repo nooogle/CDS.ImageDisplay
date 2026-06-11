@@ -1,4 +1,4 @@
-namespace CDS.ImageDisplay.BitmapDisplay
+namespace CDS.ImageDisplay.WinForms.BitmapDisplay
 {
     partial class BitmapDisplayPanel
     {

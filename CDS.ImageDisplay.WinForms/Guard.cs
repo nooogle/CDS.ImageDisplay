@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
-namespace CDS.ImageDisplay;
+namespace CDS.ImageDisplay.WinForms;
 
 internal static class Guard
 {

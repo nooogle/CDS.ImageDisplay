@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 
-namespace CDS.ImageDisplay.BitmapDisplay;
+namespace CDS.ImageDisplay.WinForms.BitmapDisplay;
 
 /// <summary>
 /// Callback delegate raised when the paint rectangle changes on a <see cref="VirtualDisplay"/>.

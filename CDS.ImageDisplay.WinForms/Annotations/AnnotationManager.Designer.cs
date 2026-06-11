@@ -1,4 +1,4 @@
-namespace CDS.ImageDisplay.Annotations
+namespace CDS.ImageDisplay.WinForms.Annotations
 {
     partial class AnnotationManager
     {

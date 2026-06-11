@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace CDS.ImageDisplay.Annotations.Json;
+namespace CDS.ImageDisplay.WinForms.Annotations.Json;
 
 /// <summary>
 /// JSON converter for <see cref="Rectangle"/>. Serializes as <c>{"X":n,"Y":n,"Width":n,"Height":n}</c>.

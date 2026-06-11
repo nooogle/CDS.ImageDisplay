@@ -1,6 +1,6 @@
 using System.Drawing;
 using AwesomeAssertions;
-using CDS.ImageDisplay.BitmapDisplay;
+using CDS.ImageDisplay.WinForms.BitmapDisplay;
 
 namespace UnitTests.BitmapDisplay;
 

@@ -2,12 +2,12 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Text.Json.Serialization;
-using CDS.ImageDisplay.Annotations.Internal;
-using CDS.ImageDisplay.BitmapDisplay;
-using CDS.ImageDisplay.Overlays;
-using CDS.ImageDisplay.Utils;
+using CDS.ImageDisplay.WinForms.Annotations.Internal;
+using CDS.ImageDisplay.WinForms.BitmapDisplay;
+using CDS.ImageDisplay.WinForms.Overlays;
+using CDS.ImageDisplay.WinForms.Utils;
 
-namespace CDS.ImageDisplay.Annotations.Shapes;
+namespace CDS.ImageDisplay.WinForms.Annotations.Shapes;
 
 /// <summary>
 /// Annotation geometry that represents a rotated rectangle. Geometry follows the OpenCV

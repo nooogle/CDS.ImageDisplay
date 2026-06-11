@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace CDS.ImageDisplay.Annotations.Shapes;
+namespace CDS.ImageDisplay.WinForms.Annotations.Shapes;
 
 /// <summary>
 /// Descriptor for polygon annotations. Acts as the catch-all shape when no other descriptor

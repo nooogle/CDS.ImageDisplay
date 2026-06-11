@@ -1,4 +1,4 @@
-namespace CDS.ImageDisplay.ImageBrowsing;
+namespace CDS.ImageDisplay.WinForms.ImageBrowsing;
 
 /// <summary>
 /// Event arguments carrying the full path of an image file.

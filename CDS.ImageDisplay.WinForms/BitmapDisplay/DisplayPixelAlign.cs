@@ -1,4 +1,4 @@
-namespace CDS.ImageDisplay.BitmapDisplay;
+namespace CDS.ImageDisplay.WinForms.BitmapDisplay;
 
 /// <summary>
 /// Controls how to map an image pixel to a display pixel.

@@ -3,9 +3,9 @@ using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using CDS.ImageDisplay.Utils;
+using CDS.ImageDisplay.WinForms.Utils;
 
-namespace CDS.ImageDisplay.RegionOfInterest;
+namespace CDS.ImageDisplay.WinForms.RegionOfInterest;
 
 /// <summary>
 /// Manages a region of interest (ROI) on a <see cref="BitmapDisplay.BitmapDisplayPanel"/>
@@ -711,7 +711,7 @@ public partial class SingleROIManager : Component
     /// <summary>
     /// Draws the current ROI.
     /// </summary>
-    private void BitmapDisplayPanel_OnPaintOver(object? sender, CDS.ImageDisplay.BitmapDisplay.PaintOverEventArgs e)
+    private void BitmapDisplayPanel_OnPaintOver(object? sender, BitmapDisplay.PaintOverEventArgs e)
     {
         if (!CanWorkWithROI)
         {

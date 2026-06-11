@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 
-namespace CDS.ImageDisplay.Overlays;
+namespace CDS.ImageDisplay.WinForms.Overlays;
 
 
 /// <summary>

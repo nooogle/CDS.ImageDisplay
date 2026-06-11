@@ -1,6 +1,6 @@
 using System.Drawing;
 using AwesomeAssertions;
-using CDS.ImageDisplay.Overlays;
+using CDS.ImageDisplay.WinForms.Overlays;
 
 namespace UnitTests.Overlays;
 

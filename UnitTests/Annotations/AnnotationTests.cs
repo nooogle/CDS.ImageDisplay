@@ -1,8 +1,8 @@
 using System;
 using System.Drawing;
 using AwesomeAssertions;
-using CDS.ImageDisplay.Annotations;
-using CDS.ImageDisplay.BitmapDisplay;
+using CDS.ImageDisplay.WinForms.Annotations;
+using CDS.ImageDisplay.WinForms.BitmapDisplay;
 
 namespace UnitTests.Annotations;
 
