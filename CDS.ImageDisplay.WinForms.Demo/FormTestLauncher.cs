@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using CDS.ImageDisplay.WinForms.Utils;
 using CDS.WinFormsMenus.Basic;
 
 namespace CDS.ImageDisplay.WinForms.Demo;
