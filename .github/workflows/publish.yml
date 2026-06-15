@@ -41,7 +41,7 @@ jobs:
         run: dotnet build ${{ env.LIBRARY_PROJECT }} --configuration Release --no-restore
 
       - name: Test
-        run: dotnet run --project ${{ env.TEST_PROJECT }} --configuration Release -- --report-trx
+        run: dotnet run --project ${{ env.TEST_PROJECT }} --configuration Release --framework net10.0-windows -- --report-trx
 
       - name: Pack
         run: dotnet pack ${{ env.LIBRARY_PROJECT }} --configuration Release --no-build --output ./artifacts
