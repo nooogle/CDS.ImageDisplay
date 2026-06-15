@@ -26,7 +26,15 @@
     <ProjectReference Include="..\CDS.ImageDisplay.WinForms\CDS.ImageDisplay.WinForms.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+		<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+	</PropertyGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+		<PackageReference Include="System.Resources.Extensions" Version="10.0.9" />
+	</ItemGroup>
+
+	<ItemGroup>
     <Compile Update="DemoForms\FormTextPanelStandard.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -26,6 +26,10 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+		<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<None Include="..\README.md" Link="README.md">
 			<Pack>True</Pack>
@@ -40,6 +44,10 @@
 	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
 	  <PackageReference Include="System.Text.Json" Version="10.0.9" />
 		<PackageReference Include="System.Collections.Immutable" Version="10.0.9" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+	  <PackageReference Include="System.Resources.Extensions" Version="10.0.9" />
 	</ItemGroup>
 
 	<ItemGroup>

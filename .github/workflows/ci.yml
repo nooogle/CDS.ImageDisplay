@@ -27,7 +27,7 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Test
-        run: dotnet test --no-build --verbosity normal --results-directory TestResults --report-trx
+        run: dotnet run --project UnitTests/UnitTests.csproj --no-build --framework net10.0-windows -- --report-trx --results-directory TestResults
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
