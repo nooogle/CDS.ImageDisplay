@@ -51,9 +51,9 @@ public class CrosshairShape
     /// </summary>
     public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawing)
     {
-        ArgumentNullException.ThrowIfNull(sender);
-        ArgumentNullException.ThrowIfNull(graphics);
-        ArgumentNullException.ThrowIfNull(drawing);
+        if (sender == null) { throw new ArgumentNullException(nameof(sender)); }
+        if (graphics == null) { throw new ArgumentNullException(nameof(graphics)); }
+        if (drawing == null) { throw new ArgumentNullException(nameof(drawing)); }
         if (!drawing.Visible)
         { return; }
 

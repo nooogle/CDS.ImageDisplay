@@ -19,7 +19,7 @@ public sealed class LineAnnotationDescriptor : IAnnotationShapeDescriptor
     /// <inheritdoc/>
     public float FitScore(FreehandPath path)
     {
-        ArgumentNullException.ThrowIfNull(path);
+        if (path == null) { throw new ArgumentNullException(nameof(path)); }
 
         if (path.Points.Count < 2) { return 0f; }
 
@@ -46,7 +46,7 @@ public sealed class LineAnnotationDescriptor : IAnnotationShapeDescriptor
     /// <inheritdoc/>
     public AnnotationGeometry CreateGeometry(FreehandPath path)
     {
-        ArgumentNullException.ThrowIfNull(path);
+        if (path == null) { throw new ArgumentNullException(nameof(path)); }
 
         Point start, end;
 

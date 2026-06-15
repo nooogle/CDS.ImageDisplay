@@ -64,8 +64,8 @@ public class LineSelectionShape
     /// </summary>
     public void Draw(BitmapDisplayPanel bitmapDisplayPanel, Graphics graphics)
     {
-        ArgumentNullException.ThrowIfNull(bitmapDisplayPanel);
-        ArgumentNullException.ThrowIfNull(graphics);
+        if (bitmapDisplayPanel is null) { throw new ArgumentNullException(nameof(bitmapDisplayPanel)); }
+        if (graphics is null) { throw new ArgumentNullException(nameof(graphics)); }
 
         if (!Visible)
         {

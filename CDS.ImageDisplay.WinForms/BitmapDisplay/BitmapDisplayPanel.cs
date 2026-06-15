@@ -395,7 +395,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnKeyDown(KeyEventArgs e)
     {
-        ArgumentNullException.ThrowIfNull(e);
+        if (e == null) { throw new ArgumentNullException(nameof(e)); }
 
         base.OnKeyDown(e);
 
@@ -653,7 +653,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnPaint(PaintEventArgs e)
     {
-        ArgumentNullException.ThrowIfNull(e);
+        if (e == null) { throw new ArgumentNullException(nameof(e)); }
 
         _stopwatch.Restart();
 
@@ -715,7 +715,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnMouseWheel(MouseEventArgs e)
     {
-        ArgumentNullException.ThrowIfNull(e);
+        if (e == null) { throw new ArgumentNullException(nameof(e)); }
 
         base.OnMouseWheel(e);
 
@@ -749,7 +749,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnMouseMove(MouseEventArgs e)
     {
-        ArgumentNullException.ThrowIfNull(e);
+        if (e == null) { throw new ArgumentNullException(nameof(e)); }
 
         base.OnMouseMove(e);
 
@@ -765,7 +765,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnMouseDown(MouseEventArgs e)
     {
-        ArgumentNullException.ThrowIfNull(e);
+        if (e == null) { throw new ArgumentNullException(nameof(e)); }
 
         base.OnMouseDown(e);
 
@@ -784,7 +784,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     protected override void OnMouseUp(MouseEventArgs e)
     {
-        ArgumentNullException.ThrowIfNull(e);
+        if (e == null) { throw new ArgumentNullException(nameof(e)); } base.OnMouseUp(e);
 
         base.OnMouseUp(e);
 
@@ -819,7 +819,7 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     public void SyncPaintRectFromOther(BitmapDisplayPanel sender)
     {
-        ArgumentNullException.ThrowIfNull(sender);
+        if (sender == null) { throw new ArgumentNullException(nameof(sender)); }
 
         Zoom = sender.Zoom;
         TargetDisplayCentre = sender.TargetDisplayCentre;

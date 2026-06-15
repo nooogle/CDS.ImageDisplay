@@ -1,8 +1,6 @@
-using System;
-using System.ComponentModel;
-using System.Drawing;
 using CDS.ImageDisplay.WinForms.BitmapDisplay;
 using CDS.ImageDisplay.WinForms.Utils;
+using System.ComponentModel;
 
 
 namespace CDS.ImageDisplay.WinForms.Overlays;
@@ -45,13 +43,12 @@ public class TextShape
     /// </summary>
     public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawing)
     {
-        ArgumentNullException.ThrowIfNull(sender);
-        ArgumentNullException.ThrowIfNull(graphics);
-        ArgumentNullException.ThrowIfNull(drawing);
-        if (!drawing.Visible)
-        { return; }
-        if (string.IsNullOrWhiteSpace(Text))
-        { return; }
+        if(sender == null) {  throw new ArgumentNullException(nameof(sender)); }
+        if(graphics == null) {  throw new ArgumentNullException(nameof(graphics)); }
+        if(drawing == null) {  throw new ArgumentNullException(nameof(drawing)); }
+
+        if (!drawing.Visible) { return; }
+        if (string.IsNullOrWhiteSpace(Text)) { return; }
 
         Font font = DrawingToolsPool.GetFont(drawing.Font);
         Brush brush = DrawingToolsPool.GetBrush(drawing.Fill);

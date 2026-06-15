@@ -51,8 +51,8 @@ public sealed class LineAnnotationGeometry : AnnotationGeometry
     /// <inheritdoc/>
     public override void Draw(BitmapDisplayPanel panel, Graphics graphics, bool isSelected)
     {
-        ArgumentNullException.ThrowIfNull(panel);
-        ArgumentNullException.ThrowIfNull(graphics);
+        if (panel == null) { throw new ArgumentNullException(nameof(panel)); }
+        if (graphics == null) { throw new ArgumentNullException(nameof(graphics)); }
 
         if (!Drawing.Visible) { return; }
 
@@ -73,7 +73,7 @@ public sealed class LineAnnotationGeometry : AnnotationGeometry
     /// <inheritdoc/>
     public override AnnotationHitInfo HitTest(BitmapDisplayPanel panel, Point displayPoint, int hitBorder)
     {
-        ArgumentNullException.ThrowIfNull(panel);
+        if (panel == null) { throw new ArgumentNullException(nameof(panel)); }
 
         PointF startDisplay = panel.MapImageToDisplay(new PointF(Start.X, Start.Y), DisplayPixelAlign.Centre);
         PointF endDisplay = panel.MapImageToDisplay(new PointF(End.X, End.Y), DisplayPixelAlign.Centre);
@@ -97,7 +97,7 @@ public sealed class LineAnnotationGeometry : AnnotationGeometry
     /// <inheritdoc/>
     public override void ApplyImageDelta(AnnotationHitInfo hit, Size imageDelta)
     {
-        ArgumentNullException.ThrowIfNull(hit);
+        if (hit == null) { throw new ArgumentNullException(nameof(hit)); }
 
         switch (hit.Kind)
         {

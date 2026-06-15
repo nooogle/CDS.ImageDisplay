@@ -58,8 +58,9 @@ public abstract class AnnotationGeometry
     /// <param name="dragDeltaDisplay">Movement since the drag started, in display pixels.</param>
     public void ApplyDrag(BitmapDisplayPanel panel, AnnotationHitInfo hit, Point dragDeltaDisplay)
     {
-        ArgumentNullException.ThrowIfNull(panel);
-        ArgumentNullException.ThrowIfNull(hit);
+        if(panel is null) throw new ArgumentNullException(nameof(panel));
+        if(hit is null) throw new ArgumentNullException(nameof(hit));
+
         ApplyImageDelta(hit, AnnotationHandleHelper.DisplayDeltaToImageDelta(panel, dragDeltaDisplay));
     }
 
@@ -83,7 +84,7 @@ public abstract class AnnotationGeometry
     /// <param name="target">The newly constructed clone to copy the drawing spec into.</param>
     protected void CopyDrawingTo(AnnotationGeometry target)
     {
-        ArgumentNullException.ThrowIfNull(target);
+        if (target == null) { throw new ArgumentNullException(nameof(target)); }
 
         target.Drawing.Visible = Drawing.Visible;
         target.Drawing.MappingMode = Drawing.MappingMode;

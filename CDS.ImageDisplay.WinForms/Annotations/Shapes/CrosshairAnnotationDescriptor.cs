@@ -23,7 +23,7 @@ public sealed class CrosshairAnnotationDescriptor : IAnnotationShapeDescriptor
     /// <inheritdoc/>
     public AnnotationGeometry CreateGeometry(FreehandPath path)
     {
-        ArgumentNullException.ThrowIfNull(path);
+        if (path == null) { throw new ArgumentNullException(nameof(path)); }
 
         Point centre = path.Points.Count > 0
             ? Point.Round(path.Centroid)

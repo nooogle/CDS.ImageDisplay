@@ -26,7 +26,7 @@ public sealed class PolygonAnnotationDescriptor : IAnnotationShapeDescriptor
     /// <inheritdoc/>
     public AnnotationGeometry CreateGeometry(FreehandPath path)
     {
-        ArgumentNullException.ThrowIfNull(path);
+        if (path == null) { throw new ArgumentNullException(nameof(path)); }
 
         IReadOnlyList<System.Drawing.PointF> points = path.Points;
         var vertices = new List<Point>(Math.Min(points.Count, MaxVertices));

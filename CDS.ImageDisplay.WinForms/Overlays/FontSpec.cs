@@ -52,7 +52,17 @@ public class FontSpec
     /// <summary>
     /// Returns a hash code for this instance.
     /// </summary>
-    public override int GetHashCode() => HashCode.Combine(FontSize, FontName, FontStyle);
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            int hash = 17;
+            hash = (hash * 31) + FontSize.GetHashCode();
+            hash = (hash * 31) + (FontName?.GetHashCode() ?? 0);
+            hash = (hash * 31) + FontStyle.GetHashCode();
+            return hash;
+        }
+    }
 
 
     /// <summary>

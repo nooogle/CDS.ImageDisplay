@@ -67,8 +67,8 @@ public sealed class EllipseAnnotationGeometry : AnnotationGeometry
     /// <inheritdoc/>
     public override void Draw(BitmapDisplayPanel panel, Graphics graphics, bool isSelected)
     {
-        ArgumentNullException.ThrowIfNull(panel);
-        ArgumentNullException.ThrowIfNull(graphics);
+        if (panel == null) { throw new ArgumentNullException(nameof(panel)); }
+        if (graphics == null) { throw new ArgumentNullException(nameof(graphics)); }
 
         if (!Drawing.Visible) { return; }
 
@@ -105,7 +105,7 @@ public sealed class EllipseAnnotationGeometry : AnnotationGeometry
     /// <inheritdoc/>
     public override AnnotationHitInfo HitTest(BitmapDisplayPanel panel, Point displayPoint, int hitBorder)
     {
-        ArgumentNullException.ThrowIfNull(panel);
+        if (panel == null) { throw new ArgumentNullException(nameof(panel)); }
 
         PointF[] handles = GetDisplayHandles(panel);
 
@@ -136,7 +136,7 @@ public sealed class EllipseAnnotationGeometry : AnnotationGeometry
     /// <inheritdoc/>
     public override void ApplyImageDelta(AnnotationHitInfo hit, Size imageDelta)
     {
-        ArgumentNullException.ThrowIfNull(hit);
+        if (hit == null) { throw new ArgumentNullException(nameof(hit)); }
 
         if (hit.Kind == AnnotationHitKind.MoveBody)
         {

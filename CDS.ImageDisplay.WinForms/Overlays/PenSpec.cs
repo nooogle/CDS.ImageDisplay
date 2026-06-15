@@ -54,7 +54,19 @@ public class PenSpec
     /// <summary>
     /// Returns a hash code for this instance.
     /// </summary>
-    public override int GetHashCode() => HashCode.Combine(Color, Width, DashStyle, StartCap, EndCap);
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            int hash = 17;
+            hash = (hash * 31) + Color.GetHashCode();
+            hash = (hash * 31) + Width.GetHashCode();
+            hash = (hash * 31) + DashStyle.GetHashCode();
+            hash = (hash * 31) + StartCap.GetHashCode();
+            hash = (hash * 31) + EndCap.GetHashCode();
+            return hash;
+        }
+    }
 
 
     /// <summary>

@@ -240,7 +240,7 @@ public partial class SingleLineSelectionManager : Component
     /// <param name="container">The component container.</param>
     public SingleLineSelectionManager(IContainer container)
     {
-        ArgumentNullException.ThrowIfNull(container);
+        if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
         container.Add(this);
         InitializeComponent();

@@ -47,7 +47,7 @@ public sealed class FreehandPath
     /// <param name="points">The points in image coordinates.</param>
     public static FreehandPath From(IEnumerable<PointF> points)
     {
-        ArgumentNullException.ThrowIfNull(points);
+        if(points == null) {  throw  new ArgumentNullException(nameof(points)); }
         return new FreehandPath(new List<PointF>(points));
     }
 

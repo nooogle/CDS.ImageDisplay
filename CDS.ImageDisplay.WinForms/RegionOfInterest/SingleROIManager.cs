@@ -251,7 +251,7 @@ public partial class SingleROIManager : Component
     /// </summary>
     public SingleROIManager(IContainer container)
     {
-        ArgumentNullException.ThrowIfNull(container);
+        if (container == null) { throw new ArgumentNullException(nameof(container)); }
 
         container.Add(this);
         InitializeComponent();
