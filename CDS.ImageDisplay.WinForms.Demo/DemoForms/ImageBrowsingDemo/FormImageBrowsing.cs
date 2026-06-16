@@ -43,7 +43,7 @@ internal sealed partial class FormImageBrowsing : Form
         using var dlg = new FolderBrowserDialog
         {
             Description = "Select a folder containing images",
-            SelectedPath = txtFolder.Text,
+            SelectedPath = txtFolder.Text,            
         };
 #if NET6_0_OR_GREATER
         dlg.UseDescriptionForTitle = true;

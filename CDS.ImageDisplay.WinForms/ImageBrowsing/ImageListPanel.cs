@@ -486,6 +486,7 @@ public partial class ImageListPanel : UserControl
     private static IEnumerable<string> GetDefaultFiles(string folder, Regex regex)
     {
         return Directory.EnumerateFiles(folder)
+            .Where(filePath => (File.GetAttributes(filePath) & FileAttributes.Hidden) == 0)
             .Where(filePath => regex.IsMatch(filePath))
             .OrderBy(filePath => filePath, StringComparer.OrdinalIgnoreCase);
     }
