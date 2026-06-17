@@ -31,6 +31,7 @@ bitmapDisplayPanel.SetImage(bitmap);   // safe to call from any thread
 | [Overlays](docs/overlays.md) | Static shapes (`RectangleShape`, `CircleShape`, `LineShape`, …), `DrawingSpec`, `TextPanelStd` |
 | [Annotations](docs/annotations.md) | Interactive freehand annotation, shape recognition, serialization, custom shapes |
 | [Regions of interest](docs/regions-of-interest.md) | `SingleROIManager`, `MultipleROIManager`, line selection |
+| [Image browsing](docs/image-browsing.md) | `ImageListPanel` — virtualised thumbnail list, LRU cache, debounced loading, per-item status indicators |
 
 ## Solution layout
 

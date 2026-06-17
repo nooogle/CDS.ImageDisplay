@@ -63,6 +63,12 @@ public partial class ImageListPanel : UserControl
     private Bitmap? _placeholder;
 
     // -----------------------------------------------------------------------
+    // Status indicator
+    // -----------------------------------------------------------------------
+
+    private Func<string, ImageItemStatus?>? _statusProvider;
+
+    // -----------------------------------------------------------------------
     // Scroll / load state
     // -----------------------------------------------------------------------
 
@@ -123,6 +129,28 @@ public partial class ImageListPanel : UserControl
 
             _fileProvider = value;
             RefreshList();
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets an optional delegate that provides per-item status information for display.
+    /// The delegate receives a file path and returns an <see cref="ImageItemStatus"/>, or
+    /// <see langword="null"/> if no indicator should be shown for that item.
+    /// When <see langword="null"/> (the default), no status indicators are shown and the
+    /// control's appearance and behaviour are identical to one without status support.
+    /// Setting this property repaints the currently visible items.
+    /// </summary>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public Func<string, ImageItemStatus?>? StatusProvider
+    {
+        get => _statusProvider;
+        set
+        {
+            if (ReferenceEquals(_statusProvider, value)) { return; }
+
+            _statusProvider = value;
+            RefreshStatuses();
         }
     }
 
@@ -252,6 +280,29 @@ public partial class ImageListPanel : UserControl
         _listView.SelectedIndices.Clear();
         _listView.SelectedIndices.Add(prev);
         _listView.EnsureVisible(prev);
+    }
+
+    /// <summary>
+    /// Repaints the currently visible items to reflect any changes in the values returned by
+    /// <see cref="StatusProvider"/>, without rebuilding the file list or flushing the thumbnail cache.
+    /// </summary>
+    /// <remarks>
+    /// Call this when statuses change and the list should immediately show the updated indicators.
+    /// Has no effect when the control has no window handle or the list is empty.
+    /// </remarks>
+    public void RefreshStatuses()
+    {
+        if (_files.Count == 0 || !IsHandleCreated || !_listView.IsHandleCreated) { return; }
+
+        int topIndex = _listView.TopItem?.Index ?? 0;
+        int rowHeight = Math.Max(1, _thumbnailHeight + 6);
+        int visibleCount = _listView.ClientSize.Height / rowHeight + 2;
+        int endIndex = Math.Min(_files.Count - 1, topIndex + visibleCount - 1);
+
+        if (topIndex <= endIndex)
+        {
+            _listView.RedrawItems(topIndex, endIndex, true);
+        }
     }
 
     // -----------------------------------------------------------------------
@@ -506,11 +557,27 @@ public partial class ImageListPanel : UserControl
             TouchLru(file); // protect recently-viewed items from eviction
         }
 
-        e.Item = new ListViewItem(Path.GetFileName(file))
+        string displayName = Path.GetFileName(file);
+        var item = new ListViewItem(displayName)
         {
             Tag = file,
             ImageIndex = imageIndex,
         };
+
+        if (_statusProvider is not null)
+        {
+            var status = _statusProvider(file);
+            if (status is not null)
+            {
+                item.BackColor = status.Color;
+                if (!string.IsNullOrEmpty(status.BadgeText))
+                {
+                    item.Text = $"[{status.BadgeText}] {displayName}";
+                }
+            }
+        }
+
+        e.Item = item;
     }
 
     private void OnListViewCacheVirtualItems(object? sender, CacheVirtualItemsEventArgs e)

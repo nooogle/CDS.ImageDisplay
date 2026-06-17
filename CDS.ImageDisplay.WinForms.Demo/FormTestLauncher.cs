@@ -154,6 +154,12 @@ internal sealed partial class FormTestLauncher : Form
             tooltip: "Browse a folder of images with thumbnail previews; use ◀ ▶ or click to step through them",
             parent: this,
             createForm: () => new DemoForms.ImageBrowsingDemo.FormImageBrowsing());
+
+        browsing.AddItem(
+            name: "Status indicators",
+            tooltip: "Demonstrates StatusProvider — each item gets a randomised colour badge; click Randomise to reshuffle",
+            parent: this,
+            createForm: () => new DemoForms.ImageBrowsingDemo.FormImageBrowsingStatus());
     }
 }
 
