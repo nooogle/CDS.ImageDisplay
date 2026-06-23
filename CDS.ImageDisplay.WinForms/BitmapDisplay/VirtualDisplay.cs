@@ -29,6 +29,29 @@ public class VirtualDisplay
     private PointF targetDisplayCentre;
     private float zoom = 1;
     private RectangleF paintRect;
+    private float _mapImageToDisplayScaleFactor = 1.0f;
+
+
+    /// <summary>
+    /// A scale factor applied when mapping image coordinates to display coordinates.
+    /// The inverse is applied when mapping display coordinates to image coordinates.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Clamped to the range 0.01 to 100.0. Default is 1.0. This does not affect
+    /// drawing of the image itself, only clients that use the coordinate-mapping functions.
+    /// </para>
+    /// <para>
+    /// Useful when overlays are generated at a different resolution than the displayed image.
+    /// For example, overlays generated against a full-size image that is being displayed at
+    /// half size require a scale factor of 0.5.
+    /// </para>
+    /// </remarks>
+    public float MapImageToDisplayScaleFactor
+    {
+        get => _mapImageToDisplayScaleFactor;
+        set => _mapImageToDisplayScaleFactor = Math.Max(0.01f, Math.Min(100.0f, value));
+    }
 
 
     /// <summary>
@@ -287,9 +310,12 @@ public class VirtualDisplay
         if (!AnythingToDisplay)
         { return PointF.Empty; }
 
+        float scaledX = imageLocation.X * _mapImageToDisplayScaleFactor;
+        float scaledY = imageLocation.Y * _mapImageToDisplayScaleFactor;
+
         var displayLocation = new PointF(
-            x: paintRect.X + (paintRect.Width * imageLocation.X / imageSize.Width),
-            y: paintRect.Y + (paintRect.Height * imageLocation.Y / imageSize.Height));
+            x: paintRect.X + (paintRect.Width * scaledX / imageSize.Width),
+            y: paintRect.Y + (paintRect.Height * scaledY / imageSize.Height));
 
         return displayLocation;
     }
@@ -304,8 +330,12 @@ public class VirtualDisplay
     /// under the current mouse location.
     /// </remarks>
     /// <param name="displayLocation">A location on the display</param>
+    /// <param name="ignoreScaleFactor">
+    /// When <see langword="true"/>, <see cref="MapImageToDisplayScaleFactor"/> is not applied.
+    /// Use this to recover raw image-pixel coordinates (e.g. for zoom pivot calculation).
+    /// </param>
     /// <returns>A location on the image or an empty point if there's nothing to display</returns>
-    public PointF MapDisplayToImage(PointF displayLocation)
+    public PointF MapDisplayToImage(PointF displayLocation, bool ignoreScaleFactor = false)
     {
         if (!AnythingToDisplay)
         { return PointF.Empty; }
@@ -313,6 +343,13 @@ public class VirtualDisplay
         var imageLocation = new PointF(
             x: (displayLocation.X - paintRect.X) / Zoom,
             y: (displayLocation.Y - paintRect.Y) / Zoom);
+
+        if (!ignoreScaleFactor && _mapImageToDisplayScaleFactor != 1.0f)
+        {
+            imageLocation = new PointF(
+                x: imageLocation.X / _mapImageToDisplayScaleFactor,
+                y: imageLocation.Y / _mapImageToDisplayScaleFactor);
+        }
 
         return imageLocation;
     }
@@ -329,15 +366,18 @@ public class VirtualDisplay
     /// the image.
     /// </remarks>
     /// <param name="displayRect">A region on the image</param>
+    /// <param name="ignoreScaleFactor">
+    /// When <see langword="true"/>, <see cref="MapImageToDisplayScaleFactor"/> is not applied.
+    /// </param>
     /// <returns>A region on the display or an empty rectangle if there's nothing to display</returns>
-    public RectangleF MapDisplayToImage(RectangleF displayRect)
+    public RectangleF MapDisplayToImage(RectangleF displayRect, bool ignoreScaleFactor = false)
     {
         if (!AnythingToDisplay)
         { return RectangleF.Empty; }
 
         var bottomRight = new PointF(displayRect.Right, displayRect.Bottom);
-        PointF imageTopLeft = MapDisplayToImage(displayRect.Location);
-        PointF imageBottomRight = MapDisplayToImage(bottomRight);
+        PointF imageTopLeft = MapDisplayToImage(displayRect.Location, ignoreScaleFactor);
+        PointF imageBottomRight = MapDisplayToImage(bottomRight, ignoreScaleFactor);
 
         var imageRect = RectangleF.FromLTRB(
             left: imageTopLeft.X,
@@ -486,5 +526,6 @@ public class VirtualDisplay
     /// <returns>
     /// Distance in display units, or 0 if there's nothing to display
     /// </returns>
-    public float MapImageToDisplay(float imageDistance) => !AnythingToDisplay ? 0 : imageDistance * zoom;
+    public float MapImageToDisplay(float imageDistance) =>
+        !AnythingToDisplay ? 0 : imageDistance * _mapImageToDisplayScaleFactor * zoom;
 }

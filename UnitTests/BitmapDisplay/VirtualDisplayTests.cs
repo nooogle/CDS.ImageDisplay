@@ -681,6 +681,123 @@ public sealed class VirtualDisplayTests
         actualDistance.Should().Be(expectedDistance);
     }
 
+    /// <summary>
+    /// Verifies that MapImageToDisplayScaleFactor defaults to 1.0 and has no effect at that value.
+    /// </summary>
+    [TestMethod]
+    public void MapImageToDisplayScaleFactorDefaultIsOne()
+    {
+        // Arrange
+        VirtualDisplay virtualDisplay = CreateActualSizeCentredDisplay();
+
+        // Act / Assert
+        virtualDisplay.MapImageToDisplayScaleFactor.Should().Be(1.0f);
+    }
+
+    /// <summary>
+    /// Verifies that MapImageToDisplayScaleFactor is clamped at 0.01.
+    /// </summary>
+    [TestMethod]
+    public void MapImageToDisplayScaleFactorClampsToMinimum()
+    {
+        // Arrange
+        VirtualDisplay virtualDisplay = CreateSubject();
+
+        // Act
+        virtualDisplay.MapImageToDisplayScaleFactor = 0.0f;
+
+        // Assert
+        virtualDisplay.MapImageToDisplayScaleFactor.Should().Be(0.01f);
+    }
+
+    /// <summary>
+    /// Verifies that MapImageToDisplayScaleFactor is clamped at 100.
+    /// </summary>
+    [TestMethod]
+    public void MapImageToDisplayScaleFactorClampsToMaximum()
+    {
+        // Arrange
+        VirtualDisplay virtualDisplay = CreateSubject();
+
+        // Act
+        virtualDisplay.MapImageToDisplayScaleFactor = 200.0f;
+
+        // Assert
+        virtualDisplay.MapImageToDisplayScaleFactor.Should().Be(100.0f);
+    }
+
+    /// <summary>
+    /// Verifies that a scale factor of 0.5 halves image coordinates before mapping to display.
+    /// </summary>
+    [TestMethod]
+    public void MapImageToDisplayWithHalfScaleFactorHalvesImageCoordinate()
+    {
+        // Arrange — actual-size centred, 400×200 image in 1000×1000 display.
+        // PaintRect = (300, 400, 400, 200). At scale 1.0, image (200, 100) → display (500, 500).
+        // At scale 0.5, image (200, 100) is treated as (100, 50) → display (400, 450).
+        VirtualDisplay virtualDisplay = CreateActualSizeCentredDisplay();
+        virtualDisplay.MapImageToDisplayScaleFactor = 0.5f;
+
+        // Act
+        PointF result = virtualDisplay.MapImageToDisplay(new PointF(200, 100));
+
+        // Assert
+        result.Should().BeEquivalentTo(new PointF(400, 450));
+    }
+
+    /// <summary>
+    /// Verifies that MapDisplayToImage with a scale factor of 0.5 doubles the image coordinate returned.
+    /// </summary>
+    [TestMethod]
+    public void MapDisplayToImageWithHalfScaleFactorDoublesImageCoordinate()
+    {
+        // Arrange — at scale 1.0, display (400, 450) → image (100, 50).
+        // With scale 0.5, we divide by 0.5, so the result is (200, 100).
+        VirtualDisplay virtualDisplay = CreateActualSizeCentredDisplay();
+        virtualDisplay.MapImageToDisplayScaleFactor = 0.5f;
+
+        // Act
+        PointF result = virtualDisplay.MapDisplayToImage(new PointF(400, 450));
+
+        // Assert
+        result.Should().BeEquivalentTo(new PointF(200, 100));
+    }
+
+    /// <summary>
+    /// Verifies that MapDisplayToImage with ignoreScaleFactor=true returns raw image coords
+    /// regardless of the scale factor set.
+    /// </summary>
+    [TestMethod]
+    public void MapDisplayToImageIgnoringScaleFactorReturnsRawImageCoordinate()
+    {
+        // Arrange — same setup as above. Raw result at display (400, 450) is image (100, 50).
+        VirtualDisplay virtualDisplay = CreateActualSizeCentredDisplay();
+        virtualDisplay.MapImageToDisplayScaleFactor = 0.5f;
+
+        // Act
+        PointF result = virtualDisplay.MapDisplayToImage(new PointF(400, 450), ignoreScaleFactor: true);
+
+        // Assert
+        result.Should().BeEquivalentTo(new PointF(100, 50));
+    }
+
+    /// <summary>
+    /// Verifies that MapImageToDisplay(float) scales the distance by both the scale factor and zoom.
+    /// </summary>
+    [TestMethod]
+    public void MapImageDistanceToDisplayWithScaleFactorAppliesScaleAndZoom()
+    {
+        // Arrange — zoom = 5, scale factor = 0.5; result = 12.5 * 0.5 * 5 = 31.25
+        VirtualDisplay virtualDisplay = CreateConfiguredFreeDisplay();
+        virtualDisplay.MapImageToDisplayScaleFactor = 0.5f;
+
+        // Act
+        float result = virtualDisplay.MapImageToDisplay(12.5f);
+
+        // Assert
+        result.Should().Be(31.25f);
+    }
+
     private static VirtualDisplay CreateSubject() => new(onPaintRectChanged: (_, _) => { });
 
     private static VirtualDisplay CreateActualSizeCentredDisplay()

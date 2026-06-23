@@ -70,6 +70,31 @@ public partial class BitmapDisplayPanel : UserControl
 
 
     /// <summary>
+    /// A scale factor applied when mapping image coordinates to display coordinates.
+    /// The inverse is applied when mapping display coordinates to image coordinates.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Clamped to the range 0.01 to 100.0. Default is 1.0. This does not affect
+    /// drawing of the image itself, only clients that use the coordinate-mapping functions.
+    /// </para>
+    /// <para>
+    /// Useful when overlays are generated at a different resolution than the displayed image.
+    /// For example, overlays generated against a full-size image that is being displayed at
+    /// half size require a scale factor of 0.5.
+    /// </para>
+    /// </remarks>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Category(s_categoryCDS)]
+    public float MapImageToDisplayScaleFactor
+    {
+        get => _virtualDisplay.MapImageToDisplayScaleFactor;
+        set => _virtualDisplay.MapImageToDisplayScaleFactor = value;
+    }
+
+
+    /// <summary>
     /// Gets the size of the image currently being displayed, or <see cref="Size.Empty"/> if no image is loaded.
     /// </summary>
     [Browsable(false)]
@@ -580,7 +605,7 @@ public partial class BitmapDisplayPanel : UserControl
 
 
     /// <summary>
-    /// Returns the image location where a pixel at <paramref name="displayLocation"/> would 
+    /// Returns the image location where a pixel at <paramref name="displayLocation"/> would
     /// have been drawn.
     /// </summary>
     /// <remarks>
@@ -594,7 +619,21 @@ public partial class BitmapDisplayPanel : UserControl
 
 
     /// <summary>
-    /// Returns the image location where a rectangle at <paramref name="displayRect"/> would 
+    /// Returns the image location where a pixel at <paramref name="displayLocation"/> would
+    /// have been drawn, ignoring any <see cref="MapImageToDisplayScaleFactor"/>.
+    /// </summary>
+    /// <remarks>
+    /// Use this when you need the raw image-pixel coordinate under a display location — for example,
+    /// when computing the zoom pivot point from a mouse position.
+    /// </remarks>
+    /// <param name="displayLocation">A location on the display</param>
+    /// <returns>A location on the image or an empty point if there's nothing to display</returns>
+    public PointF MapDisplayToImageIgnoringScaleFactor(Point displayLocation) =>
+        _virtualDisplay.MapDisplayToImage(displayLocation, ignoreScaleFactor: true);
+
+
+    /// <summary>
+    /// Returns the image location where a rectangle at <paramref name="displayRect"/> would
     /// have been drawn.
     /// </summary>
     /// <remarks>
@@ -747,7 +786,7 @@ public partial class BitmapDisplayPanel : UserControl
         if (AnythingToDisplay)
         {
             Point mouseLocationInDisplayUnits = e.Location;
-            PointF mouseLocationInImageUnits = MapDisplayToImage(mouseLocationInDisplayUnits);
+            PointF mouseLocationInImageUnits = MapDisplayToImageIgnoringScaleFactor(mouseLocationInDisplayUnits);
 
             _zoomManager.OnMouseWheel(
                 imageDisplayMode: DisplayMode,

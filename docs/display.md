@@ -83,6 +83,45 @@ Rectangle screenRect = panel.MapImageToDisplay(
 
 `PaintRect` gives you the current paint-rect, and `SizeOfHalfDisplayPixel` is useful when you need pixel-perfect alignment in custom drawing.
 
+### Overlay scale factor
+
+When overlays are generated at a different resolution than the image being displayed, set `MapImageToDisplayScaleFactor` so that the mapping functions compensate automatically.
+
+```csharp
+// Overlays were produced against a full-resolution image,
+// but we are displaying a half-resolution thumbnail:
+panel.MapImageToDisplayScaleFactor = 0.5f;
+
+// Now overlay coords map correctly to display coords:
+Rectangle screenRect = panel.MapImageToDisplay(
+    new RectangleF(overlayX, overlayY, overlayW, overlayH),
+    DisplayPixelAlign.TopLeft);
+```
+
+The factor is clamped to [0.01, 100.0] and defaults to 1.0. It affects only the coordinate-mapping functions — image rendering is unchanged.
+
+`MapDisplayToImage` applies the inverse, so ROI coordinates returned from the panel are in the same overlay space. When you need the raw image-pixel coordinate (e.g. for internal hit-testing), use `MapDisplayToImageIgnoringScaleFactor`.
+
+## Greyscale palette
+
+For 8-bit indexed (greyscale) images, the `GreyscalePaletteMode` property controls how pixel values are mapped to colours. It has no effect on 24/32-bit images.
+
+| Mode | Behaviour |
+|---|---|
+| `Standard` | 0 → black, 255 → white (default) |
+| `Inverted` | 0 → white, 255 → black |
+| `HighlightSaturated` | Standard greyscale, but fully saturated pixels (255) are highlighted in red |
+
+```csharp
+// Invert the image for X-ray-style viewing:
+panel.GreyscalePaletteMode = GreyscalePaletteMode.Inverted;
+
+// Flag blown-out pixels:
+panel.GreyscalePaletteMode = GreyscalePaletteMode.HighlightSaturated;
+```
+
+Changing the mode triggers an immediate repaint.
+
 ## Custom image sources
 
 Implement `IImageSource` to feed a native pixel buffer without creating an intermediate `Bitmap`. This is useful for OpenCV `Mat` or other image types that expose a pointer to their data:

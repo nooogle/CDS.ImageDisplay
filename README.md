@@ -27,7 +27,7 @@ bitmapDisplayPanel.SetImage(bitmap);   // safe to call from any thread
 
 | Area | Summary |
 |---|---|
-| [Display](docs/display.md) | Zoom/pan, display modes, thread-safe updates, coordinate mapping, custom image sources, paint hooks |
+| [Display](docs/display.md) | Zoom/pan, display modes, thread-safe updates, coordinate mapping, overlay scale factor, greyscale palette modes, custom image sources, paint hooks |
 | [Overlays](docs/overlays.md) | Static shapes (`RectangleShape`, `CircleShape`, `LineShape`, …), `DrawingSpec`, `TextPanelStd` |
 | [Annotations](docs/annotations.md) | Interactive freehand annotation, shape recognition, serialization, custom shapes |
 | [Regions of interest](docs/regions-of-interest.md) | `SingleROIManager`, `MultipleROIManager`, line selection |
