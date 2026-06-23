@@ -1,13 +1,68 @@
+using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace CDS.ImageDisplay.WinForms.Demo.DemoForms;
 
 
 /// <summary>
-/// Utility to generate a bitmap for the overlay demo
+/// Utility to generate bitmaps for demo forms
 /// </summary>
 internal static class BitmapGenerator
 {
+    /// <summary>
+    /// Creates an 8bpp greyscale image designed to showcase greyscale palette modes.
+    /// Contains a smooth diagonal gradient background (0..220) plus two Gaussian hotspots
+    /// that saturate to 255, making the HighlightSaturated palette mode clearly visible.
+    /// </summary>
+    public static Bitmap Make8bppSaturationDemo()
+    {
+        const int width = 480;
+        const int height = 280;
+        const float cx1 = 270f, cy1 = 110f, sigma1 = 52f, amp1 = 300f;
+        const float cx2 = 390f, cy2 = 195f, sigma2 = 30f, amp2 = 250f;
+        const float totalRange = width + height;
+
+        var bitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+
+        var palette = bitmap.Palette;
+        for (int i = 0; i < 256; i++)
+        {
+            palette.Entries[i] = Color.FromArgb(i, i, i);
+        }
+        bitmap.Palette = palette;
+
+        var bitmapData = bitmap.LockBits(
+            new Rectangle(0, 0, width, height),
+            System.Drawing.Imaging.ImageLockMode.WriteOnly,
+            System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+
+        var buffer = new byte[bitmapData.Stride * height];
+
+        for (int y = 0; y < height; y++)
+        {
+            int rowOffset = y * bitmapData.Stride;
+            for (int x = 0; x < width; x++)
+            {
+                float background = 5f + (x + y) / totalRange * 210f;
+
+                float dx1 = x - cx1, dy1 = y - cy1;
+                float g1 = amp1 * (float)Math.Exp(-(dx1 * dx1 + dy1 * dy1) / (2f * sigma1 * sigma1));
+
+                float dx2 = x - cx2, dy2 = y - cy2;
+                float g2 = amp2 * (float)Math.Exp(-(dx2 * dx2 + dy2 * dy2) / (2f * sigma2 * sigma2));
+
+                float value = background + g1 + g2;
+                buffer[rowOffset + x] = (byte)Math.Max(0, Math.Min(255, (int)value));
+            }
+        }
+
+        Marshal.Copy(buffer, 0, bitmapData.Scan0, buffer.Length);
+        bitmap.UnlockBits(bitmapData);
+        return bitmap;
+    }
+
+
     public static Bitmap Make(Size imageSize)
     {
         var bitmap = new Bitmap(imageSize.Width, imageSize.Height, format: System.Drawing.Imaging.PixelFormat.Format32bppArgb);

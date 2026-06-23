@@ -62,6 +62,12 @@ internal sealed partial class FormTestLauncher : Form
             createForm: () => new DemoForms.FormNoImage());
 
         basics.AddItem(
+            name: "Greyscale palette modes",
+            tooltip: "Three panels showing the same 8-bit image with Standard, Inverted, and Highlight Saturated palette modes",
+            parent: this,
+            createForm: () => new DemoForms.FormGreyscalePalette());
+
+        basics.AddItem(
             name: "Fit to window",
             tooltip: "Form with single image configured to always resize to fit to the window constraints",
             parent: this,

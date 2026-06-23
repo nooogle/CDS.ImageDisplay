@@ -454,6 +454,31 @@ public partial class BitmapDisplayPanel : UserControl
 
 
     /// <summary>
+    /// Palette mode applied to 8bpp indexed images.
+    /// </summary>
+    /// <remarks>
+    /// Only affects images with <see cref="System.Drawing.Imaging.PixelFormat.Format8bppIndexed"/>;
+    /// has no visible effect on 24/32-bit images. Changing the mode triggers a repaint.
+    /// </remarks>
+    [Category(s_categoryCDS)]
+    [Description("Palette mode applied to 8bpp indexed images.")]
+    [DefaultValue(GreyscalePaletteMode.Standard)]
+    public GreyscalePaletteMode GreyscalePaletteMode
+    {
+        get => _displayImage.GreyscalePaletteMode;
+
+        set
+        {
+            if (_displayImage.GreyscalePaletteMode != value)
+            {
+                _displayImage.GreyscalePaletteMode = value;
+                Invalidate();
+            }
+        }
+    }
+
+
+    /// <summary>
     /// The virtual display wants to set a new paint rect
     /// </summary>
     private void VirtualImageOnDisplay_OnPaintRectChanged(VirtualDisplay sender, RectangleF paintRect)
