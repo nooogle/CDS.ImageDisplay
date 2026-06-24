@@ -132,6 +132,14 @@ internal sealed partial class FormTestLauncher : Form
             tooltip: "Demonstrates how to use the overlays tools for drawing on top of an image using image-coordinates regardless of the current pan and zoom",
             parent: this,
             createForm: () => new DemoForms.OverlaysDemo.FormOverlays(_settingsManager.Settings.DemoForms.OverlaysDemo));
+
+        other.AddItem(
+            name: "Overlay scale factor",
+            tooltip: "Two panels share the same overlay rectangle defined in full-size coordinates. " +
+                     "The right panel shows a quarter-size image with MapImageToDisplayScaleFactor = 0.25 " +
+                     "so the overlay aligns correctly despite the downscaled image.",
+            parent: this,
+            createForm: () => new DemoForms.FormScaleFactorDemo());
     }
 
     private void AddAnnotationsDemoNodes()

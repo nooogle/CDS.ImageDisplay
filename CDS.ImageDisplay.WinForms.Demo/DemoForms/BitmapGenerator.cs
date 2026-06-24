@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
 
 namespace CDS.ImageDisplay.WinForms.Demo.DemoForms;
@@ -88,6 +89,57 @@ internal static class BitmapGenerator
             g.DrawLine((y % 100 == 0) ? pen100 : pen10, 0, y, width, y);
         }
     }
+
+    /// <summary>
+    /// Creates a synthetic machine-vision-style image with five coloured blobs on a grey background.
+    /// Two blobs (green, orange) fall inside the overlay rectangle used by <see cref="FormScaleFactorDemo"/>.
+    /// </summary>
+    public static Bitmap MakeBlobDetectionDemo(Size size)
+    {
+        var bitmap = new Bitmap(size.Width, size.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+        using var g = Graphics.FromImage(bitmap);
+        g.SmoothingMode = SmoothingMode.AntiAlias;
+
+        g.Clear(Color.FromArgb(155, 160, 162));
+
+        using var gridPen = new Pen(Color.FromArgb(25, 0, 0, 0), 1);
+        for (int x = 0; x < size.Width; x += 20)
+        { g.DrawLine(gridPen, x, 0, x, size.Height); }
+        for (int y = 0; y < size.Height; y += 20)
+        { g.DrawLine(gridPen, 0, y, size.Width, y); }
+
+        DrawBlob(g, 80, 80, 25, Color.Tomato);
+        DrawBlob(g, 320, 200, 40, Color.LimeGreen);
+        DrawBlob(g, 490, 340, 35, Color.DodgerBlue);
+        DrawBlob(g, 230, 340, 30, Color.Orange);
+        DrawBlob(g, 80, 380, 20, Color.MediumPurple);
+
+        return bitmap;
+    }
+
+    private static void DrawBlob(Graphics g, float cx, float cy, float radius, Color color)
+    {
+        using var fill = new SolidBrush(color);
+        using var outline = new Pen(Color.FromArgb(200, 0, 0, 0), 2);
+        g.FillEllipse(fill, cx - radius, cy - radius, radius * 2, radius * 2);
+        g.DrawEllipse(outline, cx - radius, cy - radius, radius * 2, radius * 2);
+    }
+
+
+    /// <summary>
+    /// Returns a new bitmap scaled by <paramref name="factor"/> using bicubic interpolation.
+    /// </summary>
+    public static Bitmap ScaleDown(Bitmap source, float factor)
+    {
+        int w = Math.Max(1, (int)(source.Width * factor));
+        int h = Math.Max(1, (int)(source.Height * factor));
+        var result = new Bitmap(w, h, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+        using var g = Graphics.FromImage(result);
+        g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+        g.DrawImage(source, 0, 0, w, h);
+        return result;
+    }
+
 
     private static void FillBackground(int width, int height, Bitmap bitmap)
     {
