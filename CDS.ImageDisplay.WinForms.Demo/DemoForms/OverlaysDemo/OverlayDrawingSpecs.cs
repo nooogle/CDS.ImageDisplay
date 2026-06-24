@@ -17,6 +17,7 @@ internal sealed class OverlayDrawingSpecs
     public DrawingSpec Polygons { get; set; } = new DrawingSpec();
     public DrawingSpec CrossHair { get; set; } = new DrawingSpec();
     public DrawingSpec Bubbles { get; set; } = new DrawingSpec();
+    public DrawingSpec Donuts { get; set; } = new DrawingSpec();
 
 
 
@@ -57,5 +58,10 @@ internal sealed class OverlayDrawingSpecs
         Bubbles.Lines.Color = Color.FromArgb(128, Color.Navy);
         Bubbles.Fill.Color = Color.FromArgb(64, Color.Navy);
         Bubbles.MappingMode = MappingMode.DirectToDisplay;
+
+        Donuts.Fill.Color = Color.FromArgb(64, Color.LimeGreen);
+        Donuts.Lines.Color = Color.Green;
+        Donuts.Lines.Width = 2;
+        Donuts.Lines.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
     }
 }

@@ -39,5 +39,8 @@ internal static class OverlayPainter
         shapes.Circle2.Draw(bitmapDisplayPanel, graphics, overlaySettings.Circles);
 
         shapes.PolygonShape.Draw(bitmapDisplayPanel, graphics, overlaySettings.Polygons);
+
+        shapes.DonutRing.Draw(bitmapDisplayPanel, graphics, overlaySettings.Donuts);
+        shapes.DonutSlice.Draw(bitmapDisplayPanel, graphics, overlaySettings.Donuts);
     }
 }

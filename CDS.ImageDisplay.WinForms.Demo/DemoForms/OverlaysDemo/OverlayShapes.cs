@@ -105,6 +105,28 @@ internal sealed class OverlayShapes
     public WinForms.Overlays.CircleShape Circle2 { get; set; } = new WinForms.Overlays.CircleShape { Centre = new PointF(300, 500), Radius = 50 };
 
     public WinForms.Overlays.PolygonShape PolygonShape { get; set; }
+
+    // Full elliptical ring — shows that the donut follows image zoom/pan
+    public WinForms.Overlays.DonutShape DonutRing { get; set; } = new WinForms.Overlays.DonutShape
+    {
+        Centre = new PointF(620, 400),
+        SemiMajorAxis = 80,
+        SemiMinorAxis = 50,
+        MajorAxisAngleDegrees = 20,
+        SweepAngle = 360,
+        Thickness = 20,
+    };
+
+    // Partial arc slice — 270° sweep demonstrates the start/sweep-angle properties
+    public WinForms.Overlays.DonutShape DonutSlice { get; set; } = new WinForms.Overlays.DonutShape
+    {
+        Centre = new PointF(450, 490),
+        SemiMajorAxis = 60,
+        SemiMinorAxis = 60,
+        StartAngle = 0,
+        SweepAngle = 270,
+        Thickness = 25,
+    };
 }
 
 
