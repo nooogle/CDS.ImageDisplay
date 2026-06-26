@@ -65,9 +65,9 @@ public sealed class EllipseAnnotationGeometry : AnnotationGeometry
     }
 
     /// <inheritdoc/>
-    public override void Draw(BitmapDisplayPanel panel, Graphics graphics, bool isSelected)
+    public override void Draw(ICoordinateMapper mapper, Graphics graphics, bool isSelected)
     {
-        if (panel == null) { throw new ArgumentNullException(nameof(panel)); }
+        if (mapper == null) { throw new ArgumentNullException(nameof(mapper)); }
         if (graphics == null) { throw new ArgumentNullException(nameof(graphics)); }
 
         if (!Drawing.Visible) { return; }
@@ -75,9 +75,9 @@ public sealed class EllipseAnnotationGeometry : AnnotationGeometry
         Pen pen = DrawingToolsPool.GetPen(Drawing.Lines);
         Brush brush = DrawingToolsPool.GetBrush(Drawing.Fill);
 
-        PointF centreDisplay = panel.MapImageToDisplay(Center, DisplayPixelAlign.Centre);
-        float semiMajorDisplay = panel.MapImageToDisplay(SemiMajor);
-        float semiMinorDisplay = panel.MapImageToDisplay(SemiMinor);
+        PointF centreDisplay = mapper.MapPoint(Center, DisplayPixelAlign.Centre);
+        float semiMajorDisplay = mapper.MapDistance(SemiMajor);
+        float semiMinorDisplay = mapper.MapDistance(SemiMinor);
 
         GraphicsState state = graphics.Save();
         try
@@ -94,7 +94,7 @@ public sealed class EllipseAnnotationGeometry : AnnotationGeometry
 
         if (isSelected)
         {
-            PointF[] handles = GetDisplayHandles(panel);
+            PointF[] handles = GetDisplayHandles(mapper);
             foreach (PointF h in handles)
             {
                 AnnotationHandleHelper.DrawHandle(graphics, pen, brush, h);
@@ -119,6 +119,7 @@ public sealed class EllipseAnnotationGeometry : AnnotationGeometry
 
         // Body hit: transform display point into ellipse local coordinates and test unit ellipse.
         PointF centreDisplay = panel.MapImageToDisplay(Center, DisplayPixelAlign.Centre);
+
         float semiMajorDisplay = panel.MapImageToDisplay(SemiMajor);
         float semiMinorDisplay = panel.MapImageToDisplay(SemiMinor);
 
@@ -212,7 +213,7 @@ public sealed class EllipseAnnotationGeometry : AnnotationGeometry
         AngleDegrees = MathF.Atan2(newY - Center.Y, newX - Center.X) * 180f / MathF.PI;
     }
 
-    private PointF[] GetDisplayHandles(BitmapDisplayPanel panel)
+    private PointF[] GetDisplayHandles(ICoordinateMapper mapper)
     {
         float rad = AngleDegrees * MathF.PI / 180f;
         float cosA = MathF.Cos(rad);
@@ -228,11 +229,11 @@ public sealed class EllipseAnnotationGeometry : AnnotationGeometry
 
         return
         [
-            panel.MapImageToDisplay(majorPos, DisplayPixelAlign.Centre),
-            panel.MapImageToDisplay(majorNeg, DisplayPixelAlign.Centre),
-            panel.MapImageToDisplay(minorPos, DisplayPixelAlign.Centre),
-            panel.MapImageToDisplay(minorNeg, DisplayPixelAlign.Centre),
-            panel.MapImageToDisplay(rotHandle, DisplayPixelAlign.Centre),
+            mapper.MapPoint(majorPos, DisplayPixelAlign.Centre),
+            mapper.MapPoint(majorNeg, DisplayPixelAlign.Centre),
+            mapper.MapPoint(minorPos, DisplayPixelAlign.Centre),
+            mapper.MapPoint(minorNeg, DisplayPixelAlign.Centre),
+            mapper.MapPoint(rotHandle, DisplayPixelAlign.Centre),
         ];
     }
 

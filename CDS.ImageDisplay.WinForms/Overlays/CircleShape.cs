@@ -43,9 +43,9 @@ public class CircleShape
     /// <summary>
     /// Draws the circle.
     /// </summary>
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawing)
+    public void Draw(ICoordinateMapper mapper, Graphics graphics, DrawingSpec drawing)
     {
-        if (sender == null) { throw new ArgumentNullException(nameof(sender)); }
+        if (mapper == null) { throw new ArgumentNullException(nameof(mapper)); }
         if (graphics == null) { throw new ArgumentNullException(nameof(graphics)); }
         if (drawing == null) { throw new ArgumentNullException(nameof(drawing)); }
         if (!drawing.Visible)
@@ -60,7 +60,7 @@ public class CircleShape
 
         if (drawing.MappingMode == MappingMode.ImageToDisplay)
         {
-            squareAroundCircle = sender.MapImageToDisplay(squareAroundCircle, pixelAdjust: PixelAlign);
+            squareAroundCircle = mapper.MapRect(squareAroundCircle, PixelAlign);
         }
 
         graphics.FillEllipse(brush, squareAroundCircle);

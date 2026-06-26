@@ -50,19 +50,19 @@ public sealed class RectAnnotationGeometry : AnnotationGeometry
         new(Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height);
 
     /// <inheritdoc/>
-    public override void Draw(BitmapDisplayPanel panel, Graphics graphics, bool isSelected)
+    public override void Draw(ICoordinateMapper mapper, Graphics graphics, bool isSelected)
     {
-        if (panel == null) { throw new ArgumentNullException(nameof(panel)); }
+        if (mapper == null) { throw new ArgumentNullException(nameof(mapper)); }
         if (graphics == null) { throw new ArgumentNullException(nameof(graphics)); }
 
         if (!Drawing.Visible || Bounds.IsEmpty) { return; }
 
-        Rectangle displayRect = panel.MapImageToDisplay((RectangleF)Bounds, DisplayPixelAlign.TopLeft);
+        RectangleF displayRect = mapper.MapRect((RectangleF)Bounds, DisplayPixelAlign.TopLeft);
         Pen pen = DrawingToolsPool.GetPen(Drawing.Lines);
         Brush brush = DrawingToolsPool.GetBrush(Drawing.Fill);
 
         graphics.FillRectangle(brush, displayRect);
-        graphics.DrawRectangle(pen, displayRect);
+        graphics.DrawRectangle(pen, displayRect.X, displayRect.Y, displayRect.Width, displayRect.Height);
 
         if (isSelected)
         {
@@ -164,7 +164,7 @@ public sealed class RectAnnotationGeometry : AnnotationGeometry
         return clone;
     }
 
-    private static PointF[] GetHandleDisplayPoints(Rectangle displayRect) =>
+    private static PointF[] GetHandleDisplayPoints(RectangleF displayRect) =>
     [
         new(displayRect.Left, displayRect.Top),
         new(displayRect.Right, displayRect.Top),

@@ -65,9 +65,9 @@ public class DonutShape
 
 
     /// <summary>Draws the donut shape on the display.</summary>
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawing)
+    public void Draw(ICoordinateMapper mapper, Graphics graphics, DrawingSpec drawing)
     {
-        if (sender == null) { throw new ArgumentNullException(nameof(sender)); }
+        if (mapper == null) { throw new ArgumentNullException(nameof(mapper)); }
         if (graphics == null) { throw new ArgumentNullException(nameof(graphics)); }
         if (drawing == null) { throw new ArgumentNullException(nameof(drawing)); }
         if (!drawing.Visible) { return; }
@@ -86,13 +86,10 @@ public class DonutShape
             float innerMajor = Math.Max(0f, SemiMajorAxis - halfThick);
             float innerMinor = Math.Max(0f, SemiMinorAxis - halfThick);
 
-            // Map both bounding rects through the full zoom+scale pipeline.
-            // MapImageToDisplayF correctly applies zoom × MapImageToDisplayScaleFactor,
-            // so we get the right display-space sizes regardless of current zoom.
-            RectangleF outerDisplay = sender.MapImageToDisplayF(
+            RectangleF outerDisplay = mapper.MapRect(
                 new RectangleF(Centre.X - (SemiMajorAxis + halfThick), Centre.Y - (SemiMinorAxis + halfThick),
                                (SemiMajorAxis + halfThick) * 2f, (SemiMinorAxis + halfThick) * 2f), PixelAlign);
-            RectangleF innerDisplay = sender.MapImageToDisplayF(
+            RectangleF innerDisplay = mapper.MapRect(
                 new RectangleF(Centre.X - innerMajor, Centre.Y - innerMinor,
                                innerMajor * 2f, innerMinor * 2f), PixelAlign);
 

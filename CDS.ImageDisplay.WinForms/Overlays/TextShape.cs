@@ -41,11 +41,11 @@ public class TextShape
     /// <summary>
     /// Draws the text on the display
     /// </summary>
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawing)
+    public void Draw(ICoordinateMapper mapper, Graphics graphics, DrawingSpec drawing)
     {
-        if(sender == null) {  throw new ArgumentNullException(nameof(sender)); }
-        if(graphics == null) {  throw new ArgumentNullException(nameof(graphics)); }
-        if(drawing == null) {  throw new ArgumentNullException(nameof(drawing)); }
+        if (mapper == null) { throw new ArgumentNullException(nameof(mapper)); }
+        if (graphics == null) { throw new ArgumentNullException(nameof(graphics)); }
+        if (drawing == null) { throw new ArgumentNullException(nameof(drawing)); }
 
         if (!drawing.Visible) { return; }
         if (string.IsNullOrWhiteSpace(Text)) { return; }
@@ -55,7 +55,7 @@ public class TextShape
 
         PointF pointOnDisplay =
             drawing.MappingMode == MappingMode.ImageToDisplay ?
-            sender.MapImageToDisplay(Location, PixelAlign) :
+            mapper.MapPoint(Location, PixelAlign) :
             Location;
 
         graphics.DrawString(Text, font, brush, pointOnDisplay);

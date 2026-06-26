@@ -157,6 +157,12 @@ internal sealed partial class FormTestLauncher : Form
             tooltip: "Full labelling-app demo with annotation list, title/notes editing, and JSON save/load",
             parent: this,
             createForm: () => new DemoForms.AnnotationsDemo.FormAnnotationsDetailed());
+
+        annotations.AddItem(
+            name: "Annotations: save to bitmap",
+            tooltip: "Draw annotations on the Thailand image then save the result as a PNG",
+            parent: this,
+            createForm: () => new DemoForms.AnnotationsDemo.FormAnnotationsToBitmap());
     }
 
     private void AddImageBrowsingDemoNodes()

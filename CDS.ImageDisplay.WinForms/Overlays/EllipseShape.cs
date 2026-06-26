@@ -56,9 +56,9 @@ public class EllipseShape
     /// <summary>
     /// Draws the shape
     /// </summary>
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawing)
+    public void Draw(ICoordinateMapper mapper, Graphics graphics, DrawingSpec drawing)
     {
-        if (sender == null) { throw new ArgumentNullException(nameof(sender)); }
+        if (mapper == null) { throw new ArgumentNullException(nameof(mapper)); }
         if (graphics == null) { throw new ArgumentNullException(nameof(graphics)); }
         if (drawing == null) { throw new ArgumentNullException(nameof(drawing)); }
         if (!drawing.Visible)
@@ -74,17 +74,17 @@ public class EllipseShape
         {
             PointF centreOnDisplay =
                 drawing.MappingMode == MappingMode.ImageToDisplay ?
-                sender.MapImageToDisplay(Centre, PixelAlign) :
+                mapper.MapPoint(Centre, PixelAlign) :
                 Centre;
 
             float majorAxisOnDisplay =
                 drawing.MappingMode == MappingMode.ImageToDisplay ?
-                sender.MapImageToDisplay(MajorAxis) :
+                mapper.MapDistance(MajorAxis) :
                 MajorAxis;
 
             float minorAxisOnDisplay =
                 drawing.MappingMode == MappingMode.ImageToDisplay ?
-                sender.MapImageToDisplay(MinorAxis) :
+                mapper.MapDistance(MinorAxis) :
                 MinorAxis;
 
             // Translate to the center of the ellipse

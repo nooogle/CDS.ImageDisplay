@@ -43,9 +43,9 @@ public class LineShape
     /// <summary>
     /// Draws the line on the display
     /// </summary>
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawingSpec)
+    public void Draw(ICoordinateMapper mapper, Graphics graphics, DrawingSpec drawingSpec)
     {
-        if (sender == null) { throw new ArgumentNullException(nameof(sender)); }
+        if (mapper == null) { throw new ArgumentNullException(nameof(mapper)); }
         if (graphics == null) { throw new ArgumentNullException(nameof(graphics)); }
         if (drawingSpec == null) { throw new ArgumentNullException(nameof(drawingSpec)); }
         if (!drawingSpec.Visible)
@@ -55,12 +55,12 @@ public class LineShape
 
         PointF startOnDisplay =
             drawingSpec.MappingMode == MappingMode.ImageToDisplay ?
-            sender.MapImageToDisplay(Start, pixelAdjust: PixelAlign) :
+            mapper.MapPoint(Start, PixelAlign) :
             Start;
 
         PointF endOnDisplay =
             drawingSpec.MappingMode == MappingMode.ImageToDisplay ?
-            sender.MapImageToDisplay(End, pixelAdjust: PixelAlign) :
+            mapper.MapPoint(End, PixelAlign) :
             End;
 
         graphics.DrawLine(pen, startOnDisplay, endOnDisplay);

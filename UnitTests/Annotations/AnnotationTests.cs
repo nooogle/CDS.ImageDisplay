@@ -130,7 +130,7 @@ public sealed class AnnotationTests
     {
         public override RectangleF GetBoundingBox() => RectangleF.Empty;
 
-        public override void Draw(BitmapDisplayPanel panel, Graphics graphics, bool isSelected) { }
+        public override void Draw(ICoordinateMapper mapper, Graphics graphics, bool isSelected) { }
 
         public override AnnotationHitInfo HitTest(BitmapDisplayPanel panel, Point displayPoint, int hitBorder)
             => AnnotationHitInfo.Miss;

@@ -73,9 +73,9 @@ public sealed class RotatedRectAnnotationGeometry : AnnotationGeometry
     }
 
     /// <inheritdoc/>
-    public override void Draw(BitmapDisplayPanel panel, Graphics graphics, bool isSelected)
+    public override void Draw(ICoordinateMapper mapper, Graphics graphics, bool isSelected)
     {
-        if (panel == null) { throw new ArgumentNullException(nameof(panel)); }
+        if (mapper == null) { throw new ArgumentNullException(nameof(mapper)); }
         if (graphics == null) { throw new ArgumentNullException(nameof(graphics)); }
 
         if (!Drawing.Visible) { return; }
@@ -83,9 +83,9 @@ public sealed class RotatedRectAnnotationGeometry : AnnotationGeometry
         Pen pen = DrawingToolsPool.GetPen(Drawing.Lines);
         Brush brush = DrawingToolsPool.GetBrush(Drawing.Fill);
 
-        PointF centreDisplay = panel.MapImageToDisplay(Center, DisplayPixelAlign.Centre);
-        float widthDisplay = panel.MapImageToDisplay(Width);
-        float heightDisplay = panel.MapImageToDisplay(Height);
+        PointF centreDisplay = mapper.MapPoint(Center, DisplayPixelAlign.Centre);
+        float widthDisplay = mapper.MapDistance(Width);
+        float heightDisplay = mapper.MapDistance(Height);
 
         GraphicsState state = graphics.Save();
         try
@@ -104,7 +104,7 @@ public sealed class RotatedRectAnnotationGeometry : AnnotationGeometry
 
         if (isSelected)
         {
-            PointF[] handles = GetDisplayHandles(panel);
+            PointF[] handles = GetDisplayHandles(mapper);
             foreach (PointF h in handles)
             {
                 AnnotationHandleHelper.DrawHandle(graphics, pen, brush, h);
@@ -241,7 +241,7 @@ public sealed class RotatedRectAnnotationGeometry : AnnotationGeometry
         ];
     }
 
-    private PointF[] GetDisplayHandles(BitmapDisplayPanel panel)
+    private PointF[] GetDisplayHandles(ICoordinateMapper mapper)
     {
         PointF[] imageCorners = GetImageCorners();
 
@@ -254,11 +254,11 @@ public sealed class RotatedRectAnnotationGeometry : AnnotationGeometry
 
         return
         [
-            panel.MapImageToDisplay(imageCorners[0], DisplayPixelAlign.Centre),
-            panel.MapImageToDisplay(imageCorners[1], DisplayPixelAlign.Centre),
-            panel.MapImageToDisplay(imageCorners[2], DisplayPixelAlign.Centre),
-            panel.MapImageToDisplay(imageCorners[3], DisplayPixelAlign.Centre),
-            panel.MapImageToDisplay(rotHandleImage, DisplayPixelAlign.Centre),
+            mapper.MapPoint(imageCorners[0], DisplayPixelAlign.Centre),
+            mapper.MapPoint(imageCorners[1], DisplayPixelAlign.Centre),
+            mapper.MapPoint(imageCorners[2], DisplayPixelAlign.Centre),
+            mapper.MapPoint(imageCorners[3], DisplayPixelAlign.Centre),
+            mapper.MapPoint(rotHandleImage, DisplayPixelAlign.Centre),
         ];
     }
 

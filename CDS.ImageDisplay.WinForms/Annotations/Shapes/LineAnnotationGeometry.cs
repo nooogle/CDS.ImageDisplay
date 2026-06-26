@@ -49,15 +49,15 @@ public sealed class LineAnnotationGeometry : AnnotationGeometry
     }
 
     /// <inheritdoc/>
-    public override void Draw(BitmapDisplayPanel panel, Graphics graphics, bool isSelected)
+    public override void Draw(ICoordinateMapper mapper, Graphics graphics, bool isSelected)
     {
-        if (panel == null) { throw new ArgumentNullException(nameof(panel)); }
+        if (mapper == null) { throw new ArgumentNullException(nameof(mapper)); }
         if (graphics == null) { throw new ArgumentNullException(nameof(graphics)); }
 
         if (!Drawing.Visible) { return; }
 
-        PointF startDisplay = panel.MapImageToDisplay(new PointF(Start.X, Start.Y), DisplayPixelAlign.Centre);
-        PointF endDisplay = panel.MapImageToDisplay(new PointF(End.X, End.Y), DisplayPixelAlign.Centre);
+        PointF startDisplay = mapper.MapPoint(new PointF(Start.X, Start.Y), DisplayPixelAlign.Centre);
+        PointF endDisplay = mapper.MapPoint(new PointF(End.X, End.Y), DisplayPixelAlign.Centre);
         Pen pen = DrawingToolsPool.GetPen(Drawing.Lines);
         Brush brush = DrawingToolsPool.GetBrush(Drawing.Fill);
 

@@ -11,7 +11,7 @@ namespace CDS.ImageDisplay.WinForms.BitmapDisplay;
 /// <summary>
 /// Displays a bitmap
 /// </summary>
-public partial class BitmapDisplayPanel : UserControl
+public partial class BitmapDisplayPanel : UserControl, ICoordinateMapper
 {
     private const string s_categoryCDS = "CDS";
 
@@ -896,4 +896,14 @@ public partial class BitmapDisplayPanel : UserControl
     /// </summary>
     public int MapImageToDisplay(float imageDistance) =>
         (int)Math.Round(_virtualDisplay.MapImageToDisplay(imageDistance: imageDistance));
+
+
+    PointF ICoordinateMapper.MapPoint(PointF point, DisplayPixelAlign pixelAdjust) =>
+        MapImageToDisplay(point, pixelAdjust);
+
+    RectangleF ICoordinateMapper.MapRect(RectangleF rect, DisplayPixelAlign pixelAdjust) =>
+        MapImageToDisplayF(rect, pixelAdjust);
+
+    float ICoordinateMapper.MapDistance(float distance) =>
+        MapImageToDisplay(distance);
 }

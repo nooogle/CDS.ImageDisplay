@@ -47,9 +47,9 @@ public class PolygonShape
     /// <summary>
     /// Draws the polygon on the display
     /// </summary>
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawing)
+    public void Draw(ICoordinateMapper mapper, Graphics graphics, DrawingSpec drawing)
     {
-        if (sender == null) { throw new ArgumentNullException(nameof(sender)); }
+        if (mapper == null) { throw new ArgumentNullException(nameof(mapper)); }
         if (graphics == null) { throw new ArgumentNullException(nameof(graphics)); }
         if (drawing == null) { throw new ArgumentNullException(nameof(drawing)); }
         if ((_points.Length < 3) || !drawing.Visible)
@@ -71,7 +71,7 @@ public class PolygonShape
             pointsOnDisplay = new PointF[_points.Length];
             for (int i = 0; i < _points.Length; i++)
             {
-                pointsOnDisplay[i] = sender.MapImageToDisplay(_points[i], pixelAdjust: PixelAlign);
+                pointsOnDisplay[i] = mapper.MapPoint(_points[i], PixelAlign);
             }
         }
 

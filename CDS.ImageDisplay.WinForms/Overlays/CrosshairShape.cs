@@ -49,9 +49,9 @@ public class CrosshairShape
     /// <summary>
     /// Draw the crosshair on the display
     /// </summary>
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawing)
+    public void Draw(ICoordinateMapper mapper, Graphics graphics, DrawingSpec drawing)
     {
-        if (sender == null) { throw new ArgumentNullException(nameof(sender)); }
+        if (mapper == null) { throw new ArgumentNullException(nameof(mapper)); }
         if (graphics == null) { throw new ArgumentNullException(nameof(graphics)); }
         if (drawing == null) { throw new ArgumentNullException(nameof(drawing)); }
         if (!drawing.Visible)
@@ -61,7 +61,7 @@ public class CrosshairShape
 
         PointF centreOnDisplay =
             drawing.MappingMode == MappingMode.ImageToDisplay ?
-            sender.MapImageToDisplay(Centre, PixelAlign) :
+            mapper.MapPoint(Centre, PixelAlign) :
             Centre;
 
         // top line

@@ -44,14 +44,14 @@ public sealed class CrosshairAnnotationGeometry : AnnotationGeometry
     public override RectangleF GetBoundingBox() => RectangleF.Empty;
 
     /// <inheritdoc/>
-    public override void Draw(BitmapDisplayPanel panel, Graphics graphics, bool isSelected)
+    public override void Draw(ICoordinateMapper mapper, Graphics graphics, bool isSelected)
     {
-        if (panel == null) { throw new ArgumentNullException(nameof(panel)); }
+        if (mapper == null) { throw new ArgumentNullException(nameof(mapper)); }
         if (graphics == null) { throw new ArgumentNullException(nameof(graphics)); }
 
         if (!Drawing.Visible) { return; }
 
-        PointF c = panel.MapImageToDisplay(new PointF(Centre.X, Centre.Y), DisplayPixelAlign.Centre);
+        PointF c = mapper.MapPoint(new PointF(Centre.X, Centre.Y), DisplayPixelAlign.Centre);
         Pen pen = DrawingToolsPool.GetPen(Drawing.Lines);
         Brush brush = DrawingToolsPool.GetBrush(Drawing.Fill);
 

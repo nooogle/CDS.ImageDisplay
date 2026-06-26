@@ -51,15 +51,15 @@ public sealed class CircleAnnotationGeometry : AnnotationGeometry
         new(Centre.X - Radius, Centre.Y - Radius, Radius * 2f, Radius * 2f);
 
     /// <inheritdoc/>
-    public override void Draw(BitmapDisplayPanel panel, Graphics graphics, bool isSelected)
+    public override void Draw(ICoordinateMapper mapper, Graphics graphics, bool isSelected)
     {
-        if (panel == null) { throw new ArgumentNullException(nameof(panel)); }
+        if (mapper == null) { throw new ArgumentNullException(nameof(mapper)); }
         if (graphics == null) { throw new ArgumentNullException(nameof(graphics)); }
 
         if (!Drawing.Visible) { return; }
 
-        PointF centreDisplay = panel.MapImageToDisplay(new PointF(Centre.X, Centre.Y), DisplayPixelAlign.Centre);
-        float radiusDisplay = panel.MapImageToDisplay((float)Radius);
+        PointF centreDisplay = mapper.MapPoint(new PointF(Centre.X, Centre.Y), DisplayPixelAlign.Centre);
+        float radiusDisplay = mapper.MapDistance((float)Radius);
         var boundingRect = new RectangleF(
             centreDisplay.X - radiusDisplay,
             centreDisplay.Y - radiusDisplay,

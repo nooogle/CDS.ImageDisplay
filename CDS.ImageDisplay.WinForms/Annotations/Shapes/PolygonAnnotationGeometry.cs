@@ -61,14 +61,14 @@ public sealed class PolygonAnnotationGeometry : AnnotationGeometry
     }
 
     /// <inheritdoc/>
-    public override void Draw(BitmapDisplayPanel panel, Graphics graphics, bool isSelected)
+    public override void Draw(ICoordinateMapper mapper, Graphics graphics, bool isSelected)
     {
-        if (panel == null) { throw new ArgumentNullException(nameof(panel)); }
+        if (mapper == null) { throw new ArgumentNullException(nameof(mapper)); }
         if (graphics == null) { throw new ArgumentNullException(nameof(graphics)); }
 
         if (!Drawing.Visible || _vertices.Count < 3) { return; }
 
-        PointF[] displayPoints = GetDisplayPoints(panel);
+        PointF[] displayPoints = GetDisplayPoints(mapper);
         Pen pen = DrawingToolsPool.GetPen(Drawing.Lines);
         Brush brush = DrawingToolsPool.GetBrush(Drawing.Fill);
 
@@ -140,13 +140,13 @@ public sealed class PolygonAnnotationGeometry : AnnotationGeometry
         return clone;
     }
 
-    private PointF[] GetDisplayPoints(BitmapDisplayPanel panel)
+    private PointF[] GetDisplayPoints(ICoordinateMapper mapper)
     {
         var points = new PointF[_vertices.Count];
 
         for (int i = 0; i < _vertices.Count; i++)
         {
-            points[i] = panel.MapImageToDisplay(new PointF(_vertices[i].X, _vertices[i].Y), DisplayPixelAlign.Centre);
+            points[i] = mapper.MapPoint(new PointF(_vertices[i].X, _vertices[i].Y), DisplayPixelAlign.Centre);
         }
 
         return points;

@@ -34,12 +34,12 @@ public abstract class AnnotationGeometry
     public abstract RectangleF GetBoundingBox();
 
     /// <summary>
-    /// Draws the annotation on the panel.
+    /// Draws the annotation.
     /// </summary>
-    /// <param name="panel">The panel being painted.</param>
+    /// <param name="mapper">Maps image coordinates to the target surface.</param>
     /// <param name="graphics">The graphics context.</param>
     /// <param name="isSelected">When <see langword="true"/>, also draws resize and move handles.</param>
-    public abstract void Draw(BitmapDisplayPanel panel, Graphics graphics, bool isSelected);
+    public abstract void Draw(ICoordinateMapper mapper, Graphics graphics, bool isSelected);
 
     /// <summary>
     /// Tests whether the given display-coordinate point is over this annotation.

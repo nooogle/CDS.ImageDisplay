@@ -36,9 +36,9 @@ public class RectangleShape
     /// <summary>
     /// Draws the rectangle on the display
     /// </summary>
-    public void Draw(BitmapDisplayPanel sender, Graphics graphics, DrawingSpec drawing)
+    public void Draw(ICoordinateMapper mapper, Graphics graphics, DrawingSpec drawing)
     {
-        if (sender == null) { throw new ArgumentNullException(nameof(sender)); }
+        if (mapper == null) { throw new ArgumentNullException(nameof(mapper)); }
         if (graphics == null) { throw new ArgumentNullException(nameof(graphics)); }
         if (drawing == null) { throw new ArgumentNullException(nameof(drawing)); }
         if (!drawing.Visible)
@@ -49,7 +49,7 @@ public class RectangleShape
 
         RectangleF rectangleOnDisplay =
             drawing.MappingMode == MappingMode.ImageToDisplay ?
-            sender.MapImageToDisplayF(Rect, pixelAdjust: PixelAlign) :
+            mapper.MapRect(Rect, PixelAlign) :
             Rect;
 
         graphics.FillRectangle(brush, rectangleOnDisplay);

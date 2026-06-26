@@ -193,6 +193,23 @@ public partial class AnnotationManager : Component
         BitmapDisplayPanel?.Invalidate();
     }
 
+    /// <summary>
+    /// Draws all annotations onto <paramref name="graphics"/> using 1:1 image coordinates.
+    /// Use this to render annotations onto a <see cref="System.Drawing.Bitmap"/> for saving to disk.
+    /// </summary>
+    /// <param name="graphics">The graphics context obtained from the target bitmap.</param>
+    /// <param name="showLabels">When <see langword="true"/>, draws annotation labels. Default <see langword="true"/>.</param>
+    public void DrawAnnotationsToBitmap(Graphics graphics, bool showLabels = true)
+    {
+        if (graphics == null) { throw new ArgumentNullException(nameof(graphics)); }
+
+        foreach (Annotation annotation in _annotations)
+        {
+            annotation.Geometry.Draw(IdentityCoordinateMapper.Instance, graphics, isSelected: false);
+            if (showLabels) { DrawAnnotationLabel(annotation, IdentityCoordinateMapper.Instance, graphics); }
+        }
+    }
+
     /// <summary>Removes all annotations and repaints without firing individual events.</summary>
     public void ClearAnnotations()
     {
@@ -402,7 +419,7 @@ public partial class AnnotationManager : Component
     private static readonly BrushSpec s_labelBackingSpec = new() { Color = Color.FromArgb(160, Color.Black) };
     private static readonly BrushSpec s_labelTextSpec = new() { Color = Color.White };
 
-    private static void DrawAnnotationLabel(Annotation annotation, BitmapDisplayPanel panel, Graphics graphics)
+    private static void DrawAnnotationLabel(Annotation annotation, ICoordinateMapper mapper, Graphics graphics)
     {
         string text = string.IsNullOrEmpty(annotation.Label) ? annotation.Title : annotation.Label;
         if (string.IsNullOrEmpty(text)) { return; }
@@ -410,7 +427,7 @@ public partial class AnnotationManager : Component
         RectangleF bbox = annotation.Geometry.GetBoundingBox();
         if (bbox.IsEmpty) { return; }
 
-        PointF displayTL = panel.MapImageToDisplay(new PointF(bbox.Left, bbox.Top), DisplayPixelAlign.TopLeft);
+        PointF displayTL = mapper.MapPoint(new PointF(bbox.Left, bbox.Top), DisplayPixelAlign.TopLeft);
 
         Font font = DrawingToolsPool.GetFont(s_labelFontSpec);
         SizeF textSize = graphics.MeasureString(text, font);
