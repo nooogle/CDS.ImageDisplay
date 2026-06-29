@@ -14,6 +14,15 @@ namespace CDS.ImageDisplay.WinForms.Overlays;
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
 public class PenSpec
 {
+    private Color _color = Color.Red;
+    private float _width = 1;
+    private DashStyle _dashStyle = DashStyle.Solid;
+    private LineCap _startCap = LineCap.Flat;
+    private LineCap _endCap = LineCap.Flat;
+
+    /// <summary>Raised when any property of this specification changes.</summary>
+    public event EventHandler? Changed;
+
     /// <summary>
     /// Simple string representation of this instance.
     /// </summary>
@@ -24,31 +33,51 @@ public class PenSpec
     /// The color of the pen.
     /// </summary>
     [JsonConverter(typeof(ColorJsonConverter))]
-    public Color Color { get; set; } = Color.Red;
+    public Color Color
+    {
+        get => _color;
+        set { if (_color == value) { return; } _color = value; Changed?.Invoke(this, EventArgs.Empty); }
+    }
 
 
     /// <summary>
     /// The width of the pen.
     /// </summary>
-    public float Width { get; set; } = 1;
+    public float Width
+    {
+        get => _width;
+        set { if (_width == value) { return; } _width = value; Changed?.Invoke(this, EventArgs.Empty); }
+    }
 
 
     /// <summary>
     /// The dash style of the pen.
     /// </summary>
-    public DashStyle DashStyle { get; set; } = DashStyle.Solid;
+    public DashStyle DashStyle
+    {
+        get => _dashStyle;
+        set { if (_dashStyle == value) { return; } _dashStyle = value; Changed?.Invoke(this, EventArgs.Empty); }
+    }
 
 
     /// <summary>
     /// The start cap of the pen.
     /// </summary>
-    public LineCap StartCap { get; set; } = LineCap.Flat;
+    public LineCap StartCap
+    {
+        get => _startCap;
+        set { if (_startCap == value) { return; } _startCap = value; Changed?.Invoke(this, EventArgs.Empty); }
+    }
 
 
     /// <summary>
     /// The end cap of the pen.
     /// </summary>
-    public LineCap EndCap { get; set; } = LineCap.Flat;
+    public LineCap EndCap
+    {
+        get => _endCap;
+        set { if (_endCap == value) { return; } _endCap = value; Changed?.Invoke(this, EventArgs.Empty); }
+    }
 
 
     /// <summary>

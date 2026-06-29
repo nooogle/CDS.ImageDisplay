@@ -12,6 +12,11 @@ namespace CDS.ImageDisplay.WinForms.Overlays;
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
 public class BrushSpec
 {
+    private Color _color = Color.Transparent;
+
+    /// <summary>Raised when any property of this specification changes.</summary>
+    public event EventHandler? Changed;
+
     /// <summary>
     /// Simple string representation of this instance.
     /// </summary>
@@ -22,7 +27,11 @@ public class BrushSpec
     /// The color of the brush.
     /// </summary>
     [JsonConverter(typeof(ColorJsonConverter))]
-    public Color Color { get; set; } = Color.Transparent;
+    public Color Color
+    {
+        get => _color;
+        set { if (_color == value) { return; } _color = value; Changed?.Invoke(this, EventArgs.Empty); }
+    }
 
 
     /// <summary>

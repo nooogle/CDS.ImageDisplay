@@ -124,6 +124,15 @@ public partial class AnnotationManager : Component
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Annotation? SelectedAnnotation => _selectedAnnotation;
 
+    /// <summary>
+    /// When set, the drawing specification of each newly committed annotation is initialised
+    /// by copying from this instance before <see cref="AnnotationCreated"/> fires.
+    /// Set to <see langword="null"/> to leave each descriptor's default colours in place.
+    /// </summary>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public DrawingSpec? DefaultDrawingSpec { get; set; }
+
     // -----------------------------------------------------------------------
     // Events
     // -----------------------------------------------------------------------
@@ -142,6 +151,13 @@ public partial class AnnotationManager : Component
 
     /// <summary>Fired when the selected annotation is deselected.</summary>
     public event EventHandler? AnnotationDeselected;
+
+    /// <summary>
+    /// Fired when the drawing specification of any managed annotation changes.
+    /// Use this to refresh a <see cref="System.Windows.Forms.PropertyGrid"/> that is
+    /// displaying the annotation's <see cref="DrawingSpec"/>.
+    /// </summary>
+    public event EventHandler? AnnotationDrawingChanged;
 
     /// <summary>
     /// Fired when a drag operation is about to begin on a selected annotation.
@@ -178,17 +194,18 @@ public partial class AnnotationManager : Component
     {
         if (annotation == null) { throw new ArgumentNullException(nameof(annotation)); }
         _annotations.Add(annotation);
+        SubscribeDrawing(annotation.Geometry.Drawing);
         BitmapDisplayPanel?.Invalidate();
     }
 
     /// <summary>Removes an annotation and fires <see cref="AnnotationDeleted"/>.</summary>
     public void RemoveAnnotation(Annotation annotation)
     {
-        if (annotation == null) { throw new ArgumentNullException(nameof(annotation)); } _annotations.Remove(annotation);
+        if (annotation == null) { throw new ArgumentNullException(nameof(annotation)); }
         if (!_annotations.Remove(annotation)) { return; }
 
+        UnsubscribeDrawing(annotation.Geometry.Drawing);
         if (_selectedAnnotation == annotation) { ClearSelection(); }
-
         AnnotationDeleted?.Invoke(this, new AnnotationDeletedEventArgs(annotation));
         BitmapDisplayPanel?.Invalidate();
     }
@@ -214,6 +231,7 @@ public partial class AnnotationManager : Component
     public void ClearAnnotations()
     {
         if (_annotations.Count == 0) { return; }
+        foreach (Annotation annotation in _annotations) { UnsubscribeDrawing(annotation.Geometry.Drawing); }
         if (_selectedAnnotation != null) { ClearSelection(); }
         _annotations.Clear();
         BitmapDisplayPanel?.Invalidate();
@@ -542,7 +560,9 @@ public partial class AnnotationManager : Component
     {
         if (_preDragSnapshot != null && _selectedAnnotation != null)
         {
+            UnsubscribeDrawing(_selectedAnnotation.Geometry.Drawing);
             _selectedAnnotation.Geometry = _preDragSnapshot;
+            SubscribeDrawing(_selectedAnnotation.Geometry.Drawing);
         }
 
         _preDragSnapshot = null;
@@ -566,7 +586,9 @@ public partial class AnnotationManager : Component
     private void CommitAnnotation(IAnnotationShapeDescriptor descriptor, FreehandPath path, BitmapDisplayPanel panel)
     {
         var annotation = new Annotation(descriptor.CreateGeometry(path));
+        if (DefaultDrawingSpec != null) { annotation.Geometry.Drawing.CopyFrom(DefaultDrawingSpec); }
         _annotations.Add(annotation);
+        SubscribeDrawing(annotation.Geometry.Drawing);
         AnnotationCreated?.Invoke(this, new AnnotationCreatedEventArgs(annotation));
         panel.Invalidate();
     }
@@ -617,6 +639,22 @@ public partial class AnnotationManager : Component
 
         var (annotation, _) = HitTestAll(displayPoint, panel);
         panel.Cursor = annotation != null ? Cursors.SizeAll : Cursors.Default;
+    }
+
+    // -----------------------------------------------------------------------
+    // Drawing-change subscriptions
+    // -----------------------------------------------------------------------
+
+    private void SubscribeDrawing(DrawingSpec drawing) =>
+        drawing.Changed += OnAnnotationDrawingChanged;
+
+    private void UnsubscribeDrawing(DrawingSpec drawing) =>
+        drawing.Changed -= OnAnnotationDrawingChanged;
+
+    private void OnAnnotationDrawingChanged(object? sender, EventArgs e)
+    {
+        BitmapDisplayPanel?.Invalidate();
+        AnnotationDrawingChanged?.Invoke(this, EventArgs.Empty);
     }
 
     // -----------------------------------------------------------------------

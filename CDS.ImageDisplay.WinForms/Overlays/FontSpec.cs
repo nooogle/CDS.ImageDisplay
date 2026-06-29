@@ -12,6 +12,13 @@ namespace CDS.ImageDisplay.WinForms.Overlays;
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
 public class FontSpec
 {
+    private int _fontSize = 12;
+    private string _fontName = "Arial";
+    private FontStyle _fontStyle = FontStyle.Regular;
+
+    /// <summary>Raised when any property of this specification changes.</summary>
+    public event EventHandler? Changed;
+
     /// <summary>
     /// Simple string representation of this instance.
     /// </summary>
@@ -22,20 +29,32 @@ public class FontSpec
     /// Gets or sets the font size.
     /// </summary>
     /// <value>The size of the font.</value>
-    public int FontSize { get; set; } = 12;
+    public int FontSize
+    {
+        get => _fontSize;
+        set { if (_fontSize == value) { return; } _fontSize = value; Changed?.Invoke(this, EventArgs.Empty); }
+    }
 
 
     /// <summary>
     /// Gets or sets the font name.
     /// </summary>
     /// <value>The name of the font.</value>
-    public string FontName { get; set; } = "Arial";
+    public string FontName
+    {
+        get => _fontName;
+        set { if (_fontName == value) { return; } _fontName = value ?? "Arial"; Changed?.Invoke(this, EventArgs.Empty); }
+    }
 
 
     /// <summary>
     /// Gets or sets the font style.
     /// </summary>
-    public FontStyle FontStyle { get; set; } = FontStyle.Regular;
+    public FontStyle FontStyle
+    {
+        get => _fontStyle;
+        set { if (_fontStyle == value) { return; } _fontStyle = value; Changed?.Invoke(this, EventArgs.Empty); }
+    }
 
 
     /// <summary>
