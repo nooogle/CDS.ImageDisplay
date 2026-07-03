@@ -6,8 +6,8 @@ using CDS.ImageDisplay.WinForms.Annotations.Internal;
 namespace CDS.ImageDisplay.WinForms.Annotations.Shapes;
 
 /// <summary>
-/// Descriptor for ellipse annotations. Fits a rotated ellipse to the freehand gesture
-/// using PCA to determine the optimal orientation and axis lengths.
+/// Descriptor for ellipse annotations. Uses a direct algebraic fit when enough points are
+/// available (7+), falling back to PCA for shorter paths.
 /// </summary>
 public sealed class EllipseAnnotationDescriptor : IAnnotationShapeDescriptor
 {
@@ -15,7 +15,7 @@ public sealed class EllipseAnnotationDescriptor : IAnnotationShapeDescriptor
     public string Name => "Ellipse";
 
     /// <inheritdoc/>
-    public string Description => "Rotated ellipse fitted to the drawn gesture via PCA";
+    public string Description => "Rotated ellipse fitted to the drawn gesture";
 
     /// <inheritdoc/>
     public float FitScore(FreehandPath path)
@@ -30,15 +30,15 @@ public sealed class EllipseAnnotationDescriptor : IAnnotationShapeDescriptor
         float h = bbox.Height;
         if (w < 1f || h < 1f) { return 0f; }
 
-        // Aspect ratio check: reject near-circles (handled by CircleAnnotationDescriptor).
+        // Reject near-circles — those are handled by CircleAnnotationDescriptor.
         float aspect = MathF.Max(w, h) / MathF.Min(w, h);
         float aspectFactor = FreehandPathAnalyser.Clamp01((aspect - 1.3f) / 0.3f);
         if (aspectFactor <= 0f) { return 0f; }
 
-        // Compute PCA ellipse and check how well points lie on its boundary.
-        (PointF center, float semiMajor, float semiMinor, float angleDeg) = ComputePcaEllipse(points);
-        float meanError = MeanPcaEllipseBoundaryError(points, center, semiMajor, semiMinor, angleDeg);
-        float boundaryScore = FreehandPathAnalyser.Clamp01(1f - meanError / 0.3f);
+        // For 7+ points use the algebraic direct fit; fall back to PCA for shorter paths.
+        float boundaryScore = points.Count >= 7
+            ? AlgebraicBoundaryScore(points)
+            : PcaBoundaryScore(points);
 
         return aspectFactor * boundaryScore;
     }
@@ -52,7 +52,17 @@ public sealed class EllipseAnnotationDescriptor : IAnnotationShapeDescriptor
         PointF center;
         float semiMajor, semiMinor, angleDegrees;
 
-        if (points.Count < 2)
+        // Prefer the algebraic fit (needs 5+ points); fall back to PCA.
+        FittedEllipse? fit = points.Count >= 5 ? FreehandPathAnalyser.FitEllipse(points) : null;
+
+        if (fit.HasValue)
+        {
+            center = fit.Value.Center;
+            semiMajor = fit.Value.SemiMajor;
+            semiMinor = fit.Value.SemiMinor;
+            angleDegrees = fit.Value.AngleDegrees;
+        }
+        else if (points.Count < 2)
         {
             center = points.Count == 1 ? points[0] : PointF.Empty;
             semiMajor = 1f;
@@ -72,7 +82,25 @@ public sealed class EllipseAnnotationDescriptor : IAnnotationShapeDescriptor
     }
 
     // -----------------------------------------------------------------------
-    // PCA helpers
+    // Scoring helpers
+    // -----------------------------------------------------------------------
+
+    private static float AlgebraicBoundaryScore(IReadOnlyList<PointF> points)
+    {
+        FittedEllipse? fit = FreehandPathAnalyser.FitEllipse(points);
+        if (!fit.HasValue) { return PcaBoundaryScore(points); }
+        return FreehandPathAnalyser.Clamp01(1f - fit.Value.MeanAlgebraicError / 0.3f);
+    }
+
+    private static float PcaBoundaryScore(IReadOnlyList<PointF> points)
+    {
+        (PointF center, float semiMajor, float semiMinor, float angleDeg) = ComputePcaEllipse(points);
+        float meanError = MeanPcaEllipseBoundaryError(points, center, semiMajor, semiMinor, angleDeg);
+        return FreehandPathAnalyser.Clamp01(1f - meanError / 0.3f);
+    }
+
+    // -----------------------------------------------------------------------
+    // PCA ellipse helpers
     // -----------------------------------------------------------------------
 
     private static (PointF center, float semiMajor, float semiMinor, float angleDegrees)
@@ -97,7 +125,12 @@ public sealed class EllipseAnnotationDescriptor : IAnnotationShapeDescriptor
         mxy /= points.Count;
         myy /= points.Count;
 
-        // Principal axis angle.
+        // Eigenvalues of the covariance matrix: λ = ((mxx+myy) ± sqrt((mxx-myy)²+4·mxy²)) / 2
+        float sqrtDisc = MathF.Sqrt((mxx - myy) * (mxx - myy) + 4f * mxy * mxy);
+        float lambda1 = (mxx + myy + sqrtDisc) / 2f; // larger → major axis
+        float lambda2 = (mxx + myy - sqrtDisc) / 2f; // smaller → minor axis
+
+        // Principal axis angle (of the major axis).
         float theta;
         if (MathF.Abs(mxy) < 1e-6f)
         {
@@ -105,40 +138,21 @@ public sealed class EllipseAnnotationDescriptor : IAnnotationShapeDescriptor
         }
         else
         {
-            float trace = mxx + myy;
-            float det = mxx * myy - mxy * mxy;
-            float lambda1 = (trace + MathF.Sqrt(MathF.Max(0f, trace * trace - 4f * det))) / 2f;
             theta = MathF.Atan2(lambda1 - myy, mxy);
         }
 
-        float cosT = MathF.Cos(theta);
-        float sinT = MathF.Sin(theta);
+        // For points uniformly sampled by angle on an ellipse, variance λ = semiAxis²/2,
+        // so semiAxis = sqrt(2λ). This is more robust than using the maximum projection.
+        float semiMajor = MathF.Max(1f, MathF.Sqrt(2f * MathF.Max(0f, lambda1)));
+        float semiMinor = MathF.Max(1f, MathF.Sqrt(2f * MathF.Max(0f, lambda2)));
 
-        // Project points onto the two axes and take the maximum absolute projection
-        // as the semi-axis length. This gives the bounding ellipse in the PCA orientation.
-        float maxU = 0f, maxV = 0f;
-        foreach (PointF p in points)
-        {
-            float dx = p.X - cx, dy = p.Y - cy;
-            float u = MathF.Abs(dx * cosT + dy * sinT);
-            float v = MathF.Abs(-dx * sinT + dy * cosT);
-            if (u > maxU) { maxU = u; }
-            if (v > maxV) { maxV = v; }
-        }
-
-        float semiMajor = MathF.Max(1f, maxU);
-        float semiMinor = MathF.Max(1f, maxV);
-
-        // Ensure semiMajor >= semiMinor by convention.
         if (semiMinor > semiMajor)
         {
             (semiMajor, semiMinor) = (semiMinor, semiMajor);
             theta += MathF.PI / 2f;
         }
 
-        float angleDeg = theta * 180f / MathF.PI;
-
-        return (new PointF(cx, cy), semiMajor, semiMinor, angleDeg);
+        return (new PointF(cx, cy), semiMajor, semiMinor, theta * 180f / MathF.PI);
     }
 
     private static float MeanPcaEllipseBoundaryError(
@@ -154,7 +168,6 @@ public sealed class EllipseAnnotationDescriptor : IAnnotationShapeDescriptor
         foreach (PointF p in points)
         {
             float dx = p.X - center.X, dy = p.Y - center.Y;
-            // Rotate into ellipse local frame.
             float u = dx * cosA + dy * sinA;
             float v = -dx * sinA + dy * cosA;
             float norm = (u / semiMajor) * (u / semiMajor) + (v / semiMinor) * (v / semiMinor);

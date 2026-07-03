@@ -50,6 +50,7 @@ internal sealed partial class FormAnnotationsDetailed : Form
     private void annotationManager_AnnotationModified(object sender, AnnotationModifiedEventArgs e)
     {
         RefreshListViewItem(e.Annotation);
+        propertyGrid.Refresh();
         SetStatus($"Modified: {GeometryTypeName(e.Annotation)} \"{e.Annotation.Title}\"");
     }
 
@@ -130,6 +131,7 @@ internal sealed partial class FormAnnotationsDetailed : Form
         txtNotes.Text = ann?.Notes ?? string.Empty;
         txtTitle.Enabled = ann != null;
         txtNotes.Enabled = ann != null;
+        propertyGrid.SelectedObject = ann;
         _updatingFields = false;
     }
 
@@ -140,6 +142,7 @@ internal sealed partial class FormAnnotationsDetailed : Form
         if (ann == null) { return; }
         ann.Title = txtTitle.Text;
         RefreshListViewItem(ann);
+        propertyGrid.Refresh();
     }
 
     private void txtNotes_TextChanged(object sender, EventArgs e)
@@ -148,6 +151,21 @@ internal sealed partial class FormAnnotationsDetailed : Form
         var ann = annotationManager.SelectedAnnotation;
         if (ann == null) { return; }
         ann.Notes = txtNotes.Text;
+        propertyGrid.Refresh();
+    }
+
+    private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+    {
+        var ann = annotationManager.SelectedAnnotation;
+        if (ann == null) { return; }
+
+        _updatingFields = true;
+        txtTitle.Text = ann.Title;
+        txtNotes.Text = ann.Notes;
+        _updatingFields = false;
+
+        RefreshListViewItem(ann);
+        bitmapDisplayPanel.Invalidate();
     }
 
     // -----------------------------------------------------------------------

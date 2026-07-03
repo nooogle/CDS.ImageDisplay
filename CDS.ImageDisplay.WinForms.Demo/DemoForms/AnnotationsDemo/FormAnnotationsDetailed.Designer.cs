@@ -37,6 +37,8 @@ namespace CDS.ImageDisplay.WinForms.Demo.DemoForms.AnnotationsDemo
             listView = new System.Windows.Forms.ListView();
             colType = new System.Windows.Forms.ColumnHeader();
             colTitle = new System.Windows.Forms.ColumnHeader();
+            labelProperties = new System.Windows.Forms.Label();
+            propertyGrid = new System.Windows.Forms.PropertyGrid();
             labelTitle = new System.Windows.Forms.Label();
             txtTitle = new System.Windows.Forms.TextBox();
             labelNotes = new System.Windows.Forms.Label();
@@ -77,6 +79,8 @@ namespace CDS.ImageDisplay.WinForms.Demo.DemoForms.AnnotationsDemo
             leftPanel.Controls.Add(checkCanCreateAnnotations);
             leftPanel.Controls.Add(checkCanEditAnnotations);
             leftPanel.Controls.Add(listView);
+            leftPanel.Controls.Add(labelProperties);
+            leftPanel.Controls.Add(propertyGrid);
             leftPanel.Controls.Add(labelTitle);
             leftPanel.Controls.Add(txtTitle);
             leftPanel.Controls.Add(labelNotes);
@@ -118,13 +122,13 @@ namespace CDS.ImageDisplay.WinForms.Demo.DemoForms.AnnotationsDemo
             // 
             // listView
             // 
-            listView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            listView.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             listView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { colType, colTitle });
             listView.FullRowSelect = true;
             listView.Location = new System.Drawing.Point(4, 30);
             listView.MultiSelect = false;
             listView.Name = "listView";
-            listView.Size = new System.Drawing.Size(270, 343);
+            listView.Size = new System.Drawing.Size(270, 148);
             listView.TabIndex = 0;
             listView.UseCompatibleStateImageBehavior = false;
             listView.View = System.Windows.Forms.View.Details;
@@ -133,12 +137,30 @@ namespace CDS.ImageDisplay.WinForms.Demo.DemoForms.AnnotationsDemo
             // 
             colType.Text = "Type";
             colType.Width = 90;
-            // 
+            //
             // colTitle
-            // 
+            //
             colTitle.Text = "Title";
             colTitle.Width = 174;
-            // 
+            //
+            // labelProperties
+            //
+            labelProperties.AutoSize = true;
+            labelProperties.Location = new System.Drawing.Point(4, 183);
+            labelProperties.Name = "labelProperties";
+            labelProperties.Size = new System.Drawing.Size(66, 15);
+            labelProperties.TabIndex = 11;
+            labelProperties.Text = "Properties:";
+            //
+            // propertyGrid
+            //
+            propertyGrid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            propertyGrid.Location = new System.Drawing.Point(4, 201);
+            propertyGrid.Name = "propertyGrid";
+            propertyGrid.Size = new System.Drawing.Size(270, 168);
+            propertyGrid.TabIndex = 12;
+            propertyGrid.PropertyValueChanged += propertyGrid_PropertyValueChanged;
+            //
             // labelTitle
             // 
             labelTitle.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
@@ -273,6 +295,8 @@ namespace CDS.ImageDisplay.WinForms.Demo.DemoForms.AnnotationsDemo
         private System.Windows.Forms.ListView listView;
         private System.Windows.Forms.ColumnHeader colType;
         private System.Windows.Forms.ColumnHeader colTitle;
+        private System.Windows.Forms.Label labelProperties;
+        private System.Windows.Forms.PropertyGrid propertyGrid;
         private System.Windows.Forms.Label labelTitle;
         private System.Windows.Forms.TextBox txtTitle;
         private System.Windows.Forms.Label labelNotes;

@@ -1,10 +1,12 @@
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Text.Json.Serialization;
 using CDS.ImageDisplay.WinForms.Annotations.Internal;
 using CDS.ImageDisplay.WinForms.Annotations.Shapes;
 using CDS.ImageDisplay.WinForms.BitmapDisplay;
 using CDS.ImageDisplay.WinForms.Overlays;
+using CDS.ImageDisplay.WinForms.Utils;
 
 namespace CDS.ImageDisplay.WinForms.Annotations;
 
@@ -12,6 +14,7 @@ namespace CDS.ImageDisplay.WinForms.Annotations;
 /// Base class for the geometry of an annotation. Owns the shape coordinates and visual style,
 /// and is responsible for drawing, hit-testing, and applying drag operations.
 /// </summary>
+[TypeConverter(typeof(SerializableExpandableObjectConverter))]
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
 [JsonDerivedType(typeof(RectAnnotationGeometry), "rect")]
 [JsonDerivedType(typeof(CircleAnnotationGeometry), "circle")]

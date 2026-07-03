@@ -40,7 +40,20 @@ public sealed class CircleAnnotationDescriptor : IAnnotationShapeDescriptor
         float perimeterRatio = path.ApproximatePerimeter / (2f * MathF.PI * MathF.Max(meanR, 1f));
         float perimeterScore = FreehandPathAnalyser.Clamp01(1f - MathF.Abs(perimeterRatio - 1f) / 0.5f);
 
-        return aspectScore * varianceScore * perimeterScore;
+        // For 7+ points use the algebraic ellipse fit to confirm the shape is circular.
+        // Only applied when the fit succeeds and has low residual error; otherwise neutral (1).
+        float algebraicScore = 1f;
+        if (path.Points.Count >= 7)
+        {
+            FittedEllipse? fit = FreehandPathAnalyser.FitEllipse(path.Points);
+            if (fit.HasValue && fit.Value.MeanAlgebraicError < 0.3f)
+            {
+                float axisRatio = fit.Value.SemiMinor / fit.Value.SemiMajor;
+                algebraicScore = FreehandPathAnalyser.Clamp01((axisRatio - 0.7f) / 0.3f);
+            }
+        }
+
+        return aspectScore * varianceScore * perimeterScore * algebraicScore;
     }
 
     /// <inheritdoc/>
