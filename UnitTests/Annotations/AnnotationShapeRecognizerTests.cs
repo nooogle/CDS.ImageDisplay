@@ -25,6 +25,24 @@ public sealed class AnnotationShapeRecognizerTests
         return FreehandPath.From(pts);
     }
 
+    private static FreehandPath MakeDiagonalLinePath()
+    {
+        var pts = new List<PointF>();
+        for (int i = 0; i <= 20; i++) { pts.Add(new PointF(i * 10f, i * 10f)); }
+        return FreehandPath.From(pts);
+    }
+
+    private static FreehandPath MakeWobblyLinePath()
+    {
+        var pts = new List<PointF>();
+        for (int x = 0; x <= 200; x += 10)
+        {
+            float wobble = MathF.Sin(x * 0.1f) * 8f;
+            pts.Add(new PointF(x, 50f + wobble));
+        }
+        return FreehandPath.From(pts);
+    }
+
     private static FreehandPath MakeRectPath()
     {
         var pts = new List<PointF>();
@@ -70,6 +88,26 @@ public sealed class AnnotationShapeRecognizerTests
     public void LineDescriptor_FitScore_ScoresHighForLinePath()
     {
         float score = new LineAnnotationDescriptor().FitScore(MakeLinePath());
+        score.Should().BeGreaterThan(AnnotationShapeRecognizer.ConfidenceThreshold);
+    }
+
+    /// <summary>
+    /// Line descriptor should score above the confidence threshold for a 45-degree diagonal line.
+    /// </summary>
+    [TestMethod]
+    public void LineDescriptor_FitScore_ScoresHighForDiagonalLinePath()
+    {
+        float score = new LineAnnotationDescriptor().FitScore(MakeDiagonalLinePath());
+        score.Should().BeGreaterThan(AnnotationShapeRecognizer.ConfidenceThreshold);
+    }
+
+    /// <summary>
+    /// Line descriptor should score above the confidence threshold for a slightly wobbly horizontal line.
+    /// </summary>
+    [TestMethod]
+    public void LineDescriptor_FitScore_ScoresHighForWobblyLinePath()
+    {
+        float score = new LineAnnotationDescriptor().FitScore(MakeWobblyLinePath());
         score.Should().BeGreaterThan(AnnotationShapeRecognizer.ConfidenceThreshold);
     }
 

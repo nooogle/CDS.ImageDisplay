@@ -26,6 +26,13 @@ namespace CDS.ImageDisplay.WinForms.Annotations;
 public abstract class AnnotationGeometry
 {
     /// <summary>
+    /// Leave blank to avoid cluttering the property grid with a long type name. 
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString() => "";
+
+
+    /// <summary>
     /// Controls how the annotation is drawn.
     /// </summary>
     public DrawingSpec Drawing { get; init; } = new();

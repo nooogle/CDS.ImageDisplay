@@ -23,24 +23,22 @@ public sealed class LineAnnotationDescriptor : IAnnotationShapeDescriptor
 
         if (path.Points.Count < 2) { return 0f; }
 
-        float w = path.BoundingBox.Width;
-        float h = path.BoundingBox.Height;
-        float longer = MathF.Max(w, h);
-        float shorter = MathF.Min(w, h);
+        (float lambda1, float lambda2, _) = FreehandPathAnalyser.ComputePca(path.Points);
+        if (lambda1 < 1f) { return 0f; }
 
-        if (longer < 1f) { return 0f; }
+        // Shape must be strongly elongated along one axis. Variance ratio λ1/λ2 is the square
+        // of the aspect ratio, so ratio=4 ≈ 2:1 and ratio=25 ≈ 5:1. Using PCA means diagonal
+        // lines are correctly detected — bounding-box aspect fails for off-axis gestures.
+        float varRatio = lambda1 / (lambda2 + 1f);
+        float elongationScore = FreehandPathAnalyser.Clamp01((varRatio - 4f) / 21f);
+        if (elongationScore <= 0f) { return 0f; }
 
-        // Must be elongated — a square-ish bbox is not a line.
-        float elongation = longer / (shorter + 1f);
-        if (elongation < 2f) { return 0f; }
+        // Points must cluster tightly around the major axis. sqrt(λ2)/sqrt(λ1) is the ratio of
+        // perpendicular std to parallel std; 0 for a perfect line, ~0.4 for an arc or fat stroke.
+        float linearityScore = FreehandPathAnalyser.Clamp01(
+            1f - MathF.Sqrt(lambda2) / (MathF.Sqrt(lambda1) * 0.4f));
 
-        float elongationScore = FreehandPathAnalyser.Clamp01((elongation - 2f) / 3f);
-
-        // Points should lie close to the straight line through the endpoints.
-        float meanDev = FreehandPathAnalyser.MeanPerpDeviation(path.Points, path.Points[0], path.Points[path.Points.Count - 1]);
-        float deviationScore = FreehandPathAnalyser.Clamp01(1f - meanDev / (longer * 0.2f));
-
-        return elongationScore * deviationScore;
+        return elongationScore * linearityScore;
     }
 
     /// <inheritdoc/>

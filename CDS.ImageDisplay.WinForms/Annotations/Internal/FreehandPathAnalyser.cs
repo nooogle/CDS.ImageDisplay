@@ -223,6 +223,42 @@ internal static class FreehandPathAnalyser
     internal static float Clamp01(float value) => MathF.Max(0f, MathF.Min(1f, value));
 
     /// <summary>
+    /// Computes the two PCA variance components (λ1 ≥ λ2 ≥ 0) and the angle of the major axis
+    /// in degrees (clockwise from positive X). Returns all zeros for fewer than 2 points.
+    /// </summary>
+    internal static (float Lambda1, float Lambda2, float AngleDegrees) ComputePca(IReadOnlyList<PointF> points)
+    {
+        if (points.Count < 2) { return (0f, 0f, 0f); }
+
+        float cx = 0f, cy = 0f;
+        foreach (PointF p in points) { cx += p.X; cy += p.Y; }
+        cx /= points.Count;
+        cy /= points.Count;
+
+        float mxx = 0f, mxy = 0f, myy = 0f;
+        foreach (PointF p in points)
+        {
+            float dx = p.X - cx, dy = p.Y - cy;
+            mxx += dx * dx;
+            mxy += dx * dy;
+            myy += dy * dy;
+        }
+        mxx /= points.Count;
+        mxy /= points.Count;
+        myy /= points.Count;
+
+        float sqrtDisc = MathF.Sqrt(MathF.Max(0f, (mxx - myy) * (mxx - myy) + 4f * mxy * mxy));
+        float lambda1 = (mxx + myy + sqrtDisc) / 2f;
+        float lambda2 = MathF.Max(0f, (mxx + myy - sqrtDisc) / 2f);
+
+        float angle = MathF.Abs(mxy) < 1e-6f
+            ? (mxx >= myy ? 0f : 90f)
+            : MathF.Atan2(lambda1 - myy, mxy) * 180f / MathF.PI;
+
+        return (lambda1, lambda2, angle);
+    }
+
+    /// <summary>
     /// Returns the mean perpendicular distance of all points from the line through
     /// <paramref name="lineStart"/> and <paramref name="lineEnd"/>.
     /// Returns 0 when the line has zero length or the list is empty.
@@ -298,7 +334,7 @@ internal static class FreehandPathAnalyser
     }
 
     /// <summary>
-    /// Computes the mean absolute deviation of points from the ellipse boundary
+    /// Computes the mean absolute deviation of points from the axis-aligned ellipse boundary
     /// <c>((x − cx) / a)² + ((y − cy) / b)² = 1</c>.
     /// Returns 1 when the ellipse is degenerate or the list is empty.
     /// </summary>
@@ -313,6 +349,34 @@ internal static class FreehandPathAnalyser
             float nx = (p.X - cx) / a;
             float ny = (p.Y - cy) / b;
             total += MathF.Abs(nx * nx + ny * ny - 1f);
+        }
+
+        return total / points.Count;
+    }
+
+    /// <summary>
+    /// Computes the mean absolute error of points relative to a rotated ellipse boundary.
+    /// For each point the error is <c>|((u/a)² + (v/b)²) − 1|</c> where u, v are the
+    /// coordinates in the ellipse's local frame (rotated by <paramref name="angleDegrees"/>).
+    /// Returns 1 when the ellipse is degenerate or the list is empty.
+    /// </summary>
+    internal static float MeanRotatedEllipseBoundaryError(
+        IReadOnlyList<PointF> points, PointF center, float semiMajor, float semiMinor, float angleDegrees)
+    {
+        if (points.Count == 0 || semiMajor < 0.001f || semiMinor < 0.001f) { return 1f; }
+
+        float rad = angleDegrees * MathF.PI / 180f;
+        float cosA = MathF.Cos(rad);
+        float sinA = MathF.Sin(rad);
+
+        float total = 0f;
+        foreach (PointF p in points)
+        {
+            float dx = p.X - center.X;
+            float dy = p.Y - center.Y;
+            float nu = (dx * cosA + dy * sinA) / semiMajor;
+            float nv = (-dx * sinA + dy * cosA) / semiMinor;
+            total += MathF.Abs(nu * nu + nv * nv - 1f);
         }
 
         return total / points.Count;
