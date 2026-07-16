@@ -410,7 +410,7 @@ public class VirtualDisplay
     private void ForceActualSizeCentred()
     {
         float previousZoom = zoom;
-        zoom = 1;
+        SetZoomField(1.0f);
         ForceCentre();
         if (zoom != previousZoom)
         {
@@ -476,15 +476,31 @@ public class VirtualDisplay
             ? (float)displaySize.Height / imageSize.Height
             : (float)displaySize.Width / imageSize.Width;
 
-        zoom = Math.Min(Math.Max(rawZoom, Consts.MinZoom), Consts.MaxZoom);
-
+        SetZoomField(rawZoom);
         ForceCentre();
+
         if (zoom != previousZoom)
         {
             onZoomChanged?.Invoke(zoom);
         }
     }
 
+
+    /// <summary>
+    /// Applies clamping and snap-to-1 to <paramref name="value"/>, stores the result in
+    /// <see cref="zoom"/>, and keeps <see cref="SizeOfHalfDisplayPixel"/> in sync.
+    /// Use this instead of writing <c>zoom = value</c> directly.
+    /// </summary>
+    private void SetZoomField(float value)
+    {
+        float clamped = Math.Max(Consts.MinZoom, Math.Min(Consts.MaxZoom, value));
+        if (Math.Abs(1.0f - clamped) <= Consts.SnapToZoom1Tolerance)
+        {
+            clamped = 1.0f;
+        }
+        zoom = clamped;
+        SizeOfHalfDisplayPixel = new SizeF(zoom / 2, zoom / 2);
+    }
 
     /// <summary>
     /// Returns the display location where a rectangle at <paramref name="imageRect"/> would be drawn.
