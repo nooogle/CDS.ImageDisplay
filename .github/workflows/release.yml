@@ -1,9 +1,9 @@
-name: Publish to NuGet
+name: Release
 
 on:
   push:
     tags:
-      - 'V*'
+      - 'V*.*.*'
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
@@ -14,24 +14,25 @@ env:
   PACKAGE_ID: CDS.ImageDisplay.WinForms
 
 jobs:
-  publish:
+  release:
     name: Build & Release
     runs-on: windows-latest
     permissions:
       id-token: write
       contents: write
       packages: write
+      attestations: write
 
     environment: nuget
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0   # MinVer needs full history to compute version from tags
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
 
@@ -49,11 +50,31 @@ jobs:
       - name: Pack
         run: dotnet pack ${{ env.LIBRARY_PROJECT }} --configuration Release --no-build --output ./artifacts
 
+      - name: Generate SBOM
+        run: |
+          dotnet tool install --global CycloneDX
+          $version = (Get-ChildItem -Path ./artifacts -Filter "${{ env.PACKAGE_ID }}.*.nupkg").BaseName.Substring("${{ env.PACKAGE_ID }}".Length + 1)
+          dotnet-CycloneDX ${{ env.LIBRARY_PROJECT }} -o ./artifacts -F json -sv $version
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: ./artifacts/*.nupkg
+
+      - name: Attest SBOM
+        uses: actions/attest-sbom@v4
+        with:
+          subject-path: ./artifacts/*.nupkg
+          sbom-path: ./artifacts/bom.json
+
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: ./artifacts/*.nupkg
+          files: |
+            ./artifacts/*.nupkg
+            ./artifacts/*.snupkg
+            ./artifacts/bom.json
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

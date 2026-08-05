@@ -11,12 +11,12 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0   # MinVer needs full history to compute version from tags
 
       - name: Set up .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
 
@@ -30,7 +30,7 @@ jobs:
         run: dotnet run --project UnitTests/UnitTests.csproj --no-build --framework net10.0-windows -- --report-trx --results-directory TestResults
 
       - name: Upload test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: test-results
@@ -38,3 +38,11 @@ jobs:
 
       - name: Build Release
         run: dotnet build --configuration Release
+
+  dependency-review:
+    name: Dependency Review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/dependency-review-action@v5.0.0   # no floating v5 tag upstream — pin exact, verify with git ls-remote before bumping
