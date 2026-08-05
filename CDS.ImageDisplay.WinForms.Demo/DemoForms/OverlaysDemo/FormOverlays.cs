@@ -1,8 +1,6 @@
 using System;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using Humanizer;
 
 namespace CDS.ImageDisplay.WinForms.Demo.DemoForms.OverlaysDemo;
 
@@ -77,38 +75,7 @@ internal sealed partial class FormOverlays : Form
         if (bitmapDisplayPanel.DisplayImage == null)
         { return; }
 
-        PaintMetrics(e.Sender, e.Graphics);
         OverlayPainter.Paint(bitmapDisplayPanel, e.Graphics, testSettings.Shapes, testSettings.Overlays);
-    }
-
-
-    private static void PaintMetrics(BitmapDisplay.BitmapDisplayPanel sender, Graphics graphics)
-    {
-        var info = new StringBuilder();
-        info.Append($"Display mode      {sender.DisplayMode.Humanize()}\n");
-        info.Append($"Display size      {sender.ClientSize}\n");
-
-        if (!sender.AnythingToDisplay)
-        {
-            info.Append("Image not loaded\n");
-        }
-        else
-        {
-            RectangleF r = sender.PaintRect;
-            info.Append($"Bitmap size       {sender.DisplayImage?.Size}\n");
-            info.Append($"Paint zoom        {sender.Zoom:0.000}\n");
-            info.Append($"Paint rect        {r.X:0.0}, {r.Y:0.0}, {r.Width:0.0}, {r.Height:0:0}\n");
-            info.Append($"Format            {sender.DisplayImage?.PixelFormat.Humanize()}\n");
-        }
-
-        info.Append($"Paint foreground  {sender.TimingMetrics.ForegroundPaint.Humanize()}\n");
-        info.Append($"Paint background  {sender.TimingMetrics.BackgroundPaint.Humanize()}\n");
-
-        var textTopleft = new PointF(12, 12);
-
-        Font font = Overlays.DrawingToolsPool.GetFont(new Overlays.FontSpec() { FontName = "Courier New", FontSize = 10 });
-
-        graphics.DrawString(info.ToString(), font, Brushes.Navy, textTopleft);
     }
 
 

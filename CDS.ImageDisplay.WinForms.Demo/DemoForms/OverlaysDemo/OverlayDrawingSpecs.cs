@@ -18,6 +18,8 @@ internal sealed class OverlayDrawingSpecs
     public DrawingSpec CrossHair { get; set; } = new DrawingSpec();
     public DrawingSpec Bubbles { get; set; } = new DrawingSpec();
     public DrawingSpec Donuts { get; set; } = new DrawingSpec();
+    public DrawingSpec MetricsPanel { get; set; } = new DrawingSpec();
+    public DrawingSpec MetricsText { get; set; } = new DrawingSpec();
 
 
 
@@ -63,5 +65,12 @@ internal sealed class OverlayDrawingSpecs
         Donuts.Lines.Color = Color.Green;
         Donuts.Lines.Width = 2;
         Donuts.Lines.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+
+        MetricsPanel.Fill.Color = Color.FromArgb(192, Color.Navy);
+        MetricsPanel.Lines.Color = Color.Black;
+
+        MetricsText.Fill.Color = Color.WhiteSmoke;
+        MetricsText.Font.FontName = "Courier New";
+        MetricsText.Font.FontSize = 10;
     }
 }

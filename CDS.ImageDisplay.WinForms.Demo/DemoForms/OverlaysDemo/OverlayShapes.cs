@@ -5,6 +5,14 @@ using System.Drawing;
 
 namespace CDS.ImageDisplay.WinForms.Demo.DemoForms.OverlaysDemo;
 
+/// <summary>
+/// The single message type used by <see cref="OverlayShapes.Metrics"/>.
+/// </summary>
+internal enum MetricsMessageType
+{
+    Info,
+}
+
 [TypeConverter(typeof(SerializableExpandableObjectConverter))]
 internal sealed class OverlayShapes
 {
@@ -12,6 +20,12 @@ internal sealed class OverlayShapes
 
     [Browsable(false)]
     public Bubble[] Bubbles { get; private set; } = [];
+
+    /// <summary>
+    /// Text panel used to display live display/paint metrics.
+    /// </summary>
+    [Browsable(false)]
+    public WinForms.Overlays.TextPanel<MetricsMessageType> Metrics { get; } = new();
 
 
     public OverlayShapes()
