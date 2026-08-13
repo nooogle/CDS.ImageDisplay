@@ -29,19 +29,19 @@ singleROIManager.DraggingROIChanged += (s, e) =>
 
 ```csharp
 // Read the current ROI
-RectangleF roi = singleROIManager.CommittedROI;
+Rectangle roi = singleROIManager.CommittedROI;
 
 // Set programmatically
-singleROIManager.CommittedROI = new RectangleF(100, 100, 200, 150);
+singleROIManager.CommittedROI = new Rectangle(100, 100, 200, 150);
 ```
 
 ### Configuration
 
 | Property | Default | Description |
 |---|---|---|
-| `DragBorder` | 8 | Hit-test tolerance in display pixels around edges and corners |
-| `MinSize` | — | Minimum ROI size in image pixels |
-| `MaxSize` | — | Maximum ROI size in image pixels |
+| `DragBorder` | 10 | Hit-test tolerance in display pixels around edges and corners |
+
+Min/max size constraints are not exposed on `SingleROIManager` itself — they live on `ROIWithGrapplesShape.MinimumSize` / `MaximumSize` (see below) and are only enforced when driven through `MultipleROIManager`.
 
 ## MultipleROIManager
 

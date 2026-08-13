@@ -424,7 +424,7 @@ public partial class BitmapDisplayPanel : UserControl, ICoordinateMapper
 
         base.OnKeyDown(e);
 
-        if (!AnythingToDisplay || DisplayMode != BitmapDisplayMode.Free)
+        if (e.Handled || !AnythingToDisplay || DisplayMode != BitmapDisplayMode.Free)
         {
             return;
         }

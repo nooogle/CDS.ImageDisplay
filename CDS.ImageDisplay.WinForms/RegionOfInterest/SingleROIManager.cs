@@ -141,7 +141,10 @@ public partial class SingleROIManager : Component
     {
         if (draggingMode != ROIDragMode.None)
         { return; }
-        if (!Visible)
+        if (!Visible || !CanEditCommitted)
+        { return; }
+
+        if (e.KeyCode is not (Keys.Left or Keys.Right or Keys.Up or Keys.Down))
         { return; }
 
         int change = 1;
@@ -172,6 +175,8 @@ public partial class SingleROIManager : Component
                 ? new Rectangle(CommittedROI.Left, CommittedROI.Top, CommittedROI.Width, CommittedROI.Height + change)
                 : new Rectangle(CommittedROI.Left, CommittedROI.Top + change, CommittedROI.Width, CommittedROI.Height);
         }
+
+        e.Handled = true;
     }
 
 
