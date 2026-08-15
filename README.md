@@ -1,5 +1,11 @@
 # CDS.ImageDisplay
 
+[![CI](https://github.com/nooogle/CDS.ImageDisplay/actions/workflows/ci.yml/badge.svg)](https://github.com/nooogle/CDS.ImageDisplay/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/nooogle/CDS.ImageDisplay/actions/workflows/codeql.yml/badge.svg)](https://github.com/nooogle/CDS.ImageDisplay/actions/workflows/codeql.yml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/nooogle/CDS.ImageDisplay/badge)](https://securityscorecards.dev/viewer/?uri=github.com/nooogle/CDS.ImageDisplay)
+[![NuGet](https://img.shields.io/nuget/v/CDS.ImageDisplay.WinForms)](https://www.nuget.org/packages/CDS.ImageDisplay.WinForms)
+[![License](https://img.shields.io/github/license/nooogle/CDS.ImageDisplay)](LICENSE)
+
 A Windows Forms library for displaying, zooming, panning, and annotating bitmaps. Designed for imaging and machine-vision applications where you need a responsive, thread-safe image viewer with overlay graphics and interactive region-of-interest selection.
 
 ## Requirements
