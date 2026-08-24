@@ -56,13 +56,17 @@ jobs:
           $version = (Get-ChildItem -Path ./artifacts -Filter "${{ env.PACKAGE_ID }}.*.nupkg").BaseName.Substring("${{ env.PACKAGE_ID }}".Length + 1)
           dotnet-CycloneDX ${{ env.LIBRARY_PROJECT }} -o ./artifacts -F json -sv $version
 
+      # actions/attest-build-provenance and actions/attest-sbom are both now thin wrappers over
+      # actions/attest (which auto-detects provenance vs. SBOM mode from whether sbom-path is
+      # set) - attest-sbom specifically logs a runtime deprecation warning, so both steps below
+      # use the unified action directly instead.
       - name: Attest build provenance
-        uses: actions/attest-build-provenance@v4
+        uses: actions/attest@v4
         with:
           subject-path: ./artifacts/*.nupkg
 
       - name: Attest SBOM
-        uses: actions/attest-sbom@v4
+        uses: actions/attest@v4
         with:
           subject-path: ./artifacts/*.nupkg
           sbom-path: ./artifacts/bom.json
