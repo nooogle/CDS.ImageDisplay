@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFrameworks>net10.0-windows;net48</TargetFrameworks>
-	  <LangVersion>latest</LangVersion>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <LangVersion>latest</LangVersion>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
@@ -16,13 +16,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Draw\**" />
-    <EmbeddedResource Remove="Draw\**" />
-    <None Remove="Draw\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AwesomeAssertions" Version="9.6.0" />
+    <PackageReference Include="FlaUI.Core" Version="5.0.0" />
+    <PackageReference Include="FlaUI.UIA3" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
     <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.10.0" />
     <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" Version="2.3.3" />
@@ -34,11 +30,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!--
+      Not a compile reference — UITests drives the harness out-of-process via UI Automation.
+      ReferenceOutputAssembly="false" keeps the harness's exe out of this project's own binary
+      references while still making it a build dependency, so it's always up to date on disk
+      wherever HarnessLauncher finds it (see HarnessLauncher.ResolveExePath).
+    -->
+    <ProjectReference Include="..\CDS.ImageDisplay.WinForms.TestHarness\CDS.ImageDisplay.WinForms.TestHarness.csproj" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\CDS.ImageDisplay.WinForms\CDS.ImageDisplay.WinForms.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.400" />
   </ItemGroup>
 
 </Project>
