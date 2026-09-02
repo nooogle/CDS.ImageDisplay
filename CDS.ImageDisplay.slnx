@@ -7,7 +7,13 @@
     <Build Solution="Debug|*" Project="false" />
   </Project>
   <Project Path="CDS.ImageDisplay.WinForms.Demo/CDS.ImageDisplay.WinForms.Demo.csproj" />
+  <Project Path="CDS.ImageDisplay.WinForms.TestHarness/CDS.ImageDisplay.WinForms.TestHarness.csproj">
+    <Build Solution="Release|*" Project="false" />
+  </Project>
   <Project Path="CDS.ImageDisplay.WinForms/CDS.ImageDisplay.WinForms.csproj" />
+  <Project Path="UITests/UITests.csproj">
+    <Build Solution="Release|*" Project="false" />
+  </Project>
   <Project Path="UnitTests/UnitTests.csproj">
     <Build Solution="Release|*" Project="false" />
   </Project>
