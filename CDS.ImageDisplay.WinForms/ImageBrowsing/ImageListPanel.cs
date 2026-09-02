@@ -78,6 +78,12 @@ public partial class ImageListPanel : UserControl
     private bool _pendingInitialRefresh;
     private int _thumbnailHeight = DefaultThumbnailHeight;
 
+    // The range currently being loaded by LoadRangeAsync, or -1/-1 when nothing is in flight.
+    // Distinguishes a genuine new scroll from a CacheVirtualItems hint that RedrawItems triggered
+    // for an item this same load is about to reach — see OnListViewCacheVirtualItems.
+    private int _loadingStart = -1;
+    private int _loadingEnd = -1;
+
     // -----------------------------------------------------------------------
     // Events
     // -----------------------------------------------------------------------
@@ -388,6 +394,8 @@ public partial class ImageListPanel : UserControl
         _cts?.Dispose();
         _cts = null;
         _debounceTimer.Stop();
+        _loadingStart = -1;
+        _loadingEnd = -1;
 
         _thumbnailSlots.Clear();
         _lruOrder.Clear();
@@ -463,42 +471,60 @@ public partial class ImageListPanel : UserControl
         _cts?.Cancel();
         _cts?.Dispose();
         _cts = new CancellationTokenSource();
+        _loadingStart = startIndex;
+        _loadingEnd = endIndex;
         _ = LoadRangeAsync(startIndex, endIndex, _cts.Token);
     }
 
     private async Task LoadRangeAsync(int startIndex, int endIndex, CancellationToken token)
     {
-        for (int i = startIndex; i <= endIndex; i++)
+        try
         {
-            if (token.IsCancellationRequested) { return; }
-
-            string file = _files[i];
-            if (_thumbnailSlots.ContainsKey(file)) { continue; } // already cached
-
-            Bitmap? thumb = null;
-            try
+            for (int i = startIndex; i <= endIndex; i++)
             {
-                int size = _thumbnailHeight;
-                thumb = await Task.Run(() => LoadThumbnail(file, size), token).ConfigureAwait(true);
-            }
-            catch (OperationCanceledException)
-            {
-                return;
-            }
-            catch (Exception)
-            {
-                continue; // unreadable file — leave as placeholder
-            }
+                if (token.IsCancellationRequested) { return; }
 
-            if (token.IsCancellationRequested)
-            {
-                thumb?.Dispose();
-                return;
-            }
+                string file = _files[i];
+                if (_thumbnailSlots.ContainsKey(file)) { continue; } // already cached
 
-            AssignThumbnail(file, thumb);
-            thumb.Dispose(); // ImageList copied the pixels; the managed wrapper is no longer needed
-            _listView.RedrawItems(i, i, true);
+                Bitmap? thumb = null;
+                try
+                {
+                    int size = _thumbnailHeight;
+                    thumb = await Task.Run(() => LoadThumbnail(file, size), token).ConfigureAwait(true);
+                }
+                catch (OperationCanceledException)
+                {
+                    return;
+                }
+                catch (Exception)
+                {
+                    continue; // unreadable file — leave as placeholder
+                }
+
+                if (token.IsCancellationRequested)
+                {
+                    thumb?.Dispose();
+                    return;
+                }
+
+                AssignThumbnail(file, thumb);
+                thumb.Dispose(); // ImageList copied the pixels; the managed wrapper is no longer needed
+                _listView.RedrawItems(i, i, true);
+            }
+        }
+        finally
+        {
+            // RedrawItems() on an owner-data ListView re-issues a CacheVirtualItems hint for
+            // whatever it just redrew — see OnListViewCacheVirtualItems, which needs this range to
+            // recognise that echo instead of mistaking it for a new scroll. Once nothing is in
+            // flight (whether this pass finished, was cancelled, or was superseded), clear it so a
+            // genuine subsequent scroll is never suppressed.
+            if (_loadingStart == startIndex && _loadingEnd == endIndex)
+            {
+                _loadingStart = -1;
+                _loadingEnd = -1;
+            }
         }
     }
 
@@ -582,10 +608,23 @@ public partial class ImageListPanel : UserControl
 
     private void OnListViewCacheVirtualItems(object? sender, CacheVirtualItemsEventArgs e)
     {
-        // Called during scrolling with the index range the ListView is about to render.
-        // Reset the debounce timer so loading only starts once scrolling settles.
-        _pendingStart = e.StartIndex;
-        _pendingEnd = e.EndIndex;
+        // Called during scrolling with the index range the ListView is about to render — but also,
+        // for an owner-data ListView, as an echo of our own RedrawItems(i, i, true) call once an
+        // item finishes loading, reporting a hint for just that item. Ignore hints entirely inside
+        // the range LoadRangeAsync is already working through: treating that echo as a new scroll
+        // would restart the debounce and — once decoding takes longer than DebounceDelayMs per
+        // item, e.g. large source images — cancel and reschedule the load on that stale one-item
+        // range before the wider range it belongs to ever finishes, silently dropping the rest.
+        if (_loadingStart >= 0 && e.StartIndex >= _loadingStart && e.EndIndex <= _loadingEnd)
+        {
+            return;
+        }
+
+        // A genuine scroll. Merge with, rather than overwrite, whatever's already pending if its
+        // debounce hasn't fired yet — some scrolls are reported as more than one hint for the same
+        // settled viewport, and overwriting would silently drop whichever part arrived first.
+        _pendingStart = _debounceTimer.Enabled ? Math.Min(_pendingStart, e.StartIndex) : e.StartIndex;
+        _pendingEnd = _debounceTimer.Enabled ? Math.Max(_pendingEnd, e.EndIndex) : e.EndIndex;
         _debounceTimer.Stop();
         _debounceTimer.Start();
     }
