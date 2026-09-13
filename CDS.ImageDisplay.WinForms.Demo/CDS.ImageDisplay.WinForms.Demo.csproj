@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CDS.WinFormsMenus" Version="1.1.5" />
+    <PackageReference Include="CDS.WinFormsMenus" Version="1.1.6" />
     <PackageReference Include="Humanizer.Core" Version="3.0.10" />
   </ItemGroup>
 
@@ -93,3 +93,4 @@
   </ItemGroup>
 
 </Project>
+
