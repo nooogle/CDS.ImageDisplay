@@ -232,6 +232,16 @@ public partial class BitmapDisplayPanel : UserControl, ICoordinateMapper
 
 
     /// <summary>
+    /// Removes any image currently being displayed.
+    /// This takes immediate effect when called from the UI thread;
+    /// otherwise takes place asap by invoking an update procedure on the UI thread
+    /// and returning immediately.
+    /// </summary>
+    [Category(s_categoryCDS)]
+    public void ClearImage() => SetImage((IImageSource?)null);
+
+
+    /// <summary>
     /// Sets the new image as a pending image; then invokes an update
     /// method to get this pending image onto the display
     /// </summary>
