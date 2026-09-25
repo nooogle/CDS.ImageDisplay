@@ -26,8 +26,13 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
 
-      - name: Test
+      # The library multi-targets, so the tests run on both TFMs: the threading and
+      # GDI+ code is exactly the kind that can behave differently on .NET Framework.
+      - name: Test (net10.0-windows)
         run: dotnet run --project UnitTests/UnitTests.csproj --no-build --framework net10.0-windows -- --report-trx --results-directory TestResults
+
+      - name: Test (net48)
+        run: dotnet run --project UnitTests/UnitTests.csproj --no-build --framework net48 -- --report-trx --results-directory TestResults
 
       - name: Upload test results
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
