@@ -86,6 +86,27 @@ public sealed class UIDispatcherTests
 
 
     /// <summary>
+    /// Verifies that a capture with no context doesn't move the UI thread identity away from
+    /// the thread whose context is still the one posts go to.
+    /// </summary>
+    [TestMethod]
+    public void Capture_WithNullContextOnAnotherThread_LeavesTheCapturedPairIntact()
+    {
+        var dispatcher = new UIDispatcher();
+        var context = new RecordingSynchronizationContext();
+        dispatcher.Capture(context);
+
+        var thread = new Thread(() => dispatcher.Capture(null));
+        thread.Start();
+        thread.Join();
+
+        dispatcher.IsOnUIThread.Should().BeTrue("the thread owning the captured context is still the UI thread");
+        dispatcher.TryPost(() => { }).Should().BeTrue();
+        context.PostCount.Should().Be(1);
+    }
+
+
+    /// <summary>
     /// Verifies that the parameterless capture uses the current thread's context.
     /// </summary>
     [TestMethod]

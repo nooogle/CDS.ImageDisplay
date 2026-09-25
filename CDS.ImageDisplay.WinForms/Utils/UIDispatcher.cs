@@ -73,22 +73,27 @@ public sealed class UIDispatcher
     /// Must be called on the UI thread.
     /// </summary>
     /// <param name="context">
-    /// The context used to post work to the UI thread; may be <see langword="null"/>,
-    /// in which case <see cref="TryPost"/> will return <see langword="false"/> until a
-    /// later capture supplies one.
+    /// The context used to post work to the UI thread. If this is <see langword="null"/>
+    /// and a usable context was captured earlier, the earlier capture is kept unchanged;
+    /// otherwise <see cref="TryPost"/> returns <see langword="false"/> until a later
+    /// capture supplies one.
     /// </param>
     public void Capture(SynchronizationContext? context)
     {
         lock (_lock)
         {
-            _uiThreadId = Environment.CurrentManagedThreadId;
-
-            // Never downgrade from a usable context to none (e.g. a re-capture on a
-            // thread whose context has been temporarily swapped out).
-            if (context != null)
+            // Thread identity and context are captured as a pair. A capture that can't supply
+            // a context (e.g. a re-capture on a thread whose context is temporarily swapped
+            // out) must leave both alone rather than downgrade to none, otherwise
+            // IsOnUIThread could name one thread while TryPost posts to another thread's
+            // message loop.
+            if ((context == null) && (_context != null))
             {
-                _context = context;
+                return;
             }
+
+            _uiThreadId = Environment.CurrentManagedThreadId;
+            _context = context;
         }
     }
 
@@ -122,11 +127,8 @@ public sealed class UIDispatcher
         }
         catch (InvalidOperationException)
         {
-            // The context's marshalling window no longer exists
-            return false;
-        }
-        catch (ObjectDisposedException)
-        {
+            // The context's marshalling window no longer exists. ObjectDisposedException
+            // derives from this, so a separate catch clause would be unreachable.
             return false;
         }
     }
