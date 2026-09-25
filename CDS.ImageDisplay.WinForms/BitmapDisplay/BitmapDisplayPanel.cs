@@ -401,6 +401,16 @@ public partial class BitmapDisplayPanel : UserControl, ICoordinateMapper
     {
         _uiDispatcher.Capture();
         base.OnHandleCreated(e);
+
+        lock (_imageLock)
+        {
+            // A callback posted to a context that was later torn down never runs, which would
+            // otherwise leave this set for good and silently drop every subsequent frame. A
+            // new handle means a live message loop, so re-arm posting. At worst this costs one
+            // redundant post, which ApplyPendingImage discards.
+            _isApplyPendingImageQueued = false;
+        }
+
         ApplyPendingImage();
     }
 
