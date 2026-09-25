@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Drawing;
 using System.Drawing.Imaging;
 
@@ -14,7 +14,8 @@ internal sealed class ImageWrapper : IDisposable
 {
     private GreyscalePaletteMode _greyscalePaletteMode = GreyscalePaletteMode.Standard;
 
-    private static readonly Dictionary<GreyscalePaletteMode, Color[]> s_paletteCache = [];
+    // Shared by all wrappers, including those written to from non-UI threads
+    private static readonly ConcurrentDictionary<GreyscalePaletteMode, Color[]> s_paletteCache = new();
 
 
     /// <summary>
@@ -148,7 +149,8 @@ internal sealed class ImageWrapper : IDisposable
 
 
     /// <summary>
-    /// Disposes the display image; should only be called on the UI thread!
+    /// Disposes the image. Callers must ensure it isn't being painted (the display
+    /// image is only touched on the UI thread; the pending image under a lock).
     /// </summary>
     private void DropImage()
     {
@@ -183,14 +185,8 @@ internal sealed class ImageWrapper : IDisposable
     /// <summary>
     /// Returns a cached 256-entry colour array for the given mode, building it on first access.
     /// </summary>
-    private static Color[] GetPaletteForMode(GreyscalePaletteMode mode)
-    {
-        if (s_paletteCache.TryGetValue(mode, out Color[]? cached))
-        {
-            return cached;
-        }
-
-        Color[] palette = mode switch
+    private static Color[] GetPaletteForMode(GreyscalePaletteMode mode) =>
+        s_paletteCache.GetOrAdd(mode, static m => m switch
         {
             GreyscalePaletteMode.Standard => BuildPalette([0, 255], [Color.Black, Color.White]),
             GreyscalePaletteMode.Inverted => BuildPalette([0, 255], [Color.White, Color.Black]),
@@ -198,11 +194,7 @@ internal sealed class ImageWrapper : IDisposable
                 [0, 254, 255],
                 [Color.Black, Color.FromArgb(254, 254, 254), Color.Red]),
             _ => BuildPalette([0, 255], [Color.Black, Color.White]),
-        };
-
-        s_paletteCache[mode] = palette;
-        return palette;
-    }
+        });
 
 
     /// <summary>

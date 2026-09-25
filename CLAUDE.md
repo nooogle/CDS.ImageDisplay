@@ -66,6 +66,7 @@ Implement `ISingleROIDescriptor` to add custom ROI types to `MultipleROIManager`
 ### Utils namespace
 
 - `DrawingToolsPool` — shared GDI+ resource cache (also used from Overlays).
+- `UIDispatcher` — captures the UI thread and its `SynchronizationContext`; use `IsOnUIThread`/`TryPost` instead of `InvokeRequired`/`BeginInvoke` (which misbehave when a control has no handle). `BitmapDisplayPanel.SetImage` uses it for cross-thread updates.
 - `SystemInfo` / `SystemInfoPanel` — GPU/CPU/memory introspection for diagnostics.
 - `Win32` — P/Invoke declarations.
 - `SerializableExpandableObjectConverter` — designer TypeConverter base for specs.

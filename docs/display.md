@@ -54,6 +54,8 @@ panel2.SyncPaintRectFromOther(panel1);
 
 `SetImage` accepts either a `Bitmap` or an `IImageSource`. When called from a background thread it queues the image for the UI thread and returns immediately. Rapid producers coalesce to one pending update so the message loop cannot accumulate a backlog.
 
+The panel captures its UI thread and `SynchronizationContext` when it is constructed, so this also works before the control is shown (the image appears once the message loop runs). Frames set after the panel is disposed, for example while a form is closing, are ignored rather than throwing. `ClearImage()` is thread-safe in the same way.
+
 ```csharp
 // In a camera capture loop on a worker thread:
 bitmapDisplayPanel.SetImage(frame);

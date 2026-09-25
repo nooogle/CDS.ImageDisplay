@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Threading;
 using System.Windows.Forms;
+using CDS.ImageDisplay.WinForms.Utils;
 
 namespace CDS.ImageDisplay.WinForms.BitmapDisplay;
 
@@ -15,14 +16,44 @@ public partial class BitmapDisplayPanel : UserControl, ICoordinateMapper
 {
     private const string s_categoryCDS = "CDS";
 
-    private readonly ImageWrapper _displayImage = new();
-    private readonly ImageWrapper _pendingDisplayImage = new();
+    private readonly UIDispatcher _uiDispatcher = new();
     private readonly object _imageLock = new();
+
+    /// <summary>
+    /// The image being displayed. Only read or modified on the UI thread; the
+    /// field itself is only reassigned (swapped with <see cref="_pendingDisplayImage"/>)
+    /// on the UI thread while holding <see cref="_imageLock"/>.
+    /// </summary>
+    private ImageWrapper _displayImage = new();
+
+    /// <summary>
+    /// The latest image set from a non-UI thread, waiting to be swapped in by the
+    /// UI thread. Guarded by <see cref="_imageLock"/>.
+    /// </summary>
+    private ImageWrapper _pendingDisplayImage = new();
+
+    /// <summary>
+    /// True if <see cref="_pendingDisplayImage"/> holds an image that has not yet
+    /// been displayed. Guarded by <see cref="_imageLock"/>.
+    /// </summary>
+    private bool _hasPendingImage;
+
+    /// <summary>
+    /// True if a callback to apply the pending image has been posted to the UI
+    /// thread and has not yet run. Guarded by <see cref="_imageLock"/>.
+    /// </summary>
+    private bool _isApplyPendingImageQueued;
+
+    /// <summary>
+    /// True once the control has been disposed; images set after this are ignored.
+    /// Guarded by <see cref="_imageLock"/>.
+    /// </summary>
+    private bool _isDisposed;
+
     private readonly VirtualDisplay _virtualDisplay;
     private readonly Stopwatch _stopwatch = new();
     private readonly DragManager _dragManager;
     private readonly ZoomManager _zoomManager;
-    private bool _isWaitingToApplyPendingImage;
 
 
     /// <summary>
@@ -171,10 +202,11 @@ public partial class BitmapDisplayPanel : UserControl, ICoordinateMapper
     /// Gets the image currently being displayed. 
     /// </summary>
     /// <remarks>
-    /// The display owns this image and may dispose it at any time if a new
+    /// The display owns this image and may dispose or reuse it at any time if a new
     /// (pending) image is being swapped in; therefore, callers should
     /// use this method with caution since it's more of a diagnostics 
-    /// tool than for sharing image data.
+    /// tool than for sharing image data. Only access it from the UI thread and
+    /// don't hold on to the reference.
     /// </remarks>
     [Category(s_categoryCDS)]
     public Bitmap? DisplayImage => _displayImage.Image;
@@ -196,16 +228,15 @@ public partial class BitmapDisplayPanel : UserControl, ICoordinateMapper
     [Category(s_categoryCDS)]
     public void SetImage(IImageSource? imageSource)
     {
-        lock (_imageLock)
+        // Thread identity is used rather than InvokeRequired, which returns false on
+        // every thread while the control has no window handle.
+        if (_uiDispatcher.IsOnUIThread)
         {
-            if (InvokeRequired)
-            {
-                SetImageIndirectlyFromNonUIThread(imageSource);
-            }
-            else
-            {
-                SetImageDirectlyFromUIThread(imageSource);
-            }
+            SetImageDirectlyFromUIThread(imageSource);
+        }
+        else
+        {
+            SetImageIndirectlyFromNonUIThread(imageSource);
         }
     }
 
@@ -242,42 +273,80 @@ public partial class BitmapDisplayPanel : UserControl, ICoordinateMapper
 
 
     /// <summary>
-    /// Sets the new image as a pending image; then invokes an update
-    /// method to get this pending image onto the display
+    /// Copies the new image into the pending image; then posts an update
+    /// to the UI thread to get this pending image onto the display
     /// </summary>
     private void SetImageIndirectlyFromNonUIThread(IImageSource? imageSource)
     {
-        // Always store the latest frame so the UI thread picks up the most
-        // recent image when it processes the pending invoke (last-writer-wins).
-        // We're protected by the imageLock held in SetImage.
-        _pendingDisplayImage.SetNewImage(imageSource);
-
-        // If a BeginInvoke is already queued to apply the pending image,
-        // don't post another one — the existing callback will use the image
-        // we just stored above. This keeps at most one callback pending,
-        // preventing message-loop buildup regardless of input frame rate.
-        if (_isWaitingToApplyPendingImage)
+        lock (_imageLock)
         {
-            return;
+            if (_isDisposed)
+            {
+                return;
+            }
+
+            // Always store the latest frame so the UI thread picks up the most
+            // recent image when it processes the posted callback (last-writer-wins).
+            _pendingDisplayImage.SetNewImage(imageSource);
+            _hasPendingImage = true;
+
+            // If a callback is already queued to apply the pending image, don't
+            // post another one — the existing callback will use the image we just
+            // stored above. This keeps at most one callback pending, preventing
+            // message-loop buildup regardless of input frame rate.
+            if (_isApplyPendingImageQueued)
+            {
+                return;
+            }
+
+            // Posting never waits for the UI thread so it's safe under the lock. If
+            // it can't be posted (no UI context yet) the image stays pending and is
+            // applied when the handle is created or on the next successful post.
+            _isApplyPendingImageQueued = _uiDispatcher.TryPost(OnApplyPendingImageCallback);
+        }
+    }
+
+
+    /// <summary>
+    /// Runs on the UI thread when posted by <see cref="SetImageIndirectlyFromNonUIThread"/>.
+    /// </summary>
+    private void OnApplyPendingImageCallback()
+    {
+        lock (_imageLock)
+        {
+            _isApplyPendingImageQueued = false;
         }
 
-        _isWaitingToApplyPendingImage = true;
+        ApplyPendingImage();
+    }
 
 
-        // Post the following action on the UI thread and return immediately.
-        // When the action is picked up we re-acquire the lock so that the flag
-        // reset is atomic with respect to non-UI threads checking it in SetImage.
-        // We call SetImageDirectlyFromUIThread rather than SetImage to avoid a
-        // nested lock acquisition: System.Threading.Lock is non-reentrant.
-        BeginInvoke(() =>
+    /// <summary>
+    /// If a non-UI thread has set an image that hasn't been displayed yet, swap it
+    /// in as the display image. Must be called on the UI thread.
+    /// </summary>
+    /// <remarks>
+    /// The pending and display images are swapped rather than copied, so the lock
+    /// is only held briefly and each frame is copied once. The old display image
+    /// becomes the pending buffer for the next frame, reusing its allocation.
+    /// </remarks>
+    private void ApplyPendingImage()
+    {
+        Size originalImageSize = _virtualDisplay.ImageSize;
+
+        lock (_imageLock)
         {
-            lock (_imageLock)
+            if (_isDisposed || !_hasPendingImage)
             {
-                using var imageSource = new BitmapImageSource(_pendingDisplayImage.Image);
-                SetImageDirectlyFromUIThread(imageSource);
-                _isWaitingToApplyPendingImage = false;
+                return;
             }
-        });
+
+            (_displayImage, _pendingDisplayImage) = (_pendingDisplayImage, _displayImage);
+            _hasPendingImage = false;
+        }
+
+        // Raise events outside the lock so handlers can't deadlock a producer thread
+        OnDisplayImageReplaced(originalImageSize);
     }
 
 
@@ -288,9 +357,31 @@ public partial class BitmapDisplayPanel : UserControl, ICoordinateMapper
     /// </summary>
     private void SetImageDirectlyFromUIThread(IImageSource? imageSource)
     {
-        Size originalImageSize = _virtualDisplay.ImageSize;
+        lock (_imageLock)
+        {
+            if (_isDisposed)
+            {
+                return;
+            }
 
+            // This image is newer than any image a non-UI thread has queued, so
+            // make sure a queued callback doesn't replace it with an older frame.
+            _hasPendingImage = false;
+        }
+
+        // Only the UI thread touches _displayImage, so no lock is needed here
+        Size originalImageSize = _virtualDisplay.ImageSize;
         _displayImage.SetNewImage(imageSource);
+        OnDisplayImageReplaced(originalImageSize);
+    }
+
+
+    /// <summary>
+    /// Updates the virtual display after the display image has changed, raises
+    /// <see cref="ImageSizeChanged"/> if needed and repaints. UI thread only.
+    /// </summary>
+    private void OnDisplayImageReplaced(Size originalImageSize)
+    {
         _virtualDisplay.ImageSize = _displayImage.ImageSize;
 
         if (originalImageSize != _virtualDisplay.ImageSize)
@@ -302,6 +393,18 @@ public partial class BitmapDisplayPanel : UserControl, ICoordinateMapper
     }
 
 
+    /// <summary>
+    /// The handle is always created on the UI thread, so (re)capture it here; then
+    /// display any image that a non-UI thread set before a callback could be posted.
+    /// </summary>
+    protected override void OnHandleCreated(EventArgs e)
+    {
+        _uiDispatcher.Capture();
+        base.OnHandleCreated(e);
+        ApplyPendingImage();
+    }
+
+
     /// <summary> 
     /// Clean up any resources being used.
     /// </summary>
@@ -310,8 +413,14 @@ public partial class BitmapDisplayPanel : UserControl, ICoordinateMapper
     {
         if (disposing)
         {
-            _displayImage?.Dispose();
-            _pendingDisplayImage?.Dispose();
+            // Under the lock so a non-UI thread can't be copying into the pending
+            // image while it's disposed, nor set a new image afterwards.
+            lock (_imageLock)
+            {
+                _isDisposed = true;
+                _displayImage.Dispose();
+                _pendingDisplayImage.Dispose();
+            }
 
             components?.Dispose();
         }
@@ -405,6 +514,11 @@ public partial class BitmapDisplayPanel : UserControl, ICoordinateMapper
         _dragManager = new DragManager(DragManager_SetNewTargetDisplayCentre);
         _zoomManager = new ZoomManager(ZoomManager_SetNewZoom);
         _virtualDisplay = new VirtualDisplay(VirtualImageOnDisplay_OnPaintRectChanged, VirtualDisplay_OnZoomChanged);
+
+        // Controls are constructed on the UI thread, and creating the first control on a
+        // thread installs its WindowsFormsSynchronizationContext, so it can be captured
+        // now; this lets non-UI threads post images before the handle is created.
+        _uiDispatcher.Capture();
     }
 
 
@@ -506,6 +620,13 @@ public partial class BitmapDisplayPanel : UserControl, ICoordinateMapper
         {
             if (_displayImage.GreyscalePaletteMode != value)
             {
+                // Keep both buffers in step since they are swapped when a
+                // non-UI thread's image is applied.
+                lock (_imageLock)
+                {
+                    _pendingDisplayImage.GreyscalePaletteMode = value;
+                }
+
                 _displayImage.GreyscalePaletteMode = value;
                 Invalidate();
             }
