@@ -79,8 +79,27 @@ Tests live in `UnitTests/`. Key classes:
 - `SpecTests` — equality and `Create()` correctness for `PenSpec`, `BrushSpec`, `FontSpec`.
 - `ColorJsonConverterTests` — round-trip serialization.
 - `PointFConverterTests`, `RectangleFConverterTests` — TypeConverter correctness.
+- `BitmapDisplayPanelThreadingTests` — cross-thread `SetImage`, driven through `UIThreadHarness`.
+- `BitmapDisplayPanelConcurrencyTests` — the same code under real lock contention.
 
 Test method naming: `MethodName_Scenario_ExpectedResult`. Use `[TestCategory]` for grouping where helpful. Use AwesomeAssertions (not FluentAssertions) — the package is `AwesomeAssertions`.
+
+Tests run sequentially — `[assembly: DoNotParallelize]` in each test project's
+`MSTestSettings.cs`. This is a UI suite: tests construct WinForms controls, run STA threads
+and share process-wide WinForms and GDI+ state. Keep it that way, and still don't let a test
+mutate process-wide state — `WindowsFormsSynchronizationContext.AutoInstall` in particular.
+
+To test anything that marshals to the UI thread, use `UIThreadHarness` with a
+`QueuedSynchronizationContext`: it runs the body on an STA thread and lets the test choose when
+posted work runs, instead of pumping with `Application.DoEvents` and sleeping. WinForms only
+auto-installs its own context over one that is null or exactly `SynchronizationContext`, so a
+derived context survives control construction untouched. Avoid `Application.DoEvents` in tests:
+it processes messages until the queue is empty, which a thread posting flat out can prevent
+indefinitely.
+
+`UITests/` is a FlaUI rig (harness launcher, sample-image factory) driving the
+`CDS.ImageDisplay.WinForms.TestHarness` app out of process. It currently holds no tests, so it
+passes `--ignore-exit-code 8`; CI runs `UnitTests` only.
 
 ## Coordinate system note
 
