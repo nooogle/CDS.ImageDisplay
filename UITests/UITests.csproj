@@ -13,6 +13,12 @@
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
     <OutputType>Exe</OutputType>
     <TestingPlatformShowTestsFailure>true</TestingPlatformShowTestsFailure>
+    <!--
+      This project is the FlaUI rig (harness launcher, sample-image factory) kept ready for
+      future UI Automation tests; it currently holds none. Without this the test platform
+      treats an empty run (exit code 8) as an error and fails the whole solution's test run.
+    -->
+    <TestingPlatformCommandLineArguments>--ignore-exit-code 8</TestingPlatformCommandLineArguments>
   </PropertyGroup>
 
   <ItemGroup>
