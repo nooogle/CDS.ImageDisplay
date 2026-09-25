@@ -36,6 +36,7 @@ namespace CDS.ImageDisplay.WinForms.Demo.DemoForms
             label2 = new System.Windows.Forms.Label();
             formStatePersister1 = new CDS.ImageDisplay.WinForms.Utils.FormStatePersister(components);
             tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)formStatePersister1).BeginInit();
             SuspendLayout();
             // 
             // bitmapDisplayPanel1
@@ -116,6 +117,7 @@ namespace CDS.ImageDisplay.WinForms.Demo.DemoForms
             Text = "FormNoImageg";
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)formStatePersister1).EndInit();
             ResumeLayout(false);
         }
 

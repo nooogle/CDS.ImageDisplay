@@ -33,6 +33,7 @@ namespace CDS.ImageDisplay.WinForms.Demo
             menuTree = new CDS.WinFormsMenus.Basic.MenuTree();
             sysInfoPanel = new CDS.ImageDisplay.WinForms.Utils.SystemInfoPanel();
             formStatePersister = new CDS.ImageDisplay.WinForms.Utils.FormStatePersister(components);
+            ((System.ComponentModel.ISupportInitialize)formStatePersister).BeginInit();
             SuspendLayout();
             // 
             // menuTree
@@ -68,6 +69,7 @@ namespace CDS.ImageDisplay.WinForms.Demo
             Name = "FormTestLauncher";
             Text = "FormTestLauncher";
             Load += FormTestLauncher_Load;
+            ((System.ComponentModel.ISupportInitialize)formStatePersister).EndInit();
             ResumeLayout(false);
         }
 
