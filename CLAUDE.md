@@ -67,6 +67,7 @@ Implement `ISingleROIDescriptor` to add custom ROI types to `MultipleROIManager`
 
 - `DrawingToolsPool` — shared GDI+ resource cache (also used from Overlays).
 - `UIDispatcher` — captures the UI thread and its `SynchronizationContext`; use `IsOnUIThread`/`TryPost` instead of `InvokeRequired`/`BeginInvoke` (which misbehave when a control has no handle). `BitmapDisplayPanel.SetImage` uses it for cross-thread updates.
+- `FormStatePersister` — saves/restores a form's bounds and maximised state. Restores in `ISupportInitialize.EndInit()` (designer-emitted, before the handle exists), never from `Load`: by Load the form is `Visible`, so setting `WindowState` calls `ShowWindow` and shows it mid-Load. `EndInit` runs before the designer's `ResumeLayout`, so the size is pre-divided by the pending auto-scale factor. Designer files without `EndInit` fall back to `HandleCreated` (bounds) and `Shown` (maximise, since `Form.CreateHandle` resets a state set earlier).
 - `SystemInfo` / `SystemInfoPanel` — GPU/CPU/memory introspection for diagnostics.
 - `Win32` — P/Invoke declarations.
 - `SerializableExpandableObjectConverter` — designer TypeConverter base for specs.
@@ -81,6 +82,7 @@ Tests live in `UnitTests/`. Key classes:
 - `PointFConverterTests`, `RectangleFConverterTests` — TypeConverter correctness.
 - `BitmapDisplayPanelThreadingTests` — cross-thread `SetImage`, driven through `UIThreadHarness`.
 - `BitmapDisplayPanelConcurrencyTests` — the same code under real lock contention.
+- `FormStatePersisterTests` — restore timing; builds forms the way `InitializeComponent` does and records any show during `OnLoad`.
 
 Test method naming: `MethodName_Scenario_ExpectedResult`. Use `[TestCategory]` for grouping where helpful. Use AwesomeAssertions (not FluentAssertions) — the package is `AwesomeAssertions`.
 

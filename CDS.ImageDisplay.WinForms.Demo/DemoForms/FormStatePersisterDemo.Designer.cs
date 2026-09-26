@@ -1,7 +1,6 @@
-
-namespace CDS.ImageDisplay.WinForms.Demo
+namespace CDS.ImageDisplay.WinForms.Demo.DemoForms
 {
-    partial class FormTestLauncher
+    partial class FormStatePersisterDemo
     {
         /// <summary>
         /// Required designer variable.
@@ -30,53 +29,40 @@ namespace CDS.ImageDisplay.WinForms.Demo
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            menuTree = new CDS.WinFormsMenus.Basic.MenuTree();
-            sysInfoPanel = new CDS.ImageDisplay.WinForms.Utils.SystemInfoPanel();
+            label1 = new System.Windows.Forms.Label();
             formStatePersister = new CDS.ImageDisplay.WinForms.Utils.FormStatePersister(components);
             ((System.ComponentModel.ISupportInitialize)formStatePersister).BeginInit();
             SuspendLayout();
             // 
-            // menuTree
+            // label1
             // 
-            menuTree.Dock = System.Windows.Forms.DockStyle.Fill;
-            menuTree.Location = new System.Drawing.Point(0, 63);
-            menuTree.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            menuTree.Name = "menuTree";
-            menuTree.Size = new System.Drawing.Size(727, 602);
-            menuTree.TabIndex = 0;
-            // 
-            // sysInfoPanel
-            // 
-            sysInfoPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            sysInfoPanel.Location = new System.Drawing.Point(0, 0);
-            sysInfoPanel.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
-            sysInfoPanel.Name = "sysInfoPanel";
-            sysInfoPanel.Size = new System.Drawing.Size(727, 63);
-            sysInfoPanel.TabIndex = 8;
+            label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            label1.Location = new System.Drawing.Point(0, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(495, 362);
+            label1.TabIndex = 3;
+            label1.Text = "This form saves and restores the position, size, minimised/maximised state, and screen affinity";
+            label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // formStatePersister
             // 
             formStatePersister.Form = this;
             // 
-            // FormTestLauncher
+            // FormStatePersisterDemo
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(727, 665);
-            Controls.Add(menuTree);
-            Controls.Add(sysInfoPanel);
-            Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            Name = "FormTestLauncher";
-            Text = "FormTestLauncher";
-            Load += FormTestLauncher_Load;
+            ClientSize = new System.Drawing.Size(495, 362);
+            Controls.Add(label1);
+            Name = "FormStatePersisterDemo";
+            Text = "FormStatePersisterDemo";
             ((System.ComponentModel.ISupportInitialize)formStatePersister).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private CDS.WinFormsMenus.Basic.MenuTree menuTree;
-        private Utils.SystemInfoPanel sysInfoPanel;
+        private System.Windows.Forms.Label label1;
         private Utils.FormStatePersister formStatePersister;
     }
 }
