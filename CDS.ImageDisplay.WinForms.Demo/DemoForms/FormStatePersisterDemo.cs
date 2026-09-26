@@ -4,7 +4,8 @@ namespace CDS.ImageDisplay.WinForms.Demo.DemoForms;
 
 
 /// <summary>
-/// Demonstration that shows what the bitmap display panel looks like when an image has not been assigned.
+/// Demonstration of <see cref="Utils.FormStatePersister"/>: the form saves its position, size and window state
+/// on close and restores them the next time it is opened.
 /// </summary>
 internal sealed partial class FormStatePersisterDemo : Form
 {

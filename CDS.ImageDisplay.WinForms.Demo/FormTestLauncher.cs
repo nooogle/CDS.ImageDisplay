@@ -30,12 +30,12 @@ internal sealed partial class FormTestLauncher : Form
         AddTextPanelDemoNodes();
         AddAnnotationsDemoNodes();
         AddImageBrowsingDemoNodes();
-        AddUtilsDemonotes();
+        AddUtilsDemoNodes();
 
         menuTree.ExpandAllGroups();
     }
 
-    private void AddUtilsDemonotes()
+    private void AddUtilsDemoNodes()
     {
         MenuGroup utils = menuTree.AddGroup("Utils");
 
