@@ -30,8 +30,20 @@ internal sealed partial class FormTestLauncher : Form
         AddTextPanelDemoNodes();
         AddAnnotationsDemoNodes();
         AddImageBrowsingDemoNodes();
+        AddUtilsDemonotes();
 
         menuTree.ExpandAllGroups();
+    }
+
+    private void AddUtilsDemonotes()
+    {
+        MenuGroup utils = menuTree.AddGroup("Utils");
+
+        utils.AddItem(
+            name: "FormStatePersisterDemo",
+            tooltip: "Demonstration of the FormStatePersister utility",
+            parent: this,
+            createForm: () => new DemoForms.FormStatePersisterDemo());
     }
 
     private void AddTextPanelDemoNodes()
