@@ -34,7 +34,7 @@ namespace CDS.ImageDisplay.WinForms.ImageBrowsing
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            _listView = new ListView();
+            _listView = new ScrollAwareListView();
             _imageList = new ImageList(components);
             _debounceTimer = new System.Windows.Forms.Timer(components);
             SuspendLayout();
@@ -58,6 +58,8 @@ namespace CDS.ImageDisplay.WinForms.ImageBrowsing
             _listView.RetrieveVirtualItem += OnListViewRetrieveVirtualItem;
             _listView.SelectedIndexChanged += OnListViewSelectedIndexChanged;
             _listView.SizeChanged += OnListViewSizeChanged;
+            _listView.ThumbDragStarted += OnListViewThumbDragStarted;
+            _listView.ScrollEnded += OnListViewScrollEnded;
             // 
             // _imageList
             // 
@@ -81,7 +83,7 @@ namespace CDS.ImageDisplay.WinForms.ImageBrowsing
 
         #endregion
 
-        private ListView _listView = null!;
+        private ScrollAwareListView _listView = null!;
         private ImageList _imageList = null!;
         private System.Windows.Forms.Timer _debounceTimer = null!;
     }
