@@ -319,6 +319,14 @@ public partial class ImageListPanel : UserControl
     {
         ResetCacheState();
 
+        // Scroll back to the top while the old items still exist. Shrinking a virtual list that is
+        // scrolled far down leaves the native control showing an out-of-range viewport (blank rows,
+        // TopItem null) which a later EnsureVisible(0) does not repair.
+        if (_listView.IsHandleCreated && _listView.VirtualListSize > 0)
+        {
+            _listView.EnsureVisible(0);
+        }
+
         _files.Clear();
         _listView.VirtualListSize = 0;
 
@@ -629,9 +637,22 @@ public partial class ImageListPanel : UserControl
         _debounceTimer.Start();
     }
 
+    private void OnListViewThumbDragStarted(object? sender, EventArgs e)
+    {
+        // Don't compete with the drag: stop anything in flight and hold off until release.
+        _debounceTimer.Stop();
+        _cts?.Cancel();
+        _loadingStart = -1;
+        _loadingEnd = -1;
+    }
+
+    private void OnListViewScrollEnded(object? sender, EventArgs e) => ScheduleVisibleLoad();
+
     private void OnDebounceTimerTick(object? sender, EventArgs e)
     {
         _debounceTimer.Stop();
+        if (_listView.IsThumbDragging) { return; } // loading starts when the thumb is released
+
         int start = Math.Max(0, _pendingStart - PreloadOverrun);
         int end = Math.Min(_files.Count - 1, _pendingEnd + PreloadOverrun);
         ScheduleLoad(start, end);
