@@ -83,6 +83,7 @@ public partial class ImageListPanel : UserControl
     // for an item this same load is about to reach — see OnListViewCacheVirtualItems.
     private int _loadingStart = -1;
     private int _loadingEnd = -1;
+    private int _loadGeneration;
 
     // -----------------------------------------------------------------------
     // Events
@@ -481,10 +482,10 @@ public partial class ImageListPanel : UserControl
         _cts = new CancellationTokenSource();
         _loadingStart = startIndex;
         _loadingEnd = endIndex;
-        _ = LoadRangeAsync(startIndex, endIndex, _cts.Token);
+        _ = LoadRangeAsync(startIndex, endIndex, ++_loadGeneration, _cts.Token);
     }
 
-    private async Task LoadRangeAsync(int startIndex, int endIndex, CancellationToken token)
+    private async Task LoadRangeAsync(int startIndex, int endIndex, int generation, CancellationToken token)
     {
         try
         {
@@ -527,8 +528,9 @@ public partial class ImageListPanel : UserControl
             // whatever it just redrew — see OnListViewCacheVirtualItems, which needs this range to
             // recognise that echo instead of mistaking it for a new scroll. Once nothing is in
             // flight (whether this pass finished, was cancelled, or was superseded), clear it so a
-            // genuine subsequent scroll is never suppressed.
-            if (_loadingStart == startIndex && _loadingEnd == endIndex)
+            // genuine subsequent scroll is never suppressed. Ownership is by generation, not range:
+            // a cancelled pass must not clear the markers of a replacement over the same range.
+            if (generation == _loadGeneration)
             {
                 _loadingStart = -1;
                 _loadingEnd = -1;
