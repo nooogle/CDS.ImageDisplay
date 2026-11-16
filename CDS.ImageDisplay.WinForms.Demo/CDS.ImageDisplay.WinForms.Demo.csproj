@@ -31,7 +31,7 @@
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
-		<PackageReference Include="System.Resources.Extensions" Version="10.0.14" />
+		<PackageReference Include="System.Resources.Extensions" Version="10.0.15" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -92,7 +92,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.403" />
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.404" />
   </ItemGroup>
 
 </Project>
