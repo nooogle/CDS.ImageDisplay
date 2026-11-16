@@ -47,7 +47,7 @@
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
 	  <PackageReference Include="System.Text.Json" Version="10.0.15" />
-		<PackageReference Include="System.Collections.Immutable" Version="10.0.15" />
+		<PackageReference Include="System.Collections.Immutable" Version="11.0.0" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
